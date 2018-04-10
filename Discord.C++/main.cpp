@@ -1,8 +1,7 @@
 #include "Discord.h"
 #include <Windows.h>
 #include <conio.h>
-
-#define TOKEN		"NDMxODIzMjMwNDU4Nzg5ODg4.DakWXQ.hbzNlbufXINBw8kRGJRigxG2LeU"
+#include <stdlib.h>
 
 using namespace DiscordCPP;
 
@@ -16,7 +15,15 @@ public:
 };
 
 int main() {
-	myClient client = myClient(TOKEN);
+	char *token;
+	size_t len;
+	if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {
+		cerr << "Error" << endl;
+		return -1;
+	}
+
+	myClient client = myClient(string(token));
+	free(token);
 
 	client.log.set_log_level(DEBUG);
 

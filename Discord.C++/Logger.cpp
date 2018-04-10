@@ -2,6 +2,10 @@
 
 using namespace std;
 
+Logger::Logger() {
+
+}
+
 Logger::Logger(std::string name) {
 	_name = name;
 }

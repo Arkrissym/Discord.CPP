@@ -4,6 +4,10 @@ using namespace std;
 using namespace web::json;
 using namespace utility;
 
+DiscordCPP::User::User() {
+
+}
+
 DiscordCPP::User::User(value data) {
 	id = conversions::to_utf8string(data.at(U("id")).as_string());
 	

@@ -29,6 +29,10 @@ DiscordCPP::Discord::~Discord() {
 	_client.close();
 }
 
+void DiscordCPP::Discord::on_ready(User user) {
+	log.debug("on_ready");
+}
+
 task<void> DiscordCPP::Discord::create_heartbeat_task() {
 	return create_task([this] {
 		while (_heartbeat_interval == 0)
@@ -40,7 +44,7 @@ task<void> DiscordCPP::Discord::create_heartbeat_task() {
 				heartbeat_msg.set_utf8_message("{\"op\": 1, \"d\": null}");
 			else {
 				string str = "{\"op\": 1, \"d\": " + to_string(_sequence_number) + "}";
-				log.debug(str);
+				//log.debug(str);
 				heartbeat_msg.set_utf8_message(str);
 			}
 
@@ -68,6 +72,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 	switch (op) {
 		case 0:
 			handle_raw_event(conversions::to_utf8string(obj.at(U("t")).as_string()), obj.at(U("d")));
+			break;
 		case 1:
 			send_heartbeat_ack();
 			break;

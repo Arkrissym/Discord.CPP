@@ -9,7 +9,7 @@ namespace DiscordCPP {
 	protected:
 
 	public:
-		snowflake(uint64_t data);
+		__declspec(dllexport) snowflake(uint64_t data);
 	};
 
 }

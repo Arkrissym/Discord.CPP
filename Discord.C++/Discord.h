@@ -23,18 +23,18 @@ namespace DiscordCPP {
 		string _session_id;
 		User _user;
 
-		concurrency::task<void> create_heartbeat_task();
-		void on_websocket_incoming_message(websocket_incoming_message msg);
+		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();
+		__declspec(dllexport) void on_websocket_incoming_message(websocket_incoming_message msg);
 
-		void handle_raw_event(std::string event_name, value data);	//op: 0
-		void send_heartbeat_ack();			//op: 1
-		void handle_hello_msg(value data);	//op: 10
+		__declspec(dllexport) void handle_raw_event(std::string event_name, value data);	//op: 0
+		__declspec(dllexport) void send_heartbeat_ack();			//op: 1
+		__declspec(dllexport) void handle_hello_msg(value data);	//op: 10
 	public:
 		Logger log;
 
-		Discord(std::string token);
-		~Discord();
-		virtual void on_ready(User user) { log.debug("on_ready"); };
+		__declspec(dllexport) Discord(std::string token);
+		__declspec(dllexport) ~Discord();
+		__declspec(dllexport) virtual void on_ready(User user);
 	};
 
 }

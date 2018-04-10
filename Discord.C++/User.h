@@ -20,8 +20,8 @@ namespace DiscordCPP {
 		bool verified = false;
 		string email;
 
-		User() {};
-		User(value data);
+		__declspec(dllexport) User();
+		__declspec(dllexport) User(value data);
 	};
 
 }

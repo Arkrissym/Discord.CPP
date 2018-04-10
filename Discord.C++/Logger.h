@@ -13,15 +13,15 @@ protected:
 	std::string _name;
 	Loglevel _level;
 public:
-	Logger() {};
-	Logger(std::string);
-	void set_log_level(Loglevel level);
+	__declspec(dllexport) Logger();
+	__declspec(dllexport) Logger(std::string);
+	__declspec(dllexport) void set_log_level(Loglevel level);
 
-	void print(Loglevel level, std::string message);
+	__declspec(dllexport) void print(Loglevel level, std::string message);
 
-	void debug(std::string message);
-	void info(std::string message);
-	void warning(std::string message);
-	void error(std::string message);
+	__declspec(dllexport) void debug(std::string message);
+	__declspec(dllexport) void info(std::string message);
+	__declspec(dllexport) void warning(std::string message);
+	__declspec(dllexport) void error(std::string message);
 };
 

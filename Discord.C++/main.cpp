@@ -9,7 +9,14 @@ class myClient : public Discord {
 public:
 	void on_ready(User user) {
 		log.info("logged in as: " + user.username);
-	};
+	}
+
+	void on_message(Message message) {
+		if (message.content.compare("?hello") == 0) {
+			log.info("hello world!");
+			send_message(message.channel_id, "Hello world!");
+		}
+	}
 
 	myClient(string token) : Discord(token) {};
 };

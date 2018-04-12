@@ -1,10 +1,14 @@
 #include "Discord.h"
 #include <iostream>
 #include <Windows.h>
+#include <cpprest\http_client.h>
 
-#define BASE_URL	"wss://gateway.discord.gg?v=6&encoding=json"
+#define GATEWAY_URL	"wss://gateway.discord.gg?v=6&encoding=json"
+#define API_URL		"https://discordapp.com/api"
 
 using namespace web::websockets::client;
+using namespace web::http::client;
+using namespace web::http;
 using namespace utility;
 using namespace web::json;
 using namespace concurrency;
@@ -14,7 +18,7 @@ DiscordCPP::Discord::Discord(std::string token) {
 	_token = conversions::to_string_t(token);
 
 	_client = websocket_callback_client();
-	_client.connect(U(BASE_URL));
+	_client.connect(U(GATEWAY_URL));
 
 	pplx::task<void> heartbeating = create_heartbeat_task();
 
@@ -29,8 +33,37 @@ DiscordCPP::Discord::~Discord() {
 	_client.close();
 }
 
+DiscordCPP::Message DiscordCPP::Discord::send_message(string channel_id, string message) {
+	string url = "/channels/" + channel_id + "/messages";
+
+	http_client c(U(API_URL));
+	http_request request(methods::POST);
+
+	request.set_request_uri(uri(conversions::to_string_t(url)));
+	request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(_token)));
+
+	value data;
+	data[U("content")] = value(conversions::to_string_t(message));
+
+	request.set_body(data);
+
+	Message *ret;
+
+	c.request(request).then([this, ret](http_response response) {
+		log.debug("message sent");
+		log.debug(response.extract_utf8string().get());
+		*ret = Message(response.extract_json().get());
+	});
+
+	return Message(*ret);
+}
+
 void DiscordCPP::Discord::on_ready(User user) {
 	log.debug("on_ready");
+}
+
+void DiscordCPP::Discord::on_message(Message message) {
+	log.debug("on_message");
 }
 
 task<void> DiscordCPP::Discord::create_heartbeat_task() {
@@ -97,11 +130,22 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 		_user = User(data.at(U("user")));
 		//_private_channels
 		//_guilds
-		//_trace
-
-		log.info("connected to: _trace");
+		web::json::array tmp = data.at(U("_trace")).as_array();
+		string str = "[ ";
+		for (int i = 0; i < tmp.size(); i++) {
+			_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
+			if (i == 0)
+				str = str + conversions::to_utf8string(tmp[i].as_string());
+			else
+				str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
+		}
+		
+		log.info("connected to: " + str + " ]");
 
 		on_ready(_user);
+	}
+	else if (event_name == "MESSAGE_CREATE") {
+		on_message(Message(data));
 	}
 	else {
 			log.warning("ignoring event: " + event_name);

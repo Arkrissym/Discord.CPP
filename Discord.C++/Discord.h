@@ -1,10 +1,12 @@
 #pragma once
 #include <cpprest\ws_client.h>
 #include <cpprest\json.h>
+#include <vector>
 
 #include "Logger.h"
 
 #include "User.h"
+#include "Message.h"
 
 namespace DiscordCPP {
 
@@ -22,6 +24,9 @@ namespace DiscordCPP {
 		unsigned int _sequence_number = 0;
 		string _session_id;
 		User _user;
+		//vector<Channel> _private_channels;
+		//vector<Guild> _guilds;
+		vector<string> _trace;
 
 		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();
 		__declspec(dllexport) void on_websocket_incoming_message(websocket_incoming_message msg);
@@ -34,7 +39,9 @@ namespace DiscordCPP {
 
 		__declspec(dllexport) Discord(std::string token);
 		__declspec(dllexport) ~Discord();
+		__declspec(dllexport) Message send_message(string channel_id, string message);
 		__declspec(dllexport) virtual void on_ready(User user);
+		__declspec(dllexport) virtual void on_message(Message message);
 	};
 
 }

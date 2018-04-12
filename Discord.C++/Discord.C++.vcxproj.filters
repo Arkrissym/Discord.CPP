@@ -27,6 +27,9 @@
     <ClCompile Include="snowflake.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Discord.h">
@@ -39,6 +42,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="snowflake.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

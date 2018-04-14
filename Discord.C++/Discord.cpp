@@ -1,10 +1,9 @@
 #include "Discord.h"
+#include "static.h"
+
 #include <iostream>
 #include <Windows.h>
 #include <cpprest\http_client.h>
-
-#define GATEWAY_URL	"wss://gateway.discord.gg?v=6&encoding=json"
-#define API_URL		"https://discordapp.com/api"
 
 using namespace web::websockets::client;
 using namespace web::http::client;
@@ -14,7 +13,7 @@ using namespace web::json;
 using namespace concurrency;
 using namespace std;
 
-DiscordCPP::Discord::Discord(std::string token) {
+DiscordCPP::Discord::Discord(string token) {
 	_token = conversions::to_string_t(token);
 
 	_client = websocket_callback_client();
@@ -33,8 +32,8 @@ DiscordCPP::Discord::~Discord() {
 	_client.close();
 }
 
-DiscordCPP::Message DiscordCPP::Discord::send_message(string channel_id, string message) {
-	string url = "/channels/" + channel_id + "/messages";
+DiscordCPP::Message DiscordCPP::Discord::send_message(Channel channel, string message, bool tts) {
+	string url = "/channels/" + channel.id + "/messages";
 
 	http_client c(U(API_URL));
 	http_request request(methods::POST);
@@ -44,18 +43,28 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(string channel_id, string 
 
 	value data;
 	data[U("content")] = value(conversions::to_string_t(message));
+	data[U("tts")] = value(tts);
 
 	request.set_body(data);
 
-	Message *ret;
+	Message *ret = new Message();
 
 	c.request(request).then([this, ret](http_response response) {
 		log.debug("message sent");
-		log.debug(response.extract_utf8string().get());
-		*ret = Message(response.extract_json().get());
-	});
+		
+		string response_string = response.extract_utf8string().get();
 
-	return Message(*ret);
+		//log.debug(response_string);
+
+		value response_data = value::parse(conversions::to_string_t(response_string));
+		//log.debug(conversions::to_utf8string(response_data.at(U("content")).as_string()));
+		*ret = Message(response_data, _token);
+	}).wait();
+
+	Message ret_msg = Message(*ret);
+	delete ret;
+
+	return ret_msg;
 }
 
 void DiscordCPP::Discord::on_ready(User user) {
@@ -145,10 +154,10 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 		on_ready(_user);
 	}
 	else if (event_name == "MESSAGE_CREATE") {
-		on_message(Message(data));
+		on_message(Message(data, _token));
 	}
 	else {
-			log.warning("ignoring event: " + event_name);
+		log.warning("ignoring event: " + event_name);
 	}
 }
 

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <cpprest\json.h>
 
+#include "Logger.h"
+
 namespace DiscordCPP {
 
 	using namespace std;
@@ -10,6 +12,8 @@ namespace DiscordCPP {
 	using namespace utility;
 
 	class User {
+	protected:
+		Logger _log;
 	public:
 		string id;	//Snowflake
 		string username;
@@ -22,6 +26,8 @@ namespace DiscordCPP {
 
 		__declspec(dllexport) User();
 		__declspec(dllexport) User(value data);
+		__declspec(dllexport) User(string id, string_t token);
+		__declspec(dllexport) ~User();
 	};
 
 }

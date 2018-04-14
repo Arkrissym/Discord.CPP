@@ -14,6 +14,7 @@ protected:
 	Loglevel _level;
 public:
 	__declspec(dllexport) Logger();
+	__declspec(dllexport) ~Logger();
 	__declspec(dllexport) Logger(std::string);
 	__declspec(dllexport) void set_log_level(Loglevel level);
 

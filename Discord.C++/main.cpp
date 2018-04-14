@@ -14,7 +14,7 @@ public:
 	void on_message(Message message) {
 		if (message.content.compare("?hello") == 0) {
 			log.info("hello world!");
-			send_message(message.channel_id, "Hello world!");
+			send_message(message.channel, "Hello world!");
 		}
 	}
 
@@ -29,7 +29,7 @@ int main() {
 		return -1;
 	}
 
-	myClient client = myClient(string(token));
+	myClient client = myClient(token);
 	free(token);
 
 	client.log.set_log_level(DEBUG);

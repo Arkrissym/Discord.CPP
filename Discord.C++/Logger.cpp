@@ -6,6 +6,10 @@ Logger::Logger() {
 
 }
 
+Logger::~Logger() {
+
+}
+
 Logger::Logger(std::string name) {
 	_name = name;
 }

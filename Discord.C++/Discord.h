@@ -7,6 +7,7 @@
 
 #include "User.h"
 #include "Message.h"
+#include "Channel.h"
 
 namespace DiscordCPP {
 
@@ -37,9 +38,9 @@ namespace DiscordCPP {
 	public:
 		Logger log;
 
-		__declspec(dllexport) Discord(std::string token);
+		__declspec(dllexport) Discord(string token);
 		__declspec(dllexport) ~Discord();
-		__declspec(dllexport) Message send_message(string channel_id, string message);
+		__declspec(dllexport) Message send_message(Channel channel, string message, bool tts = false);
 		__declspec(dllexport) virtual void on_ready(User user);
 		__declspec(dllexport) virtual void on_message(Message message);
 	};

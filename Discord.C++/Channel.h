@@ -13,13 +13,15 @@ namespace DiscordCPP {
 	using namespace web::json;
 	using namespace utility;
 
-	enum ChannelType {
-		GUILD_TEXT,
-		DM,
-		GUILD_VOICE,
-		GROUP_DM,
-		GUILD_CATEGORY
-	};
+	namespace ChannelType {
+		enum ChannelType {
+			GUILD_TEXT,
+			DM,
+			GUILD_VOICE,
+			GROUP_DM,
+			GUILD_CATEGORY
+		};
+	}
 
 	class Channel {
 	protected:

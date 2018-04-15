@@ -8,6 +8,7 @@
 #include "User.h"
 #include "Message.h"
 #include "Channel.h"
+#include "Guild.h"
 
 namespace DiscordCPP {
 
@@ -25,8 +26,8 @@ namespace DiscordCPP {
 		unsigned int _sequence_number = 0;
 		string _session_id;
 		User _user;
-		//vector<Channel> _private_channels;
-		//vector<Guild> _guilds;
+		vector<Channel> _private_channels;
+		vector<Guild> _guilds;
 		vector<string> _trace;
 
 		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();

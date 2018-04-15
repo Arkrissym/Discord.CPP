@@ -10,6 +10,7 @@ using namespace web::http::client;
 
 DiscordCPP::User::User() {
 	_log = Logger("discord.user");
+	//_log.debug("created empty user object");
 }
 
 DiscordCPP::User::User(value data) {
@@ -37,6 +38,8 @@ DiscordCPP::User::User(value data) {
 
 	if ((data.has_field(U("email"))) && (!data.at(U("email")).is_null()))
 		email = conversions::to_utf8string(data.at(U("email")).as_string());
+
+	//_log.debug("created user object");
 }
 
 DiscordCPP::User::User(string id, string_t token) {
@@ -62,5 +65,5 @@ DiscordCPP::User::User(string id, string_t token) {
 }
 
 DiscordCPP::User::~User() {
-
+	//_log.debug("destroyed user object");
 }

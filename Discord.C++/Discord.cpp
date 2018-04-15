@@ -26,10 +26,12 @@ DiscordCPP::Discord::Discord(string token) {
 	});
 
 	log = Logger("discord");
+	//log.debug("created Discord object");
 }
 
 DiscordCPP::Discord::~Discord() {
 	_client.close();
+	//log.debug("destroyed Discord object");
 }
 
 DiscordCPP::Message DiscordCPP::Discord::send_message(Channel channel, string message, bool tts) {
@@ -137,8 +139,21 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 	if (event_name == "READY") {
 		_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
 		_user = User(data.at(U("user")));
+
 		//_private_channels
+		if (is_valid_field("private_channels")) {
+			web::json::array tmp = data.at(U("private_channels")).as_array();
+			for (int i = 0; i < tmp.size(); i++)
+				_private_channels.push_back(Channel(tmp[i], _token));
+		}
+
 		//_guilds
+		if (is_valid_field("guilds")) {
+			web::json::array tmp = data.at(U("guilds")).as_array();
+			for (int i = 0; i < tmp.size(); i++)
+				_guilds.push_back(Guild(tmp[i], _token));
+		}
+
 		web::json::array tmp = data.at(U("_trace")).as_array();
 		string str = "[ ";
 		for (int i = 0; i < tmp.size(); i++) {
@@ -151,10 +166,28 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 		
 		log.info("connected to: " + str + " ]");
 
-		on_ready(_user);
+		create_task([this] {
+			on_ready(_user);
+		});
 	}
 	else if (event_name == "MESSAGE_CREATE") {
-		on_message(Message(data, _token));
+		create_task([this, data] {
+			on_message(Message(data, _token));
+		});
+	}
+	else if (event_name == "GUILD_CREATE") {
+		Guild tmp_guild = Guild(data, _token);
+
+		for (unsigned int i = 0; i < _guilds.size(); i++) {
+			if (tmp_guild.id == _guilds[i].id) {
+				_guilds[i] = tmp_guild;
+				log.debug("Updated guild data");
+				return;
+			}
+		}
+
+		_guilds.push_back(tmp_guild);
+		log.debug("data of new guild added");
 	}
 	else {
 		log.warning("ignoring event: " + event_name);

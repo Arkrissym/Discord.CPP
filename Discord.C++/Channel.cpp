@@ -61,6 +61,7 @@ DiscordCPP::Channel::Channel(value data, string_t token) {
 	if (is_valid_field("last_pin_timestamp"))
 		last_pin_timestamp = conversions::to_utf8string(data.at(U("last_pin_timestamp")).as_string());
 
+	//_log.debug("created channel object");
 }
 
 DiscordCPP::Channel::Channel(string id, string_t token) {
@@ -87,8 +88,9 @@ DiscordCPP::Channel::Channel(string id, string_t token) {
 
 DiscordCPP::Channel::Channel() {
 	_log = Logger("discord.channel");
+	//_log.debug("created empty channel object");
 }
 
 DiscordCPP::Channel::~Channel() {
-
+	//_log.debug("destroyed channel object");
 }

@@ -14,6 +14,19 @@ namespace DiscordCPP {
 	using namespace web::json;
 	using namespace utility;
 
+	namespace MessageType {
+		enum MessageType {
+			DEFAULT,
+			RECIPIENT_ADD,
+			RECIPIENT_REMOVE,
+			CALL,
+			CHANNEL_NAME_CHANGE,
+			CHANNEL_ICON_CHANGE,
+			CHANNEL_PINNED_MESSAGE,
+			GUILD_MEMBER_JOIN
+		};
+	}
+
 	class Message {
 	protected:
 		Logger _log;

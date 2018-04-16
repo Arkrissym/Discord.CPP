@@ -118,22 +118,26 @@
     <ClCompile Include="Channel.cpp" />
     <ClCompile Include="Discord.cpp" />
     <ClCompile Include="Guild.cpp" />
+    <ClCompile Include="GuildChannel.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="snowflake.cpp" />
     <ClCompile Include="User.cpp" />
+    <ClCompile Include="VoiceChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Discord.h" />
     <ClInclude Include="Guild.h" />
+    <ClInclude Include="GuildChannel.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Member.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="snowflake.h" />
     <ClInclude Include="static.h" />
     <ClInclude Include="User.h" />
+    <ClInclude Include="VoiceChannel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

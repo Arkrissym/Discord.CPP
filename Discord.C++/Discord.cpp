@@ -34,8 +34,8 @@ DiscordCPP::Discord::~Discord() {
 	//log.debug("destroyed Discord object");
 }
 
-DiscordCPP::Message DiscordCPP::Discord::send_message(Channel channel, string message, bool tts) {
-	string url = "/channels/" + channel.id + "/messages";
+DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string message, bool tts) {
+	string url = "/channels/" + channel->id + "/messages";
 
 	http_client c(U(API_URL));
 	http_request request(methods::POST);
@@ -51,7 +51,7 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel channel, string me
 
 	Message *ret = new Message();
 
-	c.request(request).then([this, ret](http_response response) {
+	Concurrency::task<void> requestTask = c.request(request).then([this, ret](http_response response) {
 		log.debug("message sent");
 		
 		string response_string = response.extract_utf8string().get();
@@ -61,7 +61,14 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel channel, string me
 		value response_data = value::parse(conversions::to_string_t(response_string));
 		//log.debug(conversions::to_utf8string(response_data.at(U("content")).as_string()));
 		*ret = Message(response_data, _token);
-	}).wait();
+	});
+
+	try {
+		requestTask.wait();
+	}
+	catch (const std::exception &e) {
+		log.error("Error exception: " + string(e.what()));
+	}
 
 	Message ret_msg = Message(*ret);
 	delete ret;

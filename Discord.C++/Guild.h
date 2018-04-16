@@ -83,6 +83,7 @@ namespace DiscordCPP {
 		//vector<Presence> presences;
 
 		__declspec(dllexport) Guild(value data, string_t token);
+		__declspec(dllexport) Guild(string id, string_t token);
 		__declspec(dllexport) Guild();
 		__declspec(dllexport) ~Guild();
 	};

@@ -29,15 +29,11 @@ namespace DiscordCPP {
 	public:
 		string id;	//snowflake
 		int type;
-		string guild_id;	//snowflake
 		int position = 0;
 		//vector<Overwrite> permission_overwrites = NULL;
 		string name;
-		string topic;
 		bool nsfw = false;
 		string last_message_id;	//snowflake
-		int bitrate = 0;
-		int user_limit = 0;
 		vector<User> recipients;
 		string icon;
 		User owner;

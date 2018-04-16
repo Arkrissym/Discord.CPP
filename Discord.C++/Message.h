@@ -32,7 +32,7 @@ namespace DiscordCPP {
 		Logger _log;
 	public:
 		string id;	//snowflake
-		Channel channel;
+		Channel *channel = NULL;
 		User author;
 		string content;
 		string timestamp;	//ISO8601 timestamp

@@ -16,27 +16,30 @@ DiscordCPP::User::User() {
 DiscordCPP::User::User(value data) {
 	_log = Logger("discord.user");
 
-	id = conversions::to_utf8string(data.at(U("id")).as_string());
+	_log.debug(conversions::to_utf8string(data.serialize()));
+
+	if (is_valid_field("id"))
+		id = conversions::to_utf8string(data.at(U("id")).as_string());
 	
-	username = conversions::to_utf8string(data.at(U("username")).as_string());
+	if (is_valid_field("username"))
+		username = conversions::to_utf8string(data.at(U("username")).as_string());
 	
-	discriminator = conversions::to_utf8string(data.at(U("discriminator")).as_string());
+	if (is_valid_field("discrimminator"))
+		discriminator = conversions::to_utf8string(data.at(U("discriminator")).as_string());
 	
-	if (data.at(U("avatar")).is_null())
-		avatar = "null";
-	else
+	if (is_valid_field("avatar"))
 		avatar = conversions::to_utf8string(data.at(U("avatar")).as_string());
 
-	if (data.has_field(U("bot")))
+	if (is_valid_field("bot"))
 		bot = data.at(U("bot")).as_bool();
 
-	if (data.has_field(U("mfa_enabled")))
+	if (is_valid_field("mfa_enabled"))
 		mfa_enabled = data.at(U("mfa_enabled")).as_bool();
 	
-	if (data.has_field(U("verified")))
+	if (is_valid_field("verified"))
 		verified = data.at(U("verified")).as_bool();
 
-	if ((data.has_field(U("email"))) && (!data.at(U("email")).is_null()))
+	if (is_valid_field("email"))
 		email = conversions::to_utf8string(data.at(U("email")).as_string());
 
 	//_log.debug("created user object");

@@ -12,11 +12,11 @@ using namespace web::http::client;
 DiscordCPP::Channel::Channel(value data, string_t token) {
 	_log = Logger("discord.channel");
 
-	id = conversions::to_utf8string(data.at(U("id")).as_string());
+	if (is_valid_field("id"))
+		id = conversions::to_utf8string(data.at(U("id")).as_string());
 
-	type = data.at(U("type")).as_integer();
-
-	//guild
+	if (is_valid_field("type"))
+		type = data.at(U("type")).as_integer();
 
 	if (is_valid_field("position"))
 		position = data.at(U("position")).as_integer();
@@ -26,20 +26,11 @@ DiscordCPP::Channel::Channel(value data, string_t token) {
 	if (is_valid_field("name"))
 		name = conversions::to_utf8string(data.at(U("name")).as_string());
 
-	if (is_valid_field("topic"))
-		topic = conversions::to_utf8string(data.at(U("topic")).as_string());
-
 	if (is_valid_field("nsfw"))
 		position = data.at(U("nsfw")).as_bool();
 
 	if (is_valid_field("last_message_id"))
 		last_message_id = conversions::to_utf8string(data.at(U("last_message_id")).as_string());
-
-	if (is_valid_field("bitrate"))
-		bitrate = data.at(U("bitrate")).as_integer();
-
-	if (is_valid_field("user_limit"))
-		user_limit = data.at(U("user_limit")).as_integer();
 
 	if (is_valid_field("recipients")) {
 		web::json::array tmp = data.at(U("recipients")).as_array();
@@ -75,7 +66,7 @@ DiscordCPP::Channel::Channel(string id, string_t token) {
 	request.set_request_uri(uri(conversions::to_string_t(url)));
 	request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(token)));
 
-	c.request(request).then([this, token](http_response response) {
+	Concurrency::task<void> requestTask = c.request(request).then([this, token](http_response response) {
 		string response_string = response.extract_utf8string().get();
 
 		//_log.debug(response_string);
@@ -83,7 +74,14 @@ DiscordCPP::Channel::Channel(string id, string_t token) {
 		value data = value::parse(conversions::to_string_t(response_string));
 
 		*this = Channel(data, token);
-	}).wait();
+	});
+
+	try {
+		requestTask.wait();
+	}
+	catch (const std::exception &e) {
+		_log.error("Error exception: " + string(e.what()));
+	}
 }
 
 DiscordCPP::Channel::Channel() {

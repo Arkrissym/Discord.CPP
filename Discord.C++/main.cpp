@@ -12,9 +12,19 @@ public:
 	}
 
 	void on_message(Message message) {
+		log.info(message.author->username + "\" sent " + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
+		
 		if (message.content.compare("?hello") == 0) {
-			log.info("hello world!");
-			send_message(message.channel, "Hello world!");
+			Message msg = send_message(message.channel, "Hello world!");
+			log.info("message sent (id: " + msg.channel->id + ")");
+		}
+		else if (message.content == "?guild") {
+			if (message.channel->type == ChannelType::GUILD_TEXT) {
+				send_message(message.channel, ((GuildChannel *)message.channel)->guild->name);
+			}
+			else {
+				send_message(message.channel, "This is not a guild channel.");
+			}
 		}
 	}
 

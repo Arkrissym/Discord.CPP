@@ -10,10 +10,10 @@ namespace DiscordCPP {
 	using namespace utility;
 
 	class VoiceChannel : public GuildChannel	{
-	protected:
+	public:
 		int bitrate;
 		int user_limit;
-	public:
+
 		__declspec(dllexport) VoiceChannel(value data, string_t token);
 		__declspec(dllexport) VoiceChannel(string id, string_t token);
 		__declspec(dllexport) VoiceChannel(const VoiceChannel &old);

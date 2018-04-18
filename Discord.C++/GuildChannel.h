@@ -11,10 +11,10 @@ namespace DiscordCPP {
 	using namespace utility;
 
 	class GuildChannel : public Channel {
-	protected:
-		Guild *guild = NULL;
-		string topic;
 	public:
+		Guild * guild = NULL;
+		string topic;
+
 		__declspec(dllexport) GuildChannel(value data, string_t token);
 		__declspec(dllexport) GuildChannel(string id, string_t token);
 		__declspec(dllexport) GuildChannel(const GuildChannel &old);

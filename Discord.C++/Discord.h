@@ -8,6 +8,8 @@
 #include "User.h"
 #include "Message.h"
 #include "Channel.h"
+#include "GuildChannel.h"
+#include "VoiceChannel.h"
 #include "Guild.h"
 
 namespace DiscordCPP {

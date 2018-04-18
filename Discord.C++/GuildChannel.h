@@ -12,13 +12,16 @@ namespace DiscordCPP {
 
 	class GuildChannel : public Channel {
 	protected:
-		Guild guild;
+		Guild *guild = NULL;
 		string topic;
 	public:
 		__declspec(dllexport) GuildChannel(value data, string_t token);
 		__declspec(dllexport) GuildChannel(string id, string_t token);
+		__declspec(dllexport) GuildChannel(const GuildChannel &old);
 		__declspec(dllexport) GuildChannel();
 		__declspec(dllexport) ~GuildChannel();
+
+		//__declspec(dllexport) virtual GuildChannel *copy();
 	};
 
 }

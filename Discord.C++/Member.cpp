@@ -6,7 +6,7 @@ using namespace web::json;
 using namespace utility;
 
 DiscordCPP::Member::Member(value data, string_t token) : User(data.at(U("user"))) {
-	_log = Logger("dicord.member");
+	//_log = Logger("dicord.member");
 
 	if (is_valid_field("nick"))
 		nick = conversions::to_utf8string(data.at(U("nick")).as_string());

@@ -10,6 +10,8 @@ using namespace utility;
 using namespace std;
 
 DiscordCPP::VoiceChannel::VoiceChannel(value data, string_t token) : DiscordCPP::GuildChannel(data, token) {
+	//_log = Logger("discord.voicechannel");
+
 	if (is_valid_field("bitrate"))
 		bitrate = data.at(U("bitrate")).as_integer();
 
@@ -18,7 +20,7 @@ DiscordCPP::VoiceChannel::VoiceChannel(value data, string_t token) : DiscordCPP:
 }
 
 DiscordCPP::VoiceChannel::VoiceChannel(string id, string_t token) {
-	_log = Logger("discord.voicechannel");
+	//_log = Logger("discord.voicechannel");
 
 	string url = "/channels/" + id;
 
@@ -42,12 +44,17 @@ DiscordCPP::VoiceChannel::VoiceChannel(string id, string_t token) {
 		requestTask.wait();
 	}
 	catch (const std::exception &e) {
-		_log.error("Error exception: " + string(e.what()));
+		Logger("discord.voicechannel").error("Error exception: " + string(e.what()));
 	}
 }
 
+DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel & old) : DiscordCPP::GuildChannel(old) {
+	bitrate = old.bitrate;
+	user_limit = old.user_limit;
+}
+
 DiscordCPP::VoiceChannel::VoiceChannel() {
-	_log = Logger("discord.voicechannel");
+	//_log = Logger("discord.voicechannel");
 }
 
 DiscordCPP::VoiceChannel::~VoiceChannel() {

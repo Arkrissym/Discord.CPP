@@ -12,7 +12,7 @@ using namespace web::json;
 using namespace utility;
 
 DiscordCPP::Message::Message(value data, string_t token) {
-	_log = Logger("discord.message");
+	//_log = Logger("discord.message");
 
 	if(is_valid_field("id"))
 		id = conversions::to_utf8string(data.at(U("id")).as_string());
@@ -26,36 +26,37 @@ DiscordCPP::Message::Message(value data, string_t token) {
 		request.set_request_uri(uri(conversions::to_string_t(url)));
 		request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(token)));
 
-		Concurrency::task<void> requestTask = c.request(request).then([this, token](http_response response) {
+		Concurrency::task<Channel *> requestTask = c.request(request).then([this, token](http_response response) {
 			string response_string = response.extract_utf8string().get();
 
-			_log.debug(response_string);
+			//_log.debug(response_string);
 
 			value data = value::parse(conversions::to_string_t(response_string));
 
-			_log.debug(conversions::to_utf8string(data.serialize()));
+			//_log.debug(conversions::to_utf8string(data.serialize()));
 
 			if (is_valid_field("bitrate")) {
-				channel = new VoiceChannel(data, token);
+				return (Channel *)new VoiceChannel(data, token);
 			}
 			else if (is_valid_field("guild_id")) {
-				channel = new GuildChannel(data, token);
+				return (Channel *)new GuildChannel(data, token);
 			}
 			else {
-				channel = new Channel(data, token);
+				return new Channel(data, token);
 			}
 		});
 
 		try {
 			requestTask.wait();
+			channel = requestTask.get();
 		}
 		catch (const std::exception &e) {
-			_log.error("Error exception: " + string(e.what()));
+			Logger("discord.message").error("exception in Message constructor: " + string(e.what()));
 		}
 	}
 
 	if (is_valid_field("author"))
-		author = User(data.at(U("author")));
+		author = new User(data.at(U("author")));
 
 	if (is_valid_field("content"))
 		content = conversions::to_utf8string(data.at(U("content")).as_string());
@@ -75,7 +76,7 @@ DiscordCPP::Message::Message(value data, string_t token) {
 	if (is_valid_field("mentions")) {
 		web::json::array tmp = data.at(U("mentions")).as_array();
 		for (int i = 0; i < tmp.size(); i++)
-			mentions.push_back(User(tmp[i]));
+			mentions.push_back(new User(tmp[i]));
 	}
 
 	//mention_roles
@@ -102,14 +103,55 @@ DiscordCPP::Message::Message(value data, string_t token) {
 	//_log.debug("created message object");
 }
 
+DiscordCPP::Message::Message(const Message & old) {
+	//_log = old._log;
+	id = old.id;
+	
+	if (old.channel != NULL) {
+		try {
+			channel = old.channel->copy(*old.channel);
+		}
+		catch (std::exception &e) {
+			Logger("discord.message").error("Error in channel copy: " + string(e.what()));
+		}
+	}
+	else {
+		channel = NULL;
+	}
+
+	author = new User(*old.author);
+	content = old.content;
+	timestamp = old.timestamp;
+	edited_timestamp = old.edited_timestamp;
+	tts = old.tts;
+	mention_everyone = old.mention_everyone;
+	//mentions = old.mentions;
+	for (int i = 0; i < old.mentions.size(); i++) {
+		mentions.push_back(new User(*old.mentions[i]));
+	}
+	//mention_roles
+	//attachements
+	//embeds
+	//reactions
+	pinned = old.pinned;
+	webhook_id = old.webhook_id;
+	type = old.type;
+	//activity
+	//application
+}
+
 DiscordCPP::Message::Message() {
-	_log = Logger("discord.message");
+	//_log = Logger("discord.message");
 	//_log.debug("created empty message object");
 }
 
 DiscordCPP::Message::~Message() {
 	//_log.debug("destroyed message object");
 
-	if(channel != NULL)
-		delete channel;
+	//if(channel != NULL)
+	delete channel;
+	delete author;
+	for (int i = 0; i < mentions.size(); i++) {
+		delete mentions[i];
+	}
 }

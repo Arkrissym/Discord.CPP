@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cpprest\json.h>
 
-#include "Logger.h"
+//#include "Logger.h"
 
 //#include "snowflake.h"
 #include "User.h"
@@ -28,18 +28,18 @@ namespace DiscordCPP {
 	}
 
 	class Message {
-	protected:
-		Logger _log;
+	//protected:
+	//	Logger _log;
 	public:
 		string id;	//snowflake
 		Channel *channel = NULL;
-		User author;
+		User *author = NULL;
 		string content;
 		string timestamp;	//ISO8601 timestamp
 		string edited_timestamp;	//ISO8601 timestamp
 		bool tts;
 		bool mention_everyone;
-		vector<User> mentions;
+		vector<User *> mentions;
 		//vector<Role> mention_roles;
 		//vector<Attachments> attachments;
 		//vector<Embed> embeds;
@@ -51,6 +51,7 @@ namespace DiscordCPP {
 		//MessageApplication application;
 
 		__declspec(dllexport) Message(value data, string_t token);
+		__declspec(dllexport) Message(const Message &old);
 		__declspec(dllexport) Message();
 		__declspec(dllexport) ~Message();
 	};

@@ -29,14 +29,16 @@ int main() {
 		return -1;
 	}
 
-	myClient client = myClient(token);
+	myClient *client = new myClient(token);
 	free(token);
 
-	client.log.set_log_level(DEBUG);
+	client->log.set_log_level(DEBUG);
 
 	while (_getch() != 'q') {
 		Sleep(10);
 	}
+
+	delete client;
 
 	return 0;
 }

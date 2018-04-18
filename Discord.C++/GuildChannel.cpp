@@ -10,15 +10,17 @@ using namespace utility;
 using namespace std;
 
 DiscordCPP::GuildChannel::GuildChannel(value data, string_t token) : DiscordCPP::Channel(data, token) {
+	//_log = Logger("discord.guildchannel");
+
 	if (is_valid_field("guild_id"))
-		guild = Guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
+		guild = new Guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
 	
 	if (is_valid_field("topic"))
 		topic = conversions::to_utf8string(data.at(U("topic")).as_string());
 }
 
 DiscordCPP::GuildChannel::GuildChannel(string id, string_t token) {
-	_log = Logger("discord.guildchannel");
+	//_log = Logger("discord.guildchannel");
 
 	string url = "/channels/" + id;
 
@@ -42,14 +44,20 @@ DiscordCPP::GuildChannel::GuildChannel(string id, string_t token) {
 		requestTask.wait();
 	}
 	catch (const std::exception &e) {
-		_log.error("Error exception: " + string(e.what()));
+		Logger("discord.guildchannel").error("Error exception: " + string(e.what()));
 	}
 }
 
+DiscordCPP::GuildChannel::GuildChannel(const GuildChannel & old) : DiscordCPP::Channel(old) {
+	if (old.guild != NULL)
+		guild = new Guild(*old.guild);
+	topic = old.topic;
+}
+
 DiscordCPP::GuildChannel::GuildChannel() {
-	_log = Logger("discord.guildchannel");
+	//_log = Logger("discord.guildchannel");
 }
 
 DiscordCPP::GuildChannel::~GuildChannel() {
-
+	delete guild;
 }

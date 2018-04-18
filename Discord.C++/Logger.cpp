@@ -14,6 +14,11 @@ Logger::Logger(std::string name) {
 	_name = name;
 }
 
+Logger::Logger(const Logger & old) {
+	_name = old._name;
+	_level = old._level;
+}
+
 void Logger::set_log_level(Loglevel level) {
 	_level = level;
 }

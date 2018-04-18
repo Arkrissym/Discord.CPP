@@ -32,6 +32,14 @@ DiscordCPP::Discord::Discord(string token) {
 DiscordCPP::Discord::~Discord() {
 	_client.close();
 	//log.debug("destroyed Discord object");
+
+	delete _user;
+	for (int i = 0; i < _private_channels.size(); i++) {
+		delete _private_channels[i];
+	}
+	for (int i = 0; i < _guilds.size(); i++) {
+		delete _guilds[i];
+	}
 }
 
 DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string message, bool tts) {
@@ -49,9 +57,9 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string m
 
 	request.set_body(data);
 
-	Message *ret = new Message();
-
-	Concurrency::task<void> requestTask = c.request(request).then([this, ret](http_response response) {
+	Message *ret = NULL;
+	
+	Concurrency::task<Message *> requestTask = c.request(request).then([this](http_response response) {
 		log.debug("message sent");
 		
 		string response_string = response.extract_utf8string().get();
@@ -60,11 +68,13 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string m
 
 		value response_data = value::parse(conversions::to_string_t(response_string));
 		//log.debug(conversions::to_utf8string(response_data.at(U("content")).as_string()));
-		*ret = Message(response_data, _token);
+		Message *tmp = new Message(response_data, _token);
+		return tmp;
 	});
 
 	try {
 		requestTask.wait();
+		ret = requestTask.get();
 	}
 	catch (const std::exception &e) {
 		log.error("Error exception: " + string(e.what()));
@@ -72,7 +82,7 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string m
 
 	Message ret_msg = Message(*ret);
 	delete ret;
-
+	
 	return ret_msg;
 }
 
@@ -145,20 +155,20 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 	if (event_name == "READY") {
 		_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
-		_user = User(data.at(U("user")));
+		_user = new User(data.at(U("user")));
 
 		//_private_channels
 		if (is_valid_field("private_channels")) {
 			web::json::array tmp = data.at(U("private_channels")).as_array();
 			for (int i = 0; i < tmp.size(); i++)
-				_private_channels.push_back(Channel(tmp[i], _token));
+				_private_channels.push_back(new Channel(tmp[i], _token));
 		}
 
 		//_guilds
 		if (is_valid_field("guilds")) {
 			web::json::array tmp = data.at(U("guilds")).as_array();
 			for (int i = 0; i < tmp.size(); i++)
-				_guilds.push_back(Guild(tmp[i], _token));
+				_guilds.push_back(new Guild(tmp[i], _token));
 		}
 
 		web::json::array tmp = data.at(U("_trace")).as_array();
@@ -174,19 +184,29 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 		log.info("connected to: " + str + " ]");
 
 		create_task([this] {
-			on_ready(_user);
+			try {
+				on_ready(*_user);
+			}
+			catch (const std::exception &e) {
+				log.error("ignoring exception in on_ready: " + string(e.what()));
+			}
 		});
 	}
 	else if (event_name == "MESSAGE_CREATE") {
 		create_task([this, data] {
-			on_message(Message(data, _token));
+			try {
+				on_message(Message(data, _token));
+			}
+			catch (const std::exception &e) {
+				log.error("ignoring exception in on_message: " + string(e.what()));
+			}
 		});
 	}
 	else if (event_name == "GUILD_CREATE") {
-		Guild tmp_guild = Guild(data, _token);
+		Guild *tmp_guild = new Guild(data, _token);
 
 		for (unsigned int i = 0; i < _guilds.size(); i++) {
-			if (tmp_guild.id == _guilds[i].id) {
+			if (tmp_guild->id == _guilds[i]->id) {
 				_guilds[i] = tmp_guild;
 				log.debug("Updated guild data");
 				return;

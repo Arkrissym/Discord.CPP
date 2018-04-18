@@ -12,8 +12,8 @@ namespace DiscordCPP {
 	using namespace utility;
 
 	class User {
-	protected:
-		Logger _log;
+	//protected:
+	//	Logger _log;
 	public:
 		string id;	//Snowflake
 		string username;

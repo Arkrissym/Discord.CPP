@@ -25,9 +25,9 @@ namespace DiscordCPP {
 		int _heartbeat_interval = 0;
 		unsigned int _sequence_number = 0;
 		string _session_id;
-		User _user;
-		vector<Channel> _private_channels;
-		vector<Guild> _guilds;
+		User *_user;
+		vector<Channel *> _private_channels;
+		vector<Guild *> _guilds;
 		vector<string> _trace;
 
 		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();

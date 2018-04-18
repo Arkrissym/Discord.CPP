@@ -3,7 +3,7 @@
 #include <vector>
 #include <cpprest\json.h>
 
-#include "Logger.h"
+//#include "Logger.h"
 
 #include "User.h"
 
@@ -24,27 +24,43 @@ namespace DiscordCPP {
 	}
 
 	class Channel {
-	protected:
-		Logger _log;
+	//protected:
+	//	Logger _log;
 	public:
 		string id;	//snowflake
 		int type;
-		int position = 0;
-		//vector<Overwrite> permission_overwrites = NULL;
+		int position;
+		//vector<Overwrite *> permission_overwrites;
 		string name;
-		bool nsfw = false;
+		bool nsfw;
 		string last_message_id;	//snowflake
-		vector<User> recipients;
+		vector<User *> recipients;
 		string icon;
-		User owner;
+		User *owner = NULL;
 		string application_id;	//snowflake
 		string parent_id;
 		string last_pin_timestamp;	//ISO8601 timestamp
 
 		__declspec(dllexport) Channel(value data, string_t token);
 		__declspec(dllexport) Channel(string id, string_t token);
+		__declspec(dllexport) Channel(const Channel &old);
 		__declspec(dllexport) Channel();
 		__declspec(dllexport) ~Channel();
+
+		template <class T>
+		__declspec(dllexport) Channel *copy(T obj);
 	};
+
+	template<class T>
+	inline Channel * Channel::copy(T obj) {
+		T* derivedptr = new T(obj);
+		Channel* baseptr = dynamic_cast<Channel*>(derivedptr);
+		if (baseptr != NULL) {
+			return baseptr;
+		}
+		// this will be reached if T is not derived from Base
+		delete derivedptr;
+		throw std::string("Invalid type given to Clone");
+	}
 
 }

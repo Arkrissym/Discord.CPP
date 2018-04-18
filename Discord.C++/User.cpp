@@ -9,14 +9,14 @@ using namespace web::http;
 using namespace web::http::client;
 
 DiscordCPP::User::User() {
-	_log = Logger("discord.user");
+	//_log = Logger("discord.user");
 	//_log.debug("created empty user object");
 }
 
 DiscordCPP::User::User(value data) {
-	_log = Logger("discord.user");
+	//_log = Logger("discord.user");
 
-	_log.debug(conversions::to_utf8string(data.serialize()));
+	//_log.debug(conversions::to_utf8string(data.serialize()));
 
 	if (is_valid_field("id"))
 		id = conversions::to_utf8string(data.at(U("id")).as_string());
@@ -46,7 +46,7 @@ DiscordCPP::User::User(value data) {
 }
 
 DiscordCPP::User::User(string id, string_t token) {
-	_log = Logger("discord.user");
+	//_log = Logger("discord.user");
 
 	string url = "/users/" + id;
 

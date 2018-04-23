@@ -1,7 +1,7 @@
 #pragma once
-//#include "snowflake.h"
+#include "DiscordObject.h"
 #include <iostream>
-#include <cpprest\json.h>
+//#include <cpprest\json.h>
 
 #include "Logger.h"
 
@@ -11,11 +11,11 @@ namespace DiscordCPP {
 	using namespace web::json;
 	using namespace utility;
 
-	class User {
+	class User : public DiscordCPP::DiscordObject {
 	//protected:
 	//	Logger _log;
 	public:
-		string id;	//Snowflake
+		//string id;	//Snowflake
 		string username;
 		string discriminator;
 		string avatar;
@@ -25,7 +25,7 @@ namespace DiscordCPP {
 		string email;
 
 		__declspec(dllexport) User();
-		__declspec(dllexport) User(value data);
+		__declspec(dllexport) User(value data, string_t token);
 		__declspec(dllexport) User(string id, string_t token);
 		__declspec(dllexport) ~User();
 	};

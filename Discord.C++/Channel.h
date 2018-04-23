@@ -1,10 +1,8 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <cpprest\json.h>
 
-//#include "Logger.h"
-
+#include "DiscordObject.h"
 #include "User.h"
 
 namespace DiscordCPP {
@@ -23,11 +21,8 @@ namespace DiscordCPP {
 		};
 	}
 
-	class Channel {
-	//protected:
-	//	Logger _log;
+	class Channel : public DiscordCPP::DiscordObject {
 	public:
-		string id;	//snowflake
 		int type;
 		int position;
 		//vector<Overwrite *> permission_overwrites;

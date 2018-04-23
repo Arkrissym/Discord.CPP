@@ -1,10 +1,8 @@
 #pragma once
 #include <iostream>
-#include <cpprest\json.h>
+//#include <cpprest\json.h>
 
-//#include "Logger.h"
-
-//#include "snowflake.h"
+#include "DiscordObject.h"
 #include "User.h"
 #include "Channel.h"
 
@@ -27,11 +25,11 @@ namespace DiscordCPP {
 		};
 	}
 
-	class Message {
+	class Message : DiscordObject {
 	//protected:
 	//	Logger _log;
 	public:
-		string id;	//snowflake
+		//string id;	//snowflake
 		Channel *channel = NULL;
 		User *author = NULL;
 		string content;

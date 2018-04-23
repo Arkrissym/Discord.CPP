@@ -1,11 +1,11 @@
 #pragma once
-//#include "Logger.h"
+#include "DiscordObject.h"
 #include "User.h"
 #include "Channel.h"
 #include "Member.h"
 
 #include <iostream>
-#include <cpprest\json.h>
+//#include <cpprest\json.h>
 
 namespace DiscordCPP {
 
@@ -45,11 +45,11 @@ namespace DiscordCPP {
 		};
 	}
 
-	class Guild {
+	class Guild : public DiscordCPP::DiscordObject {
 	//protected:
 	//	Logger _log;
 	public:
-		string id;	//snowflake
+		//string id;	//snowflake
 		string name;
 		string icon;
 		string splash;

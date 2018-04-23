@@ -11,7 +11,7 @@ using namespace std;
 using namespace web::json;
 using namespace utility;
 
-DiscordCPP::Message::Message(value data, string_t token) {
+DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.message");
 
 	if(is_valid_field("id"))
@@ -20,7 +20,7 @@ DiscordCPP::Message::Message(value data, string_t token) {
 	if (is_valid_field("channel_id")) {
 		string url = "/channels/" + conversions::to_utf8string(data.at(U("channel_id")).as_string());
 
-		http_client c(U(API_URL));
+		/*http_client c(U(API_URL));
 		http_request request(methods::GET);
 
 		request.set_request_uri(uri(conversions::to_string_t(url)));
@@ -52,11 +52,23 @@ DiscordCPP::Message::Message(value data, string_t token) {
 		}
 		catch (const std::exception &e) {
 			Logger("discord.message").error("exception in Message constructor: " + string(e.what()));
+		}*/
+
+		value channel_data = api_call(url);
+		switch (channel_data.at(U("type")).as_integer()) {
+		case ChannelType::GUILD_TEXT:
+			channel = (Channel *)new GuildChannel(channel_data, token);
+			break;
+		case ChannelType::GUILD_VOICE:
+			channel = (Channel *)new VoiceChannel(channel_data, token);
+			break;
+		default:
+			channel = new Channel(channel_data, token);
 		}
 	}
 
 	if (is_valid_field("author"))
-		author = new User(data.at(U("author")));
+		author = new User(data.at(U("author")), token);
 
 	if (is_valid_field("content"))
 		content = conversions::to_utf8string(data.at(U("content")).as_string());
@@ -76,7 +88,7 @@ DiscordCPP::Message::Message(value data, string_t token) {
 	if (is_valid_field("mentions")) {
 		web::json::array tmp = data.at(U("mentions")).as_array();
 		for (int i = 0; i < tmp.size(); i++)
-			mentions.push_back(new User(tmp[i]));
+			mentions.push_back(new User(tmp[i], token));
 	}
 
 	//mention_roles
@@ -105,6 +117,7 @@ DiscordCPP::Message::Message(value data, string_t token) {
 
 DiscordCPP::Message::Message(const Message & old) {
 	//_log = old._log;
+	_token = old._token;
 	id = old.id;
 	
 	if (old.channel != NULL) {
@@ -119,7 +132,8 @@ DiscordCPP::Message::Message(const Message & old) {
 		channel = NULL;
 	}
 
-	author = new User(*old.author);
+	if (old.author != NULL)
+		author = new User(*old.author);
 	content = old.content;
 	timestamp = old.timestamp;
 	edited_timestamp = old.edited_timestamp;

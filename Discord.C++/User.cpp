@@ -13,7 +13,7 @@ DiscordCPP::User::User() {
 	//_log.debug("created empty user object");
 }
 
-DiscordCPP::User::User(value data) {
+DiscordCPP::User::User(value data, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.user");
 
 	//_log.debug(conversions::to_utf8string(data.serialize()));
@@ -45,12 +45,12 @@ DiscordCPP::User::User(value data) {
 	//_log.debug("created user object");
 }
 
-DiscordCPP::User::User(string id, string_t token) {
+DiscordCPP::User::User(string id, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.user");
 
 	string url = "/users/" + id;
 
-	http_client c(U(API_URL));
+	/*http_client c(U(API_URL));
 	http_request request(methods::GET);
 
 	request.set_request_uri(uri(conversions::to_string_t(url)));
@@ -63,8 +63,10 @@ DiscordCPP::User::User(string id, string_t token) {
 
 		value data = value::parse(conversions::to_string_t(response_string));
 
-		*this = User(data);
-	}).wait();
+		*this = User(data, _token);
+	}).wait();*/
+
+	*this = User(api_call(url), token);
 }
 
 DiscordCPP::User::~User() {

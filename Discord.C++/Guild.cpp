@@ -11,7 +11,7 @@ using namespace utility;
 using namespace web::http;
 using namespace web::http::client;
 
-DiscordCPP::Guild::Guild(value data, string_t token) {
+DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("dicord.guild");
 
 	if (is_valid_field("id"))
@@ -157,12 +157,12 @@ DiscordCPP::Guild::Guild(value data, string_t token) {
 	//_log.debug("created guild object");
 }
 
-DiscordCPP::Guild::Guild(string id, string_t token) {
+DiscordCPP::Guild::Guild(string id, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.guild");
 
 	string url = "/guilds/" + id;
 
-	http_client c(U(API_URL));
+	/*http_client c(U(API_URL));
 	http_request request(methods::GET);
 
 	request.set_request_uri(uri(conversions::to_string_t(url)));
@@ -176,10 +176,13 @@ DiscordCPP::Guild::Guild(string id, string_t token) {
 		value data = value::parse(conversions::to_string_t(response_string));
 
 		*this = Guild(data, token);
-	}).wait();
+	}).wait();*/
+
+	*this = Guild(api_call(url), token);
 }
 
 DiscordCPP::Guild::Guild(const Guild & old) {
+	_token = old._token;
 	id = old.id;
 	name = old.name;
 	icon = old.icon;

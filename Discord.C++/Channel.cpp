@@ -9,7 +9,7 @@ using namespace utility;
 using namespace web::http;
 using namespace web::http::client;
 
-DiscordCPP::Channel::Channel(value data, string_t token) {
+DiscordCPP::Channel::Channel(value data, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.channel");
 
 	if (is_valid_field("id"))
@@ -36,7 +36,7 @@ DiscordCPP::Channel::Channel(value data, string_t token) {
 		//recipients = new vector<User *>;
 		web::json::array tmp = data.at(U("recipients")).as_array();
 		for (int i = 0; i < tmp.size(); i++)
-			recipients.push_back(new User(tmp[i]));
+			recipients.push_back(new User(tmp[i], token));
 	}
 	
 	if (is_valid_field("icon"))
@@ -56,12 +56,12 @@ DiscordCPP::Channel::Channel(value data, string_t token) {
 	//_log.debug("created channel object");
 }
 
-DiscordCPP::Channel::Channel(string id, string_t token) {
+DiscordCPP::Channel::Channel(string id, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.channel");
 
 	string url = "/channels/" + id;
 
-	http_client c(U(API_URL));
+	/*http_client c(U(API_URL));
 	http_request request(methods::GET);
 
 	request.set_request_uri(uri(conversions::to_string_t(url)));
@@ -82,11 +82,14 @@ DiscordCPP::Channel::Channel(string id, string_t token) {
 	}
 	catch (const std::exception &e) {
 		Logger("discord.channel").error("Error exception: " + string(e.what()));
-	}
+	}*/
+
+	*this = Channel(api_call(url), token);
 }
 
 DiscordCPP::Channel::Channel(const Channel & old) {
 	//_log = old._log;
+	_token = old._token;
 	id = old.id;
 	type = old.type;
 	position = old.position;

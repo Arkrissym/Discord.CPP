@@ -155,7 +155,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 	if (event_name == "READY") {
 		_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
-		_user = new User(data.at(U("user")));
+		_user = new User(data.at(U("user")), _token);
 
 		//_private_channels
 		if (is_valid_field("private_channels")) {

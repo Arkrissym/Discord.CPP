@@ -5,7 +5,7 @@ using namespace std;
 using namespace web::json;
 using namespace utility;
 
-DiscordCPP::Member::Member(value data, string_t token) : User(data.at(U("user"))) {
+DiscordCPP::Member::Member(value data, string_t token) : User(data.at(U("user")), token) {
 	//_log = Logger("dicord.member");
 
 	if (is_valid_field("nick"))

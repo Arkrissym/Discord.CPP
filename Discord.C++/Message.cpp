@@ -11,6 +11,10 @@ using namespace std;
 using namespace web::json;
 using namespace utility;
 
+/**	@param[in]	data	raw JSON data
+	@param[in]	token	discord token for the API
+	@return	Message object
+*/
 DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.message");
 
@@ -19,40 +23,6 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 	
 	if (is_valid_field("channel_id")) {
 		string url = "/channels/" + conversions::to_utf8string(data.at(U("channel_id")).as_string());
-
-		/*http_client c(U(API_URL));
-		http_request request(methods::GET);
-
-		request.set_request_uri(uri(conversions::to_string_t(url)));
-		request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(token)));
-
-		Concurrency::task<Channel *> requestTask = c.request(request).then([this, token](http_response response) {
-			string response_string = response.extract_utf8string().get();
-
-			//_log.debug(response_string);
-
-			value data = value::parse(conversions::to_string_t(response_string));
-
-			//_log.debug(conversions::to_utf8string(data.serialize()));
-
-			if (is_valid_field("bitrate")) {
-				return (Channel *)new VoiceChannel(data, token);
-			}
-			else if (is_valid_field("guild_id")) {
-				return (Channel *)new GuildChannel(data, token);
-			}
-			else {
-				return new Channel(data, token);
-			}
-		});
-
-		try {
-			requestTask.wait();
-			channel = requestTask.get();
-		}
-		catch (const std::exception &e) {
-			Logger("discord.message").error("exception in Message constructor: " + string(e.what()));
-		}*/
 
 		value channel_data = api_call(url);
 		switch (channel_data.at(U("type")).as_integer()) {
@@ -115,6 +85,9 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 	//_log.debug("created message object");
 }
 
+/**	@param[in]	old	Message object to copy
+	@return		copied Message object 
+*/
 DiscordCPP::Message::Message(const Message & old) {
 	//_log = old._log;
 	_token = old._token;

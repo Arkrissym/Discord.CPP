@@ -12,16 +12,20 @@ namespace DiscordCPP {
 	using namespace utility;
 
 	class User : public DiscordCPP::DiscordObject {
-	//protected:
-	//	Logger _log;
 	public:
-		//string id;	//Snowflake
+		///ther user's name
 		string username;
+		///the user's discord-tag
 		string discriminator;
+		///the user's avatar hash
 		string avatar;
+		///true, if the user is a bot
 		bool bot = false;
+		///true, if the user has enabled two factor authentification
 		bool mfa_enabled = false;
+		///true, if the user's email has been verified
 		bool verified = false;
+		///the user's email
 		string email;
 
 		__declspec(dllexport) User();

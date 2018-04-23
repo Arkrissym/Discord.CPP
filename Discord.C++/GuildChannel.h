@@ -12,7 +12,9 @@ namespace DiscordCPP {
 
 	class GuildChannel : public Channel {
 	public:
+		///the guild the channel belongs to
 		Guild * guild = NULL;
+		///the topic of the channel
 		string topic;
 
 		__declspec(dllexport) GuildChannel(value data, string_t token);

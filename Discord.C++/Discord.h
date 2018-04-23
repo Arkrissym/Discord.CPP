@@ -22,14 +22,23 @@ namespace DiscordCPP {
 
 	class Discord {
 	protected:
+		///discord token
 		string_t _token;
+		///websocket blient
 		websocket_callback_client _client;
+		///heartbeat interval in milliseconds
 		int _heartbeat_interval = 0;
+		///current sequence number
 		unsigned int _sequence_number = 0;
+		///session id
 		string _session_id;
+		///the user
 		User *_user;
+		///private channels of the user 
 		vector<Channel *> _private_channels;
+		///the guilds the user is a member
 		vector<Guild *> _guilds;
+		///array of servers connected to
 		vector<string> _trace;
 
 		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();

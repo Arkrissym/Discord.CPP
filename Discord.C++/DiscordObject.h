@@ -12,10 +12,13 @@ namespace DiscordCPP {
 
 	class DiscordObject {
 	protected:
+		///token to authentificate with the discord api
 		string_t _token;
 
+		///helper function to communicate with the http api
 		value api_call(string url, method method = methods::GET, value data = value());
 	public:
+		///the id of the object
 		string id;	//snowflake
 
 		DiscordObject();

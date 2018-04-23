@@ -23,17 +23,28 @@ namespace DiscordCPP {
 
 	class Channel : public DiscordCPP::DiscordObject {
 	public:
+		///the ChannelType of the channel
 		int type;
+		///the sorting position
 		int position;
 		//vector<Overwrite *> permission_overwrites;
+		///the channel's name
 		string name;
+		///true if nsfw is enabled
 		bool nsfw;
+		///the id of the last message
 		string last_message_id;	//snowflake
+		///the recipients if the channel is DM
 		vector<User *> recipients;
+		///the channel's icon hash
 		string icon;
+		///the owner of this DM channel
 		User *owner = NULL;
+		///the application id of the group DM creator if it was bot-created
 		string application_id;	//snowflake
+		///the id of the parent category channel
 		string parent_id;
+		///when the last message was pinned
 		string last_pin_timestamp;	//ISO8601 timestamp
 
 		__declspec(dllexport) Channel(value data, string_t token);

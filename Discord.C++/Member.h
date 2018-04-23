@@ -13,11 +13,15 @@ namespace DiscordCPP {
 
 	class Member : public User {
 	public:
+		///the member's nickname
 		string nick;
 		//vector<Role> roles;
+		///when the member joined the server
 		string joined_at;	//ISO8601 timestamp
-		bool deaf;
-		bool mute;
+		///true, if the member is defeaned
+		bool deaf = false;
+		///true, if the member is muted
+		bool mute = false;
 
 		__declspec(dllexport) Member(value data, string_t token);
 		__declspec(dllexport) Member();

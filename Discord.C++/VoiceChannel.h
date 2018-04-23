@@ -11,7 +11,9 @@ namespace DiscordCPP {
 
 	class VoiceChannel : public GuildChannel	{
 	public:
+		///the channel's bitrate
 		int bitrate;
+		///the channel's user-limit
 		int user_limit;
 
 		__declspec(dllexport) VoiceChannel(value data, string_t token);

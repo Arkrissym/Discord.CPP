@@ -34,16 +34,8 @@ namespace DiscordCPP {
 		bool nsfw;
 		///the id of the last message
 		string last_message_id;	//snowflake
-		///the recipients if the channel is DM
-		vector<User *> recipients;
 		///the channel's icon hash
 		string icon;
-		///the owner of this DM channel
-		User *owner = NULL;
-		///the application id of the group DM creator if it was bot-created
-		string application_id;	//snowflake
-		///the id of the parent category channel
-		string parent_id;
 		///when the last message was pinned
 		string last_pin_timestamp;	//ISO8601 timestamp
 

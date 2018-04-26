@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['manage_5fcache',['manage_cache',['../_discord_object_8cpp.html#a1c8e266efb877708c8533fc1aa428331',1,'DiscordObject.cpp']]],
   ['medium',['MEDIUM',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4a19624218056a732a9da1dd66c56acf68',1,'DiscordCPP::VerificationLevel']]],
   ['member',['Member',['../class_discord_c_p_p_1_1_member.html',1,'DiscordCPP::Member'],['../class_discord_c_p_p_1_1_member.html#a52ea7360aad5a5cd5024b279b87c7c79',1,'DiscordCPP::Member::Member(value data, string_t token)'],['../class_discord_c_p_p_1_1_member.html#a42f700c2e22e2aa5bc9bb5f29807fd72',1,'DiscordCPP::Member::Member()']]],
   ['member_2ecpp',['Member.cpp',['../_member_8cpp.html',1,'']]],

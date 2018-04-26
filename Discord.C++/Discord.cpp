@@ -42,6 +42,11 @@ DiscordCPP::Discord::~Discord() {
 	}
 }
 
+/**	@param[in]	channel	where to send the message
+	@param[in]	message	the message to send
+	@param[in]	tts		wether to send as tts message. defaults to false
+	@return		Message
+*/
 DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string message, bool tts) {
 	string url = "/channels/" + channel->id + "/messages";
 
@@ -62,13 +67,14 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string m
 	Concurrency::task<Message *> requestTask = c.request(request).then([this](http_response response) {
 		log.debug("message sent");
 		
-		string response_string = response.extract_utf8string().get();
+		string_t response_string = response.extract_string().get();
 
-		//log.debug(response_string);
+		//log.debug(conversions::to_utf8string(response_string));
 
-		value response_data = value::parse(conversions::to_string_t(response_string));
+		value response_data = value::parse(response_string);
 		//log.debug(conversions::to_utf8string(response_data.at(U("content")).as_string()));
-		Message *tmp = new Message(response_data, _token);
+		Message *tmp = NULL;
+		tmp = new Message(response_data, _token);
 		return tmp;
 	});
 
@@ -78,6 +84,8 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string m
 	}
 	catch (const std::exception &e) {
 		log.error("Error exception: " + string(e.what()));
+		delete ret;
+		return Message();
 	}
 
 	Message ret_msg = Message(*ret);
@@ -86,10 +94,12 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string m
 	return ret_msg;
 }
 
+///	@param[in]	user	the User
 void DiscordCPP::Discord::on_ready(User user) {
 	log.debug("on_ready");
 }
 
+///	@param[in]	message	the Message that was received
 void DiscordCPP::Discord::on_message(Message message) {
 	log.debug("on_message");
 }
@@ -161,7 +171,7 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 		if (is_valid_field("private_channels")) {
 			web::json::array tmp = data.at(U("private_channels")).as_array();
 			for (int i = 0; i < tmp.size(); i++)
-				_private_channels.push_back(new Channel(tmp[i], _token));
+				_private_channels.push_back(new DMChannel(tmp[i], _token));
 		}
 
 		//_guilds

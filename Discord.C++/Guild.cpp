@@ -2,6 +2,7 @@
 #include "Guild.h"
 #include "GuildChannel.h"
 #include "VoiceChannel.h"
+#include "DMChannel.h"
 
 #include <cpprest\http_client.h>
 
@@ -36,15 +37,8 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 		region = conversions::to_utf8string(data.at(U("region")).as_string());
 
 	if (is_valid_field("afk_channel_id")) {
-		if (is_valid_field("bitrate")) {
-			afk_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
-		}
-		else if (is_valid_field("topic")) {
-			afk_channel = new GuildChannel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
-		}
-		else {
-			afk_channel = new Channel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
-		}
+		//afk_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
+		afk_channel = new Channel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("afk_timeout"))
@@ -54,15 +48,8 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 		embed_enabled = data.at(U("embed_enabled")).as_bool();
 
 	if (is_valid_field("embed_channel_id")) {
-		if (is_valid_field("bitrate")) {
-			embed_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
-		}
-		else if (is_valid_field("topic")) {
-			embed_channel = new GuildChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
-		}
-		else {
-			embed_channel = new Channel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
-		}
+		//embed_channel = new GuildChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
+		embed_channel = new Channel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("verfication_level"))
@@ -94,27 +81,12 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 		widget_enabled = data.at(U("widget_enabled")).as_bool();
 
 	if (is_valid_field("widget_channel_id")) {
-		if (is_valid_field("bitrate")) {
-			widget_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("widget_channel_id")).as_string()), token);
-		}
-		else if (is_valid_field("topic")) {
-			widget_channel = new GuildChannel(conversions::to_utf8string(data.at(U("widget_channel_id")).as_string()), token);
-		}
-		else {
-			widget_channel = new Channel(conversions::to_utf8string(data.at(U("widget_channel_id")).as_string()), token);
-		}
+		widget_channel = new Channel(conversions::to_utf8string(data.at(U("widget_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("system_channel_id")) {
-		if (is_valid_field("bitrate")) {
-			system_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
-		}
-		else if (is_valid_field("topic")) {
-			system_channel = new GuildChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
-		}
-		else {
-			system_channel = new Channel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
-		}
+		//system_channel = new GuildChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
+		system_channel = new Channel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("joined_at"))
@@ -140,15 +112,20 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 	if (is_valid_field("channels")) {
 		web::json::array tmp = data.at(U("channels")).as_array();
 		for (int i = 0; i < tmp.size(); i++) {
-			if ((tmp[i].has_field(U("bitrate"))) && (!tmp[i].at(U("bitrate")).is_null())) {
-				channels.push_back(new VoiceChannel(tmp[i], token));
-			}
-			else if ( (tmp[i].has_field(U("topic"))) && (!tmp[i].at(U("topic")).is_null()) ) {
-				channels.push_back(new GuildChannel(tmp[i], token));
-			}
-			else {
+			//switch (tmp[i].at(U("type")).as_integer()) {
+			//case ChannelType::GUILD_TEXT:
+				//channels.push_back((Channel *)new GuildChannel(tmp[i], token));
+				//break;
+			//case ChannelType::GUILD_VOICE:
+				//channels.push_back((Channel *)new VoiceChannel(tmp[i], token));
+				//break;
+			//case ChannelType::DM:
+			//case ChannelType::GROUP_DM:
+				//channels.push_back((Channel *)new DMChannel(tmp[i], token));
+				//break;
+			//default:
 				channels.push_back(new Channel(tmp[i], token));
-			}
+			//}
 		}
 	}
 
@@ -161,22 +138,6 @@ DiscordCPP::Guild::Guild(string id, string_t token) : DiscordCPP::DiscordObject(
 	//_log = Logger("discord.guild");
 
 	string url = "/guilds/" + id;
-
-	/*http_client c(U(API_URL));
-	http_request request(methods::GET);
-
-	request.set_request_uri(uri(conversions::to_string_t(url)));
-	request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(token)));
-
-	c.request(request).then([this, token](http_response response) {
-		string response_string = response.extract_utf8string().get();
-
-		//_log.debug(response_string);
-
-		value data = value::parse(conversions::to_string_t(response_string));
-
-		*this = Guild(data, token);
-	}).wait();*/
 
 	*this = Guild(api_call(url), token);
 }

@@ -11,7 +11,6 @@ enum Loglevel {
 class Logger {
 protected:
 	std::string _name;
-	Loglevel _level = DEBUG;
 public:
 	__declspec(dllexport) Logger();
 	__declspec(dllexport) ~Logger();

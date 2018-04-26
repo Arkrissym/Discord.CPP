@@ -16,6 +16,8 @@ namespace DiscordCPP {
 		Guild * guild = NULL;
 		///the topic of the channel
 		string topic;
+		///the id of the parent category channel
+		string parent_id;
 
 		__declspec(dllexport) GuildChannel(value data, string_t token);
 		__declspec(dllexport) GuildChannel(string id, string_t token);

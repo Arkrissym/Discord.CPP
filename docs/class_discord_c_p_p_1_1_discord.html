@@ -87,8 +87,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7598035a10f26a46c2650a32a5f8cb6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a7598035a10f26a46c2650a32a5f8cb6f">send_message</a> (<a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a> *channel, string message, bool tts=false)</td></tr>
 <tr class="separator:a7598035a10f26a46c2650a32a5f8cb6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a388f3b9e8658106de3d078d30df6dc6d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a388f3b9e8658106de3d078d30df6dc6d">on_ready</a> (<a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> user)</td></tr>
+<tr class="memdesc:a388f3b9e8658106de3d078d30df6dc6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">called when successfully logged in  <a href="#a388f3b9e8658106de3d078d30df6dc6d">More...</a><br /></td></tr>
 <tr class="separator:a388f3b9e8658106de3d078d30df6dc6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa492a81b01db3db673c012686cf6edd6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#aa492a81b01db3db673c012686cf6edd6">on_message</a> (<a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> message)</td></tr>
+<tr class="memdesc:aa492a81b01db3db673c012686cf6edd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">called when a message was received  <a href="#aa492a81b01db3db673c012686cf6edd6">More...</a><br /></td></tr>
 <tr class="separator:aa492a81b01db3db673c012686cf6edd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -287,6 +289,14 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>called when a message was received </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">message</td><td>the <a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> that was received </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a388f3b9e8658106de3d078d30df6dc6d"></a>
@@ -312,6 +322,14 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>called when successfully logged in </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">user</td><td>the <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -397,6 +415,15 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">channel</td><td>where to send the message </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">message</td><td>the message to send </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">tts</td><td>wether to send as tts message. defaults to false </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> </dd></dl>
 
 </div>
 </div>

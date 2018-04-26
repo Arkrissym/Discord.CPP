@@ -2,6 +2,7 @@
 #include "static.h"
 #include "VoiceChannel.h"
 #include "GuildChannel.h"
+#include "DMChannel.h"
 
 #include <cpprest\http_client.h>
 
@@ -25,12 +26,17 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 		string url = "/channels/" + conversions::to_utf8string(data.at(U("channel_id")).as_string());
 
 		value channel_data = api_call(url);
+		//Logger("discord.message").debug(conversions::to_utf8string(channel_data.serialize()));
 		switch (channel_data.at(U("type")).as_integer()) {
 		case ChannelType::GUILD_TEXT:
 			channel = (Channel *)new GuildChannel(channel_data, token);
 			break;
 		case ChannelType::GUILD_VOICE:
 			channel = (Channel *)new VoiceChannel(channel_data, token);
+			break;
+		case ChannelType::DM:
+		case ChannelType::GROUP_DM:
+			channel = (Channel *)new DMChannel(channel_data, token);
 			break;
 		default:
 			channel = new Channel(channel_data, token);

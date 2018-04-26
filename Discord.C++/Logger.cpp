@@ -2,6 +2,8 @@
 
 using namespace std;
 
+static Loglevel _level = DEBUG;
+
 Logger::Logger() {
 
 }
@@ -16,7 +18,7 @@ Logger::Logger(std::string name) {
 
 Logger::Logger(const Logger & old) {
 	_name = old._name;
-	_level = old._level;
+	//_level = old._level;
 }
 
 void Logger::set_log_level(Loglevel level) {

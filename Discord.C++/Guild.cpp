@@ -1,8 +1,8 @@
 #include "static.h"
 #include "Guild.h"
-#include "GuildChannel.h"
 #include "VoiceChannel.h"
 #include "DMChannel.h"
+#include "TextChannel.h"
 
 #include <cpprest\http_client.h>
 
@@ -37,8 +37,7 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 		region = conversions::to_utf8string(data.at(U("region")).as_string());
 
 	if (is_valid_field("afk_channel_id")) {
-		//afk_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
-		afk_channel = new Channel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
+		afk_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("afk_timeout"))
@@ -49,7 +48,7 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 
 	if (is_valid_field("embed_channel_id")) {
 		//embed_channel = new GuildChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
-		embed_channel = new Channel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
+		embed_channel = new TextChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("verfication_level"))
@@ -86,7 +85,7 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 
 	if (is_valid_field("system_channel_id")) {
 		//system_channel = new GuildChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
-		system_channel = new Channel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
+		system_channel = new TextChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("joined_at"))
@@ -112,20 +111,20 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 	if (is_valid_field("channels")) {
 		web::json::array tmp = data.at(U("channels")).as_array();
 		for (int i = 0; i < tmp.size(); i++) {
-			//switch (tmp[i].at(U("type")).as_integer()) {
-			//case ChannelType::GUILD_TEXT:
-				//channels.push_back((Channel *)new GuildChannel(tmp[i], token));
-				//break;
-			//case ChannelType::GUILD_VOICE:
-				//channels.push_back((Channel *)new VoiceChannel(tmp[i], token));
-				//break;
-			//case ChannelType::DM:
-			//case ChannelType::GROUP_DM:
-				//channels.push_back((Channel *)new DMChannel(tmp[i], token));
-				//break;
-			//default:
+			switch (tmp[i].at(U("type")).as_integer()) {
+			case ChannelType::GUILD_TEXT:
+				channels.push_back((Channel *)new TextChannel(tmp[i], token));
+				break;
+			case ChannelType::GUILD_VOICE:
+				channels.push_back((Channel *)new VoiceChannel(tmp[i], token));
+				break;
+			case ChannelType::DM:
+			case ChannelType::GROUP_DM:
+				channels.push_back((Channel *)new DMChannel(tmp[i], token));
+				break;
+			default:
 				channels.push_back(new Channel(tmp[i], token));
-			//}
+			}
 		}
 	}
 

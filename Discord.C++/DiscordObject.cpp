@@ -38,7 +38,7 @@ Concurrency::task<void> manage_cache() {
 			while(it != cache.end()) {
 				shared_ptr<value> ptr = *it;
 
-				if ((time(0) - ptr->at(U("time")).as_integer()) > 20) {
+				if ((time(0) - ptr->at(U("time")).as_integer()) > 60) {
 					it->reset();
 					it = cache.erase(it);
 
@@ -62,15 +62,10 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data)
 	for (int i = 0; i < cache.size(); i++) {
 		if (conversions::to_utf8string(cache[i]->at(U("url")).as_string()) == url) {
 			if ((time(0) - cache[i]->at(U("time")).as_integer()) > 60) {
-				//delete cache[i];
-				//cache[i].reset();
-				//cache.erase(cache.begin() + i);
-				//i--;
 				Logger("discord.object.api_call").debug("found old data");
 			}
 			else {
 				Logger("discord.object.api_call").debug("using cached result for: " + url);
-				//Logger("discord.object.api_call").debug(conversions::to_utf8string(cache[i]->serialize()));
 				return value(cache[i]->at(U("data")));
 			}
 		}

@@ -5,7 +5,7 @@ using namespace std;
 using namespace web::json;
 using namespace utility;
 
-DiscordCPP::DMChannel::DMChannel(value data, string_t token) : DiscordCPP::Channel(data, token) {
+DiscordCPP::DMChannel::DMChannel(value data, string_t token) : DiscordCPP::TextChannel(data, token) {
 	if (is_valid_field("recipients")) {
 		//recipients = new vector<User *>;
 		web::json::array tmp = data.at(U("recipients")).as_array();
@@ -26,7 +26,7 @@ DiscordCPP::DMChannel::DMChannel(string id, string_t token) {
 	*this = DMChannel(api_call(url), token);
 }
 
-DiscordCPP::DMChannel::DMChannel(const DMChannel & old) : DiscordCPP::Channel(old) {
+DiscordCPP::DMChannel::DMChannel(const DMChannel & old) : DiscordCPP::TextChannel(old) {
 	for (int i = 0; i < old.recipients.size(); i++) {
 		recipients.push_back(new User(*old.recipients[i]));
 	}

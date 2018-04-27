@@ -1,5 +1,5 @@
 #pragma once
-#include "Channel.h"
+#include "TextChannel.h"
 
 namespace DiscordCPP {
 
@@ -7,7 +7,7 @@ namespace DiscordCPP {
 	using namespace web::json;
 	using namespace utility;
 
-	class DMChannel : public Channel {
+	class DMChannel : public TextChannel {
 	public:
 		///the recipients if the channel is DM
 		vector<User *> recipients;

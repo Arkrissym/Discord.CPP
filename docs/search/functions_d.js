@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['voicechannel',['VoiceChannel',['../class_discord_c_p_p_1_1_voice_channel.html#a23278456c4b6b6305f41953a7445e5ba',1,'DiscordCPP::VoiceChannel::VoiceChannel(value data, string_t token)'],['../class_discord_c_p_p_1_1_voice_channel.html#ad0ce7957be7a074e490523127bafb78d',1,'DiscordCPP::VoiceChannel::VoiceChannel(string id, string_t token)'],['../class_discord_c_p_p_1_1_voice_channel.html#a36df0ca123c6c0fc87d824365ac63f7b',1,'DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel &amp;old)'],['../class_discord_c_p_p_1_1_voice_channel.html#acac22a781834e58e48836872bb881cb0',1,'DiscordCPP::VoiceChannel::VoiceChannel()']]]
+  ['user',['User',['../class_discord_c_p_p_1_1_user.html#ad2fa751a66a7d6fb1dc65988adccd57e',1,'DiscordCPP::User::User()'],['../class_discord_c_p_p_1_1_user.html#a70058511fc437893c2f8fa9a88d21d48',1,'DiscordCPP::User::User(value data, string_t token)'],['../class_discord_c_p_p_1_1_user.html#af07cc95329eccfbef2440e1fa33bc0b8',1,'DiscordCPP::User::User(string id, string_t token)']]]
 ];

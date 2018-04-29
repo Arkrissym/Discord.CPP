@@ -47,6 +47,8 @@ namespace DiscordCPP {
 
 		template <class T>
 		__declspec(dllexport) Channel *copy(T obj);
+
+		__declspec(dllexport) operator string() { return name; };
 	};
 
 	template<class T>

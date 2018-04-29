@@ -32,3 +32,10 @@ DiscordCPP::Member::Member() {
 DiscordCPP::Member::~Member() {
 	//_log.debug("destroyed member object");
 }
+
+DiscordCPP::Member::operator string() {
+	if (nick == "")
+		return username;
+	else
+		return nick;
+}

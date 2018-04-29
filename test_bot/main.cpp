@@ -21,7 +21,7 @@ public:
 		}
 		else if (message.content == "?guild") {
 			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				((TextChannel *)message.channel)->send(((GuildChannel *)message.channel)->guild->name);
+				((TextChannel *)message.channel)->send(*((GuildChannel *)message.channel)->guild);
 			}
 			else {
 				((TextChannel *)message.channel)->send("This is not a guild channel.");

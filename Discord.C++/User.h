@@ -32,6 +32,8 @@ namespace DiscordCPP {
 		__declspec(dllexport) User(value data, string_t token);
 		__declspec(dllexport) User(string id, string_t token);
 		__declspec(dllexport) ~User();
+
+		__declspec(dllexport) virtual operator string() { return username; };
 	};
 
 }

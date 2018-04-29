@@ -27,6 +27,7 @@ namespace DiscordCPP {
 		__declspec(dllexport) Member();
 		__declspec(dllexport) ~Member();
 
+		__declspec(dllexport) operator string();
 	};
 
 }

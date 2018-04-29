@@ -46,7 +46,7 @@ DiscordCPP::Discord::~Discord() {
 	@param[in]	message	the message to send
 	@param[in]	tts		wether to send as tts message. defaults to false
 	@return		Message
-*/
+
 DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string message, bool tts) {
 	string url = "/channels/" + channel->id + "/messages";
 
@@ -93,7 +93,7 @@ DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string m
 	
 	return ret_msg;
 }
-
+*/
 ///	@param[in]	user	the User
 void DiscordCPP::Discord::on_ready(User user) {
 	log.debug("on_ready");

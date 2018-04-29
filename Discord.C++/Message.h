@@ -61,6 +61,9 @@ namespace DiscordCPP {
 		__declspec(dllexport) Message(const Message &old);
 		__declspec(dllexport) Message();
 		__declspec(dllexport) ~Message();
+
+		///Edit this message
+		__declspec(dllexport) Message edit(string content);
 	};
 
 }

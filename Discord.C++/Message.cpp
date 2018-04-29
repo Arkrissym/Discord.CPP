@@ -148,3 +148,15 @@ DiscordCPP::Message::~Message() {
 		delete mentions[i];
 	}
 }
+
+/**	@param[in]	content	New message-content.
+	@return		Updated message object.
+*/
+DiscordCPP::Message DiscordCPP::Message::edit(string content) {
+	string url = "/channels/" + channel->id + "/messages/" + id;
+
+	value data;
+	data[U("content")] = value(conversions::to_string_t(content));
+
+	return Message(api_call(url, methods::PATCH, data), _token);
+}

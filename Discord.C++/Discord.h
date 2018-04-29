@@ -53,7 +53,7 @@ namespace DiscordCPP {
 
 		__declspec(dllexport) Discord(string token);
 		__declspec(dllexport) ~Discord();
-		__declspec(dllexport) Message send_message(Channel *channel, string message, bool tts = false);
+		//__declspec(dllexport) Message send_message(Channel *channel, string message, bool tts = false);
 		///called when successfully logged in
 		__declspec(dllexport) virtual void on_ready(User user);
 		///called when a message was received

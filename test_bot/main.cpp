@@ -27,6 +27,11 @@ public:
 				((TextChannel *)message.channel)->send("This is not a guild channel.");
 			}
 		}
+		else if (message.content == "?msgedit") {
+			Message msg = ((TextChannel *)message.channel)->send("New message");
+			Sleep(1);
+			msg.edit("Edited message");
+		}
 	}
 
 	myClient(string token) : Discord(token) {};

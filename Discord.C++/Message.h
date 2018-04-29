@@ -64,6 +64,8 @@ namespace DiscordCPP {
 
 		///Edit this message
 		__declspec(dllexport) Message edit(string content);
+		///Delete this message
+		__declspec(dllexport) void delete_msg();
 	};
 
 }

@@ -160,3 +160,9 @@ DiscordCPP::Message DiscordCPP::Message::edit(string content) {
 
 	return Message(api_call(url, methods::PATCH, data), _token);
 }
+
+void DiscordCPP::Message::delete_msg() {
+	string url = "/channels/" + channel->id + "/messages/" + id;
+	api_call(url, methods::DEL);
+}
+

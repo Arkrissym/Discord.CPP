@@ -42,58 +42,6 @@ DiscordCPP::Discord::~Discord() {
 	}
 }
 
-/**	@param[in]	channel	where to send the message
-	@param[in]	message	the message to send
-	@param[in]	tts		wether to send as tts message. defaults to false
-	@return		Message
-
-DiscordCPP::Message DiscordCPP::Discord::send_message(Channel *channel, string message, bool tts) {
-	string url = "/channels/" + channel->id + "/messages";
-
-	http_client c(U(API_URL));
-	http_request request(methods::POST);
-
-	request.set_request_uri(uri(conversions::to_string_t(url)));
-	request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(_token)));
-
-	value data;
-	data[U("content")] = value(conversions::to_string_t(message));
-	data[U("tts")] = value(tts);
-
-	request.set_body(data);
-
-	Message *ret = NULL;
-	
-	Concurrency::task<Message *> requestTask = c.request(request).then([this](http_response response) {
-		log.debug("message sent");
-		
-		string_t response_string = response.extract_string().get();
-
-		//log.debug(conversions::to_utf8string(response_string));
-
-		value response_data = value::parse(response_string);
-		//log.debug(conversions::to_utf8string(response_data.at(U("content")).as_string()));
-		Message *tmp = NULL;
-		tmp = new Message(response_data, _token);
-		return tmp;
-	});
-
-	try {
-		requestTask.wait();
-		ret = requestTask.get();
-	}
-	catch (const std::exception &e) {
-		log.error("Error exception: " + string(e.what()));
-		delete ret;
-		return Message();
-	}
-
-	Message ret_msg = Message(*ret);
-	delete ret;
-	
-	return ret_msg;
-}
-*/
 ///	@param[in]	user	the User
 void DiscordCPP::Discord::on_ready(User user) {
 	log.debug("on_ready");

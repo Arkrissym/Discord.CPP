@@ -29,8 +29,14 @@ public:
 		}
 		else if (message.content == "?msgedit") {
 			Message msg = ((TextChannel *)message.channel)->send("New message");
-			Sleep(1);
+			Sleep(1000);
 			msg.edit("Edited message");
+		}
+		else if (message.content == "?msgdel") {
+			Message msg = ((TextChannel *)message.channel)->send("Message will be deleted in 5 seconds.");
+			Sleep(5000);
+			msg.delete_msg();
+			message.delete_msg();
 		}
 	}
 

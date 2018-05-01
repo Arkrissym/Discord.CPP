@@ -26,7 +26,7 @@ DiscordCPP::VoiceChannel::VoiceChannel(string id, string_t token) {
 	//_log = Logger("discord.voicechannel");
 
 	string url = "/channels/" + id;
-
+	_token = token;
 	*this = VoiceChannel(api_call(url), token);
 }
 

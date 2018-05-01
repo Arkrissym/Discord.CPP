@@ -23,7 +23,7 @@ DiscordCPP::GuildChannel::GuildChannel(string id, string_t token) {
 	//_log = Logger("discord.guildchannel");
 
 	string url = "/channels/" + id;
-
+	_token = token;
 	*this = GuildChannel(api_call(url), token);
 }
 

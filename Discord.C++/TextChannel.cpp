@@ -12,6 +12,7 @@ DiscordCPP::TextChannel::TextChannel(value data, string_t token) : DiscordCPP::C
 
 DiscordCPP::TextChannel::TextChannel(string id, string_t token) {
 	string url = "/channels/" + id; 
+	_token = token;
 	*this = TextChannel(api_call(url), token);
 }
 

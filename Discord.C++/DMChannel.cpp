@@ -22,7 +22,7 @@ DiscordCPP::DMChannel::DMChannel(value data, string_t token) : DiscordCPP::TextC
 
 DiscordCPP::DMChannel::DMChannel(string id, string_t token) {
 	string url = "/channels/" + id;
-
+	_token = token;
 	*this = DMChannel(api_call(url), token);
 }
 

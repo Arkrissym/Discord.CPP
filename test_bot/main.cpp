@@ -15,7 +15,6 @@ public:
 		//log.info(message.author->username + "\" sent " + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
 		
 		if (message.content.compare("?hello") == 0) {
-			//Message msg = send_message(message.channel, "Hello world!");
 			Message msg = ((TextChannel *)message.channel)->send("Hello World!");
 			log.info("message sent (id: " + msg.channel->id + ")");
 		}

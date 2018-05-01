@@ -122,5 +122,9 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data)
 		}
 	} while (code == 429);
 
+	if (code == 401) {
+		throw std::exception("Unauthorized API call");
+	}
+
 	return ret;
 }

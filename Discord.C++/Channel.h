@@ -45,9 +45,13 @@ namespace DiscordCPP {
 		__declspec(dllexport) Channel();
 		__declspec(dllexport) ~Channel();
 
+		///Delete this channel
+		__declspec(dllexport) void delete_channel();
+
 		template <class T>
 		__declspec(dllexport) Channel *copy(T obj);
 
+		///@return Channelname as std::string
 		__declspec(dllexport) operator string() { return name; };
 	};
 

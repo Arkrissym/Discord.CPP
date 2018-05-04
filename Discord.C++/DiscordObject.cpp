@@ -3,8 +3,6 @@
 #include "Logger.h"
 
 #include <chrono>
-//#include <time.h>
-//#include <Windows.h>
 
 using namespace std;
 using namespace web::json;
@@ -59,23 +57,26 @@ Concurrency::task<void> manage_cache() {
 	@param[in]	data	(optional) JSON data to send
 */
 value DiscordCPP::DiscordObject::api_call(string url, method method, value data) {
-	for (int i = 0; i < cache.size(); i++) {
-		if (conversions::to_utf8string(cache[i]->at(U("url")).as_string()) == url) {
-			if ((time(0) - cache[i]->at(U("time")).as_integer()) > 60) {
-				Logger("discord.object.api_call").debug("found old data");
-			}
-			else {
-				Logger("discord.object.api_call").debug("using cached result for: " + url);
-				return value(cache[i]->at(U("data")));
+	if (method == methods::GET) {
+		for (int i = 0; i < cache.size(); i++) {
+			if (conversions::to_utf8string(cache[i]->at(U("url")).as_string()) == url) {
+				if ((time(0) - cache[i]->at(U("time")).as_integer()) > 60) {
+					Logger("discord.object.api_call").debug("found old data");
+				}
+				else {
+					Logger("discord.object.api_call").debug("using cached result for: " + url);
+					return value(cache[i]->at(U("data")));
+				}
 			}
 		}
 	}
-	
+
 	http_client c(U(API_URL));
 	http_request request(method);
 
 	request.set_request_uri(uri(conversions::to_string_t(url)));
 	request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(_token)));
+	request.headers().add(U("User-Agent"), conversions::to_string_t("DiscordBot (github.com/Arkrissym/Discord.CPP, " + string(VERSION) + ")"));
 
 	if ((method != methods::GET) && (method != methods::HEAD))
 		request.set_body(data);
@@ -110,12 +111,11 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data)
 			//cache.push_back(new value(tmp));
 			cache.push_back(make_shared<value>(tmp));
 
-			Logger("discord.object.api_call").debug("caching object");
-			
+			Logger("discord.object.api_call").debug("caching object");	
 		}
 
 		if (code == 429) {
-			Logger("discord.object.api_call").debug("Timeout. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
+			Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
 
 			//Sleep(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()));
 			this_thread::sleep_for(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str())));
@@ -123,7 +123,13 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data)
 	} while (code == 429);
 
 	if (code == 401) {
-		throw std::exception("Unauthorized API call");
+		throw std::exception("Unauthorized API call(401)");
+	}
+	else if (code == 403) {
+		throw std::exception("Permission denied(403)");
+	}
+	else if (code == 500) {
+		throw std::exception("Server error(500)");
 	}
 
 	return ret;

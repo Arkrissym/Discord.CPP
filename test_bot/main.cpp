@@ -37,6 +37,9 @@ public:
 			msg.delete_msg();
 			message.delete_msg();
 		}
+		else if (message.content == "?chdel") {
+			message.channel->delete_channel();
+		}
 	}
 
 	myClient(string token) : Discord(token) {};

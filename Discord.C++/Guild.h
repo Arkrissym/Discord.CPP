@@ -109,6 +109,7 @@ namespace DiscordCPP {
 		__declspec(dllexport) Guild();
 		__declspec(dllexport) ~Guild();
 
+		///@return Guildname as std::string
 		__declspec(dllexport) operator string() { return name; };
 	};
 

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['edit',['edit',['../class_discord_c_p_p_1_1_message.html#a83a63a65d216bb1045d92f17cc36fe25',1,'DiscordCPP::Message']]],
   ['edited_5ftimestamp',['edited_timestamp',['../class_discord_c_p_p_1_1_message.html#a7fd844c0cb703f32e9a85be17758aad9',1,'DiscordCPP::Message']]],
   ['elevated',['ELEVATED',['../namespace_discord_c_p_p_1_1_m_f_a_level.html#af2e68d7f818558e80e74879712909d42adad0cf623a0f6ebb44dd968e1ebea0ac',1,'DiscordCPP::MFALevel']]],
   ['email',['email',['../class_discord_c_p_p_1_1_user.html#a595c57ecd8e6aea818a76f8403a2113c',1,'DiscordCPP::User']]],

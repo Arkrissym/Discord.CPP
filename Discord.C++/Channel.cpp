@@ -81,3 +81,9 @@ DiscordCPP::Channel::~Channel() {
 
 	//overwrites
 }
+
+void DiscordCPP::Channel::delete_channel() {
+	string url = "/channels/" + id;
+
+	api_call(url, methods::DEL);
+}

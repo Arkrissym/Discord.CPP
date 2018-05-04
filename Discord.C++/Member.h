@@ -27,6 +27,7 @@ namespace DiscordCPP {
 		__declspec(dllexport) Member();
 		__declspec(dllexport) ~Member();
 
+		///@return Nickname (Username if not present) as std::string
 		__declspec(dllexport) operator string();
 	};
 

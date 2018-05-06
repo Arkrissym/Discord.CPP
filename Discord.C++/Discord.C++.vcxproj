@@ -123,6 +123,7 @@
     <ClCompile Include="Discord.cpp" />
     <ClCompile Include="DiscordObject.cpp" />
     <ClCompile Include="DMChannel.cpp" />
+    <ClCompile Include="Embed.cpp" />
     <ClCompile Include="Guild.cpp" />
     <ClCompile Include="GuildChannel.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="Discord.h" />
     <ClInclude Include="DiscordObject.h" />
     <ClInclude Include="DMChannel.h" />
+    <ClInclude Include="Embed.h" />
     <ClInclude Include="Guild.h" />
     <ClInclude Include="GuildChannel.h" />
     <ClInclude Include="Logger.h" />

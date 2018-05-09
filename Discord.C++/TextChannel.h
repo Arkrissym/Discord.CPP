@@ -1,6 +1,7 @@
 #pragma once
 #include "Channel.h"
 #include "Message.h"
+#include "Embed.h"
 
 #include <cpprest\json.h>
 
@@ -23,6 +24,7 @@ namespace DiscordCPP {
 
 		///Send a message to this channel.
 		__declspec(dllexport) Message send(string content, bool tts=false);
+		__declspec(dllexport) Message send(Embed embed);
 	};
 
 }

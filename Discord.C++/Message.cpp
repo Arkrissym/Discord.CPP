@@ -71,7 +71,12 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 
 	//attachements
 
-	//embeds
+	if (is_valid_field("embeds")) {
+		web::json::array tmp = data.at(U("embeds")).as_array();
+		for (int i = 0; i < tmp.size(); i++) {
+			embeds.push_back(new Embed(tmp[i]));
+		}
+	}
 
 	//reactions
 
@@ -146,6 +151,9 @@ DiscordCPP::Message::~Message() {
 	delete author;
 	for (int i = 0; i < mentions.size(); i++) {
 		delete mentions[i];
+	}
+	for (int i = 0; i < embeds.size(); i++) {
+		delete embeds[i];
 	}
 }
 

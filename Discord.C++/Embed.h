@@ -1,10 +1,12 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <cpprest\json.h>
 
 namespace DiscordCPP {
 
 	using namespace std;
+	using namespace web::json;
 
 	class Embed {
 	protected:
@@ -13,7 +15,7 @@ namespace DiscordCPP {
 		string _type;
 		string _url;
 		string _timestamp;	//ISO8601
-		int _color;
+		int _color = 0;
 		struct Footer {
 			string text;
 			string icon_url;
@@ -47,8 +49,19 @@ namespace DiscordCPP {
 		};
 		vector<Field> _fields;
 	public:
-		Embed();
-		~Embed();
+		__declspec(dllexport) Embed(string title, string description = "");
+		__declspec(dllexport) Embed(value data);
+		__declspec(dllexport) ~Embed();
+
+		__declspec(dllexport) void set_color(int color);
+		__declspec(dllexport) void add_field(string name, string value, bool Inline = true);
+		__declspec(dllexport) void set_author(string name, string url="", string icon_url="");
+		__declspec(dllexport) void set_footer(string text, string icon_url = "");
+		__declspec(dllexport) void set_image(string url);
+		__declspec(dllexport) void set_thumbnail(string url);
+		__declspec(dllexport) void set_video(string url);
+
+		__declspec(dllexport) value to_json();
 	};
 
 }

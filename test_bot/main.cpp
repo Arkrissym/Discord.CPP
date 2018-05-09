@@ -40,6 +40,22 @@ public:
 		else if (message.content == "?chdel") {
 			message.channel->delete_channel();
 		}
+		else if (message.content == "?embed") {
+			Embed embed = Embed("Embed", "description");
+
+			embed.set_color(0x00ff00);
+			embed.set_author("TestBot", "github.com");
+			embed.set_footer("Footer");
+
+			for (int i = 0; i < 4; i++) {
+				embed.add_field("Field", to_string(i));
+			}
+			for (int i = 4; i < 7; i++) {
+				embed.add_field("Field", to_string(i), false);
+			}
+
+			((TextChannel *)message.channel)->send(embed);
+		}
 	}
 
 	myClient(string token) : Discord(token) {};

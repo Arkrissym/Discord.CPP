@@ -4,6 +4,7 @@
 #include "DiscordObject.h"
 #include "User.h"
 #include "Channel.h"
+#include "Embed.h"
 
 namespace DiscordCPP {
 
@@ -46,7 +47,8 @@ namespace DiscordCPP {
 		vector<User *> mentions;
 		//vector<Role> mention_roles;
 		//vector<Attachments> attachments;
-		//vector<Embed> embeds;
+		///Array of embeds
+		vector<Embed *> embeds;
 		//vector<Reaction> reactions;
 		///true, if this message has been pinned
 		bool pinned;

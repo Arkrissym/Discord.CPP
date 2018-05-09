@@ -12,6 +12,7 @@
 #include "VoiceChannel.h"
 #include "DMChannel.h"
 #include "Guild.h"
+#include "Embed.h"
 
 namespace DiscordCPP {
 

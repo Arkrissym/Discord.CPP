@@ -41,3 +41,14 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(string content, bool tts) {
 
 	return Message(api_call(url, methods::POST, data), _token);
 }
+
+/**	@param[in]	embed	The Embed to send.
+	@return	The message that was sent.
+*/
+DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
+	string url = "/channels/" + id + "/messages";
+
+	value data;
+	data[U("embed")] = embed.to_json();
+	return Message(api_call(url, methods::POST, data), _token);
+}

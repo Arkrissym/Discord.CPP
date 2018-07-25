@@ -29,17 +29,14 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 		//Logger("discord.message").debug(conversions::to_utf8string(channel_data.serialize()));
 		switch (channel_data.at(U("type")).as_integer()) {
 		case ChannelType::GUILD_TEXT:
-			channel = (Channel *)new GuildChannel(channel_data, token);
-			break;
-		case ChannelType::GUILD_VOICE:
-			channel = (Channel *)new VoiceChannel(channel_data, token);
+			channel = (TextChannel *)new GuildChannel(channel_data, token);
 			break;
 		case ChannelType::DM:
 		case ChannelType::GROUP_DM:
-			channel = (Channel *)new DMChannel(channel_data, token);
+			channel = (TextChannel *)new DMChannel(channel_data, token);
 			break;
 		default:
-			channel = new Channel(channel_data, token);
+			channel = new TextChannel(channel_data, token);
 		}
 	}
 
@@ -106,7 +103,7 @@ DiscordCPP::Message::Message(const Message & old) {
 	
 	if (old.channel != NULL) {
 		try {
-			channel = old.channel->copy(*old.channel);
+			channel = (TextChannel *)old.channel->copy(*old.channel);
 		}
 		catch (std::exception &e) {
 			Logger("discord.message").error("Error in channel copy: " + string(e.what()));
@@ -173,4 +170,3 @@ void DiscordCPP::Message::delete_msg() {
 	string url = "/channels/" + channel->id + "/messages/" + id;
 	api_call(url, methods::DEL);
 }
-

@@ -3,7 +3,7 @@
 
 #include "DiscordObject.h"
 #include "User.h"
-#include "Channel.h"
+#include "TextChannel.h"
 #include "Embed.h"
 
 namespace DiscordCPP {
@@ -28,7 +28,7 @@ namespace DiscordCPP {
 	class Message : DiscordObject {
 	public:
 		///the channel the message was sent in
-		Channel *channel = NULL;
+		TextChannel *channel = NULL;
 		///The author of this message
 		User *author = NULL;
 		///The content of this message

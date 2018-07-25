@@ -15,7 +15,7 @@ namespace DiscordCPP {
 		string _type;
 		string _url;
 		string _timestamp;	//ISO8601
-		int _color = 0;
+		int _color = -1;
 		struct Footer {
 			string text;
 			string icon_url;
@@ -49,7 +49,7 @@ namespace DiscordCPP {
 		};
 		vector<Field> _fields;
 	public:
-		__declspec(dllexport) Embed(string title, string description = "");
+		__declspec(dllexport) Embed(string title="", string description = "");
 		__declspec(dllexport) Embed(value data);
 		__declspec(dllexport) ~Embed();
 
@@ -57,6 +57,7 @@ namespace DiscordCPP {
 		__declspec(dllexport) void add_field(string name, string value, bool Inline = true);
 		__declspec(dllexport) void set_author(string name, string url="", string icon_url="");
 		__declspec(dllexport) void set_footer(string text, string icon_url = "");
+		__declspec(dllexport) void set_provider(string name, string url = "");
 		__declspec(dllexport) void set_image(string url);
 		__declspec(dllexport) void set_thumbnail(string url);
 		__declspec(dllexport) void set_video(string url);

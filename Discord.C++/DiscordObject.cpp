@@ -52,11 +52,12 @@ Concurrency::task<void> manage_cache() {
 	});
 }
 
-/**	@param[in]	url		Relative url
-	@param[in]	method	(optional) Method of the http request. Default is GET.
-	@param[in]	data	(optional) JSON data to send
+/**	@param[in]	url				Relative url
+	@param[in]	method			(optional) Method of the http request. Default is GET.
+	@param[in]	data			(optional) JSON data to send
+	@param[in]	content_type	(optional) the Content-Type of data
 */
-value DiscordCPP::DiscordObject::api_call(string url, method method, value data) {
+value DiscordCPP::DiscordObject::api_call(string url, method method, value data, string content_type) {
 	if (method == methods::GET) {
 		for (int i = 0; i < cache.size(); i++) {
 			if (conversions::to_utf8string(cache[i]->at(U("url")).as_string()) == url) {
@@ -77,6 +78,8 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data)
 	request.set_request_uri(uri(conversions::to_string_t(url)));
 	request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(_token)));
 	request.headers().add(U("User-Agent"), conversions::to_string_t("DiscordBot (github.com/Arkrissym/Discord.CPP, " + string(VERSION) + ")"));
+	if (content_type != "")
+		request.headers().set_content_type(conversions::to_string_t(content_type));
 
 	if ((method != methods::GET) && (method != methods::HEAD))
 		request.set_body(data);
@@ -122,14 +125,11 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data)
 		}
 	} while (code == 429);
 
-	if (code == 401) {
-		throw std::exception("Unauthorized API call(401)");
-	}
-	else if (code == 403) {
-		throw std::exception("Permission denied(403)");
-	}
-	else if (code == 500) {
-		throw std::exception("Server error(500)");
+	switch (code) {
+		case 400: throw exception("Malformed/Invalid API call(400)");
+		case 401: throw exception("Unauthorized API call(401)");
+		case 403: throw exception("Permission denied(403)");
+		case 500: throw exception("Server error(500)");
 	}
 
 	return ret;

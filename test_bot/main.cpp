@@ -44,8 +44,11 @@ public:
 			Embed embed = Embed("Embed", "description");
 
 			embed.set_color(0x00ff00);
-			embed.set_author("TestBot", "github.com");
-			embed.set_footer("Footer");
+			embed.set_author("TestBot", "https://github.com", "https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
+			embed.set_footer("Footer", "https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
+			embed.set_thumbnail("https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
+			embed.set_image("https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
+			embed.set_provider("Provider", "https://github.com");
 
 			for (int i = 0; i < 4; i++) {
 				embed.add_field("Field", to_string(i));
@@ -53,7 +56,7 @@ public:
 			for (int i = 4; i < 7; i++) {
 				embed.add_field("Field", to_string(i), false);
 			}
-
+			
 			((TextChannel *)message.channel)->send(embed);
 		}
 	}

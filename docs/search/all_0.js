@@ -1,13 +1,26 @@
 var searchData=
 [
+  ['_5fauthor',['_author',['../class_discord_c_p_p_1_1_embed.html#a1dde387b47838f5fa514c6e74591e04c',1,'DiscordCPP::Embed']]],
   ['_5fclient',['_client',['../class_discord_c_p_p_1_1_discord.html#a623f2c3017bc6facc92b6f5d669c8bc5',1,'DiscordCPP::Discord']]],
+  ['_5fcolor',['_color',['../class_discord_c_p_p_1_1_embed.html#ab2ead45b38abac9a386988bd485056a9',1,'DiscordCPP::Embed']]],
+  ['_5fdescription',['_description',['../class_discord_c_p_p_1_1_embed.html#ac30fad77ef7770f04c6f4968ea314fd3',1,'DiscordCPP::Embed']]],
+  ['_5ffields',['_fields',['../class_discord_c_p_p_1_1_embed.html#adc974f894bfecee399f9173efb6fb432',1,'DiscordCPP::Embed']]],
+  ['_5ffooter',['_footer',['../class_discord_c_p_p_1_1_embed.html#af46f547618285f798cec8ff0984f8a0c',1,'DiscordCPP::Embed']]],
   ['_5fguilds',['_guilds',['../class_discord_c_p_p_1_1_discord.html#a2d54f2717a8ebcc4448f129d15431fb3',1,'DiscordCPP::Discord']]],
   ['_5fheartbeat_5finterval',['_heartbeat_interval',['../class_discord_c_p_p_1_1_discord.html#a7c8ccfb9cf3ee3df12fe373d9431a5c1',1,'DiscordCPP::Discord']]],
+  ['_5fimage',['_image',['../class_discord_c_p_p_1_1_embed.html#a5f376d9eb36e7195257161822dcf381d',1,'DiscordCPP::Embed']]],
   ['_5fname',['_name',['../class_logger.html#af050fc8c757429af3e17f336339af136',1,'Logger']]],
   ['_5fprivate_5fchannels',['_private_channels',['../class_discord_c_p_p_1_1_discord.html#a3e6e122a170adaecd4af5da8a91b146a',1,'DiscordCPP::Discord']]],
+  ['_5fprovider',['_provider',['../class_discord_c_p_p_1_1_embed.html#aec81744679a78ee458cfc88b7e8e70d5',1,'DiscordCPP::Embed']]],
   ['_5fsequence_5fnumber',['_sequence_number',['../class_discord_c_p_p_1_1_discord.html#a8f5ec7d8cbc3b0a62a1c4b61c0e1c911',1,'DiscordCPP::Discord']]],
   ['_5fsession_5fid',['_session_id',['../class_discord_c_p_p_1_1_discord.html#acabc8d0799ed5877682550ff94dac2b2',1,'DiscordCPP::Discord']]],
+  ['_5fthumbnail',['_thumbnail',['../class_discord_c_p_p_1_1_embed.html#aa9519cb3915a1bb5abe6e20a272e0e30',1,'DiscordCPP::Embed']]],
+  ['_5ftimestamp',['_timestamp',['../class_discord_c_p_p_1_1_embed.html#a02a1d6b362e9f0d5a6cc7a42f99061c0',1,'DiscordCPP::Embed']]],
+  ['_5ftitle',['_title',['../class_discord_c_p_p_1_1_embed.html#abc5d1df80ee98797b83fdbb9542ce5fd',1,'DiscordCPP::Embed']]],
   ['_5ftoken',['_token',['../class_discord_c_p_p_1_1_discord.html#a15d9dadd6b1551e335b1984007e4d248',1,'DiscordCPP::Discord::_token()'],['../class_discord_c_p_p_1_1_discord_object.html#a865d607b61a7a138272de9e1be4e6958',1,'DiscordCPP::DiscordObject::_token()']]],
   ['_5ftrace',['_trace',['../class_discord_c_p_p_1_1_discord.html#a43d1af50c0a9c3cd353992917f08197c',1,'DiscordCPP::Discord']]],
-  ['_5fuser',['_user',['../class_discord_c_p_p_1_1_discord.html#aaa6c48ecf3243535a5c815335a88c9df',1,'DiscordCPP::Discord']]]
+  ['_5ftype',['_type',['../class_discord_c_p_p_1_1_embed.html#a583446dcbd4a59451d1fa56ce74a7ca4',1,'DiscordCPP::Embed']]],
+  ['_5furl',['_url',['../class_discord_c_p_p_1_1_embed.html#a08eef9ffd7e4846f301f527e325469e7',1,'DiscordCPP::Embed']]],
+  ['_5fuser',['_user',['../class_discord_c_p_p_1_1_discord.html#aaa6c48ecf3243535a5c815335a88c9df',1,'DiscordCPP::Discord']]],
+  ['_5fvideo',['_video',['../class_discord_c_p_p_1_1_embed.html#a0eb74263f06ebed1ed8565acbdc6bfd7',1,'DiscordCPP::Embed']]]
 ];

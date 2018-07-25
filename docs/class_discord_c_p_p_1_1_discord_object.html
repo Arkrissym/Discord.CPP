@@ -110,9 +110,9 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:aace907a080dc0d7cd14f7ad05a929ef6"><td class="memItemLeft" align="right" valign="top">value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_object.html#aace907a080dc0d7cd14f7ad05a929ef6">api_call</a> (string url, method method=methods::GET, value data=value())</td></tr>
-<tr class="memdesc:aace907a080dc0d7cd14f7ad05a929ef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function to communicate with the http api  <a href="#aace907a080dc0d7cd14f7ad05a929ef6">More...</a><br /></td></tr>
-<tr class="separator:aace907a080dc0d7cd14f7ad05a929ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad535b9522048f15076c20aa7fd50e301"><td class="memItemLeft" align="right" valign="top">value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_object.html#ad535b9522048f15076c20aa7fd50e301">api_call</a> (string url, method method=methods::GET, value data=value(), string content_type=&quot;&quot;)</td></tr>
+<tr class="memdesc:ad535b9522048f15076c20aa7fd50e301"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper function to communicate with the http api  <a href="#ad535b9522048f15076c20aa7fd50e301">More...</a><br /></td></tr>
+<tr class="separator:ad535b9522048f15076c20aa7fd50e301"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -163,8 +163,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aace907a080dc0d7cd14f7ad05a929ef6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aace907a080dc0d7cd14f7ad05a929ef6">&#9670;&nbsp;</a></span>api_call()</h2>
+<a id="ad535b9522048f15076c20aa7fd50e301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad535b9522048f15076c20aa7fd50e301">&#9670;&nbsp;</a></span>api_call()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,7 +188,13 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">value&#160;</td>
-          <td class="paramname"><em>data</em> = <code>value()</code>&#160;</td>
+          <td class="paramname"><em>data</em> = <code>value()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>content_type</em> = <code>&quot;&quot;</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -209,6 +215,7 @@ Protected Attributes</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">url</td><td>Relative url </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">method</td><td>(optional) Method of the http request. Default is GET. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>(optional) JSON data to send </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">content_type</td><td>(optional) the Content-Type of data </td></tr>
   </table>
   </dd>
 </dl>

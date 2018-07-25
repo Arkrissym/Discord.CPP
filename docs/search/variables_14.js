@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['webhook_5fid',['webhook_id',['../class_discord_c_p_p_1_1_message.html#af68fb714fdccd9c85846e5da6e0a18bd',1,'DiscordCPP::Message']]],
-  ['widget_5fchannel',['widget_channel',['../class_discord_c_p_p_1_1_guild.html#a8e743c8d2f6d7c9925b2c74b7bf42e03',1,'DiscordCPP::Guild']]],
-  ['widget_5fenabled',['widget_enabled',['../class_discord_c_p_p_1_1_guild.html#a64729c8024077e823479009b76363dc2',1,'DiscordCPP::Guild']]]
+  ['value',['value',['../struct_discord_c_p_p_1_1_embed_1_1_field.html#ac8122f5840acb8eb4f5b7392bb5e21f3',1,'DiscordCPP::Embed::Field']]],
+  ['verification_5flevel',['verification_level',['../class_discord_c_p_p_1_1_guild.html#ab98c94afe973fc7c783c5ccdef6949ce',1,'DiscordCPP::Guild']]],
+  ['verified',['verified',['../class_discord_c_p_p_1_1_user.html#a93fb017f3d3065dc15c6f7ca9c7d9b49',1,'DiscordCPP::User']]]
 ];

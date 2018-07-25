@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['member_2ecpp',['Member.cpp',['../_member_8cpp.html',1,'']]],
-  ['member_2eh',['Member.h',['../_member_8h.html',1,'']]],
-  ['message_2ecpp',['Message.cpp',['../_message_8cpp.html',1,'']]],
-  ['message_2eh',['Message.h',['../_message_8h.html',1,'']]]
+  ['logger_2ecpp',['Logger.cpp',['../_logger_8cpp.html',1,'']]],
+  ['logger_2eh',['Logger.h',['../_logger_8h.html',1,'']]]
 ];

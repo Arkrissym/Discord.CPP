@@ -104,9 +104,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:afc0be2e78ec8c7f7bef6b50c28a94253"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_message.html#afc0be2e78ec8c7f7bef6b50c28a94253">channel</a> = NULL</td></tr>
-<tr class="memdesc:afc0be2e78ec8c7f7bef6b50c28a94253"><td class="mdescLeft">&#160;</td><td class="mdescRight">the channel the message was sent in  <a href="#afc0be2e78ec8c7f7bef6b50c28a94253">More...</a><br /></td></tr>
-<tr class="separator:afc0be2e78ec8c7f7bef6b50c28a94253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a844fd68ac98cb30a41a82d61503a70b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_text_channel.html">TextChannel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_message.html#a844fd68ac98cb30a41a82d61503a70b6">channel</a> = NULL</td></tr>
+<tr class="memdesc:a844fd68ac98cb30a41a82d61503a70b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">the channel the message was sent in  <a href="#a844fd68ac98cb30a41a82d61503a70b6">More...</a><br /></td></tr>
+<tr class="separator:a844fd68ac98cb30a41a82d61503a70b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10f4283ffb9753019cda51a177e71b27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_message.html#a10f4283ffb9753019cda51a177e71b27">author</a> = NULL</td></tr>
 <tr class="memdesc:a10f4283ffb9753019cda51a177e71b27"><td class="mdescLeft">&#160;</td><td class="mdescRight">The author of this message.  <a href="#a10f4283ffb9753019cda51a177e71b27">More...</a><br /></td></tr>
 <tr class="separator:a10f4283ffb9753019cda51a177e71b27"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,6 +128,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a68a3c7cb7dcc025b826e2befcd8c4c9d"><td class="memItemLeft" align="right" valign="top">vector&lt; <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_message.html#a68a3c7cb7dcc025b826e2befcd8c4c9d">mentions</a></td></tr>
 <tr class="memdesc:a68a3c7cb7dcc025b826e2befcd8c4c9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">array of mentioned users  <a href="#a68a3c7cb7dcc025b826e2befcd8c4c9d">More...</a><br /></td></tr>
 <tr class="separator:a68a3c7cb7dcc025b826e2befcd8c4c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9188f067282d5d3768b7f175ea1656ec"><td class="memItemLeft" align="right" valign="top">vector&lt; <a class="el" href="class_discord_c_p_p_1_1_embed.html">Embed</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_message.html#a9188f067282d5d3768b7f175ea1656ec">embeds</a></td></tr>
+<tr class="memdesc:a9188f067282d5d3768b7f175ea1656ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of embeds.  <a href="#a9188f067282d5d3768b7f175ea1656ec">More...</a><br /></td></tr>
+<tr class="separator:a9188f067282d5d3768b7f175ea1656ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30c397fd5102155f3582c7bb2ac781ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_message.html#a30c397fd5102155f3582c7bb2ac781ee">pinned</a></td></tr>
 <tr class="memdesc:a30c397fd5102155f3582c7bb2ac781ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">true, if this message has been pinned  <a href="#a30c397fd5102155f3582c7bb2ac781ee">More...</a><br /></td></tr>
 <tr class="separator:a30c397fd5102155f3582c7bb2ac781ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -298,14 +301,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="afc0be2e78ec8c7f7bef6b50c28a94253"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc0be2e78ec8c7f7bef6b50c28a94253">&#9670;&nbsp;</a></span>channel</h2>
+<a id="a844fd68ac98cb30a41a82d61503a70b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a844fd68ac98cb30a41a82d61503a70b6">&#9670;&nbsp;</a></span>channel</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a>* DiscordCPP::Message::channel = NULL</td>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_text_channel.html">TextChannel</a>* DiscordCPP::Message::channel = NULL</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -343,6 +346,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>when the message was edited </p>
+
+</div>
+</div>
+<a id="a9188f067282d5d3768b7f175ea1656ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9188f067282d5d3768b7f175ea1656ec">&#9670;&nbsp;</a></span>embeds</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;<a class="el" href="class_discord_c_p_p_1_1_embed.html">Embed</a> *&gt; DiscordCPP::Message::embeds</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Array of embeds. </p>
 
 </div>
 </div>

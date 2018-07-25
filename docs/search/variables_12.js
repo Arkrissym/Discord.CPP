@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['unavailable',['unavailable',['../class_discord_c_p_p_1_1_guild.html#a8c492711c75fb6ed3a5654ec38e4dbfb',1,'DiscordCPP::Guild']]],
-  ['user_5flimit',['user_limit',['../class_discord_c_p_p_1_1_voice_channel.html#aecc25012bd7a734c171c17295c835b08',1,'DiscordCPP::VoiceChannel']]],
-  ['username',['username',['../class_discord_c_p_p_1_1_user.html#af7e866ebe3677dc8714350c521989472',1,'DiscordCPP::User']]]
+  ['text',['text',['../struct_discord_c_p_p_1_1_embed_1_1_footer.html#adfd2fc485f41d68e7ead0b021a6604e2',1,'DiscordCPP::Embed::Footer']]],
+  ['timestamp',['timestamp',['../class_discord_c_p_p_1_1_message.html#a6a731e7a186723948ca10d099c3073c9',1,'DiscordCPP::Message']]],
+  ['topic',['topic',['../class_discord_c_p_p_1_1_text_channel.html#aa2e065227cdfe4a2e829b8132a0f4999',1,'DiscordCPP::TextChannel']]],
+  ['tts',['tts',['../class_discord_c_p_p_1_1_message.html#a4ff881c144b7313dc1a23520644b66f3',1,'DiscordCPP::Message']]],
+  ['type',['type',['../class_discord_c_p_p_1_1_channel.html#a557bbeba646631fd88fb9eba4695b666',1,'DiscordCPP::Channel::type()'],['../class_discord_c_p_p_1_1_message.html#aa55ba105379bae9e8155bd30fc7cb0f7',1,'DiscordCPP::Message::type()']]]
 ];

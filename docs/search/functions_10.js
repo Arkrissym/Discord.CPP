@@ -3,6 +3,7 @@ var searchData=
   ['_7echannel',['~Channel',['../class_discord_c_p_p_1_1_channel.html#aff7646650db2228e950710372f2441a7',1,'DiscordCPP::Channel']]],
   ['_7ediscord',['~Discord',['../class_discord_c_p_p_1_1_discord.html#a33748fd4c9e42f9316b4d2f064e09307',1,'DiscordCPP::Discord']]],
   ['_7edmchannel',['~DMChannel',['../class_discord_c_p_p_1_1_d_m_channel.html#a82cd3fc76036ae0d69dd8048e8270006',1,'DiscordCPP::DMChannel']]],
+  ['_7eembed',['~Embed',['../class_discord_c_p_p_1_1_embed.html#a993443a537943e6cc3147723fd2d1e16',1,'DiscordCPP::Embed']]],
   ['_7eguild',['~Guild',['../class_discord_c_p_p_1_1_guild.html#a925889148da3c315a248ad526e9d335b',1,'DiscordCPP::Guild']]],
   ['_7eguildchannel',['~GuildChannel',['../class_discord_c_p_p_1_1_guild_channel.html#aa4d555f86d2404f0b72cd6492f51666e',1,'DiscordCPP::GuildChannel']]],
   ['_7elogger',['~Logger',['../class_logger.html#acb668a9e186a25fbaad2e4af6d1ed00a',1,'Logger']]],

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['icon',['icon',['../class_discord_c_p_p_1_1_channel.html#a8a4f75cc0bee94bc24368255eafb2766',1,'DiscordCPP::Channel::icon()'],['../class_discord_c_p_p_1_1_guild.html#a5788e61a4c5485ff74d072896e952ceb',1,'DiscordCPP::Guild::icon()']]],
-  ['id',['id',['../class_discord_c_p_p_1_1_discord_object.html#af31400604ee115cf1dcd7ce366a31dca',1,'DiscordCPP::DiscordObject']]]
+  ['height',['height',['../struct_discord_c_p_p_1_1_embed_1_1_image.html#a457980af2e1a14489b7dc44ac8926892',1,'DiscordCPP::Embed::Image::height()'],['../struct_discord_c_p_p_1_1_embed_1_1_video.html#aaa6b81d5bf6091b24c62f9b034e002f0',1,'DiscordCPP::Embed::Video::height()']]]
 ];

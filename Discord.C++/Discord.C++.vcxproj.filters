@@ -24,9 +24,6 @@
     <ClCompile Include="User.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="snowflake.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Message.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="User.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="snowflake.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">

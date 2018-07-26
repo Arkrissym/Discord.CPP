@@ -129,7 +129,6 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="Message.cpp" />
-    <ClCompile Include="snowflake.cpp" />
     <ClCompile Include="TextChannel.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="VoiceChannel.cpp" />
@@ -145,7 +144,6 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Member.h" />
     <ClInclude Include="Message.h" />
-    <ClInclude Include="snowflake.h" />
     <ClInclude Include="static.h" />
     <ClInclude Include="TextChannel.h" />
     <ClInclude Include="User.h" />

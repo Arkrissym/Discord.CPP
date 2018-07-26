@@ -44,6 +44,10 @@ namespace DiscordCPP {
 		};
 	}
 
+	class User;
+	class Channel;
+	class Member;
+
 	class Guild : public DiscordCPP::DiscordObject {
 	public:
 		///the guild's name

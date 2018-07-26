@@ -1,6 +1,6 @@
 #pragma once
 #include "TextChannel.h"
-#include "Guild.h"
+//#include "Guild.h"
 
 #include <cpprest\json.h>
 
@@ -9,6 +9,8 @@ namespace DiscordCPP {
 	using namespace std;
 	using namespace web::json;
 	using namespace utility;
+
+	class Guild;
 
 	class GuildChannel : public TextChannel {
 	public:

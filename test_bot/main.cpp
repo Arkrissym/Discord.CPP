@@ -57,7 +57,11 @@ public:
 				embed.add_field("Field", to_string(i), false);
 			}
 			
-			((TextChannel *)message.channel)->send(embed);
+			message.channel->send(embed);
+		}
+		else if (message.content == "?dm") {
+			message.author->send("This is a direct text message.");
+			message.author->send(Embed("Embed", "text"));
 		}
 	}
 

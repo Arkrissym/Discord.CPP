@@ -1,4 +1,6 @@
 #include "TextChannel.h"
+#include "Message.h"
+#include "Embed.h"
 #include "static.h"
 
 using namespace std;

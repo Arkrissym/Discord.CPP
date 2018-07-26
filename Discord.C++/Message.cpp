@@ -3,6 +3,10 @@
 #include "VoiceChannel.h"
 #include "GuildChannel.h"
 #include "DMChannel.h"
+#include "User.h"
+#include "Embed.h"
+
+#include "Logger.h"
 
 #include <cpprest\http_client.h>
 

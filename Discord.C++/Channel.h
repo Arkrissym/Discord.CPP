@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "DiscordObject.h"
-#include "User.h"
+//#include "User.h"
 
 namespace DiscordCPP {
 
@@ -20,6 +20,8 @@ namespace DiscordCPP {
 			GUILD_CATEGORY
 		};
 	}
+
+	class User;
 
 	class Channel : public DiscordCPP::DiscordObject {
 	public:

@@ -2,9 +2,9 @@
 #include <iostream>
 
 #include "DiscordObject.h"
-#include "User.h"
-#include "TextChannel.h"
-#include "Embed.h"
+//#include "User.h"
+//#include "TextChannel.h"
+//#include "Embed.h"
 
 namespace DiscordCPP {
 
@@ -24,6 +24,10 @@ namespace DiscordCPP {
 			GUILD_MEMBER_JOIN
 		};
 	}
+
+	class User;
+	class TextChannel;
+	class Embed;
 
 	class Message : DiscordObject {
 	public:

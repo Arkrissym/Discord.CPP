@@ -1,4 +1,7 @@
 #include "User.h"
+#include "DMChannel.h"
+#include "Message.h"
+#include "Embed.h"
 #include "static.h"
 #include "cpprest\http_client.h"
 
@@ -55,4 +58,28 @@ DiscordCPP::User::User(string id, string_t token) : DiscordCPP::DiscordObject(to
 
 DiscordCPP::User::~User() {
 	//_log.debug("destroyed user object");
+}
+
+/** @return DMChannel
+*/
+DiscordCPP::DMChannel DiscordCPP::User::getDMChannel() {
+	value data;
+	data[U("recipient_id")] = value(conversions::to_string_t(id));
+
+	return DMChannel(api_call("/users/@me/channels", methods::POST, data), _token);
+}
+
+/**	@param[in]	content	The string message to send.
+@param[in]	tts		(optional) Wether to send as tts-message or not. Default is false.
+@return	The message that was sent.
+*/
+DiscordCPP::Message DiscordCPP::User::send(string content, bool tts) {
+	return Message(getDMChannel().send(content, tts));
+}
+
+/**	@param[in]	embed	The Embed to send.
+@return	The message that was sent.
+*/
+DiscordCPP::Message DiscordCPP::User::send(DiscordCPP::Embed embed) {
+	return Message(getDMChannel().send(embed));
 }

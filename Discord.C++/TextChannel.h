@@ -1,7 +1,7 @@
 #pragma once
 #include "Channel.h"
-#include "Message.h"
-#include "Embed.h"
+//#include "Message.h"
+//#include "Embed.h"
 
 #include <cpprest\json.h>
 
@@ -10,6 +10,9 @@ namespace DiscordCPP {
 	using namespace std;
 	using namespace web::json;
 	using namespace utility;
+
+	class Message;
+	class Embed;
 
 	class TextChannel : public Channel {
 	public:

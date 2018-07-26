@@ -1,7 +1,10 @@
 #pragma once
 #include "DiscordObject.h"
+//#include "Message.h"
+//#include "Embed.h"
+//#include "DMChannel.h"
+
 #include <iostream>
-//#include <cpprest\json.h>
 
 #include "Logger.h"
 
@@ -10,6 +13,10 @@ namespace DiscordCPP {
 	using namespace std;
 	using namespace web::json;
 	using namespace utility;
+
+	class Message;
+	class Embed;
+	class DMChannel;
 
 	class User : public DiscordCPP::DiscordObject {
 	public:
@@ -32,6 +39,12 @@ namespace DiscordCPP {
 		__declspec(dllexport) User(value data, string_t token);
 		__declspec(dllexport) User(string id, string_t token);
 		__declspec(dllexport) ~User();
+		///get/create the DMChannel for this user
+		__declspec(dllexport) DMChannel getDMChannel();
+		///send a message to this user
+		__declspec(dllexport) Message send(string content, bool tts = false);
+		///send an embed to this user
+		__declspec(dllexport) Message send(Embed embed);
 
 		///@return Username as std::string
 		__declspec(dllexport) virtual operator string() { return username; };

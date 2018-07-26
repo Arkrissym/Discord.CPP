@@ -1,5 +1,6 @@
 #include "static.h"
 #include "GuildChannel.h"
+#include "Guild.h"
 
 #include <cpprest\http_client.h>
 

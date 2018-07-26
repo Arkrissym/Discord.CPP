@@ -1,4 +1,5 @@
 #include "DMChannel.h"
+#include "User.h"
 #include "static.h"
 
 using namespace std;

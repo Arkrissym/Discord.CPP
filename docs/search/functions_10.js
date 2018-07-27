@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['_7eactivity',['~Activity',['../class_discord_c_p_p_1_1_activity.html#a86cdd7e067f562a24263e653ca01e831',1,'DiscordCPP::Activity']]],
   ['_7echannel',['~Channel',['../class_discord_c_p_p_1_1_channel.html#aff7646650db2228e950710372f2441a7',1,'DiscordCPP::Channel']]],
   ['_7ediscord',['~Discord',['../class_discord_c_p_p_1_1_discord.html#a33748fd4c9e42f9316b4d2f064e09307',1,'DiscordCPP::Discord']]],
   ['_7edmchannel',['~DMChannel',['../class_discord_c_p_p_1_1_d_m_channel.html#a82cd3fc76036ae0d69dd8048e8270006',1,'DiscordCPP::DMChannel']]],

@@ -13,6 +13,7 @@
 #include "DMChannel.h"
 #include "Guild.h"
 #include "Embed.h"
+#include "Activity.h"
 
 namespace DiscordCPP {
 
@@ -26,7 +27,7 @@ namespace DiscordCPP {
 	protected:
 		///discord token
 		string_t _token;
-		///websocket blient
+		///websocket client
 		websocket_callback_client _client;
 		///heartbeat interval in milliseconds
 		int _heartbeat_interval = 0;
@@ -58,6 +59,8 @@ namespace DiscordCPP {
 		__declspec(dllexport) virtual void on_ready(User user);
 		///called when a message was received
 		__declspec(dllexport) virtual void on_message(Message message);
+		///updates the presence of user
+		__declspec(dllexport) task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);	//TODO: testen!
 	};
 
 }

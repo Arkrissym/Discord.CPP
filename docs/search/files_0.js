@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['channel_2ecpp',['Channel.cpp',['../_channel_8cpp.html',1,'']]],
-  ['channel_2eh',['Channel.h',['../_channel_8h.html',1,'']]]
+  ['activity_2ecpp',['Activity.cpp',['../_activity_8cpp.html',1,'']]],
+  ['activity_2eh',['Activity.h',['../_activity_8h.html',1,'']]]
 ];

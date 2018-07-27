@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['very_5fhigh',['VERY_HIGH',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4a9ece68498e80680dbe8d3a5ca71b6aa4',1,'DiscordCPP::VerificationLevel']]]
+  ['streaming',['Streaming',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018a95e54bd873a2eb313f12b8f21eb01422',1,'DiscordCPP::ActivityTypes']]]
 ];

@@ -9,6 +9,8 @@ class myClient : public Discord {
 public:
 	void on_ready(User user) {
 		log.info("logged in as: " + user.username);
+
+		this->update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game));
 	}
 
 	void on_message(Message message) {

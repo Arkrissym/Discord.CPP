@@ -62,7 +62,7 @@ DiscordCPP::User::~User() {
 
 /** @return DMChannel
 */
-DiscordCPP::DMChannel DiscordCPP::User::getDMChannel() {
+DiscordCPP::DMChannel DiscordCPP::User::get_dmchannel() {
 	value data;
 	data[U("recipient_id")] = value(conversions::to_string_t(id));
 
@@ -74,12 +74,12 @@ DiscordCPP::DMChannel DiscordCPP::User::getDMChannel() {
 @return	The message that was sent.
 */
 DiscordCPP::Message DiscordCPP::User::send(string content, bool tts) {
-	return Message(getDMChannel().send(content, tts));
+	return Message(get_dmchannel().send(content, tts));
 }
 
 /**	@param[in]	embed	The Embed to send.
 @return	The message that was sent.
 */
 DiscordCPP::Message DiscordCPP::User::send(DiscordCPP::Embed embed) {
-	return Message(getDMChannel().send(embed));
+	return Message(get_dmchannel().send(embed));
 }

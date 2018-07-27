@@ -40,7 +40,7 @@ namespace DiscordCPP {
 		__declspec(dllexport) User(string id, string_t token);
 		__declspec(dllexport) ~User();
 		///get/create the DMChannel for this user
-		__declspec(dllexport) DMChannel getDMChannel();
+		__declspec(dllexport) DMChannel get_dmchannel();
 		///send a message to this user
 		__declspec(dllexport) Message send(string content, bool tts = false);
 		///send an embed to this user

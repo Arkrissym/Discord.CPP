@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['defaultmessagenotificationlevel',['DefaultMessageNotificationLevel',['../namespace_discord_c_p_p_1_1_default_message_notification_level.html#a37b8b25ee33335283a508e781be2a840',1,'DiscordCPP::DefaultMessageNotificationLevel']]]
+  ['channeltype',['ChannelType',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2',1,'DiscordCPP::ChannelType']]]
 ];

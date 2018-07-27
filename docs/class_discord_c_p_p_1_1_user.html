@@ -96,6 +96,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af07cc95329eccfbef2440e1fa33bc0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7b708ffd964ec7299c5eedfcaaa690e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_user.html#af7b708ffd964ec7299c5eedfcaaa690e">~User</a> ()</td></tr>
 <tr class="separator:af7b708ffd964ec7299c5eedfcaaa690e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90dfcdcdce6aad804121e71579f12edc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_d_m_channel.html">DMChannel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_user.html#a90dfcdcdce6aad804121e71579f12edc">get_dmchannel</a> ()</td></tr>
+<tr class="memdesc:a90dfcdcdce6aad804121e71579f12edc"><td class="mdescLeft">&#160;</td><td class="mdescRight">get/create the <a class="el" href="class_discord_c_p_p_1_1_d_m_channel.html">DMChannel</a> for this user  <a href="#a90dfcdcdce6aad804121e71579f12edc">More...</a><br /></td></tr>
+<tr class="separator:a90dfcdcdce6aad804121e71579f12edc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5ac480fbc39f3f8375a27926d3a39bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_user.html#ad5ac480fbc39f3f8375a27926d3a39bc">send</a> (string content, bool tts=false)</td></tr>
+<tr class="memdesc:ad5ac480fbc39f3f8375a27926d3a39bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">send a message to this user  <a href="#ad5ac480fbc39f3f8375a27926d3a39bc">More...</a><br /></td></tr>
+<tr class="separator:ad5ac480fbc39f3f8375a27926d3a39bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc4291f99fd2767a210a96d3c0a1682d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_user.html#adc4291f99fd2767a210a96d3c0a1682d">send</a> (<a class="el" href="class_discord_c_p_p_1_1_embed.html">Embed</a> embed)</td></tr>
+<tr class="memdesc:adc4291f99fd2767a210a96d3c0a1682d"><td class="mdescLeft">&#160;</td><td class="mdescRight">send an embed to this user  <a href="#adc4291f99fd2767a210a96d3c0a1682d">More...</a><br /></td></tr>
+<tr class="separator:adc4291f99fd2767a210a96d3c0a1682d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0b9ba657b7297b2d6022638d990c320"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_user.html#ad0b9ba657b7297b2d6022638d990c320">operator string</a> ()</td></tr>
 <tr class="separator:ad0b9ba657b7297b2d6022638d990c320"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_discord_c_p_p_1_1_discord_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_discord_c_p_p_1_1_discord_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_discord_c_p_p_1_1_discord_object.html">DiscordCPP::DiscordObject</a></td></tr>
@@ -235,6 +244,26 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a90dfcdcdce6aad804121e71579f12edc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90dfcdcdce6aad804121e71579f12edc">&#9670;&nbsp;</a></span>get_dmchannel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_d_m_channel.html">DiscordCPP::DMChannel</a> DiscordCPP::User::get_dmchannel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get/create the <a class="el" href="class_discord_c_p_p_1_1_d_m_channel.html">DMChannel</a> for this user </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_discord_c_p_p_1_1_d_m_channel.html">DMChannel</a> </dd></dl>
+
+</div>
+</div>
 <a id="ad0b9ba657b7297b2d6022638d990c320"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad0b9ba657b7297b2d6022638d990c320">&#9670;&nbsp;</a></span>operator string()</h2>
 
@@ -260,6 +289,71 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Username as std::string </dd></dl>
 
 <p>Reimplemented in <a class="el" href="class_discord_c_p_p_1_1_member.html#aa0887dc3b83120336d58eb40ef84e3bb">DiscordCPP::Member</a>.</p>
+
+</div>
+</div>
+<a id="ad5ac480fbc39f3f8375a27926d3a39bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5ac480fbc39f3f8375a27926d3a39bc">&#9670;&nbsp;</a></span>send() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_message.html">DiscordCPP::Message</a> DiscordCPP::User::send </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>content</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>tts</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>send a message to this user </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">content</td><td>The string message to send. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">tts</td><td>(optional) Wether to send as tts-message or not. Default is false. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The message that was sent. </dd></dl>
+
+</div>
+</div>
+<a id="adc4291f99fd2767a210a96d3c0a1682d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc4291f99fd2767a210a96d3c0a1682d">&#9670;&nbsp;</a></span>send() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_message.html">DiscordCPP::Message</a> DiscordCPP::User::send </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_embed.html">DiscordCPP::Embed</a>&#160;</td>
+          <td class="paramname"><em>embed</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>send an embed to this user </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">embed</td><td>The <a class="el" href="class_discord_c_p_p_1_1_embed.html">Embed</a> to send. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The message that was sent. </dd></dl>
 
 </div>
 </div>

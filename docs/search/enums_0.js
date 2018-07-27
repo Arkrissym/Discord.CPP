@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['channeltype',['ChannelType',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2',1,'DiscordCPP::ChannelType']]]
+  ['activitytypes',['ActivityTypes',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018',1,'DiscordCPP::ActivityTypes']]]
 ];

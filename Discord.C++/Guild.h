@@ -76,8 +76,8 @@ namespace DiscordCPP {
 		int default_message_notifications = 0;
 		///ExplicitContentFilterLevel
 		int explicit_content_filter = 0;
-		//vector<Role> roles;
-		//vector<Emoji> emojis;
+		//vector<Role *> roles;
+		//vector<Emoji *> emojis;
 		///enabled guild features
 		vector<string> features;
 		///MFALevel
@@ -100,12 +100,12 @@ namespace DiscordCPP {
 		bool unavailable = false;
 		///number of members
 		int member_count = 0;
-		//vector<VoiceState> voice_states;
+		//vector<VoiceState *> voice_states;
 		///users in the guild
 		vector<Member *> members;
 		///channels of the guild
 		vector<Channel *> channels;
-		//vector<Presence> presences;
+		//vector<Presence *> presences;
 
 		__declspec(dllexport) Guild(value data, string_t token);
 		__declspec(dllexport) Guild(string id, string_t token);

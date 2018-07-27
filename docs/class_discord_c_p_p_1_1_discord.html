@@ -90,6 +90,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa492a81b01db3db673c012686cf6edd6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#aa492a81b01db3db673c012686cf6edd6">on_message</a> (<a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> message)</td></tr>
 <tr class="memdesc:aa492a81b01db3db673c012686cf6edd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">called when a message was received  <a href="#aa492a81b01db3db673c012686cf6edd6">More...</a><br /></td></tr>
 <tr class="separator:aa492a81b01db3db673c012686cf6edd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5649d4397dcb95e18df93f1a69bd19"><td class="memItemLeft" align="right" valign="top">task&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a6f5649d4397dcb95e18df93f1a69bd19">update_presence</a> (string status, <a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a> activity=<a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a>(), bool afk=false)</td></tr>
+<tr class="memdesc:a6f5649d4397dcb95e18df93f1a69bd19"><td class="mdescLeft">&#160;</td><td class="mdescRight">updates the presence of user  <a href="#a6f5649d4397dcb95e18df93f1a69bd19">More...</a><br /></td></tr>
+<tr class="separator:a6f5649d4397dcb95e18df93f1a69bd19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -115,7 +118,7 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:a15d9dadd6b1551e335b1984007e4d248"><td class="mdescLeft">&#160;</td><td class="mdescRight">discord token  <a href="#a15d9dadd6b1551e335b1984007e4d248">More...</a><br /></td></tr>
 <tr class="separator:a15d9dadd6b1551e335b1984007e4d248"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a623f2c3017bc6facc92b6f5d669c8bc5"><td class="memItemLeft" align="right" valign="top">websocket_callback_client&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a623f2c3017bc6facc92b6f5d669c8bc5">_client</a></td></tr>
-<tr class="memdesc:a623f2c3017bc6facc92b6f5d669c8bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">websocket blient  <a href="#a623f2c3017bc6facc92b6f5d669c8bc5">More...</a><br /></td></tr>
+<tr class="memdesc:a623f2c3017bc6facc92b6f5d669c8bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">websocket client  <a href="#a623f2c3017bc6facc92b6f5d669c8bc5">More...</a><br /></td></tr>
 <tr class="separator:a623f2c3017bc6facc92b6f5d669c8bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c8ccfb9cf3ee3df12fe373d9431a5c1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a7c8ccfb9cf3ee3df12fe373d9431a5c1">_heartbeat_interval</a> = 0</td></tr>
 <tr class="memdesc:a7c8ccfb9cf3ee3df12fe373d9431a5c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">heartbeat interval in milliseconds  <a href="#a7c8ccfb9cf3ee3df12fe373d9431a5c1">More...</a><br /></td></tr>
@@ -382,6 +385,50 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6f5649d4397dcb95e18df93f1a69bd19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f5649d4397dcb95e18df93f1a69bd19">&#9670;&nbsp;</a></span>update_presence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">task&lt; void &gt; DiscordCPP::Discord::update_presence </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>status</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a>&#160;</td>
+          <td class="paramname"><em>activity</em> = <code><a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a>()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>afk</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>updates the presence of user </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">status</td><td>the new status (see <a class="el" href="namespace_discord_c_p_p_1_1_discord_status.html">DiscordStatus</a>) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">activity</td><td>(optional) the <a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a> </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">afk</td><td>(optional) wether the bot/user is afk or not </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a623f2c3017bc6facc92b6f5d669c8bc5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a623f2c3017bc6facc92b6f5d669c8bc5">&#9670;&nbsp;</a></span>_client</h2>
@@ -403,7 +450,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>websocket blient </p>
+<p>websocket client </p>
 
 </div>
 </div>

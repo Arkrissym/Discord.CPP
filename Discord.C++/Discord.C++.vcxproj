@@ -119,6 +119,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Activity.cpp" />
     <ClCompile Include="Channel.cpp" />
     <ClCompile Include="Discord.cpp" />
     <ClCompile Include="DiscordObject.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="VoiceChannel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Activity.h" />
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Discord.h" />
     <ClInclude Include="DiscordObject.h" />

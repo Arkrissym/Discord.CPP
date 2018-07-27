@@ -52,6 +52,30 @@ void DiscordCPP::Discord::on_message(Message message) {
 	log.debug("on_message");
 }
 
+/**	@param[in]	status		the new status (see DiscordStatus)
+	@param[in]	activity	(optional) the Activity
+	@param[in]	afk			(optional) wether the bot/user is afk or not
+*/
+task<void> DiscordCPP::Discord::update_presence(string status, Activity activity, bool afk) {
+	value presence;
+
+	presence[U("op")] = value(3);
+
+	presence[U("d")][U("since")] = value();
+	if (activity.type == ActivityTypes::NoActivity)
+		presence[U("d")][U("game")] = value();
+	else
+		presence[U("d")][U("game")] = activity.to_json();
+	
+	presence[U("d")][U("status")] = value(conversions::to_string_t(status));
+	presence[U("d")][U("afk")] = value(afk);
+
+	websocket_outgoing_message msg;
+	msg.set_utf8_message(conversions::to_utf8string(presence.serialize()));
+
+	return _client.send(msg);
+}
+
 task<void> DiscordCPP::Discord::create_heartbeat_task() {
 	return create_task([this] {
 		while (_heartbeat_interval == 0)

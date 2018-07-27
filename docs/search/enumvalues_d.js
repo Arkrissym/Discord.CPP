@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['warning',['WARNING',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdca984de77c680eaff141ec910e25568a81',1,'Logger.h']]]
+  ['very_5fhigh',['VERY_HIGH',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4a9ece68498e80680dbe8d3a5ca71b6aa4',1,'DiscordCPP::VerificationLevel']]]
 ];

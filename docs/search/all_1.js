@@ -1,5 +1,9 @@
 var searchData=
 [
+  ['activity',['Activity',['../class_discord_c_p_p_1_1_activity.html',1,'DiscordCPP::Activity'],['../class_discord_c_p_p_1_1_activity.html#a437586e66d6218a8c1c8a0a6d57dadab',1,'DiscordCPP::Activity::Activity()'],['../class_discord_c_p_p_1_1_activity.html#a6cca78c4cad8ce659a6b9c5d0dc802ba',1,'DiscordCPP::Activity::Activity(string name, int type, string url=&quot;&quot;)']]],
+  ['activity_2ecpp',['Activity.cpp',['../_activity_8cpp.html',1,'']]],
+  ['activity_2eh',['Activity.h',['../_activity_8h.html',1,'']]],
+  ['activitytypes',['ActivityTypes',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018',1,'DiscordCPP::ActivityTypes']]],
   ['add_5ffield',['add_field',['../class_discord_c_p_p_1_1_embed.html#aea81b046fb1306ccc808c10a4003c742',1,'DiscordCPP::Embed']]],
   ['afk_5fchannel',['afk_channel',['../class_discord_c_p_p_1_1_guild.html#aad35781e0a572f106faa893f516132de',1,'DiscordCPP::Guild']]],
   ['afk_5ftimeout',['afk_timeout',['../class_discord_c_p_p_1_1_guild.html#aa7e3016a6b39b8bdb018f19805cf9d1e',1,'DiscordCPP::Guild']]],

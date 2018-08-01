@@ -8,6 +8,7 @@ var searchData=
   ['default_5fmessage_5fnotifications',['default_message_notifications',['../class_discord_c_p_p_1_1_guild.html#a990972aa6e7a511b3c68b4d111801026',1,'DiscordCPP::Guild']]],
   ['defaultmessagenotificationlevel',['DefaultMessageNotificationLevel',['../namespace_discord_c_p_p_1_1_default_message_notification_level.html',1,'DiscordCPP::DefaultMessageNotificationLevel'],['../namespace_discord_c_p_p_1_1_default_message_notification_level.html#a37b8b25ee33335283a508e781be2a840',1,'DiscordCPP::DefaultMessageNotificationLevel::DefaultMessageNotificationLevel()']]],
   ['delete_5fchannel',['delete_channel',['../class_discord_c_p_p_1_1_channel.html#abcdb6d1d0fc5294aaefca48f906d278c',1,'DiscordCPP::Channel']]],
+  ['delete_5fmessages',['delete_messages',['../class_discord_c_p_p_1_1_text_channel.html#a3008cf581c61798a4829d0f1434fcfba',1,'DiscordCPP::TextChannel']]],
   ['delete_5fmsg',['delete_msg',['../class_discord_c_p_p_1_1_message.html#a9bd5d0f4a99f169e0cfc2b7aa2df2c39',1,'DiscordCPP::Message']]],
   ['disabled',['DISABLED',['../namespace_discord_c_p_p_1_1_explicit_content_filter_level.html#aa3826261bb36372611c15559b881f712aa763932b0b9e16eadee7a6cae6d88a76',1,'DiscordCPP::ExplicitContentFilterLevel']]],
   ['discord',['Discord',['../class_discord_c_p_p_1_1_discord.html',1,'DiscordCPP::Discord'],['../class_discord_c_p_p_1_1_discord.html#a5588a90d77766f5b759b1c7971818c29',1,'DiscordCPP::Discord::Discord()']]],

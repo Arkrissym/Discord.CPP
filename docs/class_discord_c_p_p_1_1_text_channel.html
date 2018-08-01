@@ -22,6 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
+   &#160;<span id="projectnumber">0.2.1</span>
    </div>
   </td>
  </tr>
@@ -101,10 +102,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a62f5392395455e9ce1118aabca44a2df"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_text_channel.html#a62f5392395455e9ce1118aabca44a2df">~TextChannel</a> ()</td></tr>
 <tr class="separator:a62f5392395455e9ce1118aabca44a2df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1835b37300b37e42d6d86c223545585c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_text_channel.html#a1835b37300b37e42d6d86c223545585c">send</a> (string content, bool tts=false)</td></tr>
-<tr class="memdesc:a1835b37300b37e42d6d86c223545585c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a message to this channel.  <a href="#a1835b37300b37e42d6d86c223545585c">More...</a><br /></td></tr>
+<tr class="memdesc:a1835b37300b37e42d6d86c223545585c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a <a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> to this channel.  <a href="#a1835b37300b37e42d6d86c223545585c">More...</a><br /></td></tr>
 <tr class="separator:a1835b37300b37e42d6d86c223545585c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2f51215ab5772f2274657a1a736b504"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_text_channel.html#ac2f51215ab5772f2274657a1a736b504">send</a> (<a class="el" href="class_discord_c_p_p_1_1_embed.html">Embed</a> embed)</td></tr>
 <tr class="separator:ac2f51215ab5772f2274657a1a736b504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3f02715751b8e32d07d1ead813431b6"><td class="memItemLeft" align="right" valign="top">vector&lt; shared_ptr&lt; <a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_text_channel.html#ab3f02715751b8e32d07d1ead813431b6">history</a> (int limit=100, string before=&quot;&quot;, string after=&quot;&quot;, string around=&quot;&quot;)</td></tr>
+<tr class="memdesc:ab3f02715751b8e32d07d1ead813431b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get messages from channel history.  <a href="#ab3f02715751b8e32d07d1ead813431b6">More...</a><br /></td></tr>
+<tr class="separator:ab3f02715751b8e32d07d1ead813431b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3008cf581c61798a4829d0f1434fcfba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_text_channel.html#a3008cf581c61798a4829d0f1434fcfba">delete_messages</a> (vector&lt; shared_ptr&lt; <a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> &gt;&gt; messages)</td></tr>
+<tr class="memdesc:a3008cf581c61798a4829d0f1434fcfba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete multiple messages from this channel.  <a href="#a3008cf581c61798a4829d0f1434fcfba">More...</a><br /></td></tr>
+<tr class="separator:a3008cf581c61798a4829d0f1434fcfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_discord_c_p_p_1_1_channel"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_discord_c_p_p_1_1_channel')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_discord_c_p_p_1_1_channel.html">DiscordCPP::Channel</a></td></tr>
 <tr class="memitem:abad32b088c036d52b3b9b72e18549032 inherit pub_methods_class_discord_c_p_p_1_1_channel"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#abad32b088c036d52b3b9b72e18549032">Channel</a> (value data, string_t token)</td></tr>
 <tr class="separator:abad32b088c036d52b3b9b72e18549032 inherit pub_methods_class_discord_c_p_p_1_1_channel"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -283,6 +290,78 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3008cf581c61798a4829d0f1434fcfba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3008cf581c61798a4829d0f1434fcfba">&#9670;&nbsp;</a></span>delete_messages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DiscordCPP::TextChannel::delete_messages </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; shared_ptr&lt; <a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> &gt;&gt;&#160;</td>
+          <td class="paramname"><em>messages</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Delete multiple messages from this channel. </p>
+
+</div>
+</div>
+<a id="ab3f02715751b8e32d07d1ead813431b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3f02715751b8e32d07d1ead813431b6">&#9670;&nbsp;</a></span>history()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; shared_ptr&lt; <a class="el" href="class_discord_c_p_p_1_1_message.html">DiscordCPP::Message</a> &gt; &gt; DiscordCPP::TextChannel::history </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>limit</em> = <code>100</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>before</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>after</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>around</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get messages from channel history. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">limit</td><td>Max number of messages to retrieve (1-100) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">before</td><td>Get messages before this message id </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">after</td><td>Get messages after this message id </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">around</td><td>Get messages around this message id </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Array of messages </dd></dl>
+
+</div>
+</div>
 <a id="a1835b37300b37e42d6d86c223545585c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1835b37300b37e42d6d86c223545585c">&#9670;&nbsp;</a></span>send() <span class="overload">[1/2]</span></h2>
 
@@ -309,7 +388,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Send a message to this channel. </p>
+<p>Send a <a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> to this channel. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">content</td><td>The string message to send. </td></tr>

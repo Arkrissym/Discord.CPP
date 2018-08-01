@@ -25,9 +25,15 @@ namespace DiscordCPP {
 		__declspec(dllexport) TextChannel();
 		__declspec(dllexport) ~TextChannel();
 
-		///Send a message to this channel.
+		///Send a Message to this channel.
 		__declspec(dllexport) Message send(string content, bool tts=false);
 		__declspec(dllexport) Message send(Embed embed);
+
+		///Get messages from channel history
+		__declspec(dllexport) vector<shared_ptr<Message>> history(int limit=100, string before="", string after="", string around="");
+
+		///Delete multiple messages from this channel
+		__declspec(dllexport) void delete_messages(vector<shared_ptr<Message>> messages);
 	};
 
 }

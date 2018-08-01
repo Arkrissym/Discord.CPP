@@ -23,7 +23,7 @@ namespace DiscordCPP {
 
 	class User;
 
-	class Channel : public DiscordCPP::DiscordObject {
+	class Channel : public DiscordObject {
 	public:
 		///the ChannelType of the channel
 		int type;

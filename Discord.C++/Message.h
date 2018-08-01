@@ -29,7 +29,7 @@ namespace DiscordCPP {
 	class TextChannel;
 	class Embed;
 
-	class Message : DiscordObject {
+	class Message : public DiscordObject {
 	public:
 		///the channel the message was sent in
 		TextChannel *channel = NULL;

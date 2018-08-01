@@ -65,6 +65,13 @@ public:
 			message.author->send("This is a direct text message.");
 			message.author->send(Embed("Embed", "text"));
 		}
+		else if (message.content.compare(0, 7, "?clear ") == 0) {
+			string tmp = message.content.substr(7);
+			vector<shared_ptr<Message>> messages = message.channel->history(atoi(tmp.c_str()));
+
+			log.info("num messages: " + to_string(messages.size()));
+			message.channel->delete_messages(messages);
+		}
 	}
 
 	myClient(string token) : Discord(token) {};

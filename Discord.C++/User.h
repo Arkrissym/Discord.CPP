@@ -18,7 +18,7 @@ namespace DiscordCPP {
 	class Embed;
 	class DMChannel;
 
-	class User : public DiscordCPP::DiscordObject {
+	class User : public DiscordObject {
 	public:
 		///ther user's name
 		string username;

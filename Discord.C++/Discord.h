@@ -60,7 +60,7 @@ namespace DiscordCPP {
 		///called when a message was received
 		__declspec(dllexport) virtual void on_message(Message message);
 		///updates the presence of user
-		__declspec(dllexport) task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);	//TODO: testen!
+		__declspec(dllexport) task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
 	};
 
 }

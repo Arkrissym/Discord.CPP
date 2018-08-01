@@ -48,7 +48,7 @@ namespace DiscordCPP {
 	class Channel;
 	class Member;
 
-	class Guild : public DiscordCPP::DiscordObject {
+	class Guild : public DiscordObject {
 	public:
 		///the guild's name
 		string name;

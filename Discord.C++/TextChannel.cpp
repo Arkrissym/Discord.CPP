@@ -54,3 +54,48 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
 	data[U("embed")] = embed.to_json();
 	return Message(api_call(url, methods::POST, data), _token);
 }
+
+/**	@param[in]	limit	Max number of messages to retrieve (1-100)
+	@param[in]	before	Get messages before this message id
+	@param[in]	after	Get messages after this message id
+	@param[in]	around	Get messages around this message id
+	@return	Array of messages
+*/
+vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int limit, string before, string after, string around) {
+	vector<shared_ptr<Message>> ret;
+	
+	string url = "/channels/" + id + "/messages" + "?limit=" + to_string(limit);
+
+	if (before.length() > 0)
+		url += "&before=" + before;
+	if (after.length() > 0)
+		url += "&after=" + after;
+	if (around.length() > 0)
+		url += "&around" + around;
+
+	web::json::array msgs = api_call(url, methods::GET).as_array();
+
+	for (int i = 0; i < msgs.size(); i++) {
+		//cout << endl << conversions::to_utf8string(msgs[i].serialize());
+		ret.push_back(make_shared<Message>(Message(msgs[i], _token)));
+	}
+
+	return ret;
+}
+
+void DiscordCPP::TextChannel::delete_messages(vector<shared_ptr<Message>> messages) {
+	if (messages.size() < 2)
+		throw exception("Cannot delete less than 2 messages: use Message::delete_msg() instead");
+	else if (messages.size() > 100)
+		throw exception("Cannot delete more than 100 messages");
+
+	string url = "/channels/" + id + "/messages/bulk-delete";
+
+	value data;
+	data[U("messages")] = value();
+	for (int i = 0; i < messages.size(); i++) {
+		data[U("messages")][i] = value(conversions::to_string_t(messages[i]->id));
+	}
+
+	api_call(url, methods::POST, data);
+}

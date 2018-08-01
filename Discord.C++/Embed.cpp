@@ -15,7 +15,6 @@ DiscordCPP::Embed::Embed(string title, string description) {
 
 DiscordCPP::Embed::Embed(value data) {
 	//Logger("discord.embed").debug(conversions::to_utf8string(data.serialize()));
-
 	if (is_valid_field("title")) {
 		_title = conversions::to_utf8string(data.at(U("title")).as_string());
 	}
@@ -36,8 +35,10 @@ DiscordCPP::Embed::Embed(value data) {
 	}
 	if (is_valid_field("footer")) {
 		_footer.text = conversions::to_utf8string(data[U("footer")][U("text")].as_string());
-		_footer.icon_url = conversions::to_utf8string(data[U("footer")][U("icon_url")].as_string());
-		_footer.proxy_icon_url = conversions::to_utf8string(data[U("footer")][U("proxy_icon_url")].as_string());
+		if ((data[U("footer")].has_field(U("icon_url"))) && (!data[U("footer")].at(U("icon_url")).is_null()))
+			_footer.icon_url = conversions::to_utf8string(data[U("footer")][U("icon_url")].as_string());
+		if ((data[U("footer")].has_field(U("proxy_icon_url"))) && (!data[U("footer")].at(U("proxy_icon_url")).is_null()))
+			_footer.proxy_icon_url = conversions::to_utf8string(data[U("footer")][U("proxy_icon_url")].as_string());
 	}
 	if (is_valid_field("image")) {
 		_image.width = data[U("image")][U("width")].as_integer();
@@ -58,9 +59,12 @@ DiscordCPP::Embed::Embed(value data) {
 	}
 	if (is_valid_field("author")) {
 		_author.name = conversions::to_utf8string(data[U("author")][U("name")].as_string());
-		_author.url = conversions::to_utf8string(data[U("author")][U("url")].as_string());
-		_author.icon_url = conversions::to_utf8string(data[U("author")][U("icon_url")].as_string());
-		_author.proxy_icon_url = conversions::to_utf8string(data[U("author")][U("proxy_icon_url")].as_string());
+		if ((data[U("author")].has_field(U("url"))) && (!data[U("author")].at(U("url")).is_null()))
+			_author.url = conversions::to_utf8string(data[U("author")][U("url")].as_string());
+		if ((data[U("author")].has_field(U("icon_url"))) && (!data[U("author")].at(U("icon_url")).is_null()))
+			_author.icon_url = conversions::to_utf8string(data[U("author")][U("icon_url")].as_string());
+		if ((data[U("author")].has_field(U("proxy_icon_url"))) && (!data[U("author")].at(U("proxy_icon_url")).is_null()))
+			_author.proxy_icon_url = conversions::to_utf8string(data[U("author")][U("proxy_icon_url")].as_string());
 	}
 	if (is_valid_field("provider")) {
 		_provider.name = conversions::to_utf8string(data[U("provider")][U("name")].as_string());

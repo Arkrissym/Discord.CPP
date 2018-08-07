@@ -167,7 +167,7 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 
 		create_task([this] {
 			try {
-				on_ready(*_user);
+				on_ready(User(*_user));
 			}
 			catch (const std::exception &e) {
 				log.error("ignoring exception in on_ready: " + string(e.what()));
@@ -221,7 +221,29 @@ void DiscordCPP::Discord::handle_hello_msg(value data) {
 	out_json[U("op")] = value(2);
 
 	out_json[U("d")][U("token")] = value(_token);
-	out_json[U("d")][U("properties")][U("$os")] = value(U("Windows"));
+#ifdef _WIN64
+	out_json[U("d")][U("properties")][U("$os")] = value(U("Windows(64 bit)"));
+#elif _WIN32
+	out_json[U("d")][U("properties")][U("$os")] = value(U("Windows(32 bit)"));
+#elif __APPLE__
+#include "TargetConditionals.h"
+#if TARGET_OS_IPHONE && TARGET_IPHONE_SIMULATOR
+	out_json[U("d")][U("properties")][U("$os")] = value(U("IOS simulator"));
+#elif TARGET_OS_IPHONE
+	out_json[U("d")][U("properties")][U("$os")] = value(U("IOS"));
+#else
+#define TARGET_OS_OSX 1
+	out_json[U("d")][U("properties")][U("$os")] = value(U("OS X"));
+#endif
+#elif __ANDROID__
+	out_json[U("d")][U("properties")][U("$os")] = value(U("Android"));
+#elif __linux__
+	out_json[U("d")][U("properties")][U("$os")] = value(U("Linux"));
+#elif __unix__
+	out_json[U("d")][U("properties")][U("$os")] = value(U("Unix"));
+#elif __posix
+	out_json[U("d")][U("properties")][U("$os")] = value(U("POSIX"));
+#endif
 	out_json[U("d")][U("properties")][U("$browser")] = value(U("Discord.C++"));
 	out_json[U("d")][U("properties")][U("$device")] = value(U("Discord.C++"));
 

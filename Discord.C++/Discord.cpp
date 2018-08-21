@@ -16,6 +16,8 @@ using namespace std;
 DiscordCPP::Discord::Discord(string token) {
 	_token = conversions::to_string_t(token);
 
+	log = Logger("discord");
+
 	_client = websocket_callback_client();
 	_client.connect(U(GATEWAY_URL));
 
@@ -25,12 +27,15 @@ DiscordCPP::Discord::Discord(string token) {
 		on_websocket_incoming_message(msg);
 	});
 
-	log = Logger("discord");
+	_client.set_close_handler([this](websocket_close_status close_status, string_t reason, error_code error) {
+		on_websocket_disconnnect(close_status, conversions::to_utf8string(reason), error);
+	});
+
 	//log.debug("created Discord object");
 }
 
 DiscordCPP::Discord::~Discord() {
-	_client.close();
+	_client.close(websocket_close_status::normal, U("user input"));
 	//log.debug("destroyed Discord object");
 
 	delete _user;
@@ -134,6 +139,12 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 	}
 }
 
+void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status, string reason, error_code error) {
+	log.warning("websocket closed with status code " + to_string((int)status) + ": " + reason);
+
+	_client.connect(U(GATEWAY_URL));
+}
+
 void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 	if (event_name == "READY") {
 		_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
@@ -226,17 +237,7 @@ void DiscordCPP::Discord::handle_hello_msg(value data) {
 #elif _WIN32
 	out_json[U("d")][U("properties")][U("$os")] = value(U("Windows(32 bit)"));
 #elif __APPLE__
-#include "TargetConditionals.h"
-#if TARGET_OS_IPHONE && TARGET_IPHONE_SIMULATOR
-	out_json[U("d")][U("properties")][U("$os")] = value(U("IOS simulator"));
-#elif TARGET_OS_IPHONE
-	out_json[U("d")][U("properties")][U("$os")] = value(U("IOS"));
-#else
-#define TARGET_OS_OSX 1
 	out_json[U("d")][U("properties")][U("$os")] = value(U("OS X"));
-#endif
-#elif __ANDROID__
-	out_json[U("d")][U("properties")][U("$os")] = value(U("Android"));
 #elif __linux__
 	out_json[U("d")][U("properties")][U("$os")] = value(U("Linux"));
 #elif __unix__

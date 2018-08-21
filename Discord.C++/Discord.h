@@ -46,6 +46,7 @@ namespace DiscordCPP {
 
 		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();
 		__declspec(dllexport) void on_websocket_incoming_message(websocket_incoming_message msg);
+		__declspec(dllexport) void on_websocket_disconnnect(websocket_close_status status, string reason, error_code error);
 
 		__declspec(dllexport) void handle_raw_event(std::string event_name, value data);	//op: 0
 		__declspec(dllexport) void send_heartbeat_ack();			//op: 1
@@ -59,6 +60,7 @@ namespace DiscordCPP {
 		__declspec(dllexport) virtual void on_ready(User user);
 		///called when a message was received
 		__declspec(dllexport) virtual void on_message(Message message);
+		
 		///updates the presence of user
 		__declspec(dllexport) task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
 	};

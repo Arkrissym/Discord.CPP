@@ -22,6 +22,7 @@ install:
 	mkdir /usr/local/include/$(LIB_NAME)
 	cp -f -t /usr/local/include/$(LIB_NAME) $(HEADER_FILES)
 	cp -f  $(LIB).$(VERSION) /usr/local/lib/
+	ln -s /usr/local/lib/$(LIB).$(VERSION) /usr/local/lib/$(LIB)
 	ldconfig
 
 uninstall:

@@ -1,5 +1,10 @@
+#ifdef _WIN32
+#include "Discord.h"
+#include <iostream>
+#else
 #include <discord_cpp/Discord.h>
 #include <stdlib.h>
+#endif
 #include <chrono>
 #include <thread>
 

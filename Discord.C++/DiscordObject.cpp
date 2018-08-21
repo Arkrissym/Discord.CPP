@@ -3,6 +3,7 @@
 #include "Logger.h"
 
 #include <chrono>
+#include <thread>
 
 using namespace std;
 using namespace web::json;
@@ -13,7 +14,7 @@ using namespace utility;
 static vector<shared_ptr<value>> cache;
 static bool cache_manager_active = false;
 
-Concurrency::task<void> manage_cache();
+pplx::task<void> manage_cache();
 
 DiscordCPP::DiscordObject::DiscordObject() {
 
@@ -29,8 +30,8 @@ DiscordCPP::DiscordObject::DiscordObject(string_t token) {
 	}
 }
 
-Concurrency::task<void> manage_cache() {
-	return Concurrency::create_task([] {
+pplx::task<void> manage_cache() {
+	return pplx::create_task([] {
 		while (1) {
 			auto it = cache.begin();
 			while(it != cache.end()) {
@@ -88,7 +89,7 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 	unsigned short code;
 
 	do {
-		Concurrency::task<http_response> requestTask = c.request(request).then([this, url](http_response response) {
+		pplx::task<http_response> requestTask = c.request(request).then([this, url](http_response response) {
 			Logger("discord.object.api_call").debug("api call sent: " + url + ": " + to_string(response.status_code()));
 
 			return response;
@@ -114,7 +115,7 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 			//cache.push_back(new value(tmp));
 			cache.push_back(make_shared<value>(tmp));
 
-			Logger("discord.object.api_call").debug("caching object");	
+			Logger("discord.object.api_call").debug("caching object");
 		}
 
 		if (code == 429) {
@@ -126,10 +127,10 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 	} while (code == 429);
 
 	switch (code) {
-		case 400: throw exception("Malformed/Invalid API call(400)");
-		case 401: throw exception("Unauthorized API call(401)");
-		case 403: throw exception("Permission denied(403)");
-		case 500: throw exception("Server error(500)");
+		case 400: throw runtime_error("Malformed/Invalid API call(400)");
+		case 401: throw runtime_error("Unauthorized API call(401)");
+		case 403: throw runtime_error("Permission denied(403)");
+		case 500: throw runtime_error("Server error(500)");
 	}
 
 	return ret;

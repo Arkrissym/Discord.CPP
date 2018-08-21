@@ -2,8 +2,10 @@
 #include "static.h"
 
 #include <iostream>
-#include <Windows.h>
-#include <cpprest\http_client.h>
+#include <chrono>
+#include <thread>
+//#include <Windows.h>
+#include <cpprest/http_client.h>
 
 using namespace web::websockets::client;
 using namespace web::http::client;
@@ -56,7 +58,7 @@ void DiscordCPP::Discord::on_message(Message message) {
 	@param[in]	activity	(optional) the Activity
 	@param[in]	afk			(optional) wether the bot/user is afk or not
 */
-task<void> DiscordCPP::Discord::update_presence(string status, Activity activity, bool afk) {
+pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity activity, bool afk) {
 	value presence;
 
 	presence[U("op")] = value(3);
@@ -76,10 +78,10 @@ task<void> DiscordCPP::Discord::update_presence(string status, Activity activity
 	return _client.send(msg);
 }
 
-task<void> DiscordCPP::Discord::create_heartbeat_task() {
-	return create_task([this] {
+pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
+	return pplx::create_task([this] {
 		while (_heartbeat_interval == 0)
-			Sleep(50);
+			this_thread::sleep_for(chrono::milliseconds(50));
 
 		while (1) {
 			websocket_outgoing_message heartbeat_msg = websocket_outgoing_message();
@@ -95,14 +97,14 @@ task<void> DiscordCPP::Discord::create_heartbeat_task() {
 				log.debug("Heartbeat message has been sent");
 			});
 
-			Sleep(_heartbeat_interval);
+			this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
 		}
 	});
 }
 
 void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_message msg) {
 	// handle message from server...
-	task<string> str = msg.extract_string();
+	pplx::task<string> str = msg.extract_string();
 	string_t message = conversions::to_string_t(str.get());
 
 	value obj = value::parse(message);
@@ -165,7 +167,7 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 		
 		log.info("connected to: " + str + " ]");
 
-		create_task([this] {
+		pplx::create_task([this] {
 			try {
 				on_ready(*_user);
 			}
@@ -175,7 +177,7 @@ void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 		});
 	}
 	else if (event_name == "MESSAGE_CREATE") {
-		create_task([this, data] {
+		pplx::create_task([this, data] {
 			try {
 				on_message(Message(data, _token));
 			}

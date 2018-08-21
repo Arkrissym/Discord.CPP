@@ -1,6 +1,12 @@
 #pragma once
 #include "TextChannel.h"
 
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
+
 namespace DiscordCPP {
 
 	using namespace std;
@@ -16,10 +22,10 @@ namespace DiscordCPP {
 		///the application id of the group DM creator if it was bot-created
 		string application_id;	//snowflake
 
-		__declspec(dllexport) DMChannel(value data, string_t token);
-		__declspec(dllexport) DMChannel(string id, string_t token);
-		__declspec(dllexport) DMChannel(const DMChannel & old);
-		__declspec(dllexport) ~DMChannel();
+		DLL_EXPORT DMChannel(value data, string_t token);
+		DLL_EXPORT DMChannel(string id, string_t token);
+		DLL_EXPORT DMChannel(const DMChannel & old);
+		DLL_EXPORT ~DMChannel();
 	};
 
 }

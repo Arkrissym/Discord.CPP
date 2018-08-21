@@ -1,6 +1,6 @@
 #pragma once
-#include <cpprest\ws_client.h>
-#include <cpprest\json.h>
+#include <cpprest/ws_client.h>
+#include <cpprest/json.h>
 #include <vector>
 
 #include "Logger.h"
@@ -14,6 +14,12 @@
 #include "Guild.h"
 #include "Embed.h"
 #include "Activity.h"
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 namespace DiscordCPP {
 
@@ -44,23 +50,23 @@ namespace DiscordCPP {
 		///array of servers connected to
 		vector<string> _trace;
 
-		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();
-		__declspec(dllexport) void on_websocket_incoming_message(websocket_incoming_message msg);
+		DLL_EXPORT pplx::task<void> create_heartbeat_task();
+		DLL_EXPORT void on_websocket_incoming_message(websocket_incoming_message msg);
 
-		__declspec(dllexport) void handle_raw_event(std::string event_name, value data);	//op: 0
-		__declspec(dllexport) void send_heartbeat_ack();			//op: 1
-		__declspec(dllexport) void handle_hello_msg(value data);	//op: 10
+		DLL_EXPORT void handle_raw_event(std::string event_name, value data);	//op: 0
+		DLL_EXPORT void send_heartbeat_ack();			//op: 1
+		DLL_EXPORT void handle_hello_msg(value data);	//op: 10
 	public:
 		Logger log;
 
-		__declspec(dllexport) Discord(string token);
-		__declspec(dllexport) ~Discord();
+		DLL_EXPORT Discord(string token);
+		DLL_EXPORT ~Discord();
 		///called when successfully logged in
-		__declspec(dllexport) virtual void on_ready(User user);
+		DLL_EXPORT virtual void on_ready(User user);
 		///called when a message was received
-		__declspec(dllexport) virtual void on_message(Message message);
+		DLL_EXPORT virtual void on_message(Message message);
 		///updates the presence of user
-		__declspec(dllexport) task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
+		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
 	};
 
 }

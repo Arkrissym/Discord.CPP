@@ -6,6 +6,12 @@
 //#include "TextChannel.h"
 //#include "Embed.h"
 
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
+
 namespace DiscordCPP {
 
 	using namespace std;
@@ -63,15 +69,15 @@ namespace DiscordCPP {
 		//MessageAcivity activity;
 		//MessageApplication application;
 
-		__declspec(dllexport) Message(value data, string_t token);
-		__declspec(dllexport) Message(const Message &old);
-		__declspec(dllexport) Message();
-		__declspec(dllexport) ~Message();
+		DLL_EXPORT Message(value data, string_t token);
+		DLL_EXPORT Message(const Message &old);
+		DLL_EXPORT Message();
+		DLL_EXPORT ~Message();
 
 		///Edit this message
-		__declspec(dllexport) Message edit(string content);
+		DLL_EXPORT Message edit(string content);
 		///Delete this message
-		__declspec(dllexport) void delete_msg();
+		DLL_EXPORT void delete_msg();
 	};
 
 }

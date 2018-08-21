@@ -2,7 +2,13 @@
 #include "TextChannel.h"
 //#include "Guild.h"
 
-#include <cpprest\json.h>
+#include <cpprest/json.h>
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 namespace DiscordCPP {
 
@@ -19,11 +25,11 @@ namespace DiscordCPP {
 		///the parent category channel
 		Channel *parent;
 
-		__declspec(dllexport) GuildChannel(value data, string_t token);
-		__declspec(dllexport) GuildChannel(string id, string_t token);
-		__declspec(dllexport) GuildChannel(const GuildChannel &old);
-		__declspec(dllexport) GuildChannel();
-		__declspec(dllexport) ~GuildChannel();
+		DLL_EXPORT GuildChannel(value data, string_t token);
+		DLL_EXPORT GuildChannel(string id, string_t token);
+		DLL_EXPORT GuildChannel(const GuildChannel &old);
+		DLL_EXPORT GuildChannel();
+		DLL_EXPORT ~GuildChannel();
 	};
 
 }

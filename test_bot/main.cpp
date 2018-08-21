@@ -1,9 +1,10 @@
-#include "Discord.h"
-#include <Windows.h>
-#include <conio.h>
+#include <discord_cpp/Discord.h>
 #include <stdlib.h>
+#include <chrono>
+#include <thread>
 
 using namespace DiscordCPP;
+using namespace std;
 
 class myClient : public Discord {
 public:
@@ -30,12 +31,12 @@ public:
 		}
 		else if (message.content == "?msgedit") {
 			Message msg = message.channel->send("New message");
-			Sleep(1000);
+			this_thread::sleep_for(chrono::seconds(1));
 			msg.edit("Edited message");
 		}
 		else if (message.content == "?msgdel") {
 			Message msg = message.channel->send("Message will be deleted in 5 seconds.");
-			Sleep(5000);
+			this_thread::sleep_for(chrono::seconds(5));
 			msg.delete_msg();
 			message.delete_msg();
 		}
@@ -79,19 +80,26 @@ public:
 
 int main() {
 	char *token;
+#ifdef _WIN32
 	size_t len;
 	if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {
 		cerr << "Error" << endl;
 		return -1;
 	}
+#else
+	token = getenv("DISCORD_TEST_TOKEN");
+#endif
 
 	myClient *client = new myClient(token);
+
+#ifdef _WIN32
 	free(token);
+#endif
 
 	client->log.set_log_level(DEBUG);
 
-	while (_getch() != 'q') {
-		Sleep(10);
+	while (1) {
+		this_thread::sleep_for(chrono::seconds(1));
 	}
 
 	delete client;

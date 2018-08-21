@@ -3,7 +3,7 @@
 #include "Message.h"
 #include "Embed.h"
 #include "static.h"
-#include "cpprest\http_client.h"
+#include "cpprest/http_client.h"
 
 using namespace std;
 using namespace web::json;

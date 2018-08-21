@@ -1,7 +1,13 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <cpprest\json.h>
+#include <cpprest/json.h>
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 namespace DiscordCPP {
 
@@ -49,20 +55,20 @@ namespace DiscordCPP {
 		};
 		vector<Field> _fields;
 	public:
-		__declspec(dllexport) Embed(string title="", string description = "");
-		__declspec(dllexport) Embed(value data);
-		__declspec(dllexport) ~Embed();
+		DLL_EXPORT Embed(string title="", string description = "");
+		DLL_EXPORT Embed(value data);
+		DLL_EXPORT ~Embed();
 
-		__declspec(dllexport) void set_color(int color);
-		__declspec(dllexport) void add_field(string name, string value, bool Inline = true);
-		__declspec(dllexport) void set_author(string name, string url="", string icon_url="");
-		__declspec(dllexport) void set_footer(string text, string icon_url = "");
-		__declspec(dllexport) void set_provider(string name, string url = "");
-		__declspec(dllexport) void set_image(string url);
-		__declspec(dllexport) void set_thumbnail(string url);
-		__declspec(dllexport) void set_video(string url);
+		DLL_EXPORT void set_color(int color);
+		DLL_EXPORT void add_field(string name, string value, bool Inline = true);
+		DLL_EXPORT void set_author(string name, string url="", string icon_url="");
+		DLL_EXPORT void set_footer(string text, string icon_url = "");
+		DLL_EXPORT void set_provider(string name, string url = "");
+		DLL_EXPORT void set_image(string url);
+		DLL_EXPORT void set_thumbnail(string url);
+		DLL_EXPORT void set_video(string url);
 
-		__declspec(dllexport) value to_json();
+		DLL_EXPORT value to_json();
 	};
 
 }

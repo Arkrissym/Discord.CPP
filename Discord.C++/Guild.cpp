@@ -4,7 +4,7 @@
 #include "DMChannel.h"
 #include "TextChannel.h"
 
-#include <cpprest\http_client.h>
+#include <cpprest/http_client.h>
 
 using namespace std;
 using namespace web::json;

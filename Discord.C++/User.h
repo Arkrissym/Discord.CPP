@@ -8,6 +8,12 @@
 
 #include "Logger.h"
 
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
+
 namespace DiscordCPP {
 
 	using namespace std;
@@ -35,19 +41,19 @@ namespace DiscordCPP {
 		///the user's email
 		string email;
 
-		__declspec(dllexport) User();
-		__declspec(dllexport) User(value data, string_t token);
-		__declspec(dllexport) User(string id, string_t token);
-		__declspec(dllexport) ~User();
+		DLL_EXPORT User();
+		DLL_EXPORT User(value data, string_t token);
+		DLL_EXPORT User(string id, string_t token);
+		DLL_EXPORT ~User();
 		///get/create the DMChannel for this user
-		__declspec(dllexport) DMChannel get_dmchannel();
+		DLL_EXPORT DMChannel get_dmchannel();
 		///send a message to this user
-		__declspec(dllexport) Message send(string content, bool tts = false);
+		DLL_EXPORT Message send(string content, bool tts = false);
 		///send an embed to this user
-		__declspec(dllexport) Message send(Embed embed);
+		DLL_EXPORT Message send(Embed embed);
 
 		///@return Username as std::string
-		__declspec(dllexport) virtual operator string() { return username; };
+		DLL_EXPORT virtual operator string() { return username; };
 	};
 
 }

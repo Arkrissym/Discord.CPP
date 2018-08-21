@@ -3,7 +3,13 @@
 #include "User.h"
 
 #include <iostream>
-#include <cpprest\json.h>
+#include <cpprest/json.h>
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 namespace DiscordCPP {
 
@@ -23,12 +29,12 @@ namespace DiscordCPP {
 		///true, if the member is muted
 		bool mute = false;
 
-		__declspec(dllexport) Member(value data, string_t token);
-		__declspec(dllexport) Member();
-		__declspec(dllexport) ~Member();
+		DLL_EXPORT Member(value data, string_t token);
+		DLL_EXPORT Member();
+		DLL_EXPORT ~Member();
 
 		///@return Nickname (Username if not present) as std::string
-		__declspec(dllexport) operator string();
+		DLL_EXPORT operator string();
 	};
 
 }

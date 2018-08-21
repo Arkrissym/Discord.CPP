@@ -93,7 +93,7 @@ void DiscordCPP::Embed::set_color(int color) {
 
 void DiscordCPP::Embed::add_field(string name, string value, bool Inline) {
 	if (_fields.size() >= 25) {
-		throw exception("Embed: Cannot add more than 25 fields.");
+		throw length_error("Embed: Cannot add more than 25 fields.");
 	}
 
 	Field field;
@@ -176,7 +176,7 @@ value DiscordCPP::Embed::to_json() {
 		ret[U("thumbnail")][U("url")] = value(conversions::to_string_t(_thumbnail.url));
 
 	if (ret.size() == 0) {
-		throw exception("Cannot create JSON from empty Embed");
+		throw invalid_argument("Cannot create JSON from empty Embed");
 	}
 
 	//Logger("discord.embed").debug(conversions::to_utf8string(ret.serialize()));

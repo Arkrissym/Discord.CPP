@@ -6,6 +6,12 @@
 
 #include <iostream>
 
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
+
 namespace DiscordCPP {
 
 	using namespace std;
@@ -107,14 +113,14 @@ namespace DiscordCPP {
 		vector<Channel *> channels;
 		//vector<Presence *> presences;
 
-		__declspec(dllexport) Guild(value data, string_t token);
-		__declspec(dllexport) Guild(string id, string_t token);
-		__declspec(dllexport) Guild(const Guild &old);
-		__declspec(dllexport) Guild();
-		__declspec(dllexport) ~Guild();
+		DLL_EXPORT Guild(value data, string_t token);
+		DLL_EXPORT Guild(string id, string_t token);
+		DLL_EXPORT Guild(const Guild &old);
+		DLL_EXPORT Guild();
+		DLL_EXPORT ~Guild();
 
 		///@return Guildname as std::string
-		__declspec(dllexport) operator string() { return name; };
+		DLL_EXPORT operator string() { return name; };
 	};
 
 }

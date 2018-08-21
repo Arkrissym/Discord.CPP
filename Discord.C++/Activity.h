@@ -1,7 +1,13 @@
 #pragma once
 #include <string>
 
-#include <cpprest\json.h>
+#include <cpprest/json.h>
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 namespace DiscordCPP {
 
@@ -31,11 +37,11 @@ namespace DiscordCPP {
 		int type;
 		string url;
 
-		__declspec(dllexport) Activity();
-		__declspec(dllexport) Activity(string name, int type, string url="");
-		__declspec(dllexport) ~Activity();
+		DLL_EXPORT Activity();
+		DLL_EXPORT Activity(string name, int type, string url="");
+		DLL_EXPORT ~Activity();
 
-		__declspec(dllexport) value to_json();
+		DLL_EXPORT value to_json();
 	};
 
 }

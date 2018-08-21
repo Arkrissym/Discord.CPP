@@ -1,7 +1,13 @@
 #pragma once
 #include "Channel.h"
 
-#include <cpprest\json.h>
+#include <cpprest/json.h>
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 namespace DiscordCPP {
 
@@ -18,11 +24,11 @@ namespace DiscordCPP {
 		///the parent category channel
 		Channel *parent;
 
-		__declspec(dllexport) VoiceChannel(value data, string_t token);
-		__declspec(dllexport) VoiceChannel(string id, string_t token);
-		__declspec(dllexport) VoiceChannel(const VoiceChannel &old);
-		__declspec(dllexport) VoiceChannel();
-		__declspec(dllexport) ~VoiceChannel();
+		DLL_EXPORT VoiceChannel(value data, string_t token);
+		DLL_EXPORT VoiceChannel(string id, string_t token);
+		DLL_EXPORT VoiceChannel(const VoiceChannel &old);
+		DLL_EXPORT VoiceChannel();
+		DLL_EXPORT ~VoiceChannel();
 	};
 
 }

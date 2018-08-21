@@ -5,6 +5,12 @@
 #include "DiscordObject.h"
 //#include "User.h"
 
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
+
 namespace DiscordCPP {
 
 	using namespace std;
@@ -41,20 +47,20 @@ namespace DiscordCPP {
 		///when the last message was pinned
 		string last_pin_timestamp;	//ISO8601 timestamp
 
-		__declspec(dllexport) Channel(value data, string_t token);
-		__declspec(dllexport) Channel(string id, string_t token);
-		__declspec(dllexport) Channel(const Channel &old);
-		__declspec(dllexport) Channel();
-		__declspec(dllexport) ~Channel();
+		DLL_EXPORT Channel(value data, string_t token);
+		DLL_EXPORT Channel(string id, string_t token);
+		DLL_EXPORT Channel(const Channel &old);
+		DLL_EXPORT Channel();
+		DLL_EXPORT ~Channel();
 
 		///Delete this channel
-		__declspec(dllexport) void delete_channel();
+		DLL_EXPORT void delete_channel();
 
 		template <class T>
-		__declspec(dllexport) Channel *copy(T obj);
+		DLL_EXPORT Channel *copy(T obj);
 
 		///@return Channelname as std::string
-		__declspec(dllexport) operator string() { return name; };
+		DLL_EXPORT operator string() { return name; };
 	};
 
 	template<class T>

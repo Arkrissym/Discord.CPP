@@ -3,7 +3,13 @@
 //#include "Message.h"
 //#include "Embed.h"
 
-#include <cpprest\json.h>
+#include <cpprest/json.h>
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 namespace DiscordCPP {
 
@@ -19,21 +25,21 @@ namespace DiscordCPP {
 		///the topic of the channel
 		string topic;
 
-		__declspec(dllexport) TextChannel(value data, string_t token);
-		__declspec(dllexport) TextChannel(string id, string_t token);
-		__declspec(dllexport) TextChannel(const TextChannel &old);
-		__declspec(dllexport) TextChannel();
-		__declspec(dllexport) ~TextChannel();
+		DLL_EXPORT TextChannel(value data, string_t token);
+		DLL_EXPORT TextChannel(string id, string_t token);
+		DLL_EXPORT TextChannel(const TextChannel &old);
+		DLL_EXPORT TextChannel();
+		DLL_EXPORT ~TextChannel();
 
 		///Send a Message to this channel.
-		__declspec(dllexport) Message send(string content, bool tts=false);
-		__declspec(dllexport) Message send(Embed embed);
+		DLL_EXPORT Message send(string content, bool tts=false);
+		DLL_EXPORT Message send(Embed embed);
 
 		///Get messages from channel history
-		__declspec(dllexport) vector<shared_ptr<Message>> history(int limit=100, string before="", string after="", string around="");
+		DLL_EXPORT vector<shared_ptr<Message>> history(int limit=100, string before="", string after="", string around="");
 
 		///Delete multiple messages from this channel
-		__declspec(dllexport) void delete_messages(vector<shared_ptr<Message>> messages);
+		DLL_EXPORT void delete_messages(vector<shared_ptr<Message>> messages);
 	};
 
 }

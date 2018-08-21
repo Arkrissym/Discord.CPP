@@ -1,7 +1,7 @@
 #include "static.h"
 #include "VoiceChannel.h"
 
-#include <cpprest\http_client.h>
+#include <cpprest/http_client.h>
 
 using namespace web::http;
 using namespace web::http::client;

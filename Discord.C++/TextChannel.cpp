@@ -85,9 +85,9 @@ vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int lim
 
 void DiscordCPP::TextChannel::delete_messages(vector<shared_ptr<Message>> messages) {
 	if (messages.size() < 2)
-		throw exception("Cannot delete less than 2 messages: use Message::delete_msg() instead");
+		throw out_of_range("Cannot delete less than 2 messages: use Message::delete_msg() instead");
 	else if (messages.size() > 100)
-		throw exception("Cannot delete more than 100 messages");
+		throw out_of_range("Cannot delete more than 100 messages");
 
 	string url = "/channels/" + id + "/messages/bulk-delete";
 

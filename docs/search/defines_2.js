@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['is_5fvalid_5ffield',['is_valid_field',['../static_8h.html#afff986e44bd400123ef599a209c62d68',1,'static.h']]]
+  ['gateway_5furl',['GATEWAY_URL',['../static_8h.html#a5f44de4dc2f28bd239034f62914329ba',1,'static.h']]]
 ];

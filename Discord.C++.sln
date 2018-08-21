@@ -10,6 +10,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bot", "test_bot\test_b
 		{41D6DDB3-E6FC-4287-9DF3-3C409DD42E65} = {41D6DDB3-E6FC-4287-9DF3-3C409DD42E65}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C11FCB8A-DBDC-47BA-A82B-B42FAB0B8C16}"
+	ProjectSection(SolutionItems) = preProject
+		Makefile = Makefile
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

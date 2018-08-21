@@ -11,5 +11,5 @@ var searchData=
   ['channeltype',['ChannelType',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2',1,'DiscordCPP::ChannelType']]],
   ['content',['content',['../class_discord_c_p_p_1_1_message.html#a05ec39a76d2dbf66bb30166f17ee6071',1,'DiscordCPP::Message']]],
   ['copy',['copy',['../class_discord_c_p_p_1_1_channel.html#a7f9e1bd37680b9fd7468fb3a505e5e23',1,'DiscordCPP::Channel']]],
-  ['create_5fheartbeat_5ftask',['create_heartbeat_task',['../class_discord_c_p_p_1_1_discord.html#a82ec7fecea95bd1a4206a515eddf8a84',1,'DiscordCPP::Discord']]]
+  ['create_5fheartbeat_5ftask',['create_heartbeat_task',['../class_discord_c_p_p_1_1_discord.html#ac2012e3ce07e05ed3f54da7fd9fed7fe',1,'DiscordCPP::Discord']]]
 ];

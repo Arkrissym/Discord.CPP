@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.2.1</span>
+   &#160;<span id="projectnumber">0.3.0</span>
    </div>
   </td>
  </tr>
@@ -91,9 +91,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa492a81b01db3db673c012686cf6edd6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#aa492a81b01db3db673c012686cf6edd6">on_message</a> (<a class="el" href="class_discord_c_p_p_1_1_message.html">Message</a> message)</td></tr>
 <tr class="memdesc:aa492a81b01db3db673c012686cf6edd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">called when a message was received  <a href="#aa492a81b01db3db673c012686cf6edd6">More...</a><br /></td></tr>
 <tr class="separator:aa492a81b01db3db673c012686cf6edd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f5649d4397dcb95e18df93f1a69bd19"><td class="memItemLeft" align="right" valign="top">task&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a6f5649d4397dcb95e18df93f1a69bd19">update_presence</a> (string status, <a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a> activity=<a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a>(), bool afk=false)</td></tr>
-<tr class="memdesc:a6f5649d4397dcb95e18df93f1a69bd19"><td class="mdescLeft">&#160;</td><td class="mdescRight">updates the presence of user  <a href="#a6f5649d4397dcb95e18df93f1a69bd19">More...</a><br /></td></tr>
-<tr class="separator:a6f5649d4397dcb95e18df93f1a69bd19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e983525381fb1c1a3e3cfdceaa24df2"><td class="memItemLeft" align="right" valign="top">pplx::task&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a1e983525381fb1c1a3e3cfdceaa24df2">update_presence</a> (string status, <a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a> activity=<a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a>(), bool afk=false)</td></tr>
+<tr class="memdesc:a1e983525381fb1c1a3e3cfdceaa24df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">updates the presence of user  <a href="#a1e983525381fb1c1a3e3cfdceaa24df2">More...</a><br /></td></tr>
+<tr class="separator:a1e983525381fb1c1a3e3cfdceaa24df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -102,10 +102,12 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a82ec7fecea95bd1a4206a515eddf8a84"><td class="memItemLeft" align="right" valign="top">concurrency::task&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a82ec7fecea95bd1a4206a515eddf8a84">create_heartbeat_task</a> ()</td></tr>
-<tr class="separator:a82ec7fecea95bd1a4206a515eddf8a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2012e3ce07e05ed3f54da7fd9fed7fe"><td class="memItemLeft" align="right" valign="top">concurrency::task&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#ac2012e3ce07e05ed3f54da7fd9fed7fe">create_heartbeat_task</a> ()</td></tr>
+<tr class="separator:ac2012e3ce07e05ed3f54da7fd9fed7fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad508f2e56a2f058669d55fcc3a388d80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#ad508f2e56a2f058669d55fcc3a388d80">on_websocket_incoming_message</a> (websocket_incoming_message msg)</td></tr>
 <tr class="separator:ad508f2e56a2f058669d55fcc3a388d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1443b0c3fc2d699d86f8b184e46ed22"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#ac1443b0c3fc2d699d86f8b184e46ed22">on_websocket_disconnnect</a> (websocket_close_status status, string reason, error_code error)</td></tr>
+<tr class="separator:ac1443b0c3fc2d699d86f8b184e46ed22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49da26db044d5d4fc15676c147864194"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a49da26db044d5d4fc15676c147864194">handle_raw_event</a> (std::string event_name, value data)</td></tr>
 <tr class="separator:a49da26db044d5d4fc15676c147864194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a534b0b557418d5ca3364a78e98775e6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a534b0b557418d5ca3364a78e98775e6f">send_heartbeat_ack</a> ()</td></tr>
@@ -180,8 +182,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a82ec7fecea95bd1a4206a515eddf8a84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82ec7fecea95bd1a4206a515eddf8a84">&#9670;&nbsp;</a></span>create_heartbeat_task()</h2>
+<a id="ac2012e3ce07e05ed3f54da7fd9fed7fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2012e3ce07e05ed3f54da7fd9fed7fe">&#9670;&nbsp;</a></span>create_heartbeat_task()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,7 +192,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">task&lt; void &gt; DiscordCPP::Discord::create_heartbeat_task </td>
+          <td class="memname">pplx::task&lt; void &gt; DiscordCPP::Discord::create_heartbeat_task </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -335,6 +337,48 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ac1443b0c3fc2d699d86f8b184e46ed22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1443b0c3fc2d699d86f8b184e46ed22">&#9670;&nbsp;</a></span>on_websocket_disconnnect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DiscordCPP::Discord::on_websocket_disconnnect </td>
+          <td>(</td>
+          <td class="paramtype">websocket_close_status&#160;</td>
+          <td class="paramname"><em>status</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>reason</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">error_code&#160;</td>
+          <td class="paramname"><em>error</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad508f2e56a2f058669d55fcc3a388d80"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad508f2e56a2f058669d55fcc3a388d80">&#9670;&nbsp;</a></span>on_websocket_incoming_message()</h2>
 
@@ -386,14 +430,14 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6f5649d4397dcb95e18df93f1a69bd19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f5649d4397dcb95e18df93f1a69bd19">&#9670;&nbsp;</a></span>update_presence()</h2>
+<a id="a1e983525381fb1c1a3e3cfdceaa24df2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e983525381fb1c1a3e3cfdceaa24df2">&#9670;&nbsp;</a></span>update_presence()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">task&lt; void &gt; DiscordCPP::Discord::update_presence </td>
+          <td class="memname">pplx::task&lt; void &gt; DiscordCPP::Discord::update_presence </td>
           <td>(</td>
           <td class="paramtype">string&#160;</td>
           <td class="paramname"><em>status</em>, </td>

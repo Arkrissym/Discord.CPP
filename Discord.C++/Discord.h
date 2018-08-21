@@ -50,9 +50,9 @@ namespace DiscordCPP {
 		///array of servers connected to
 		vector<string> _trace;
 
-		__declspec(dllexport) concurrency::task<void> create_heartbeat_task();
-		__declspec(dllexport) void on_websocket_incoming_message(websocket_incoming_message msg);
-		__declspec(dllexport) void on_websocket_disconnnect(websocket_close_status status, string reason, error_code error);
+		DLL_EXPORT concurrency::task<void> create_heartbeat_task();
+		DLL_EXPORT void on_websocket_incoming_message(websocket_incoming_message msg);
+		DLL_EXPORT void on_websocket_disconnnect(websocket_close_status status, string reason, error_code error);
 
 		DLL_EXPORT void handle_raw_event(std::string event_name, value data);	//op: 0
 		DLL_EXPORT void send_heartbeat_ack();			//op: 1
@@ -66,6 +66,7 @@ namespace DiscordCPP {
 		DLL_EXPORT virtual void on_ready(User user);
 		///called when a message was received
 		DLL_EXPORT virtual void on_message(Message message);
+
 		///updates the presence of user
 		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
 	};

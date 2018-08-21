@@ -50,7 +50,7 @@ namespace DiscordCPP {
 		///array of servers connected to
 		vector<string> _trace;
 
-		DLL_EXPORT concurrency::task<void> create_heartbeat_task();
+		DLL_EXPORT pplx::task<void> create_heartbeat_task();
 		DLL_EXPORT void on_websocket_incoming_message(websocket_incoming_message msg);
 		DLL_EXPORT void on_websocket_disconnnect(websocket_close_status status, string reason, error_code error);
 

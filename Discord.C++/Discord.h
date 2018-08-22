@@ -34,7 +34,7 @@ namespace DiscordCPP {
 		///discord token
 		string_t _token;
 		///websocket client
-		websocket_callback_client _client;
+		websocket_callback_client *_client;
 		///heartbeat interval in milliseconds
 		int _heartbeat_interval = 0;
 		///current sequence number
@@ -51,6 +51,8 @@ namespace DiscordCPP {
 		vector<string> _trace;
 
 		DLL_EXPORT pplx::task<void> create_heartbeat_task();
+		DLL_EXPORT pplx::task<void> connect();
+
 		DLL_EXPORT void on_websocket_incoming_message(websocket_incoming_message msg);
 		DLL_EXPORT void on_websocket_disconnnect(websocket_close_status status, string reason, error_code error);
 
@@ -62,6 +64,7 @@ namespace DiscordCPP {
 
 		DLL_EXPORT Discord(string token);
 		DLL_EXPORT ~Discord();
+
 		///called when successfully logged in
 		DLL_EXPORT virtual void on_ready(User user);
 		///called when a message was received

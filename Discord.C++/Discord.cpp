@@ -20,24 +20,17 @@ DiscordCPP::Discord::Discord(string token) {
 
 	log = Logger("discord");
 
-	_client = websocket_callback_client();
-	_client.connect(U(GATEWAY_URL));
-
 	pplx::task<void> heartbeating = create_heartbeat_task();
 
-	_client.set_message_handler([this](websocket_incoming_message msg) {
-		on_websocket_incoming_message(msg);
-	});
-
-	_client.set_close_handler([this](websocket_close_status close_status, string_t reason, error_code error) {
-		on_websocket_disconnnect(close_status, conversions::to_utf8string(reason), error);
-	});
+	connect();
 
 	//log.debug("created Discord object");
 }
 
 DiscordCPP::Discord::~Discord() {
-	_client.close(websocket_close_status::normal, U("user input"));
+	_client->close(websocket_close_status::normal, U("user input")).then([this] {
+		delete _client;
+	});
 	//log.debug("destroyed Discord object");
 
 	delete _user;
@@ -80,7 +73,7 @@ pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity ac
 	websocket_outgoing_message msg;
 	msg.set_utf8_message(conversions::to_utf8string(presence.serialize()));
 
-	return _client.send(msg);
+	return _client->send(msg);
 }
 
 pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
@@ -98,12 +91,34 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 				heartbeat_msg.set_utf8_message(str);
 			}
 
-			_client.send(heartbeat_msg).then([this] {
-				log.debug("Heartbeat message has been sent");
-			});
+			try {
+				_client->send(heartbeat_msg).then([this] {
+					log.debug("Heartbeat message has been sent");
+				});
+			}
+			catch (const std::exception &e) {
+				log.error("Cannot send heartbeat message: " + string(e.what()));
+			}
 
 			this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
 		}
+	});
+}
+
+DLL_EXPORT pplx::task<void> DiscordCPP::Discord::connect() {
+	return pplx::create_task([this] {
+		log.info("connecting to websocket: " + string(GATEWAY_URL));
+
+		_client = new websocket_callback_client();
+		_client->connect(U(GATEWAY_URL));
+
+		_client->set_message_handler([this](websocket_incoming_message msg) {
+			on_websocket_incoming_message(msg);
+		});
+
+		_client->set_close_handler([this](websocket_close_status close_status, string_t reason, error_code error) {
+			on_websocket_disconnnect(close_status, conversions::to_utf8string(reason), error);
+		});
 	});
 }
 
@@ -144,7 +159,18 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status, string reason, error_code error) {
 	log.warning("websocket closed with status code " + to_string((int)status) + ": " + reason);
 
-	_client.connect(U(GATEWAY_URL));
+	pplx::create_task([this] {
+		try {
+			delete _client;
+		}
+		catch (const std::exception &e) {
+			log.error("error while deleting old websocket client: " + string(e.what()));
+		}
+	}).then([this] {
+		log.info("trying to reconnect");
+		connect().wait();
+		log.info("reconnected");
+	});
 }
 
 void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
@@ -221,7 +247,7 @@ void DiscordCPP::Discord::send_heartbeat_ack() {
 	out_json[U("op")] = value(11);
 	websocket_outgoing_message out_msg = websocket_outgoing_message();
 	out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
-	_client.send(out_msg).then([this] {
+	_client->send(out_msg).then([this] {
 		log.debug("Heartbeat ACK message has been sent");
 	});
 }
@@ -254,7 +280,7 @@ void DiscordCPP::Discord::handle_hello_msg(value data) {
 
 	websocket_outgoing_message out_msg = websocket_outgoing_message();
 	out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
-	_client.send(out_msg).then([this] {
+	_client->send(out_msg).then([this] {
 		log.info("Identify message has been sent");
 	});
 }

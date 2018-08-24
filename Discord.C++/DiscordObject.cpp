@@ -57,7 +57,7 @@ pplx::task<void> manage_cache() {
 	@param[in]	method			(optional) Method of the http request. Default is GET.
 	@param[in]	data			(optional) JSON data to send
 	@param[in]	content_type	(optional) the Content-Type of data
-	@param[in]	cache			(optional) whether
+	@param[in]	cache			(optional) wether to cache results or not (only GET requests can be cached)
 */
 value DiscordCPP::DiscordObject::api_call(string url, method method, value data, string content_type, bool cache) {
 	if (method == methods::GET && cache == true) {

@@ -9,6 +9,7 @@ var searchData=
   ['channel_5fpinned_5fmessage',['CHANNEL_PINNED_MESSAGE',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7a60e2e0aa1299b463cf5fb57be3163385',1,'DiscordCPP::MessageType']]],
   ['channels',['channels',['../class_discord_c_p_p_1_1_guild.html#abcb905817b04a4c67548fd8d45835871',1,'DiscordCPP::Guild']]],
   ['channeltype',['ChannelType',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2',1,'DiscordCPP::ChannelType']]],
+  ['connect',['connect',['../class_discord_c_p_p_1_1_discord.html#a1f2a887bd57befcf15130cce6cfe01eb',1,'DiscordCPP::Discord']]],
   ['content',['content',['../class_discord_c_p_p_1_1_message.html#a05ec39a76d2dbf66bb30166f17ee6071',1,'DiscordCPP::Message']]],
   ['copy',['copy',['../class_discord_c_p_p_1_1_channel.html#a7f9e1bd37680b9fd7468fb3a505e5e23',1,'DiscordCPP::Channel']]],
   ['create_5fheartbeat_5ftask',['create_heartbeat_task',['../class_discord_c_p_p_1_1_discord.html#ac2012e3ce07e05ed3f54da7fd9fed7fe',1,'DiscordCPP::Discord']]]

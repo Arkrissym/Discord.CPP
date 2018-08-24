@@ -1,7 +1,7 @@
 var searchData=
 [
   ['_5fauthor',['_author',['../class_discord_c_p_p_1_1_embed.html#a1dde387b47838f5fa514c6e74591e04c',1,'DiscordCPP::Embed']]],
-  ['_5fclient',['_client',['../class_discord_c_p_p_1_1_discord.html#a623f2c3017bc6facc92b6f5d669c8bc5',1,'DiscordCPP::Discord']]],
+  ['_5fclient',['_client',['../class_discord_c_p_p_1_1_discord.html#aa1d340ed0e9e501b960a2935d9b70d01',1,'DiscordCPP::Discord']]],
   ['_5fcolor',['_color',['../class_discord_c_p_p_1_1_embed.html#ab2ead45b38abac9a386988bd485056a9',1,'DiscordCPP::Embed']]],
   ['_5fdescription',['_description',['../class_discord_c_p_p_1_1_embed.html#ac30fad77ef7770f04c6f4968ea314fd3',1,'DiscordCPP::Embed']]],
   ['_5ffields',['_fields',['../class_discord_c_p_p_1_1_embed.html#adc974f894bfecee399f9173efb6fb432',1,'DiscordCPP::Embed']]],
@@ -9,6 +9,7 @@ var searchData=
   ['_5fguilds',['_guilds',['../class_discord_c_p_p_1_1_discord.html#a2d54f2717a8ebcc4448f129d15431fb3',1,'DiscordCPP::Discord']]],
   ['_5fheartbeat_5finterval',['_heartbeat_interval',['../class_discord_c_p_p_1_1_discord.html#a7c8ccfb9cf3ee3df12fe373d9431a5c1',1,'DiscordCPP::Discord']]],
   ['_5fimage',['_image',['../class_discord_c_p_p_1_1_embed.html#a5f376d9eb36e7195257161822dcf381d',1,'DiscordCPP::Embed']]],
+  ['_5finvalid_5fsession',['_invalid_session',['../class_discord_c_p_p_1_1_discord.html#a9fbb9dba279edbac0e04b4b4e567ad59',1,'DiscordCPP::Discord']]],
   ['_5fname',['_name',['../class_logger.html#af050fc8c757429af3e17f336339af136',1,'Logger']]],
   ['_5fprivate_5fchannels',['_private_channels',['../class_discord_c_p_p_1_1_discord.html#a3e6e122a170adaecd4af5da8a91b146a',1,'DiscordCPP::Discord']]],
   ['_5fprovider',['_provider',['../class_discord_c_p_p_1_1_embed.html#aec81744679a78ee458cfc88b7e8e70d5',1,'DiscordCPP::Embed']]],

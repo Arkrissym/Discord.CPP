@@ -41,6 +41,8 @@ namespace DiscordCPP {
 		unsigned int _sequence_number = 0;
 		///session id
 		string _session_id;
+		///indicator if we have a invalid session
+		bool _invalid_session = false;
 		///the user
 		User *_user;
 		///private channels of the user 
@@ -56,9 +58,9 @@ namespace DiscordCPP {
 		DLL_EXPORT void on_websocket_incoming_message(websocket_incoming_message msg);
 		DLL_EXPORT void on_websocket_disconnnect(websocket_close_status status, string reason, error_code error);
 
-		DLL_EXPORT void handle_raw_event(std::string event_name, value data);	//op: 0
-		DLL_EXPORT void send_heartbeat_ack();			//op: 1
-		DLL_EXPORT void handle_hello_msg(value data);	//op: 10
+		DLL_EXPORT pplx::task<void> handle_raw_event(std::string event_name, value data);	//op: 0
+		DLL_EXPORT pplx::task<void> send_heartbeat_ack();			//op: 1
+		DLL_EXPORT pplx::task<void> handle_hello_msg(value data);	//op: 10
 	public:
 		Logger log;
 

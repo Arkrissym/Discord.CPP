@@ -4,7 +4,9 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-//#include <Windows.h>
+#include <stdlib.h>
+#include <time.h>
+
 #include <cpprest/http_client.h>
 
 using namespace web::websockets::client;
@@ -23,6 +25,8 @@ DiscordCPP::Discord::Discord(string token) {
 	pplx::task<void> heartbeating = create_heartbeat_task();
 
 	connect();
+
+	srand((unsigned int)time(NULL));
 
 	//log.debug("created Discord object");
 }
@@ -105,7 +109,7 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 	});
 }
 
-DLL_EXPORT pplx::task<void> DiscordCPP::Discord::connect() {
+pplx::task<void> DiscordCPP::Discord::connect() {
 	return pplx::create_task([this] {
 		log.info("connecting to websocket: " + string(GATEWAY_URL));
 
@@ -141,6 +145,9 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 		case 1:
 			send_heartbeat_ack();
 			break;
+		case 9:
+			_invalid_session = true;
+			break;
 		case 10:
 			handle_hello_msg(obj.at(U("d")));
 			break;
@@ -157,7 +164,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 }
 
 void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status, string reason, error_code error) {
-	log.warning("websocket closed with status code " + to_string((int)status) + ": " + reason);
+	log.warning("websocket closed with status code " + to_string((int)status) + ": " + reason + "(" + to_string(error.value()) + ": " + error.message() + ")");
 
 	pplx::create_task([this] {
 		try {
@@ -173,114 +180,162 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 	});
 }
 
-void DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
-	if (event_name == "READY") {
-		_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
-		_user = new User(data.at(U("user")), _token);
+pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
+	return pplx::create_task([this, event_name, data] {
+		if (event_name == "READY") {
+			_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
+			_user = new User(data.at(U("user")), _token);
 
-		//_private_channels
-		if (is_valid_field("private_channels")) {
-			web::json::array tmp = data.at(U("private_channels")).as_array();
-			for (int i = 0; i < tmp.size(); i++)
-				_private_channels.push_back(new DMChannel(tmp[i], _token));
+			//_private_channels
+			if (is_valid_field("private_channels")) {
+				web::json::array tmp = data.at(U("private_channels")).as_array();
+				for (int i = 0; i < tmp.size(); i++)
+					_private_channels.push_back(new DMChannel(tmp[i], _token));
+			}
+
+			//_guilds
+			if (is_valid_field("guilds")) {
+				web::json::array tmp = data.at(U("guilds")).as_array();
+				for (int i = 0; i < tmp.size(); i++)
+					_guilds.push_back(new Guild(tmp[i], _token));
+			}
+
+			web::json::array tmp = data.at(U("_trace")).as_array();
+			string str = "[ ";
+			for (int i = 0; i < tmp.size(); i++) {
+				_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
+				if (i == 0)
+					str = str + conversions::to_utf8string(tmp[i].as_string());
+				else
+					str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
+			}
+
+			log.info("connected to: " + str + " ]");
+			log.info("session id: " + _session_id);
+
+			pplx::create_task([this] {
+				try {
+					on_ready(User(*_user));
+				}
+				catch (const std::exception &e) {
+					log.error("ignoring exception in on_ready: " + string(e.what()));
+				}
+			});
 		}
+		else if (event_name == "RESUMED") {
+			web::json::array tmp = data.at(U("_trace")).as_array();
+			string str = "[ ";
+			for (int i = 0; i < tmp.size(); i++) {
+				_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
+				if (i == 0)
+					str = str + conversions::to_utf8string(tmp[i].as_string());
+				else
+					str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
+			}
 
-		//_guilds
-		if (is_valid_field("guilds")) {
-			web::json::array tmp = data.at(U("guilds")).as_array();
-			for (int i = 0; i < tmp.size(); i++)
-				_guilds.push_back(new Guild(tmp[i], _token));
+			log.info("successfully resumed session " + _session_id + "with trace " + str);
 		}
-
-		web::json::array tmp = data.at(U("_trace")).as_array();
-		string str = "[ ";
-		for (int i = 0; i < tmp.size(); i++) {
-			_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
-			if (i == 0)
-				str = str + conversions::to_utf8string(tmp[i].as_string());
-			else
-				str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
+		else if (event_name == "MESSAGE_CREATE") {
+			pplx::create_task([this, data] {
+				try {
+					on_message(Message(data, _token));
+				}
+				catch (const std::exception &e) {
+					log.error("ignoring exception in on_message: " + string(e.what()));
+				}
+			});
 		}
-		
-		log.info("connected to: " + str + " ]");
+		else if (event_name == "GUILD_CREATE") {
+			Guild *tmp_guild = new Guild(data, _token);
 
-		pplx::create_task([this] {
-			try {
-				on_ready(User(*_user));
+			for (unsigned int i = 0; i < _guilds.size(); i++) {
+				if (tmp_guild->id == _guilds[i]->id) {
+					_guilds[i] = tmp_guild;
+					log.debug("Updated guild data");
+					return;
+				}
 			}
-			catch (const std::exception &e) {
-				log.error("ignoring exception in on_ready: " + string(e.what()));
-			}
-		});
-	}
-	else if (event_name == "MESSAGE_CREATE") {
-		pplx::create_task([this, data] {
-			try {
-				on_message(Message(data, _token));
-			}
-			catch (const std::exception &e) {
-				log.error("ignoring exception in on_message: " + string(e.what()));
-			}
-		});
-	}
-	else if (event_name == "GUILD_CREATE") {
-		Guild *tmp_guild = new Guild(data, _token);
 
-		for (unsigned int i = 0; i < _guilds.size(); i++) {
-			if (tmp_guild->id == _guilds[i]->id) {
-				_guilds[i] = tmp_guild;
-				log.debug("Updated guild data");
-				return;
-			}
+			_guilds.push_back(tmp_guild);
+			log.debug("data of new guild added");
 		}
-
-		_guilds.push_back(tmp_guild);
-		log.debug("data of new guild added");
-	}
-	else {
-		log.warning("ignoring event: " + event_name);
-	}
-}
-
-void DiscordCPP::Discord::send_heartbeat_ack() {
-	value out_json;
-	out_json[U("op")] = value(11);
-	websocket_outgoing_message out_msg = websocket_outgoing_message();
-	out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
-	_client->send(out_msg).then([this] {
-		log.debug("Heartbeat ACK message has been sent");
+		else {
+			log.warning("ignoring event: " + event_name);
+		}
 	});
 }
 
-void DiscordCPP::Discord::handle_hello_msg(value data) {
-	_heartbeat_interval = data.at(U("heartbeat_interval")).as_integer();
-	log.debug("set heartbeat_interval: " + to_string(_heartbeat_interval));
+pplx::task<void> DiscordCPP::Discord::send_heartbeat_ack() {
+	return pplx::create_task([this] {
+		value out_json;
+		out_json[U("op")] = value(11);
+		websocket_outgoing_message out_msg = websocket_outgoing_message();
+		out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
+		_client->send(out_msg).then([this] {
+			log.debug("Heartbeat ACK message has been sent");
+		});
+	});
+}
 
-	value out_json;
-	out_json[U("op")] = value(2);
+pplx::task<void> DiscordCPP::Discord::handle_hello_msg(value data) {
+	return pplx::create_task([this, data] {
+		_heartbeat_interval = data.at(U("heartbeat_interval")).as_integer();
+		log.debug("set heartbeat_interval: " + to_string(_heartbeat_interval));
 
-	out_json[U("d")][U("token")] = value(_token);
-#ifdef _WIN64
-	out_json[U("d")][U("properties")][U("$os")] = value(U("Windows(64 bit)"));
-#elif _WIN32
-	out_json[U("d")][U("properties")][U("$os")] = value(U("Windows(32 bit)"));
+		value out_json;
+		websocket_outgoing_message out_msg = websocket_outgoing_message();
+
+		if (_sequence_number > 0) {
+			unsigned int seq = _sequence_number;
+
+			log.info("trying to resume session");
+
+			out_json[U("op")] = value(6);
+			out_json[U("d")][U("token")] = value(_token);
+			out_json[U("d")][U("session_id")] = value(conversions::to_string_t(_session_id));
+			out_json[U("d")][U("seq")] = value(seq);
+
+			out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
+			_client->send(out_msg).then([this] {
+				log.info("Resume payload has been sent");
+			});
+
+			while (_invalid_session == false) {
+				if (_sequence_number > seq) {
+					return;
+				}
+				this_thread::sleep_for(chrono::milliseconds(100));
+			}
+
+			log.info("cannot resume session");
+
+			this_thread::sleep_for(chrono::milliseconds(1000 + rand() % 4001));
+		}
+
+		out_json = value();
+		out_json[U("op")] = value(2);
+
+		out_json[U("d")][U("token")] = value(_token);
+#ifdef _WIN32
+		out_json[U("d")][U("properties")][U("$os")] = value(U("Windows"));
 #elif __APPLE__
-	out_json[U("d")][U("properties")][U("$os")] = value(U("OS X"));
+		out_json[U("d")][U("properties")][U("$os")] = value(U("OS X"));
 #elif __linux__
-	out_json[U("d")][U("properties")][U("$os")] = value(U("Linux"));
+		out_json[U("d")][U("properties")][U("$os")] = value(U("Linux"));
 #elif __unix__
-	out_json[U("d")][U("properties")][U("$os")] = value(U("Unix"));
+		out_json[U("d")][U("properties")][U("$os")] = value(U("Unix"));
 #elif __posix
-	out_json[U("d")][U("properties")][U("$os")] = value(U("POSIX"));
+		out_json[U("d")][U("properties")][U("$os")] = value(U("POSIX"));
 #endif
-	out_json[U("d")][U("properties")][U("$browser")] = value(U("Discord.C++"));
-	out_json[U("d")][U("properties")][U("$device")] = value(U("Discord.C++"));
+		out_json[U("d")][U("properties")][U("$browser")] = value(U("Discord.C++"));
+		out_json[U("d")][U("properties")][U("$device")] = value(U("Discord.C++"));
 
-	//log.debug(conversions::to_utf8string(out_json.serialize()));
+		//log.debug(conversions::to_utf8string(out_json.serialize()));
 
-	websocket_outgoing_message out_msg = websocket_outgoing_message();
-	out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
-	_client->send(out_msg).then([this] {
-		log.info("Identify message has been sent");
+		out_msg = websocket_outgoing_message();
+		out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
+		_client->send(out_msg).then([this] {
+			log.info("Identify payload has been sent");
+		});
 	});
 }

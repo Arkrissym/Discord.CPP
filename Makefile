@@ -27,14 +27,14 @@ install:
 
 uninstall:
 	rm -rf /usr/local/include/$(LIB_NAME)
-	rm -f /usr/local/lib/$(LIB).*
+	rm -f /usr/local/lib/$(LIB)*
 	ldconfig
 
 test:
 	@echo "CC $@"
 	@g++ -o $@ -g -O2 -std=c++14 -Wall test_bot/main.cpp -l$(LIB_NAME) -lboost_system -lcrypto -lssl -lcpprest
 
-.PHONY: all
+.PHONY: all clean test
 
 clean:
 	@rm -f $(OBJ_FILES) $(LIB).* test

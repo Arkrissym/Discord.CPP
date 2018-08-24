@@ -73,7 +73,7 @@ vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int lim
 	if (around.length() > 0)
 		url += "&around" + around;
 
-	web::json::array msgs = api_call(url, methods::GET).as_array();
+	web::json::array msgs = api_call(url, methods::GET, value(), "", false).as_array();
 
 	for (int i = 0; i < msgs.size(); i++) {
 		//cout << endl << conversions::to_utf8string(msgs[i].serialize());

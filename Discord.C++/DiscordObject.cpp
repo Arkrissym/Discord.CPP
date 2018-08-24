@@ -11,7 +11,7 @@ using namespace web::http;
 using namespace web::http::client;
 using namespace utility;
 
-static vector<shared_ptr<value>> cache;
+static vector<shared_ptr<value>> _cache;
 static bool cache_manager_active = false;
 
 pplx::task<void> manage_cache();
@@ -33,13 +33,13 @@ DiscordCPP::DiscordObject::DiscordObject(string_t token) {
 pplx::task<void> manage_cache() {
 	return pplx::create_task([] {
 		while (1) {
-			auto it = cache.begin();
-			while(it != cache.end()) {
+			auto it = _cache.begin();
+			while(it != _cache.end()) {
 				shared_ptr<value> ptr = *it;
 
 				if ((time(0) - ptr->at(U("time")).as_integer()) > 60) {
 					it->reset();
-					it = cache.erase(it);
+					it = _cache.erase(it);
 
 					Logger("discord.object.manage_cache").debug("deleted old data");
 				}
@@ -57,17 +57,18 @@ pplx::task<void> manage_cache() {
 	@param[in]	method			(optional) Method of the http request. Default is GET.
 	@param[in]	data			(optional) JSON data to send
 	@param[in]	content_type	(optional) the Content-Type of data
+	@param[in]	cache			(optional) whether
 */
-value DiscordCPP::DiscordObject::api_call(string url, method method, value data, string content_type) {
-	if (method == methods::GET) {
-		for (int i = 0; i < cache.size(); i++) {
-			if (conversions::to_utf8string(cache[i]->at(U("url")).as_string()) == url) {
-				if ((time(0) - cache[i]->at(U("time")).as_integer()) > 60) {
+value DiscordCPP::DiscordObject::api_call(string url, method method, value data, string content_type, bool cache) {
+	if (method == methods::GET && cache == true) {
+		for (int i = 0; i < _cache.size(); i++) {
+			if (conversions::to_utf8string(_cache[i]->at(U("url")).as_string()) == url) {
+				if ((time(0) - _cache[i]->at(U("time")).as_integer()) > 60) {
 					Logger("discord.object.api_call").debug("found old data");
 				}
 				else {
 					Logger("discord.object.api_call").debug("using cached result for: " + url);
-					return value(cache[i]->at(U("data")));
+					return value(_cache[i]->at(U("data")));
 				}
 			}
 		}
@@ -113,7 +114,7 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 			tmp[U("data")] = ret;
 
 			//cache.push_back(new value(tmp));
-			cache.push_back(make_shared<value>(tmp));
+			_cache.push_back(make_shared<value>(tmp));
 
 			Logger("discord.object.api_call").debug("caching object");
 		}
@@ -121,7 +122,6 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 		if (code == 429) {
 			Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
 
-			//Sleep(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()));
 			this_thread::sleep_for(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str())));
 		}
 	} while (code == 429);

@@ -16,7 +16,7 @@ namespace DiscordCPP {
 		string_t _token;
 
 		///helper function to communicate with the http api
-		value api_call(string url, method method = methods::GET, value data = value(), string content_type="");
+		value api_call(string url, method method = methods::GET, value data = value(), string content_type="", bool cache=true);
 	public:
 		///the id of the object
 		string id;	//snowflake

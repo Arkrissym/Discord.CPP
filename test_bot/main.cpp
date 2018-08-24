@@ -73,7 +73,7 @@ public:
 		}
 		else if (message.content.compare(0, 7, "?clear ") == 0) {
 			string tmp = message.content.substr(7);
-			vector<shared_ptr<Message>> messages = message.channel->history(atoi(tmp.c_str()));
+			vector<shared_ptr<Message>> messages = message.channel->history(atoi(tmp.c_str()) + 1);
 
 			log.info("num messages: " + to_string(messages.size()));
 			message.channel->delete_messages(messages);

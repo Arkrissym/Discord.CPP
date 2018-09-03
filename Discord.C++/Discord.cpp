@@ -205,6 +205,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 	return pplx::create_task([this, event_name, data] {
 		if (event_name == "READY") {
 			_reconnect_timeout = 0;
+			_last_heartbeat_ack = time(0);
 
 			_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
 			_user = new User(data.at(U("user")), _token);
@@ -247,6 +248,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 		}
 		else if (event_name == "RESUMED") {
 			_reconnect_timeout = 0;
+			_last_heartbeat_ack = time(0);
 
 			web::json::array tmp = data.at(U("_trace")).as_array();
 			string str = "[ ";

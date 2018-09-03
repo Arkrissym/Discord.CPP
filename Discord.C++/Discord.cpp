@@ -85,23 +85,36 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 		while (_heartbeat_interval == 0)
 			this_thread::sleep_for(chrono::milliseconds(50));
 
-		while (1) {
-			websocket_outgoing_message heartbeat_msg = websocket_outgoing_message();
-			if(_sequence_number == 0)
-				heartbeat_msg.set_utf8_message("{\"op\": 1, \"d\": null}");
-			else {
-				string str = "{\"op\": 1, \"d\": " + to_string(_sequence_number) + "}";
-				//log.debug(str);
-				heartbeat_msg.set_utf8_message(str);
-			}
+		_last_heartbeat_ack = time(0);
 
-			try {
-				_client->send(heartbeat_msg).then([this] {
-					log.debug("Heartbeat message has been sent");
-				});
+		while (1) {
+			if (_last_heartbeat_ack * 1000 + _heartbeat_interval < time(0) * 1000) {
+				log.warning("Gateway stopped responding. Closing and restarting websocket...");
+				try {
+					_client->close(websocket_close_status::going_away, U("Server not responding")).wait();
+				}
+				catch (exception &e) {
+					log.error("Cannot close websocket: " + string(e.what()));
+				}
 			}
-			catch (const std::exception &e) {
-				log.error("Cannot send heartbeat message: " + string(e.what()));
+			else {
+				websocket_outgoing_message heartbeat_msg = websocket_outgoing_message();
+				if (_sequence_number == 0)
+					heartbeat_msg.set_utf8_message("{\"op\": 1, \"d\": null}");
+				else {
+					string str = "{\"op\": 1, \"d\": " + to_string(_sequence_number) + "}";
+					//log.debug(str);
+					heartbeat_msg.set_utf8_message(str);
+				}
+
+				try {
+					_client->send(heartbeat_msg).then([this] {
+						log.debug("Heartbeat message has been sent");
+					}).wait();
+				}
+				catch (const std::exception &e) {
+					log.error("Cannot send heartbeat message: " + string(e.what()));
+				}
 			}
 
 			this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
@@ -153,6 +166,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 			break;
 		case 11:
 			log.debug("received heartbeat ACK");
+			_last_heartbeat_ack = time(0);
 			break;
 		default:
 			//print message
@@ -164,7 +178,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(websocket_incoming_messa
 }
 
 void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status, string reason, error_code error) {
-	log.warning("websocket closed with status code " + to_string((int)status) + ": " + reason + "(" + to_string(error.value()) + ": " + error.message() + ")");
+	log.warning("websocket closed with status code " + to_string((int)status) + ": " + reason + " (" + to_string(error.value()) + ": " + error.message() + ")");
 
 	pplx::create_task([this] {
 		try {
@@ -174,7 +188,14 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 			log.error("error while deleting old websocket client: " + string(e.what()));
 		}
 	}).then([this] {
-		log.info("trying to reconnect");
+		log.info("trying to reconnect in " + to_string((double)_reconnect_timeout / 1000) + "s");
+		this_thread::sleep_for(chrono::milliseconds(_reconnect_timeout));
+		if (_reconnect_timeout == 0) {
+			_reconnect_timeout = 1000;
+		}
+		else {
+			_reconnect_timeout = (unsigned int)(_reconnect_timeout * 1.5);
+		}
 		connect().wait();
 		log.info("reconnected");
 	});
@@ -233,7 +254,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
 			}
 
-			log.info("successfully resumed session " + _session_id + "with trace " + str);
+			log.info("successfully resumed session " + _session_id + " with trace " + str + " ]");
 		}
 		else if (event_name == "MESSAGE_CREATE") {
 			pplx::create_task([this, data] {

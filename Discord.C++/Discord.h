@@ -51,6 +51,11 @@ namespace DiscordCPP {
 		vector<Guild *> _guilds;
 		///array of servers connected to
 		vector<string> _trace;
+		///sometimes it is better a few seconds before reconnecting...
+		unsigned int _reconnect_timeout = 0;
+		///timestamp of last heartbeat ack
+		time_t _last_heartbeat_ack;
+
 
 		DLL_EXPORT pplx::task<void> create_heartbeat_task();
 		DLL_EXPORT pplx::task<void> connect();

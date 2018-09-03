@@ -9,6 +9,11 @@
 test
 lib*
 start.sh
+*.wav
+*.mp3
+*.in
+*.opus
+*.pcm
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

@@ -9,9 +9,11 @@ OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o, $(SRC_FILES))
 HEADER_FILES := $(wildcard $(SRC_DIR)/*.h)
 
 CXXFLAGS := -std=c++14 -fPIC -Wall -Wextra -O2
+CFLAGS := $(pkg-config --cflags libsodium)
+LDFLAGS := $(pkg-config --libs libsodium) -lcpprest -lopus
 
 all: $(OBJ_FILES)
-	g++ -shared -o $(LIB).$(VERSION) $(OBJ_FILES)
+	g++ $(CFLAGS) -shared -o $(LIB).$(VERSION) $(OBJ_FILES) $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
@@ -32,7 +34,7 @@ uninstall:
 
 test:
 	@echo "CC $@"
-	@g++ -o $@ -g -O2 -std=c++14 -Wall test_bot/main.cpp -l$(LIB_NAME) -lboost_system -lcrypto -lssl -lcpprest
+	@g++ -o $@ -g -O2 -std=c++14 -Wall test_bot/main.cpp -l$(LIB_NAME) -lboost_system -lcrypto -lssl
 
 .PHONY: all clean test
 

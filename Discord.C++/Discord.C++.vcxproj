@@ -133,6 +133,8 @@
     <ClCompile Include="TextChannel.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="VoiceChannel.cpp" />
+    <ClCompile Include="VoiceClient.cpp" />
+    <ClCompile Include="VoiceState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activity.h" />
@@ -150,6 +152,8 @@
     <ClInclude Include="TextChannel.h" />
     <ClInclude Include="User.h" />
     <ClInclude Include="VoiceChannel.h" />
+    <ClInclude Include="VoiceClient.h" />
+    <ClInclude Include="VoiceState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -57,6 +57,12 @@
     <ClCompile Include="Activity.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="VoiceClient.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="VoiceState.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Discord.h">
@@ -102,6 +108,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Activity.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="VoiceClient.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="VoiceState.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

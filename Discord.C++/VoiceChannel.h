@@ -15,6 +15,8 @@ namespace DiscordCPP {
 	using namespace web::json;
 	using namespace utility;
 
+	class Guild;
+
 	class VoiceChannel : public Channel	{
 	public:
 		///the channel's bitrate
@@ -22,7 +24,9 @@ namespace DiscordCPP {
 		///the channel's user-limit
 		int user_limit;
 		///the parent category channel
-		Channel *parent;
+		Channel *parent = NULL;
+		///the guild the channel belongs to
+		Guild *guild = NULL;
 
 		DLL_EXPORT VoiceChannel(value data, string_t token);
 		DLL_EXPORT VoiceChannel(string id, string_t token);

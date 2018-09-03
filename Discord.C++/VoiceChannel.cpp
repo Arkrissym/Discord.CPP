@@ -1,5 +1,6 @@
 #include "static.h"
 #include "VoiceChannel.h"
+#include "Guild.h"
 
 #include <cpprest/http_client.h>
 
@@ -20,6 +21,9 @@ DiscordCPP::VoiceChannel::VoiceChannel(value data, string_t token) : DiscordCPP:
 
 	if (is_valid_field("parent_id"))
 		parent = new Channel(conversions::to_utf8string(data.at(U("parent_id")).as_string()), token);
+
+	if (is_valid_field("guild_id"))
+		guild = new Guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
 }
 
 DiscordCPP::VoiceChannel::VoiceChannel(string id, string_t token) {
@@ -43,4 +47,5 @@ DiscordCPP::VoiceChannel::VoiceChannel() {
 
 DiscordCPP::VoiceChannel::~VoiceChannel() {
 	delete parent;
+	delete guild;
 }

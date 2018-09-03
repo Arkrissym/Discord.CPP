@@ -88,7 +88,7 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 		_last_heartbeat_ack = time(0);
 
 		while (1) {
-			if (_last_heartbeat_ack * 1000 + _heartbeat_interval < time(0) * 1000) {
+			if (_last_heartbeat_ack * 1000 + _heartbeat_interval + 2000 < time(0) * 1000) {
 				log.warning("Gateway stopped responding. Closing and restarting websocket...");
 				try {
 					_client->close(websocket_close_status::going_away, U("Server not responding")).wait();
@@ -204,6 +204,8 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 	return pplx::create_task([this, event_name, data] {
 		if (event_name == "READY") {
+			_reconnect_timeout = 0;
+
 			_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
 			_user = new User(data.at(U("user")), _token);
 
@@ -244,6 +246,8 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			});
 		}
 		else if (event_name == "RESUMED") {
+			_reconnect_timeout = 0;
+
 			web::json::array tmp = data.at(U("_trace")).as_array();
 			string str = "[ ";
 			for (int i = 0; i < tmp.size(); i++) {

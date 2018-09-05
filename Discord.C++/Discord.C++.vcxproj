@@ -130,6 +130,7 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="Message.cpp" />
+    <ClCompile Include="static.cpp" />
     <ClCompile Include="TextChannel.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="VoiceChannel.cpp" />

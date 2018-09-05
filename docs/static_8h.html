@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.3.3</span>
+   &#160;<span id="projectnumber">0.3.4</span>
    </div>
   </td>
  </tr>
@@ -67,17 +67,20 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">static.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
+<div class="textblock"><code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;cpprest/asyncrt_utils.h&gt;</code><br />
+</div>
 <p><a href="static_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="static_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>&#160;&#160;&#160;&quot;0.3.3&quot;</td></tr>
+<tr class="memitem:a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="static_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>&#160;&#160;&#160;&quot;0.3.4&quot;</td></tr>
 <tr class="separator:a1c6d5de492ac61ad29aec7aa9a436bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f44de4dc2f28bd239034f62914329ba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="static_8h.html#a5f44de4dc2f28bd239034f62914329ba">GATEWAY_URL</a>&#160;&#160;&#160;&quot;wss://gateway.discord.gg?v=6&amp;encoding=json&quot;</td></tr>
 <tr class="separator:a5f44de4dc2f28bd239034f62914329ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -85,6 +88,13 @@ Macros</h2></td></tr>
 <tr class="separator:a47cbcc6d148fe0c8f9fb95966026aa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afff986e44bd400123ef599a209c62d68"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="static_8h.html#afff986e44bd400123ef599a209c62d68">is_valid_field</a>(name)&#160;&#160;&#160;(data.has_field(U(name))) &amp;&amp; (!data.at(U(name)).is_null())</td></tr>
 <tr class="separator:afff986e44bd400123ef599a209c62d68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ca888bd091694c05472e1b91df1a97b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="static_8h.html#a1ca888bd091694c05472e1b91df1a97b">DLL_EXPORT</a></td></tr>
+<tr class="separator:a1ca888bd091694c05472e1b91df1a97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a96aca8381ac6ec864ace9b90c46fe241"><td class="memItemLeft" align="right" valign="top">pplx::task&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="static_8h.html#a96aca8381ac6ec864ace9b90c46fe241">waitFor</a> (const std::chrono::milliseconds ms)</td></tr>
+<tr class="separator:a96aca8381ac6ec864ace9b90c46fe241"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a47cbcc6d148fe0c8f9fb95966026aa97"></a>
@@ -95,6 +105,20 @@ Macros</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define API_URL&#160;&#160;&#160;&quot;https://discordapp.com/api&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1ca888bd091694c05472e1b91df1a97b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ca888bd091694c05472e1b91df1a97b">&#9670;&nbsp;</a></span>DLL_EXPORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DLL_EXPORT</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -140,7 +164,26 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define VERSION&#160;&#160;&#160;&quot;0.3.3&quot;</td>
+          <td class="memname">#define VERSION&#160;&#160;&#160;&quot;0.3.4&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a96aca8381ac6ec864ace9b90c46fe241"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96aca8381ac6ec864ace9b90c46fe241">&#9670;&nbsp;</a></span>waitFor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pplx::task&lt;void&gt; waitFor </td>
+          <td>(</td>
+          <td class="paramtype">const std::chrono::milliseconds&#160;</td>
+          <td class="paramname"><em>ms</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

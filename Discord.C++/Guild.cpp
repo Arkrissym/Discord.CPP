@@ -66,7 +66,7 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 
 	if (is_valid_field("features")) {
 		web::json::array tmp = data.at(U("features")).as_array();
-		for (int i = 0; i < tmp.size(); i++)
+		for (unsigned int i = 0; i < tmp.size(); i++)
 			features.push_back(conversions::to_utf8string(tmp[i].as_string()));
 	}
 
@@ -104,13 +104,13 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 
 	if (is_valid_field("members")) {
 		web::json::array tmp = data.at(U("members")).as_array();
-		for (int i = 0; i < tmp.size(); i++)
+		for (unsigned int i = 0; i < tmp.size(); i++)
 			members.push_back(new Member(tmp[i], token));
 	}
 
 	if (is_valid_field("channels")) {
 		web::json::array tmp = data.at(U("channels")).as_array();
-		for (int i = 0; i < tmp.size(); i++) {
+		for (unsigned int i = 0; i < tmp.size(); i++) {
 			switch (tmp[i].at(U("type")).as_integer()) {
 			case ChannelType::GUILD_TEXT:
 				channels.push_back((Channel *)new TextChannel(tmp[i], token));
@@ -175,10 +175,10 @@ DiscordCPP::Guild::Guild(const Guild & old) {
 	unavailable = old.unavailable;
 	member_count = old.member_count;
 	//voice_states
-	for (int i = 0; i < old.members.size(); i++) {
+	for (unsigned int i = 0; i < old.members.size(); i++) {
 		members.push_back(new Member(*old.members[i]));
 	}
-	for (int i = 0; i < old.channels.size(); i++) {
+	for (unsigned int i = 0; i < old.channels.size(); i++) {
 		channels.push_back(old.channels[i]->copy(*old.channels[i]));
 	}
 	//presences
@@ -197,10 +197,10 @@ DiscordCPP::Guild::~Guild() {
 	delete embed_channel;
 	delete widget_channel;
 	delete embed_channel;
-	for (int i = 0; i < members.size(); i++) {
+	for (unsigned int i = 0; i < members.size(); i++) {
 		delete members[i];
 	}
-	for (int i = 0; i < channels.size(); i++) {
+	for (unsigned int i = 0; i < channels.size(); i++) {
 		delete channels[i];
 	}
 }

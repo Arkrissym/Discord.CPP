@@ -10,7 +10,7 @@ DiscordCPP::DMChannel::DMChannel(value data, string_t token) : DiscordCPP::TextC
 	if (is_valid_field("recipients")) {
 		//recipients = new vector<User *>;
 		web::json::array tmp = data.at(U("recipients")).as_array();
-		for (int i = 0; i < tmp.size(); i++)
+		for (unsigned int i = 0; i < tmp.size(); i++)
 			recipients.push_back(new User(tmp[i], token));
 	}
 
@@ -28,7 +28,7 @@ DiscordCPP::DMChannel::DMChannel(string id, string_t token) {
 }
 
 DiscordCPP::DMChannel::DMChannel(const DMChannel & old) : DiscordCPP::TextChannel(old) {
-	for (int i = 0; i < old.recipients.size(); i++) {
+	for (unsigned int i = 0; i < old.recipients.size(); i++) {
 		recipients.push_back(new User(*old.recipients[i]));
 	}
 	if (old.owner != NULL)
@@ -37,7 +37,7 @@ DiscordCPP::DMChannel::DMChannel(const DMChannel & old) : DiscordCPP::TextChanne
 }
 
 DiscordCPP::DMChannel::~DMChannel() {
-	for (int i = 0; i < recipients.size(); i++) {
+	for (unsigned int i = 0; i < recipients.size(); i++) {
 		delete recipients[i];
 	}
 	delete owner;

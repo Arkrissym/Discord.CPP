@@ -2,9 +2,6 @@
 #include "static.h"
 #include "Logger.h"
 
-#include <chrono>
-#include <thread>
-
 using namespace std;
 using namespace web::json;
 using namespace web::http;
@@ -49,7 +46,7 @@ pplx::task<void> manage_cache() {
 			}
 
 			//this_thread::sleep_for(chrono::seconds(10));
-			pplx::wait(10000);
+			waitFor(chrono::milliseconds(10000)).wait();
 		}
 	});
 }
@@ -62,7 +59,7 @@ pplx::task<void> manage_cache() {
 */
 value DiscordCPP::DiscordObject::api_call(string url, method method, value data, string content_type, bool cache) {
 	if (method == methods::GET && cache == true) {
-		for (int i = 0; i < _cache.size(); i++) {
+		for (unsigned int i = 0; i < _cache.size(); i++) {
 			if (conversions::to_utf8string(_cache[i]->at(U("url")).as_string()) == url) {
 				if ((time(0) - _cache[i]->at(U("time")).as_integer()) > 60) {
 					Logger("discord.object.api_call").debug("found old data");
@@ -124,7 +121,7 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 			Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
 
 			//this_thread::sleep_for(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str())));
-			pplx::wait(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()));
+			waitFor(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()))).wait();
 		}
 	} while (code == 429);
 

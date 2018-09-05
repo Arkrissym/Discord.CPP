@@ -75,7 +75,7 @@ vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int lim
 
 	web::json::array msgs = api_call(url, methods::GET, value(), "", false).as_array();
 
-	for (int i = 0; i < msgs.size(); i++) {
+	for (unsigned int i = 0; i < msgs.size(); i++) {
 		//cout << endl << conversions::to_utf8string(msgs[i].serialize());
 		ret.push_back(make_shared<Message>(Message(msgs[i], _token)));
 	}
@@ -93,7 +93,7 @@ void DiscordCPP::TextChannel::delete_messages(vector<shared_ptr<Message>> messag
 
 	value data;
 	data[U("messages")] = value();
-	for (int i = 0; i < messages.size(); i++) {
+	for (unsigned int i = 0; i < messages.size(); i++) {
 		data[U("messages")][i] = value(conversions::to_string_t(messages[i]->id));
 	}
 

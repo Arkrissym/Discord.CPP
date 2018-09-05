@@ -57,6 +57,9 @@
     <ClCompile Include="Activity.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="static.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Discord.h">

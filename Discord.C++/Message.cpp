@@ -64,7 +64,7 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 
 	if (is_valid_field("mentions")) {
 		web::json::array tmp = data.at(U("mentions")).as_array();
-		for (int i = 0; i < tmp.size(); i++)
+		for (unsigned int i = 0; i < tmp.size(); i++)
 			mentions.push_back(new User(tmp[i], token));
 	}
 
@@ -74,7 +74,7 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 
 	if (is_valid_field("embeds")) {
 		web::json::array tmp = data.at(U("embeds")).as_array();
-		for (int i = 0; i < tmp.size(); i++) {
+		for (unsigned int i = 0; i < tmp.size(); i++) {
 			embeds.push_back(new Embed(tmp[i]));
 		}
 	}
@@ -125,7 +125,7 @@ DiscordCPP::Message::Message(const Message & old) {
 	tts = old.tts;
 	mention_everyone = old.mention_everyone;
 	//mentions = old.mentions;
-	for (int i = 0; i < old.mentions.size(); i++) {
+	for (unsigned int i = 0; i < old.mentions.size(); i++) {
 		mentions.push_back(new User(*old.mentions[i]));
 	}
 	//mention_roles
@@ -150,10 +150,10 @@ DiscordCPP::Message::~Message() {
 	//if(channel != NULL)
 	delete channel;
 	delete author;
-	for (int i = 0; i < mentions.size(); i++) {
+	for (unsigned int i = 0; i < mentions.size(); i++) {
 		delete mentions[i];
 	}
-	for (int i = 0; i < embeds.size(); i++) {
+	for (unsigned int i = 0; i < embeds.size(); i++) {
 		delete embeds[i];
 	}
 }

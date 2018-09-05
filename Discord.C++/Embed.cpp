@@ -72,7 +72,7 @@ DiscordCPP::Embed::Embed(value data) {
 	}
 	if (is_valid_field("fields")) {
 		web::json::array tmp = data.at(U("fields")).as_array();
-		for (int i = 0; i < tmp.size(); i++) {
+		for (unsigned int i = 0; i < tmp.size(); i++) {
 			Field f;
 			f.name = conversions::to_utf8string(tmp[i].at(U("name")).as_string());
 			f.value = conversions::to_utf8string(tmp[i].at(U("value")).as_string());
@@ -142,7 +142,7 @@ value DiscordCPP::Embed::to_json() {
 	if (_color >= 0)
 		ret[U("color")] = value(_color);
 
-	for (int i = 0; i < _fields.size(); i++) {
+	for (unsigned int i = 0; i < _fields.size(); i++) {
 		value f;
 		f[U("name")] = value(conversions::to_string_t(_fields[i].name));
 		f[U("value")] = value(conversions::to_string_t(_fields[i].value));

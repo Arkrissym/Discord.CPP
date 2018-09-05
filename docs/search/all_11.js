@@ -11,6 +11,7 @@ var searchData=
   ['set_5fthumbnail',['set_thumbnail',['../class_discord_c_p_p_1_1_embed.html#acbc0769f3832e8753c2332a3410bb8fe',1,'DiscordCPP::Embed']]],
   ['set_5fvideo',['set_video',['../class_discord_c_p_p_1_1_embed.html#a1183a624f80a289a894dd6cea27e1a11',1,'DiscordCPP::Embed']]],
   ['splash',['splash',['../class_discord_c_p_p_1_1_guild.html#a33adee0dd665fe8203446b7b12fd79e5',1,'DiscordCPP::Guild']]],
+  ['static_2ecpp',['static.cpp',['../static_8cpp.html',1,'']]],
   ['static_2eh',['static.h',['../static_8h.html',1,'']]],
   ['streaming',['Streaming',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018a95e54bd873a2eb313f12b8f21eb01422',1,'DiscordCPP::ActivityTypes']]],
   ['system_5fchannel',['system_channel',['../class_discord_c_p_p_1_1_guild.html#a9c4f1803e67381deed28c9d1951204b1',1,'DiscordCPP::Guild']]]

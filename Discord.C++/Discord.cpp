@@ -2,8 +2,6 @@
 #include "static.h"
 
 #include <iostream>
-#include <chrono>
-#include <thread>
 #include <stdlib.h>
 #include <time.h>
 
@@ -38,10 +36,10 @@ DiscordCPP::Discord::~Discord() {
 	//log.debug("destroyed Discord object");
 
 	delete _user;
-	for (int i = 0; i < _private_channels.size(); i++) {
+	for (unsigned int i = 0; i < _private_channels.size(); i++) {
 		delete _private_channels[i];
 	}
-	for (int i = 0; i < _guilds.size(); i++) {
+	for (unsigned int i = 0; i < _guilds.size(); i++) {
 		delete _guilds[i];
 	}
 }
@@ -84,7 +82,7 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 	return pplx::create_task([this] {
 		while (_heartbeat_interval == 0)
 			//this_thread::sleep_for(chrono::milliseconds(50));
-			pplx::wait(50);
+			waitFor(chrono::milliseconds(50)).wait();
 
 		_last_heartbeat_ack = time(0);
 
@@ -119,7 +117,7 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 			}
 
 			//this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
-			pplx::wait(_heartbeat_interval);
+			waitFor(chrono::milliseconds(_heartbeat_interval)).wait();
 		}
 	});
 }
@@ -192,7 +190,7 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 	}).then([this] {
 		log.info("trying to reconnect in " + to_string((double)_reconnect_timeout / 1000) + "s");
 		//this_thread::sleep_for(chrono::milliseconds(_reconnect_timeout));
-		pplx::wait(_reconnect_timeout);
+		waitFor(chrono::milliseconds(_reconnect_timeout)).wait();
 
 		if (_reconnect_timeout == 0) {
 			_reconnect_timeout = 1000;
@@ -217,20 +215,20 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			//_private_channels
 			if (is_valid_field("private_channels")) {
 				web::json::array tmp = data.at(U("private_channels")).as_array();
-				for (int i = 0; i < tmp.size(); i++)
+				for (unsigned int i = 0; i < tmp.size(); i++)
 					_private_channels.push_back(new DMChannel(tmp[i], _token));
 			}
 
 			//_guilds
 			if (is_valid_field("guilds")) {
 				web::json::array tmp = data.at(U("guilds")).as_array();
-				for (int i = 0; i < tmp.size(); i++)
+				for (unsigned int i = 0; i < tmp.size(); i++)
 					_guilds.push_back(new Guild(tmp[i], _token));
 			}
 
 			web::json::array tmp = data.at(U("_trace")).as_array();
 			string str = "[ ";
-			for (int i = 0; i < tmp.size(); i++) {
+			for (unsigned int i = 0; i < tmp.size(); i++) {
 				_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
 				if (i == 0)
 					str = str + conversions::to_utf8string(tmp[i].as_string());
@@ -256,7 +254,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 
 			web::json::array tmp = data.at(U("_trace")).as_array();
 			string str = "[ ";
-			for (int i = 0; i < tmp.size(); i++) {
+			for (unsigned int i = 0; i < tmp.size(); i++) {
 				_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
 				if (i == 0)
 					str = str + conversions::to_utf8string(tmp[i].as_string());
@@ -336,13 +334,13 @@ pplx::task<void> DiscordCPP::Discord::handle_hello_msg(value data) {
 					return;
 				}
 				//this_thread::sleep_for(chrono::milliseconds(100));
-				pplx::wait(100);
+				waitFor(chrono::milliseconds(100)).wait();
 			}
 
 			log.info("cannot resume session");
 
 			//this_thread::sleep_for(chrono::milliseconds(1000 + rand() % 4001));
-			pplx::wait(1000 + rand() % 4001);
+			waitFor(chrono::milliseconds(1000 + rand() % 4001)).wait();
 		}
 
 		out_json = value();

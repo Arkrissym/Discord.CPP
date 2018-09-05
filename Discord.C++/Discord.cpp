@@ -83,7 +83,8 @@ pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity ac
 pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 	return pplx::create_task([this] {
 		while (_heartbeat_interval == 0)
-			this_thread::sleep_for(chrono::milliseconds(50));
+			//this_thread::sleep_for(chrono::milliseconds(50));
+			pplx::wait(50);
 
 		_last_heartbeat_ack = time(0);
 
@@ -117,7 +118,8 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 				}
 			}
 
-			this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
+			//this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
+			pplx::wait(_heartbeat_interval);
 		}
 	});
 }
@@ -189,7 +191,9 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 		}
 	}).then([this] {
 		log.info("trying to reconnect in " + to_string((double)_reconnect_timeout / 1000) + "s");
-		this_thread::sleep_for(chrono::milliseconds(_reconnect_timeout));
+		//this_thread::sleep_for(chrono::milliseconds(_reconnect_timeout));
+		pplx::wait(_reconnect_timeout);
+
 		if (_reconnect_timeout == 0) {
 			_reconnect_timeout = 1000;
 		}
@@ -331,12 +335,14 @@ pplx::task<void> DiscordCPP::Discord::handle_hello_msg(value data) {
 				if (_sequence_number > seq) {
 					return;
 				}
-				this_thread::sleep_for(chrono::milliseconds(100));
+				//this_thread::sleep_for(chrono::milliseconds(100));
+				pplx::wait(100);
 			}
 
 			log.info("cannot resume session");
 
-			this_thread::sleep_for(chrono::milliseconds(1000 + rand() % 4001));
+			//this_thread::sleep_for(chrono::milliseconds(1000 + rand() % 4001));
+			pplx::wait(1000 + rand() % 4001);
 		}
 
 		out_json = value();

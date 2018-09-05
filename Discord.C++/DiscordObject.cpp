@@ -48,7 +48,8 @@ pplx::task<void> manage_cache() {
 				}
 			}
 
-			this_thread::sleep_for(chrono::seconds(10));
+			//this_thread::sleep_for(chrono::seconds(10));
+			pplx::wait(10000);
 		}
 	});
 }
@@ -122,7 +123,8 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 		if (code == 429) {
 			Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
 
-			this_thread::sleep_for(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str())));
+			//this_thread::sleep_for(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str())));
+			pplx::wait(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()));
 		}
 	} while (code == 429);
 

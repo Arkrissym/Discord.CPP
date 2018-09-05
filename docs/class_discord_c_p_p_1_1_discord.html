@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.3.1</span>
+   &#160;<span id="projectnumber">0.3.3</span>
    </div>
   </td>
  </tr>
@@ -149,6 +149,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a43d1af50c0a9c3cd353992917f08197c"><td class="memItemLeft" align="right" valign="top">vector&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a43d1af50c0a9c3cd353992917f08197c">_trace</a></td></tr>
 <tr class="memdesc:a43d1af50c0a9c3cd353992917f08197c"><td class="mdescLeft">&#160;</td><td class="mdescRight">array of servers connected to  <a href="#a43d1af50c0a9c3cd353992917f08197c">More...</a><br /></td></tr>
 <tr class="separator:a43d1af50c0a9c3cd353992917f08197c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af819015466559b030099ec25c6acb449"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#af819015466559b030099ec25c6acb449">_reconnect_timeout</a> = 0</td></tr>
+<tr class="memdesc:af819015466559b030099ec25c6acb449"><td class="mdescLeft">&#160;</td><td class="mdescRight">sometimes it is better a few seconds before reconnecting...  <a href="#af819015466559b030099ec25c6acb449">More...</a><br /></td></tr>
+<tr class="separator:af819015466559b030099ec25c6acb449"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a982cacfd191fad9cab7ac764a52dfcde"><td class="memItemLeft" align="right" valign="top">time_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a982cacfd191fad9cab7ac764a52dfcde">_last_heartbeat_ack</a></td></tr>
+<tr class="memdesc:a982cacfd191fad9cab7ac764a52dfcde"><td class="mdescLeft">&#160;</td><td class="mdescRight">timestamp of last heartbeat ack  <a href="#a982cacfd191fad9cab7ac764a52dfcde">More...</a><br /></td></tr>
+<tr class="separator:a982cacfd191fad9cab7ac764a52dfcde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5588a90d77766f5b759b1c7971818c29"></a>
@@ -601,6 +607,30 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a982cacfd191fad9cab7ac764a52dfcde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a982cacfd191fad9cab7ac764a52dfcde">&#9670;&nbsp;</a></span>_last_heartbeat_ack</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">time_t DiscordCPP::Discord::_last_heartbeat_ack</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>timestamp of last heartbeat ack </p>
+
+</div>
+</div>
 <a id="a3e6e122a170adaecd4af5da8a91b146a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3e6e122a170adaecd4af5da8a91b146a">&#9670;&nbsp;</a></span>_private_channels</h2>
 
@@ -622,6 +652,30 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>private channels of the user </p>
+
+</div>
+</div>
+<a id="af819015466559b030099ec25c6acb449"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af819015466559b030099ec25c6acb449">&#9670;&nbsp;</a></span>_reconnect_timeout</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int DiscordCPP::Discord::_reconnect_timeout = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>sometimes it is better a few seconds before reconnecting... </p>
 
 </div>
 </div>

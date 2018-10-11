@@ -87,7 +87,7 @@ pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 		_last_heartbeat_ack = time(0);
 
 		while (1) {
-			if (_last_heartbeat_ack * 1000 + _heartbeat_interval + 2000 < time(0) * 1000) {
+			if (_last_heartbeat_ack * 1000 + _heartbeat_interval * 2 < time(0) * 1000) {
 				log.warning("Gateway stopped responding. Closing and restarting websocket...");
 				try {
 					_client->close(websocket_close_status::going_away, U("Server not responding")).wait();
@@ -189,9 +189,10 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 		}
 	}).then([this] {
 		log.info("trying to reconnect in " + to_string((double)_reconnect_timeout / 1000) + "s");
+	}).then([this] {
 		//this_thread::sleep_for(chrono::milliseconds(_reconnect_timeout));
 		waitFor(chrono::milliseconds(_reconnect_timeout)).wait();
-
+		
 		if (_reconnect_timeout == 0) {
 			_reconnect_timeout = 1000;
 		}
@@ -327,7 +328,7 @@ pplx::task<void> DiscordCPP::Discord::handle_hello_msg(value data) {
 			out_msg.set_utf8_message(conversions::to_utf8string(out_json.serialize()));
 			_client->send(out_msg).then([this] {
 				log.info("Resume payload has been sent");
-			});
+			}).wait();
 
 			while (_invalid_session == false) {
 				if (_sequence_number > seq) {

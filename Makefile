@@ -1,4 +1,4 @@
-VERSION = 0.3.4
+VERSION = 0.3.5
 LIB_NAME = discord_cpp
 LIB = lib$(LIB_NAME).so
 

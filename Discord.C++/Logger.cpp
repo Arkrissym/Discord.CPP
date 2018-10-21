@@ -45,7 +45,7 @@ void Logger::print(Loglevel level, std::string message) {
 				break;
 		}
 
-		std::cout << endl << level_name.c_str() << " - " << _name.c_str() << " - " << message.c_str();
+		std::cout << level_name.c_str() << " - " << _name.c_str() << " - " << message.c_str() << endl;
 	}
 }
 

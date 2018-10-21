@@ -187,10 +187,8 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 		catch (const std::exception &e) {
 			log.error("error while deleting old websocket client: " + string(e.what()));
 		}
-	}).then([this] {
+	
 		log.info("trying to reconnect in " + to_string((double)_reconnect_timeout / 1000) + "s");
-	}).then([this] {
-		//this_thread::sleep_for(chrono::milliseconds(_reconnect_timeout));
 		waitFor(chrono::milliseconds(_reconnect_timeout)).wait();
 		
 		if (_reconnect_timeout == 0) {

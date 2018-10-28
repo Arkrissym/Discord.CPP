@@ -194,7 +194,7 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 		if (_reconnect_timeout == 0) {
 			_reconnect_timeout = 1000;
 		}
-		else {
+		else if (_reconnect_timeout < 90000) {	//cap timeout to about 15 min
 			_reconnect_timeout = (unsigned int)(_reconnect_timeout * 1.5);
 		}
 		connect().wait();

@@ -331,49 +331,19 @@ pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
 	});
 }
 
+#define FRAME_MILLIS 20
 #define FRAME_SIZE 960
 #define SAMPLE_RATE 48000
 #define CHANNELS 2
-#define APPLICATION OPUS_APPLICATION_AUDIO
-#define BITRATE 64000
+#define BITRATE 320000
 
-#define MAX_FRAME_SIZE 6*960
-//#define MAX_PACKET_SIZE (3*1276)
-#define MAX_PACKET_SIZE 8192
-
-template <typename T,
-	int N = sizeof(T) * 8,
-	typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
-	inline T swapEndianness(T value)
-{
-	T result = 0;
-
-	for (int i = 0; i < N; i += 8)
-	{
-		result |= ((value >> i) & 0xFF) << (N - i - 8);
-	}
-
-	return result;
-}
-
-
-template <typename T,
-	typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
-	inline void writeIntoPacket(
-		std::vector<unsigned char>& packet,
-		size_t pos,
-		T value)
-{
-	T* ptr = reinterpret_cast<T*>(packet.data() + pos);
-	// TODO: only swap if needed
-	ptr[0] = swapEndianness(value);
-}
+#define MAX_PACKET_SIZE FRAME_SIZE * 8
 
 pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 	return pplx::create_task([this, filename] {
-		_log.debug("creating opus encoder");
+		//_log.debug("creating opus encoder");
 		int error;
-		OpusEncoder *encoder = opus_encoder_create(SAMPLE_RATE, CHANNELS, APPLICATION, &error);
+		OpusEncoder *encoder = opus_encoder_create(SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_AUDIO, &error);
 		if (error < 0) {
 			throw runtime_error("failed to create opus encoder: " + string(opus_strerror(error)));
 		}
@@ -382,154 +352,95 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		if (error < 0) {
 			throw runtime_error("failed to set bitrate for opus encoder: " + string(opus_strerror(error)));
 		}
-
-		OpusDecoder *decoder = opus_decoder_create(SAMPLE_RATE, CHANNELS, &error);
-		if (error < 0) {
-			throw runtime_error("failed to create opus decoder: " + string(opus_strerror(error)));
-		}
+		
+		opus_encoder_ctl(encoder, OPUS_SET_INBAND_FEC(1));
+		opus_encoder_ctl(encoder, OPUS_SET_PACKET_LOSS_PERC(15));
 
 
-		_log.debug("initialising libsodium");
+		//_log.debug("initialising libsodium");
 		if (sodium_init() == -1) {
 			throw runtime_error("libsodium initialisation failed");
 		}
 
-		//unsigned char header[12];
-		//unsigned char nonce[24];
-		vector<unsigned char> packet(12 + MAX_PACKET_SIZE + crypto_secretbox_MACBYTES);
-
 		ifstream file;
 		file.open(filename, ios_base::binary);
-//#pragma warning(suppress : 4996)
-		//FILE *file = fopen(filename.c_str(), "r");
-		//if (!file) {
-//#pragma warning(suppress : 4996)
-			//throw runtime_error("cannot open file " + filename + ": " + strerror(errno));
-		//}
-
-		ofstream fout;
-		fout.open("out.wav", ios_base::binary);
 
 		int num_opus_bytes;
 		unsigned char *pcm_data = new unsigned char[FRAME_SIZE * CHANNELS * 2];
-		opus_int16 *in_data;// = new opus_int16[FRAME_SIZE * CHANNELS];
-		opus_int16 out[MAX_FRAME_SIZE*CHANNELS];
-		//unsigned char *opus_data = new unsigned char[MAX_PACKET_SIZE];
+		opus_int16 *in_data;
 		vector<unsigned char> opus_data(MAX_PACKET_SIZE);
-		unsigned char *ciphertext;
-
-		_log.debug("starting loop");
 		
-		//while (file.good()) {
+		//_log.debug("starting loop");
+		
+		auto start = std::chrono::steady_clock::now();
+
 		while(1) {
-			//_log.debug("reading next frame");
 			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);
-			//fread(pcm_data, sizeof(short)*CHANNELS, FRAME_SIZE, file);
-			//if (feof(file))
 			if(file.gcount() == 0)
 				break;
 
-			//for (unsigned int i = 0; i < CHANNELS*FRAME_SIZE; i++)
-			//	in_data[i] = pcm_data[2 * i + 1] << 8 | pcm_data[2 * i];
 			in_data = reinterpret_cast<opus_int16*>(pcm_data);
 
-			//_log.debug("encoding frame");
 			num_opus_bytes = opus_encode(encoder, in_data, FRAME_SIZE, opus_data.data(), MAX_PACKET_SIZE);
 			if (num_opus_bytes <= 0) {
 				throw runtime_error("failed to encode frame: " + string(opus_strerror(num_opus_bytes)));
 			}
 
-			int frame_size = opus_decode(decoder, opus_data.data(), num_opus_bytes, out, MAX_FRAME_SIZE, 0);
-			if (frame_size <= 0) {
-				throw runtime_error("failed to decode frame: " + string(opus_strerror(frame_size)));
-			}
+			//_log.debug(to_string(num_opus_bytes) + "/" + to_string(MAX_PACKET_SIZE) + " used");
 
 			opus_data.resize(num_opus_bytes);
+			
+			vector<unsigned char> packet(12 + opus_data.size() + crypto_secretbox_MACBYTES);
 
-			for (unsigned int i = 0; i < CHANNELS*frame_size; i++) {
-				pcm_data[2 * i] = out[i] & 0xFF;
-				pcm_data[2 * i + 1] = (out[i] >> 8) & 0xFF;
-			}
+			packet[0] = 0x80;	//Type
+			packet[1] = 0x78;	//Version
 
-			//fout.write((char *)opus_data.data(), opus_data.size());
-			fout.write((char *)pcm_data, frame_size*CHANNELS);
+			packet[2] = _sequence >> 8;	//Sequence
+			packet[3] = (unsigned char) _sequence;
 
-			//randombytes_buf(data, 128);
+			packet[4] = _timestamp >> 24;	//Timestamp
+			packet[5] = _timestamp >> 16;
+			packet[6] = _timestamp >> 8;
+			packet[7] = _timestamp;
 
-			//_timestamp = (unsigned int) time(NULL);
-			/*
-			nonce[0] = header[0] = 0x80;	//Type
-			nonce[1] = header[1] = 0x78;	//Version
-
-			nonce[2] = header[2] = _sequence >> 8;	//Sequence
-			nonce[3] = header[3] = (unsigned char) _sequence;
-
-			nonce[4] = header[4] = _timestamp >> 24;	//Timestamp
-			nonce[5] = header[5] = _timestamp >> 16;
-			nonce[6] = header[6] = _timestamp >> 8;
-			nonce[7] = header[7] = _timestamp;
-
-			nonce[8] = header[8] = (unsigned char)(_ssrc >> 24);	//SSRC
-			nonce[9] = header[9] = (unsigned char)(_ssrc >> 16);
-			nonce[10] = header[10] = (unsigned char)(_ssrc >> 8);
-			nonce[11] = header[11] = (unsigned char)_ssrc;
-
-			for (unsigned int i = 12; i < 24; i++) {
-				nonce[i] = 0;
-			}
-			*/
-
-			packet[0] = 0x80;
-			packet[1] = 0x78;
-			writeIntoPacket(packet, 2, _sequence);
-			writeIntoPacket(packet, 4, _timestamp);
-			writeIntoPacket(packet, 8, _ssrc);
+			packet[8] = (unsigned char)(_ssrc >> 24);	//SSRC
+			packet[9] = (unsigned char)(_ssrc >> 16);
+			packet[10] = (unsigned char)(_ssrc >> 8);
+			packet[11] = (unsigned char)_ssrc;
 
 			_sequence++;
-			_timestamp += opus_packet_get_samples_per_frame(opus_data.data(), SAMPLE_RATE);
-
+			_timestamp += SAMPLE_RATE / 1000 * FRAME_MILLIS;
+			
 			unsigned char nonce[crypto_secretbox_NONCEBYTES];
 			memset(nonce, 0, crypto_secretbox_NONCEBYTES);
-			memcpy(nonce, packet.data(), 12);
+			
+			for (int i = 0; i < 12; i++) {
+				nonce[i] = packet[i];
+			}
 
-			ciphertext = new unsigned char[MAX_PACKET_SIZE + crypto_secretbox_MACBYTES];
-
-			//crypto_secretbox_easy(opus_data, ciphertext, sizeof(ciphertext), nonce, key);
 			crypto_secretbox_easy(packet.data() + 12, opus_data.data(), opus_data.size(), nonce, _secret_key.data());
 
+			packet.resize(12 + opus_data.size() + crypto_secretbox_MACBYTES);
+			
 			string msg;
-			//msg.resize(sizeof(header) + sizeof(ciphertext), '\0');
 			msg.resize(packet.size(), '\0');
 
 			for (unsigned int i = 0; i < packet.size(); i++) {
 				msg[i] = packet[i];
 			}
 			
-			/*
-			for (unsigned int i = 0; i < 12; i++) {
-				msg[i] = header[i];
-			}
-			for (unsigned int i = 0; i < sizeof(ciphertext); i++) {
-				msg[12 + i] = ciphertext[i];
-			}
-			*/
-			//_log.debug("sending frame");
+			auto finish = std::chrono::steady_clock::now();
+			this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start));
+			start = std::chrono::steady_clock::now();
+
 			_udp->send(msg);
-
-			delete[] ciphertext;
-
-			this_thread::sleep_for(chrono::milliseconds(20));
 		}
 
 		opus_encoder_destroy(encoder);
 
-		//delete[] in_data;
 		delete[] pcm_data;
-		//delete[] opus_data;
-		//fclose(file);
 		file.close();
-		fout.close();
-
-		_log.debug("finished playing audio");
+		
+		//_log.debug("finished playing audio");
 	});
 }

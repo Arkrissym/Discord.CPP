@@ -11,6 +11,14 @@
 #include <sodium.h>
 #include <opus/opus.h>
 
+#define FRAME_MILLIS 20
+#define FRAME_SIZE 960
+#define SAMPLE_RATE 48000
+#define CHANNELS 2
+#define BITRATE 320000
+
+#define MAX_PACKET_SIZE FRAME_SIZE * 8
+
 using namespace std;
 using namespace web::json;
 using namespace utility;
@@ -107,7 +115,8 @@ pplx::task<void> DiscordCPP::VoiceClient::identify() {
 pplx::task<void> DiscordCPP::VoiceClient::create_heartbeat_task() {
 	return pplx::create_task([this] {
 		while (_heartbeat_interval == 0)
-			this_thread::sleep_for(chrono::milliseconds(50));
+			//this_thread::sleep_for(chrono::milliseconds(50));
+			waitFor(chrono::milliseconds(50)).wait();
 
 		while (_keepalive) {
 			try {
@@ -124,7 +133,8 @@ pplx::task<void> DiscordCPP::VoiceClient::create_heartbeat_task() {
 				_log.error("Cannot send heartbeat message: " + string(e.what()));
 			}
 
-			this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
+			//this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
+			waitFor(chrono::milliseconds(_heartbeat_interval)).wait();
 		}
 	});
 }
@@ -277,7 +287,8 @@ DiscordCPP::VoiceClient::VoiceClient(websocket_callback_client **main_ws, string
 	});
 
 	while (_ready == false)	{
-		this_thread::sleep_for(chrono::milliseconds(10));
+		//this_thread::sleep_for(chrono::milliseconds(10));
+		waitFor(chrono::milliseconds(10)).wait();
 	}
 }
 
@@ -330,14 +341,6 @@ pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
 		}).wait();
 	});
 }
-
-#define FRAME_MILLIS 20
-#define FRAME_SIZE 960
-#define SAMPLE_RATE 48000
-#define CHANNELS 2
-#define BITRATE 320000
-
-#define MAX_PACKET_SIZE FRAME_SIZE * 8
 
 pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 	return pplx::create_task([this, filename] {
@@ -430,7 +433,8 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 			}
 			
 			auto finish = std::chrono::steady_clock::now();
-			this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start));
+			//this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start));
+			waitFor(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start)).wait();
 			start = std::chrono::steady_clock::now();
 
 			_udp->send(msg);

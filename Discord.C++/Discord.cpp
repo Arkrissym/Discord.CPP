@@ -116,7 +116,8 @@ DiscordCPP::VoiceClient DiscordCPP::Discord::join_voice_channel(VoiceChannel cha
 				return VoiceClient(&_client, _voice_states[i]->voice_token, _voice_states[i]->endpoint, _voice_states[i]->session_id, _voice_states[i]->guild_id, _voice_states[i]->channel_id, conversions::to_string_t(_user->id));
 			}
 		}
-		this_thread::sleep_for(chrono::milliseconds(10));
+		//this_thread::sleep_for(chrono::milliseconds(10));
+		waitFor(chrono::milliseconds(10)).wait();
 	}
 
 	return VoiceClient();

@@ -14,6 +14,8 @@
 #include "Guild.h"
 #include "Embed.h"
 #include "Activity.h"
+#include "VoiceClient.h"
+#include "VoiceState.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -56,6 +58,12 @@ namespace DiscordCPP {
 		///timestamp of last heartbeat ack
 		time_t _last_heartbeat_ack;
 
+		///array of VoiceStates
+		vector<VoiceState *> _voice_states;
+		///the task that sends the heartbeat messages
+		pplx::task<void> _heartbeat_task;
+		///wether to keep the websocket alive or not
+		bool _keepalive = true;
 
 		DLL_EXPORT pplx::task<void> create_heartbeat_task();
 		DLL_EXPORT pplx::task<void> connect();
@@ -79,6 +87,8 @@ namespace DiscordCPP {
 
 		///updates the presence of user
 		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
+		///joins a VoiceChannel
+		DLL_EXPORT VoiceClient join_voice_channel(VoiceChannel channel);
 	};
 
 }

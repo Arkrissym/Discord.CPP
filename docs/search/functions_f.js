@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['waitfor',['waitFor',['../static_8cpp.html#a96aca8381ac6ec864ace9b90c46fe241',1,'waitFor(const std::chrono::milliseconds ms):&#160;static.cpp'],['../static_8h.html#a96aca8381ac6ec864ace9b90c46fe241',1,'waitFor(const std::chrono::milliseconds ms):&#160;static.cpp']]],
-  ['warning',['warning',['../class_logger.html#a3306a4d8b858890ba49f59224024bd82',1,'Logger']]]
+  ['udp_5fclient',['udp_client',['../class_discord_c_p_p_1_1udp__client.html#a5d3345fb845d02039308e55273b70c7f',1,'DiscordCPP::udp_client::udp_client()'],['../class_discord_c_p_p_1_1udp__client.html#ae9117f6321458b20cc39b60c37459154',1,'DiscordCPP::udp_client::udp_client(string_t ip, int port)'],['../class_discord_c_p_p_1_1udp__client.html#aead43148d6aa43f9f1f455f1d0b33f61',1,'DiscordCPP::udp_client::udp_client(udp_client &amp;old)']]],
+  ['update_5fpresence',['update_presence',['../class_discord_c_p_p_1_1_discord.html#a1e983525381fb1c1a3e3cfdceaa24df2',1,'DiscordCPP::Discord']]],
+  ['user',['User',['../class_discord_c_p_p_1_1_user.html#ad2fa751a66a7d6fb1dc65988adccd57e',1,'DiscordCPP::User::User()'],['../class_discord_c_p_p_1_1_user.html#a70058511fc437893c2f8fa9a88d21d48',1,'DiscordCPP::User::User(value data, string_t token)'],['../class_discord_c_p_p_1_1_user.html#af07cc95329eccfbef2440e1fa33bc0b8',1,'DiscordCPP::User::User(string id, string_t token)']]]
 ];

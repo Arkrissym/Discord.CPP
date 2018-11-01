@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.3.5</span>
+   &#160;<span id="projectnumber">0.4.0</span>
    </div>
   </td>
  </tr>
@@ -132,9 +132,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aecc25012bd7a734c171c17295c835b08"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_voice_channel.html#aecc25012bd7a734c171c17295c835b08">user_limit</a></td></tr>
 <tr class="memdesc:aecc25012bd7a734c171c17295c835b08"><td class="mdescLeft">&#160;</td><td class="mdescRight">the channel's user-limit  <a href="#aecc25012bd7a734c171c17295c835b08">More...</a><br /></td></tr>
 <tr class="separator:aecc25012bd7a734c171c17295c835b08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0ae5e2937df510213a428d9f9194cd1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_voice_channel.html#aa0ae5e2937df510213a428d9f9194cd1">parent</a></td></tr>
+<tr class="memitem:aa0ae5e2937df510213a428d9f9194cd1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_voice_channel.html#aa0ae5e2937df510213a428d9f9194cd1">parent</a> = NULL</td></tr>
 <tr class="memdesc:aa0ae5e2937df510213a428d9f9194cd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">the parent category channel  <a href="#aa0ae5e2937df510213a428d9f9194cd1">More...</a><br /></td></tr>
 <tr class="separator:aa0ae5e2937df510213a428d9f9194cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d1aae024f572639072ca13be3eb4082"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_voice_channel.html#a1d1aae024f572639072ca13be3eb4082">guild</a> = NULL</td></tr>
+<tr class="memdesc:a1d1aae024f572639072ca13be3eb4082"><td class="mdescLeft">&#160;</td><td class="mdescRight">the guild the channel belongs to  <a href="#a1d1aae024f572639072ca13be3eb4082">More...</a><br /></td></tr>
+<tr class="separator:a1d1aae024f572639072ca13be3eb4082"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_discord_c_p_p_1_1_channel"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_discord_c_p_p_1_1_channel')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_discord_c_p_p_1_1_channel.html">DiscordCPP::Channel</a></td></tr>
 <tr class="memitem:a557bbeba646631fd88fb9eba4695b666 inherit pub_attribs_class_discord_c_p_p_1_1_channel"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#a557bbeba646631fd88fb9eba4695b666">type</a></td></tr>
 <tr class="memdesc:a557bbeba646631fd88fb9eba4695b666 inherit pub_attribs_class_discord_c_p_p_1_1_channel"><td class="mdescLeft">&#160;</td><td class="mdescRight">the <a class="el" href="namespace_discord_c_p_p_1_1_channel_type.html">ChannelType</a> of the channel  <a href="class_discord_c_p_p_1_1_channel.html#a557bbeba646631fd88fb9eba4695b666">More...</a><br /></td></tr>
@@ -299,6 +302,22 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a1d1aae024f572639072ca13be3eb4082"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d1aae024f572639072ca13be3eb4082">&#9670;&nbsp;</a></span>guild</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a>* DiscordCPP::VoiceChannel::guild = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>the guild the channel belongs to </p>
+
+</div>
+</div>
 <a id="aa0ae5e2937df510213a428d9f9194cd1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa0ae5e2937df510213a428d9f9194cd1">&#9670;&nbsp;</a></span>parent</h2>
 
@@ -306,7 +325,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a>* DiscordCPP::VoiceChannel::parent</td>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a>* DiscordCPP::VoiceChannel::parent = NULL</td>
         </tr>
       </table>
 </div><div class="memdoc">

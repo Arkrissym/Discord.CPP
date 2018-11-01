@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['send',['send',['../class_discord_c_p_p_1_1_text_channel.html#a1835b37300b37e42d6d86c223545585c',1,'DiscordCPP::TextChannel::send(string content, bool tts=false)'],['../class_discord_c_p_p_1_1_text_channel.html#ac2f51215ab5772f2274657a1a736b504',1,'DiscordCPP::TextChannel::send(Embed embed)'],['../class_discord_c_p_p_1_1_user.html#ad5ac480fbc39f3f8375a27926d3a39bc',1,'DiscordCPP::User::send(string content, bool tts=false)'],['../class_discord_c_p_p_1_1_user.html#adc4291f99fd2767a210a96d3c0a1682d',1,'DiscordCPP::User::send(Embed embed)']]],
+  ['sample_5frate',['SAMPLE_RATE',['../_voice_client_8cpp.html#a4b76a0c2859cfd819a343a780070ee2b',1,'VoiceClient.cpp']]],
+  ['send',['send',['../class_discord_c_p_p_1_1_text_channel.html#a1835b37300b37e42d6d86c223545585c',1,'DiscordCPP::TextChannel::send(string content, bool tts=false)'],['../class_discord_c_p_p_1_1_text_channel.html#ac2f51215ab5772f2274657a1a736b504',1,'DiscordCPP::TextChannel::send(Embed embed)'],['../class_discord_c_p_p_1_1_user.html#ad5ac480fbc39f3f8375a27926d3a39bc',1,'DiscordCPP::User::send(string content, bool tts=false)'],['../class_discord_c_p_p_1_1_user.html#adc4291f99fd2767a210a96d3c0a1682d',1,'DiscordCPP::User::send(Embed embed)'],['../class_discord_c_p_p_1_1udp__client.html#ac6e5251e47c03cb7d1a3094f4d06a2c2',1,'DiscordCPP::udp_client::send()']]],
   ['send_5fheartbeat_5fack',['send_heartbeat_ack',['../class_discord_c_p_p_1_1_discord.html#a5f6d2d2dcc98da0cc261e1f140bd9c30',1,'DiscordCPP::Discord']]],
+  ['session_5fid',['session_id',['../class_discord_c_p_p_1_1_voice_state.html#aa2c2ac45ca8cfbd54d452b2480d03afe',1,'DiscordCPP::VoiceState']]],
   ['set_5fauthor',['set_author',['../class_discord_c_p_p_1_1_embed.html#a03e3a4283b34bb8753295e77b8819fcc',1,'DiscordCPP::Embed']]],
   ['set_5fcolor',['set_color',['../class_discord_c_p_p_1_1_embed.html#a6f9fdfa1e95bd1a8d18bab0e8ac52784',1,'DiscordCPP::Embed']]],
   ['set_5ffooter',['set_footer',['../class_discord_c_p_p_1_1_embed.html#aca527584766bda7d8aa6d07d9e1776ef',1,'DiscordCPP::Embed']]],

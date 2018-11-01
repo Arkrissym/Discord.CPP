@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logger',['Logger',['../class_logger.html#abc41bfb031d896170c7675fa96a6b30c',1,'Logger::Logger()'],['../class_logger.html#a9e64dc7bb0d4e6c03b69884bea650895',1,'Logger::Logger(std::string)'],['../class_logger.html#a7ebe8c09f42bcd9d428a70ea0267e231',1,'Logger::Logger(const Logger &amp;old)']]]
+  ['join_5fvoice_5fchannel',['join_voice_channel',['../class_discord_c_p_p_1_1_discord.html#a4bbce4112239154e4213ccd21c3de69a',1,'DiscordCPP::Discord']]]
 ];

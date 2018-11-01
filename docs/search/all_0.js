@@ -8,8 +8,10 @@ var searchData=
   ['_5ffooter',['_footer',['../class_discord_c_p_p_1_1_embed.html#af46f547618285f798cec8ff0984f8a0c',1,'DiscordCPP::Embed']]],
   ['_5fguilds',['_guilds',['../class_discord_c_p_p_1_1_discord.html#a2d54f2717a8ebcc4448f129d15431fb3',1,'DiscordCPP::Discord']]],
   ['_5fheartbeat_5finterval',['_heartbeat_interval',['../class_discord_c_p_p_1_1_discord.html#a7c8ccfb9cf3ee3df12fe373d9431a5c1',1,'DiscordCPP::Discord']]],
+  ['_5fheartbeat_5ftask',['_heartbeat_task',['../class_discord_c_p_p_1_1_discord.html#aeb445059094d230306b2327ce47c9661',1,'DiscordCPP::Discord']]],
   ['_5fimage',['_image',['../class_discord_c_p_p_1_1_embed.html#a5f376d9eb36e7195257161822dcf381d',1,'DiscordCPP::Embed']]],
   ['_5finvalid_5fsession',['_invalid_session',['../class_discord_c_p_p_1_1_discord.html#a9fbb9dba279edbac0e04b4b4e567ad59',1,'DiscordCPP::Discord']]],
+  ['_5fkeepalive',['_keepalive',['../class_discord_c_p_p_1_1_discord.html#adeca4a92d51bad6fd986b45cce512daf',1,'DiscordCPP::Discord']]],
   ['_5flast_5fheartbeat_5fack',['_last_heartbeat_ack',['../class_discord_c_p_p_1_1_discord.html#a982cacfd191fad9cab7ac764a52dfcde',1,'DiscordCPP::Discord']]],
   ['_5fname',['_name',['../class_logger.html#af050fc8c757429af3e17f336339af136',1,'Logger']]],
   ['_5fprivate_5fchannels',['_private_channels',['../class_discord_c_p_p_1_1_discord.html#a3e6e122a170adaecd4af5da8a91b146a',1,'DiscordCPP::Discord']]],
@@ -25,5 +27,6 @@ var searchData=
   ['_5ftype',['_type',['../class_discord_c_p_p_1_1_embed.html#a583446dcbd4a59451d1fa56ce74a7ca4',1,'DiscordCPP::Embed']]],
   ['_5furl',['_url',['../class_discord_c_p_p_1_1_embed.html#a08eef9ffd7e4846f301f527e325469e7',1,'DiscordCPP::Embed']]],
   ['_5fuser',['_user',['../class_discord_c_p_p_1_1_discord.html#aaa6c48ecf3243535a5c815335a88c9df',1,'DiscordCPP::Discord']]],
-  ['_5fvideo',['_video',['../class_discord_c_p_p_1_1_embed.html#a0eb74263f06ebed1ed8565acbdc6bfd7',1,'DiscordCPP::Embed']]]
+  ['_5fvideo',['_video',['../class_discord_c_p_p_1_1_embed.html#a0eb74263f06ebed1ed8565acbdc6bfd7',1,'DiscordCPP::Embed']]],
+  ['_5fvoice_5fstates',['_voice_states',['../class_discord_c_p_p_1_1_discord.html#ab0da5495bcd138bc2c2289ecc3dbd71d',1,'DiscordCPP::Discord']]]
 ];

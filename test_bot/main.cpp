@@ -78,6 +78,36 @@ public:
 			log.info("num messages: " + to_string(messages.size()));
 			message.channel->delete_messages(messages);
 		}
+		else if (message.content.compare(0, 6, "?join ") == 0) {
+			if (message.channel->type != ChannelType::GUILD_TEXT) {
+				return;
+			}
+
+			string channel_name = message.content.substr(6);
+
+			Guild *guild = NULL;
+
+			for (unsigned int i = 0; i < _guilds.size(); i++) {
+				if (((GuildChannel *)message.channel)->guild->id == _guilds[i]->id) {
+					guild = _guilds[i];
+					break;
+				}
+			}
+
+			for (unsigned int i = 0; i < guild->channels.size(); i++) {
+				if (guild->channels[i]->name.compare(channel_name) == 0) {
+					VoiceClient vc = this->join_voice_channel(*(VoiceChannel *)guild->channels[i]);
+
+					//this_thread::sleep_for(chrono::seconds(10));
+					vc.play("test.wav").wait();
+					vc.disconnect().wait();
+
+					return;
+				}
+			}
+
+			message.channel->send("Channel not found");
+		}
 	}
 
 	myClient(string token) : Discord(token) {};

@@ -83,7 +83,7 @@ pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity ac
 /**	@param[in]	channel		the vocie channel to connect
 	@return		VoiceClient	
 */
-DiscordCPP::VoiceClient DiscordCPP::Discord::join_voice_channel(VoiceChannel channel) {
+DiscordCPP::VoiceClient *DiscordCPP::Discord::join_voice_channel(VoiceChannel channel) {
 	if (channel.type != ChannelType::GUILD_VOICE) {
 		throw logic_error("channel must be a voice channel");
 	}
@@ -113,14 +113,14 @@ DiscordCPP::VoiceClient DiscordCPP::Discord::join_voice_channel(VoiceChannel cha
 	while (true) {
 		for (unsigned int i = 0; i < _voice_states.size(); i++) {
 			if ((_voice_states[i]->channel_id == conversions::to_string_t(channel.id)) && (_voice_states[i]->endpoint.length() > 1)) {
-				return VoiceClient(&_client, _voice_states[i]->voice_token, _voice_states[i]->endpoint, _voice_states[i]->session_id, _voice_states[i]->guild_id, _voice_states[i]->channel_id, conversions::to_string_t(_user->id));
+				return new VoiceClient(&_client, _voice_states[i]->voice_token, _voice_states[i]->endpoint, _voice_states[i]->session_id, _voice_states[i]->guild_id, _voice_states[i]->channel_id, conversions::to_string_t(_user->id));
 			}
 		}
 		//this_thread::sleep_for(chrono::milliseconds(10));
 		waitFor(chrono::milliseconds(10)).wait();
 	}
 
-	return VoiceClient();
+	return new VoiceClient();
 }
 
 pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {

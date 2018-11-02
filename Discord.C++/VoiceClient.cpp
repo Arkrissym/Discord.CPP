@@ -42,11 +42,11 @@ void DiscordCPP::udp_client::handle_receive(boost::system::error_code &error, si
 	wait_for_receive();
 }
 */
-DiscordCPP::udp_client::udp_client() : _io_service(boost::asio::io_service()) {
+DiscordCPP::udp_client::udp_client() {
 
 }
 
-DiscordCPP::udp_client::udp_client(string_t ip, int port) : _io_service(boost::asio::io_service()) {
+DiscordCPP::udp_client::udp_client(string_t ip, int port) {
 	_log = Logger("discord.VoiceClient.udp_client");
 
 	udp::resolver resolver(_io_service);
@@ -58,17 +58,18 @@ DiscordCPP::udp_client::udp_client(string_t ip, int port) : _io_service(boost::a
 
 	_socket->open(udp::v4());
 }
-
+/*
 DiscordCPP::udp_client::udp_client(udp_client & old) : _io_service(old._io_service) {
 	this->_log = old._log;
 	this->_recv_buffer = old._recv_buffer;
 	this->_socket = old._socket;
 	this->_remote = old._remote;
 }
-
+*/
 DiscordCPP::udp_client::~udp_client() {
 	_log.debug("~udp_client");
 	_socket->close();
+	delete _socket;
 }
 
 void DiscordCPP::udp_client::send(const string &msg) {
@@ -291,7 +292,7 @@ DiscordCPP::VoiceClient::VoiceClient(websocket_callback_client **main_ws, string
 		waitFor(chrono::milliseconds(10)).wait();
 	}
 }
-
+/*
 DiscordCPP::VoiceClient::VoiceClient(const VoiceClient & old) {
 	this->_channel_id = old._channel_id;
 	this->_guild_id = old._guild_id;
@@ -311,7 +312,7 @@ DiscordCPP::VoiceClient::VoiceClient(const VoiceClient & old) {
 	this->_my_port = old._my_port;
 	this->_secret_key = old._secret_key;
 }
-
+*/
 DiscordCPP::VoiceClient::VoiceClient() {
 
 }

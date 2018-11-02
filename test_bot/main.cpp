@@ -96,11 +96,13 @@ public:
 
 			for (unsigned int i = 0; i < guild->channels.size(); i++) {
 				if (guild->channels[i]->name.compare(channel_name) == 0) {
-					VoiceClient vc = this->join_voice_channel(*(VoiceChannel *)guild->channels[i]);
+					VoiceClient *vc = this->join_voice_channel(*(VoiceChannel *)guild->channels[i]);
 
 					//this_thread::sleep_for(chrono::seconds(10));
-					vc.play("test.wav").wait();
-					vc.disconnect().wait();
+					vc->play("test.wav").wait();
+					vc->disconnect().wait();
+
+					delete vc;
 
 					return;
 				}

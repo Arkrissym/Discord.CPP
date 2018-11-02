@@ -28,7 +28,7 @@ namespace DiscordCPP {
 	private:
 		Logger _log;
 
-		boost::asio::io_service &_io_service;
+		boost::asio::io_service _io_service;
 		udp::socket *_socket;
 		//udp::socket *_recv_socket;
 		udp::endpoint _remote;
@@ -39,7 +39,8 @@ namespace DiscordCPP {
 	public:
 		DLL_EXPORT udp_client();
 		DLL_EXPORT udp_client(string_t ip, int port);
-		DLL_EXPORT udp_client(udp_client &old);
+		DLL_EXPORT udp_client(udp_client &old) = delete;
+		DLL_EXPORT udp_client& operator=(const udp_client&) = delete;
 		DLL_EXPORT ~udp_client();
 		//DLL_EXPORT void connect(string_t ip, int port);
 		DLL_EXPORT void send(const string &msg);
@@ -87,7 +88,7 @@ namespace DiscordCPP {
 		DLL_EXPORT pplx::task<void> speak(bool speak = true);
 	public:
 		DLL_EXPORT VoiceClient(websocket_callback_client **main_ws, string_t voice_token, string_t endpoint, string_t session_id, string_t guild_id, string_t channel_id, string_t user_id);
-		DLL_EXPORT VoiceClient(const VoiceClient &old);
+		DLL_EXPORT VoiceClient(const VoiceClient &old) = delete;
 		DLL_EXPORT VoiceClient();
 		DLL_EXPORT ~VoiceClient();
 

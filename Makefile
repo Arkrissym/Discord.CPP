@@ -10,7 +10,7 @@ HEADER_FILES := $(wildcard $(SRC_DIR)/*.h)
 
 CXXFLAGS := -std=c++14 -fPIC -Wall -Wextra -O2
 CFLAGS := $(pkg-config --cflags libsodium)
-LDFLAGS := $(pkg-config --libs libsodium) -lcpprest -lopus
+LDFLAGS := -lsodium -lcpprest -lopus
 
 all: $(OBJ_FILES)
 	g++ $(CFLAGS) -shared -o $(LIB).$(VERSION) $(OBJ_FILES) $(LDFLAGS)

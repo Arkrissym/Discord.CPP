@@ -378,7 +378,7 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		
 		//_log.debug("starting loop");
 		
-		auto start = std::chrono::steady_clock::now();
+		//auto start = std::chrono::steady_clock::now();
 
 
 		class timer_event {
@@ -405,9 +405,11 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 
 		auto timer = pplx::create_task([run_timer, timer_send] {
 			while (run_timer) {
-				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([timer_send] {
-					timer_send->set();
-				}).wait();
+				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS - 1));
+				//waitFor(chrono::milliseconds(FRAME_MILLIS)).then([timer_send] {
+				//		timer_send->set();
+				//}).wait();
+				timer_send->set();
 			}
 		});
 

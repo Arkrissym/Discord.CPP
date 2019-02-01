@@ -11,7 +11,7 @@
 #include <sodium.h>
 #include <opus/opus.h>
 
-#include <agents.h>
+//#include <agents.h>
 
 #define FRAME_MILLIS 20
 #define FRAME_SIZE 960
@@ -392,15 +392,24 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		};
 
 		timer_event *timer_send = new timer_event();
-		//bool timer_send = false;
+		bool run_timer = true;
 
-		auto callback = new pplx::call<int>([timer_send](int) {
+		/*auto callback = new pplx::call<int>([timer_send](int) {
 			timer_send->set();
 		});
 		auto timer = new pplx::timer<int>(FRAME_MILLIS, 0, NULL, true);
 		
 		timer->link_target(callback);
 		timer->start();
+		*/
+
+		auto timer = pplx::create_task([run_timer, timer_send] {
+			while (run_timer) {
+				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([timer_send] {
+					timer_send->set();
+				}).wait();
+			}
+		});
 
 		while(1) {
 			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);
@@ -476,10 +485,13 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 			//start = std::chrono::steady_clock::now();
 		}
 
-		timer->stop();
+		run_timer = false;
+		timer.wait();
 
-		delete timer;
-		delete callback;
+		//timer->stop();
+
+		//delete timer;
+		//delete callback;
 		delete timer_send;
 
 		opus_encoder_destroy(encoder);

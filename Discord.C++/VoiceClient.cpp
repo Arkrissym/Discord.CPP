@@ -437,7 +437,7 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 			//this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start));
 			//waitFor(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start)).wait();
 
-			while((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start)).count() < 20) {
+			while((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start)).count() < (FRAME_MILLIS - 1)) {
 				waitFor(chrono::milliseconds(1));
 			}
 

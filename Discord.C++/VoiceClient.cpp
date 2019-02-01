@@ -11,6 +11,8 @@
 #include <sodium.h>
 #include <opus/opus.h>
 
+#include <agents.h>
+
 #define FRAME_MILLIS 20
 #define FRAME_SIZE 960
 #define SAMPLE_RATE 48000
@@ -378,6 +380,28 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		
 		auto start = std::chrono::steady_clock::now();
 
+
+		class timer_event {
+			bool is_set = false;
+
+		public:
+			bool get_is_set() { return is_set; };
+
+			void set() { is_set = true; };
+			void unset() { is_set = false; };
+		};
+
+		timer_event *timer_send = new timer_event();
+		//bool timer_send = false;
+
+		auto callback = new pplx::call<int>([timer_send](int) {
+			timer_send->set();
+		});
+		auto timer = new pplx::timer<int>(FRAME_MILLIS, 0, NULL, true);
+		
+		timer->link_target(callback);
+		timer->start();
+
 		while(1) {
 			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);
 			if(file.gcount() == 0)
@@ -437,14 +461,26 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 			//this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start));
 			//waitFor(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start)).wait();
 
-			while((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start)).count() < (FRAME_MILLIS - 1)) {
+			//while((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start)).count() < (FRAME_MILLIS - 1)) {
+			//	waitFor(chrono::milliseconds(1));
+			//}
+
+			while (!timer_send->get_is_set()) {
 				waitFor(chrono::milliseconds(1));
 			}
 
 			_udp->send(msg);
 
-			start = std::chrono::steady_clock::now();
+			timer_send->unset();
+
+			//start = std::chrono::steady_clock::now();
 		}
+
+		timer->stop();
+
+		delete timer;
+		delete callback;
+		delete timer_send;
 
 		opus_encoder_destroy(encoder);
 

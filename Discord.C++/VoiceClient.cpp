@@ -2,6 +2,8 @@
 #include "static.h"
 #include "Logger.h"
 
+#include <queue>
+
 #include <chrono>
 #include <thread>
 #include <time.h>
@@ -391,8 +393,9 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 			void unset() { is_set = false; };
 		};
 
-		timer_event *timer_send = new timer_event();
-		bool run_timer = true;
+		//timer_event *timer_send = new timer_event();
+		timer_event *run_timer = new timer_event();
+		run_timer->set();
 
 		/*auto callback = new pplx::call<int>([timer_send](int) {
 			timer_send->set();
@@ -403,17 +406,27 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		timer->start();
 		*/
 
-		auto timer = pplx::create_task([run_timer, timer_send] {
-			while (run_timer) {
-				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS - 1));
-				//waitFor(chrono::milliseconds(FRAME_MILLIS)).then([timer_send] {
-				//		timer_send->set();
-				//}).wait();
-				timer_send->set();
+		queue<string> *buffer=new queue<string>();
+		
+		auto timer = pplx::create_task([run_timer, this, buffer] {
+			while (run_timer->get_is_set() || buffer->size() > 0) {
+				//this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS - 1));
+				//timer_send->set();
+				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([this, buffer] {
+						//timer_send->set();
+					if (buffer->size() > 0) {
+						_udp->send(buffer->front());
+						buffer->pop();
+					}
+				}).wait();
 			}
 		});
 
 		while(1) {
+			if (buffer->size() >= 10) {
+				waitFor(chrono::milliseconds(FRAME_MILLIS)).wait();
+			}
+
 			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);
 			if(file.gcount() == 0)
 				break;
@@ -476,25 +489,28 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 			//	waitFor(chrono::milliseconds(1));
 			//}
 
-			while (!timer_send->get_is_set()) {
-				waitFor(chrono::milliseconds(1));
-			}
+			//while (!timer_send->get_is_set()) {
+			//	waitFor(chrono::milliseconds(1));
+			//}
 
-			_udp->send(msg);
+			buffer->push(msg);
+			//_udp->send(msg);
 
-			timer_send->unset();
+			//timer_send->unset();
 
 			//start = std::chrono::steady_clock::now();
 		}
 
-		run_timer = false;
+		run_timer->unset();
 		timer.wait();
 
 		//timer->stop();
 
 		//delete timer;
 		//delete callback;
-		delete timer_send;
+		//delete timer_send;
+		delete run_timer;
+		delete buffer;
 
 		opus_encoder_destroy(encoder);
 

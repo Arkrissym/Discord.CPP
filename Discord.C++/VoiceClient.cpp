@@ -3,7 +3,6 @@
 #include "Logger.h"
 
 #include <queue>
-
 #include <chrono>
 #include <thread>
 #include <time.h>
@@ -12,8 +11,6 @@
 
 #include <sodium.h>
 #include <opus/opus.h>
-
-//#include <agents.h>
 
 #define FRAME_MILLIS 20
 #define FRAME_SIZE 960
@@ -132,7 +129,7 @@ pplx::task<void> DiscordCPP::VoiceClient::create_heartbeat_task() {
 				}).wait();
 			}
 			catch (websocket_exception &e) {
-				_log.error("Cannot send heartbeat message: " + string(e.what()) + " (" + to_string(e.error_code().value()) + ": " + e.error_code().message());
+				_log.error("Cannot send heartbeat message: " + string(e.what()) + " (" + to_string(e.error_code().value()) + ": " + e.error_code().message() + ")");
 			}
 			catch (exception &e) {
 				_log.error("Cannot send heartbeat message: " + string(e.what()));
@@ -380,9 +377,6 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		
 		//_log.debug("starting loop");
 		
-		//auto start = std::chrono::steady_clock::now();
-
-
 		class timer_event {
 			bool is_set = false;
 
@@ -393,27 +387,15 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 			void unset() { is_set = false; };
 		};
 
-		//timer_event *timer_send = new timer_event();
 		timer_event *run_timer = new timer_event();
 		run_timer->set();
-
-		/*auto callback = new pplx::call<int>([timer_send](int) {
-			timer_send->set();
-		});
-		auto timer = new pplx::timer<int>(FRAME_MILLIS, 0, NULL, true);
-		
-		timer->link_target(callback);
-		timer->start();
-		*/
 
 		queue<string> *buffer=new queue<string>();
 		
 		auto timer = pplx::create_task([run_timer, this, buffer] {
+			waitFor(chrono::milliseconds(5 * FRAME_MILLIS)).wait();
 			while (run_timer->get_is_set() || buffer->size() > 0) {
-				//this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS - 1));
-				//timer_send->set();
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([this, buffer] {
-						//timer_send->set();
 					if (buffer->size() > 0) {
 						_udp->send(buffer->front());
 						buffer->pop();
@@ -423,7 +405,7 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		});
 
 		while(1) {
-			if (buffer->size() >= 10) {
+			if (buffer->size() >= 20) {
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).wait();
 			}
 
@@ -481,34 +463,12 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 				msg[i] = packet[i];
 			}
 			
-			//auto finish = std::chrono::steady_clock::now();
-			//this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start));
-			//waitFor(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start)).wait();
-
-			//while((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start)).count() < (FRAME_MILLIS - 1)) {
-			//	waitFor(chrono::milliseconds(1));
-			//}
-
-			//while (!timer_send->get_is_set()) {
-			//	waitFor(chrono::milliseconds(1));
-			//}
-
 			buffer->push(msg);
-			//_udp->send(msg);
-
-			//timer_send->unset();
-
-			//start = std::chrono::steady_clock::now();
 		}
 
 		run_timer->unset();
 		timer.wait();
 
-		//timer->stop();
-
-		//delete timer;
-		//delete callback;
-		//delete timer_send;
 		delete run_timer;
 		delete buffer;
 

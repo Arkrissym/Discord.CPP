@@ -2,6 +2,7 @@
 #include "static.h"
 #include "Logger.h"
 
+#include <queue>
 #include <chrono>
 #include <thread>
 #include <time.h>
@@ -128,7 +129,7 @@ pplx::task<void> DiscordCPP::VoiceClient::create_heartbeat_task() {
 				}).wait();
 			}
 			catch (websocket_exception &e) {
-				_log.error("Cannot send heartbeat message: " + string(e.what()) + " (" + to_string(e.error_code().value()) + ": " + e.error_code().message());
+				_log.error("Cannot send heartbeat message: " + string(e.what()) + " (" + to_string(e.error_code().value()) + ": " + e.error_code().message() + ")");
 			}
 			catch (exception &e) {
 				_log.error("Cannot send heartbeat message: " + string(e.what()));
@@ -376,9 +377,38 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		
 		//_log.debug("starting loop");
 		
-		auto start = std::chrono::steady_clock::now();
+		class timer_event {
+			bool is_set = false;
+
+		public:
+			bool get_is_set() { return is_set; };
+
+			void set() { is_set = true; };
+			void unset() { is_set = false; };
+		};
+
+		timer_event *run_timer = new timer_event();
+		run_timer->set();
+
+		queue<string> *buffer=new queue<string>();
+		
+		auto timer = pplx::create_task([run_timer, this, buffer] {
+			waitFor(chrono::milliseconds(5 * FRAME_MILLIS)).wait();
+			while (run_timer->get_is_set() || buffer->size() > 0) {
+				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([this, buffer] {
+					if (buffer->size() > 0) {
+						_udp->send(buffer->front());
+						buffer->pop();
+					}
+				}).wait();
+			}
+		});
 
 		while(1) {
+			if (buffer->size() >= 20) {
+				waitFor(chrono::milliseconds(FRAME_MILLIS)).wait();
+			}
+
 			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);
 			if(file.gcount() == 0)
 				break;
@@ -433,18 +463,14 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 				msg[i] = packet[i];
 			}
 			
-			//auto finish = std::chrono::steady_clock::now();
-			//this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start));
-			//waitFor(chrono::milliseconds(FRAME_MILLIS) - std::chrono::duration_cast<std::chrono::milliseconds>(finish - start)).wait();
-
-			while((std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start)).count() < 20) {
-				waitFor(chrono::milliseconds(1));
-			}
-
-			_udp->send(msg);
-
-			start = std::chrono::steady_clock::now();
+			buffer->push(msg);
 		}
+
+		run_timer->unset();
+		timer.wait();
+
+		delete run_timer;
+		delete buffer;
 
 		opus_encoder_destroy(encoder);
 

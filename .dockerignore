@@ -1,0 +1,25 @@
+.git/
+.git*
+docs/
+LICENSE
+README.md
+lib*
+.vs/
+*.sln
+*.vcxproj
+*.user
+*.filters
+
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Bb]uild/

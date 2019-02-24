@@ -80,7 +80,7 @@ pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity ac
 	return _client->send(msg);
 }
 
-/**	@param[in]	channel		the vocie channel to connect
+/**	@param[in]	channel		the voice channel to connect
 	@return		VoiceClient	
 */
 DiscordCPP::VoiceClient *DiscordCPP::Discord::join_voice_channel(VoiceChannel channel) {

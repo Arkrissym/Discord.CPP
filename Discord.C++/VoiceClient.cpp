@@ -3,8 +3,10 @@
 #include "Logger.h"
 
 #include <queue>
+#ifndef _WIN32
 #include <chrono>
 #include <thread>
+#endif
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
@@ -395,18 +397,30 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		auto timer = pplx::create_task([run_timer, this, buffer] {
 			waitFor(chrono::milliseconds(5 * FRAME_MILLIS)).wait();
 			while (run_timer->get_is_set() || buffer->size() > 0) {
+#ifdef _WIN32
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([this, buffer] {
 					if (buffer->size() > 0) {
 						_udp->send(buffer->front());
 						buffer->pop();
 					}
 				}).wait();
+#else
+				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS));
+				if (buffer->size() > 0) {
+					_udp->send(buffer->front());
+					buffer->pop();
+			}
+#endif
 			}
 		});
 
 		while(1) {
 			if (buffer->size() >= 20) {
+#ifdef _WIN32
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).wait();
+#else
+				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS));
+#endif
 			}
 
 			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);

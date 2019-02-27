@@ -4,6 +4,7 @@
 #include "VoiceClient.h"
 #include "Discord.h"
 #include "Logger.h"
+#include "Exceptions.h"
 
 #include <cpprest/http_client.h>
 
@@ -55,10 +56,12 @@ DiscordCPP::VoiceChannel::~VoiceChannel() {
 	delete guild;
 }
 
-/// @return		VoiceClient
+/*	@return		VoiceClient
+	@throws	ClientException
+**/
 DiscordCPP::VoiceClient * DiscordCPP::VoiceChannel::connect() {
 	if (this->type != ChannelType::GUILD_VOICE) {
-		throw logic_error("channel must be a voice channel");
+		throw ClientException("channel must be a voice channel");
 	}
 
 	Guild *guild = NULL;

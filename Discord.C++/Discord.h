@@ -18,6 +18,7 @@
 #include "VoiceState.h"
 #include "AudioSource.h"
 #include "FileAudioSource.h"
+#include "Exceptions.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)

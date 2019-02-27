@@ -1,6 +1,7 @@
 #include "VoiceClient.h"
 #include "static.h"
 #include "Logger.h"
+#include "Exceptions.h"
 
 #include <queue>
 #ifndef _WIN32
@@ -346,18 +347,20 @@ pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
 	});
 }
 
+/**	@throws	OpusError	ClientException
+*/
 pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource *source) {
 	return pplx::create_task([this, source] {
 		//_log.debug("creating opus encoder");
 		int error;
 		OpusEncoder *encoder = opus_encoder_create(SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_AUDIO, &error);
 		if (error < 0) {
-			throw runtime_error("failed to create opus encoder: " + string(opus_strerror(error)));
+			throw OpusError("failed to create opus encoder: " + string(opus_strerror(error)), error);
 		}
 
 		error = opus_encoder_ctl(encoder, OPUS_SET_BITRATE(BITRATE));
 		if (error < 0) {
-			throw runtime_error("failed to set bitrate for opus encoder: " + string(opus_strerror(error)));
+			throw OpusError("failed to set bitrate for opus encoder: " + string(opus_strerror(error)), error);
 		}
 		
 		opus_encoder_ctl(encoder, OPUS_SET_INBAND_FEC(1));
@@ -366,7 +369,7 @@ pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource *source) {
 
 		//_log.debug("initialising libsodium");
 		if (sodium_init() == -1) {
-			throw runtime_error("libsodium initialisation failed");
+			throw ClientException("libsodium initialisation failed");
 		}
 
 		int num_opus_bytes;
@@ -427,7 +430,7 @@ pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource *source) {
 
 			num_opus_bytes = opus_encode(encoder, in_data, FRAME_SIZE, opus_data.data(), MAX_PACKET_SIZE);
 			if (num_opus_bytes <= 0) {
-				throw runtime_error("failed to encode frame: " + string(opus_strerror(num_opus_bytes)));
+				throw OpusError("failed to encode frame: " + string(opus_strerror(num_opus_bytes)), num_opus_bytes);
 			}
 
 			//_log.debug(to_string(num_opus_bytes) + "/" + to_string(MAX_PACKET_SIZE) + " used");

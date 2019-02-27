@@ -93,7 +93,7 @@ namespace DiscordCPP {
 		DLL_EXPORT VoiceClient();
 		DLL_EXPORT ~VoiceClient();
 
-		///Disconnect from the Voice Channel
+		///Disconnect from the VoiceChannel
 		DLL_EXPORT pplx::task<void> disconnect();
 		///play an AudioSource
 		DLL_EXPORT pplx::task<void> play(AudioSource *source);

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logger',['Logger',['../class_logger.html',1,'']]]
+  ['image',['Image',['../struct_discord_c_p_p_1_1_embed_1_1_image.html',1,'DiscordCPP::Embed']]]
 ];

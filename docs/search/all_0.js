@@ -4,6 +4,7 @@ var searchData=
   ['_5fclient',['_client',['../class_discord_c_p_p_1_1_discord.html#aa1d340ed0e9e501b960a2935d9b70d01',1,'DiscordCPP::Discord']]],
   ['_5fcolor',['_color',['../class_discord_c_p_p_1_1_embed.html#ab2ead45b38abac9a386988bd485056a9',1,'DiscordCPP::Embed']]],
   ['_5fdescription',['_description',['../class_discord_c_p_p_1_1_embed.html#ac30fad77ef7770f04c6f4968ea314fd3',1,'DiscordCPP::Embed']]],
+  ['_5ferror_5fcode',['_error_code',['../class_discord_c_p_p_1_1_status_code_exception.html#a5e5b65e1300836cdc5b0cecf0be96999',1,'DiscordCPP::StatusCodeException']]],
   ['_5ffields',['_fields',['../class_discord_c_p_p_1_1_embed.html#adc974f894bfecee399f9173efb6fb432',1,'DiscordCPP::Embed']]],
   ['_5ffooter',['_footer',['../class_discord_c_p_p_1_1_embed.html#af46f547618285f798cec8ff0984f8a0c',1,'DiscordCPP::Embed']]],
   ['_5fguilds',['_guilds',['../class_discord_c_p_p_1_1_discord.html#a2d54f2717a8ebcc4448f129d15431fb3',1,'DiscordCPP::Discord']]],

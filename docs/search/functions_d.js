@@ -9,5 +9,7 @@ var searchData=
   ['set_5flog_5flevel',['set_log_level',['../class_logger.html#a30814544444b5bd922df5a405fa6691f',1,'Logger']]],
   ['set_5fprovider',['set_provider',['../class_discord_c_p_p_1_1_embed.html#a11b5d1ca8c416bb40cee10f64a15aa52',1,'DiscordCPP::Embed']]],
   ['set_5fthumbnail',['set_thumbnail',['../class_discord_c_p_p_1_1_embed.html#acbc0769f3832e8753c2332a3410bb8fe',1,'DiscordCPP::Embed']]],
-  ['set_5fvideo',['set_video',['../class_discord_c_p_p_1_1_embed.html#a1183a624f80a289a894dd6cea27e1a11',1,'DiscordCPP::Embed']]]
+  ['set_5fvideo',['set_video',['../class_discord_c_p_p_1_1_embed.html#a1183a624f80a289a894dd6cea27e1a11',1,'DiscordCPP::Embed']]],
+  ['sizeerror',['SizeError',['../class_discord_c_p_p_1_1_size_error.html#a4f7f7d83a799144c445c03635fe20d5d',1,'DiscordCPP::SizeError']]],
+  ['statuscodeexception',['StatusCodeException',['../class_discord_c_p_p_1_1_status_code_exception.html#afdb4282347340b9f568e1100f7f2e82f',1,'DiscordCPP::StatusCodeException']]]
 ];

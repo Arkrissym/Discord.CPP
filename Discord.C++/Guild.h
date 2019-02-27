@@ -53,6 +53,7 @@ namespace DiscordCPP {
 	class User;
 	class Channel;
 	class Member;
+	class Discord;
 
 	class Guild : public DiscordObject {
 	public:
@@ -113,8 +114,8 @@ namespace DiscordCPP {
 		vector<Channel *> channels;
 		//vector<Presence *> presences;
 
-		DLL_EXPORT Guild(value data, string_t token);
-		DLL_EXPORT Guild(string id, string_t token);
+		DLL_EXPORT Guild(Discord *client, value data, string_t token);
+		DLL_EXPORT Guild(Discord *client, string id, string_t token);
 		DLL_EXPORT Guild(const Guild &old);
 		DLL_EXPORT Guild();
 		DLL_EXPORT ~Guild();

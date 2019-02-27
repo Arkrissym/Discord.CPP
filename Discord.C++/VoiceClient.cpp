@@ -3,8 +3,10 @@
 #include "Logger.h"
 
 #include <queue>
+#ifndef _WIN32
 #include <chrono>
 #include <thread>
+#endif
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
@@ -344,8 +346,8 @@ pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
 	});
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
-	return pplx::create_task([this, filename] {
+pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource *source) {
+	return pplx::create_task([this, source] {
 		//_log.debug("creating opus encoder");
 		int error;
 		OpusEncoder *encoder = opus_encoder_create(SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_AUDIO, &error);
@@ -366,9 +368,6 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		if (sodium_init() == -1) {
 			throw runtime_error("libsodium initialisation failed");
 		}
-
-		ifstream file;
-		file.open(filename, ios_base::binary);
 
 		int num_opus_bytes;
 		unsigned char *pcm_data = new unsigned char[FRAME_SIZE * CHANNELS * 2];
@@ -395,22 +394,33 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		auto timer = pplx::create_task([run_timer, this, buffer] {
 			waitFor(chrono::milliseconds(5 * FRAME_MILLIS)).wait();
 			while (run_timer->get_is_set() || buffer->size() > 0) {
+#ifdef _WIN32
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([this, buffer] {
 					if (buffer->size() > 0) {
 						_udp->send(buffer->front());
 						buffer->pop();
 					}
 				}).wait();
+#else
+				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS));
+				if (buffer->size() > 0) {
+					_udp->send(buffer->front());
+					buffer->pop();
+			}
+#endif
 			}
 		});
 
 		while(1) {
 			if (buffer->size() >= 20) {
+#ifdef _WIN32
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).wait();
+#else
+				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS));
+#endif
 			}
 
-			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);
-			if(file.gcount() == 0)
+			if (source->read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2) != true)
 				break;
 
 			in_data = reinterpret_cast<opus_int16*>(pcm_data);
@@ -475,7 +485,6 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		opus_encoder_destroy(encoder);
 
 		delete[] pcm_data;
-		file.close();
 		
 		//_log.debug("finished playing audio");
 	});

@@ -66,6 +66,9 @@
     <ClCompile Include="static.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="FileAudioSource.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Discord.h">
@@ -117,6 +120,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="VoiceState.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSource.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FileAudioSource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

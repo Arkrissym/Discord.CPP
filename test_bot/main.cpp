@@ -99,7 +99,7 @@ public:
 					VoiceClient *vc = ((VoiceChannel *)guild->channels[i])->connect();
 
 					//this_thread::sleep_for(chrono::seconds(10));
-					vc->play("test.wav").wait();
+					vc->play(&FileAudioSource("test.wav")).wait();
 					vc->disconnect().wait();
 
 					delete vc;

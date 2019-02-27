@@ -16,6 +16,8 @@
 #include "Activity.h"
 #include "VoiceClient.h"
 #include "VoiceState.h"
+#include "AudioSource.h"
+#include "FileAudioSource.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)

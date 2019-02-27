@@ -12,6 +12,8 @@ var searchData=
   ['api_5fcall',['api_call',['../class_discord_c_p_p_1_1_discord_object.html#a7379c9f14b51880bca10a8ea479544dd',1,'DiscordCPP::DiscordObject']]],
   ['api_5furl',['API_URL',['../static_8h.html#a47cbcc6d148fe0c8f9fb95966026aa97',1,'static.h']]],
   ['application_5fid',['application_id',['../class_discord_c_p_p_1_1_d_m_channel.html#a739f6372abbe7ecaca452fa2c06f0b76',1,'DiscordCPP::DMChannel::application_id()'],['../class_discord_c_p_p_1_1_guild.html#a9661f2ad2c1e33b8029abe6fe72c7059',1,'DiscordCPP::Guild::application_id()']]],
+  ['audiosource',['AudioSource',['../class_discord_c_p_p_1_1_audio_source.html',1,'DiscordCPP::AudioSource'],['../class_discord_c_p_p_1_1_audio_source.html#a6796e86a66473d7c522bb3cb1274f6ca',1,'DiscordCPP::AudioSource::AudioSource()']]],
+  ['audiosource_2eh',['AudioSource.h',['../_audio_source_8h.html',1,'']]],
   ['author',['Author',['../struct_discord_c_p_p_1_1_embed_1_1_author.html',1,'DiscordCPP::Embed::Author'],['../class_discord_c_p_p_1_1_message.html#a10f4283ffb9753019cda51a177e71b27',1,'DiscordCPP::Message::author()']]],
   ['avatar',['avatar',['../class_discord_c_p_p_1_1_user.html#a543cc88cabf1d846f529850128d2061f',1,'DiscordCPP::User']]]
 ];

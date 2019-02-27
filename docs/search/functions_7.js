@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['join_5fvoice_5fchannel',['join_voice_channel',['../class_discord_c_p_p_1_1_discord.html#a4bbce4112239154e4213ccd21c3de69a',1,'DiscordCPP::Discord']]]
+  ['info',['info',['../class_logger.html#a17dd1302a17b15291d750d6ad3a75fa2',1,'Logger']]]
 ];

@@ -13,8 +13,8 @@ using namespace std;
 DiscordCPP::GuildChannel::GuildChannel(value data, string_t token) : DiscordCPP::TextChannel(data, token) {
 	//_log = Logger("discord.guildchannel");
 
-	if (is_valid_field("guild_id"))
-		guild = new Guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
+	if (is_valid_field("guild_id"))	//TODO: remove NULL-pointer 
+		guild = new Guild(NULL, conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
 
 	if (is_valid_field("parent_id"))
 		parent = new Channel(conversions::to_utf8string(data.at(U("parent_id")).as_string()), token);

@@ -65,6 +65,8 @@ namespace DiscordCPP {
 		///wether to keep the websocket alive or not
 		bool _keepalive = true;
 
+		friend VoiceClient * VoiceChannel::connect();
+
 		DLL_EXPORT pplx::task<void> create_heartbeat_task();
 		DLL_EXPORT pplx::task<void> connect();
 
@@ -87,8 +89,6 @@ namespace DiscordCPP {
 
 		///updates the presence of user
 		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
-		///joins a VoiceChannel
-		DLL_EXPORT VoiceClient *join_voice_channel(VoiceChannel channel);
 	};
 
 }

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.4.0</span>
+   &#160;<span id="projectnumber">0.5.1</span>
    </div>
   </td>
  </tr>
@@ -71,6 +71,7 @@ $(function() {
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="class_discord_c_p_p_1_1_discord-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DiscordCPP::Discord Class Reference</div>  </div>
@@ -94,9 +95,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1e983525381fb1c1a3e3cfdceaa24df2"><td class="memItemLeft" align="right" valign="top">pplx::task&lt; void &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a1e983525381fb1c1a3e3cfdceaa24df2">update_presence</a> (string status, <a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a> activity=<a class="el" href="class_discord_c_p_p_1_1_activity.html">Activity</a>(), bool afk=false)</td></tr>
 <tr class="memdesc:a1e983525381fb1c1a3e3cfdceaa24df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">updates the presence of user  <a href="#a1e983525381fb1c1a3e3cfdceaa24df2">More...</a><br /></td></tr>
 <tr class="separator:a1e983525381fb1c1a3e3cfdceaa24df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bbce4112239154e4213ccd21c3de69a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_voice_client.html">VoiceClient</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a4bbce4112239154e4213ccd21c3de69a">join_voice_channel</a> (<a class="el" href="class_discord_c_p_p_1_1_voice_channel.html">VoiceChannel</a> channel)</td></tr>
-<tr class="memdesc:a4bbce4112239154e4213ccd21c3de69a"><td class="mdescLeft">&#160;</td><td class="mdescRight">joins a <a class="el" href="class_discord_c_p_p_1_1_voice_channel.html">VoiceChannel</a>  <a href="#a4bbce4112239154e4213ccd21c3de69a">More...</a><br /></td></tr>
-<tr class="separator:a4bbce4112239154e4213ccd21c3de69a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -167,6 +165,11 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:adeca4a92d51bad6fd986b45cce512daf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#adeca4a92d51bad6fd986b45cce512daf">_keepalive</a> = true</td></tr>
 <tr class="memdesc:adeca4a92d51bad6fd986b45cce512daf"><td class="mdescLeft">&#160;</td><td class="mdescRight">wether to keep the websocket alive or not  <a href="#adeca4a92d51bad6fd986b45cce512daf">More...</a><br /></td></tr>
 <tr class="separator:adeca4a92d51bad6fd986b45cce512daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:aef717f30b5ca56e6fd45ef31a560cc57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_discord_c_p_p_1_1_voice_client.html">VoiceClient</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#aef717f30b5ca56e6fd45ef31a560cc57">VoiceChannel::connect</a> ()</td></tr>
+<tr class="separator:aef717f30b5ca56e6fd45ef31a560cc57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5588a90d77766f5b759b1c7971818c29"></a>
@@ -314,33 +317,6 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4bbce4112239154e4213ccd21c3de69a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bbce4112239154e4213ccd21c3de69a">&#9670;&nbsp;</a></span>join_voice_channel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_voice_client.html">DiscordCPP::VoiceClient</a> DiscordCPP::Discord::join_voice_channel </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_voice_channel.html">VoiceChannel</a>&#160;</td>
-          <td class="paramname"><em>channel</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>joins a <a class="el" href="class_discord_c_p_p_1_1_voice_channel.html">VoiceChannel</a> </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">channel</td><td>the vocie channel to connect </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_discord_c_p_p_1_1_voice_client.html">VoiceClient</a> </dd></dl>
 
 </div>
 </div>
@@ -546,6 +522,32 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="aef717f30b5ca56e6fd45ef31a560cc57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef717f30b5ca56e6fd45ef31a560cc57">&#9670;&nbsp;</a></span>VoiceChannel::connect</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_voice_client.html">VoiceClient</a>* <a class="el" href="class_discord_c_p_p_1_1_voice_channel.html#a55bad700680ec8f3dcc48a0ca6869fe9">VoiceChannel::connect</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -80,49 +80,6 @@ pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity ac
 	return _client->send(msg);
 }
 
-/**	@param[in]	channel		the vocie channel to connect
-	@return		VoiceClient	
-*/
-DiscordCPP::VoiceClient *DiscordCPP::Discord::join_voice_channel(VoiceChannel channel) {
-	if (channel.type != ChannelType::GUILD_VOICE) {
-		throw logic_error("channel must be a voice channel");
-	}
-
-	Guild *guild = NULL;
-	for (unsigned int i = 0; i < _guilds.size(); i++) {
-		for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
-			if (_guilds[i]->channels[j]->id == channel.id)
-				guild = _guilds[i];
-		}
-	}
-
-	value payload = value();
-	payload[U("op")] = value(4);
-	payload[U("d")][U("guild_id")] = value(conversions::to_string_t(guild->id));
-	payload[U("d")][U("channel_id")] = value(conversions::to_string_t(channel.id));
-	payload[U("d")][U("self_mute")] = value(false);
-	payload[U("d")][U("self_deaf")] = value(false);
-
-	websocket_outgoing_message msg;
-	msg.set_utf8_message(conversions::to_utf8string(payload.serialize()));
-
-	_client->send(msg).then([this] {
-		log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
-	});
-
-	while (true) {
-		for (unsigned int i = 0; i < _voice_states.size(); i++) {
-			if ((_voice_states[i]->channel_id == conversions::to_string_t(channel.id)) && (_voice_states[i]->endpoint.length() > 1)) {
-				return new VoiceClient(&_client, _voice_states[i]->voice_token, _voice_states[i]->endpoint, _voice_states[i]->session_id, _voice_states[i]->guild_id, _voice_states[i]->channel_id, conversions::to_string_t(_user->id));
-			}
-		}
-		//this_thread::sleep_for(chrono::milliseconds(10));
-		waitFor(chrono::milliseconds(10)).wait();
-	}
-
-	return new VoiceClient();
-}
-
 pplx::task<void> DiscordCPP::Discord::create_heartbeat_task() {
 	return pplx::create_task([this] {
 		while (_heartbeat_interval == 0)
@@ -252,87 +209,88 @@ void DiscordCPP::Discord::on_websocket_disconnnect(websocket_close_status status
 
 pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 	return pplx::create_task([this, event_name, data] {
-		if (event_name == "READY") {
-			_reconnect_timeout = 0;
-			_last_heartbeat_ack = time(0);
+		try {
+			if (event_name == "READY") {
+				_reconnect_timeout = 0;
+				_last_heartbeat_ack = time(0);
 
-			_invalid_session = false;
+				_invalid_session = false;
 
-			_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
-			_user = new User(data.at(U("user")), _token);
+				_session_id = conversions::to_utf8string(data.at(U("session_id")).as_string());
+				_user = new User(data.at(U("user")), _token);
 
-			//_private_channels
-			if (is_valid_field("private_channels")) {
-				web::json::array tmp = data.at(U("private_channels")).as_array();
-				for (unsigned int i = 0; i < tmp.size(); i++)
-					_private_channels.push_back(new DMChannel(tmp[i], _token));
-			}
-
-			//_guilds
-			if (is_valid_field("guilds")) {
-				web::json::array tmp = data.at(U("guilds")).as_array();
-				for (unsigned int i = 0; i < tmp.size(); i++)
-					_guilds.push_back(new Guild(tmp[i], _token));
-			}
-
-			web::json::array tmp = data.at(U("_trace")).as_array();
-			string str = "[ ";
-			for (unsigned int i = 0; i < tmp.size(); i++) {
-				_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
-				if (i == 0)
-					str = str + conversions::to_utf8string(tmp[i].as_string());
-				else
-					str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
-			}
-
-			log.info("connected to: " + str + " ]");
-			log.info("session id: " + _session_id);
-
-			pplx::create_task([this] {
-				try {
-					on_ready(User(*_user));
+				//_private_channels
+				if (is_valid_field("private_channels")) {
+					web::json::array tmp = data.at(U("private_channels")).as_array();
+					for (unsigned int i = 0; i < tmp.size(); i++)
+						_private_channels.push_back(new DMChannel(tmp[i], _token));
 				}
-				catch (const std::exception &e) {
-					log.error("ignoring exception in on_ready: " + string(e.what()));
-				}
-			});
-		}
-		else if (event_name == "RESUMED") {
-			_reconnect_timeout = 0;
-			_last_heartbeat_ack = time(0);
 
-			web::json::array tmp = data.at(U("_trace")).as_array();
-			string str = "[ ";
-			for (unsigned int i = 0; i < tmp.size(); i++) {
-				_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
-				if (i == 0)
-					str = str + conversions::to_utf8string(tmp[i].as_string());
-				else
-					str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
+				//_guilds
+				if (is_valid_field("guilds")) {
+					web::json::array tmp = data.at(U("guilds")).as_array();
+					for (unsigned int i = 0; i < tmp.size(); i++)
+						_guilds.push_back(new Guild(this, tmp[i], _token));
+				}
+
+				web::json::array tmp = data.at(U("_trace")).as_array();
+				string str = "[ ";
+				for (unsigned int i = 0; i < tmp.size(); i++) {
+					_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
+					if (i == 0)
+						str = str + conversions::to_utf8string(tmp[i].as_string());
+					else
+						str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
+				}
+
+				log.info("connected to: " + str + " ]");
+				log.info("session id: " + _session_id);
+
+				pplx::create_task([this] {
+					try {
+						on_ready(User(*_user));
+					}
+					catch (const std::exception &e) {
+						log.error("ignoring exception in on_ready: " + string(e.what()));
+					}
+				});
 			}
+			else if (event_name == "RESUMED") {
+				_reconnect_timeout = 0;
+				_last_heartbeat_ack = time(0);
 
-			log.info("successfully resumed session " + _session_id + " with trace " + str + " ]");
-		}
-		else if (event_name == "MESSAGE_CREATE") {
-			pplx::create_task([this, data] {
-				try {
-					on_message(Message(data, _token));
+				web::json::array tmp = data.at(U("_trace")).as_array();
+				string str = "[ ";
+				for (unsigned int i = 0; i < tmp.size(); i++) {
+					_trace.push_back(conversions::to_utf8string(tmp[i].as_string()));
+					if (i == 0)
+						str = str + conversions::to_utf8string(tmp[i].as_string());
+					else
+						str = str + ", " + conversions::to_utf8string(tmp[i].as_string());
 				}
-				catch (const std::exception &e) {
-					log.error("ignoring exception in on_message: " + string(e.what()));
-				}
-			});
-		}
-		else if (event_name == "GUILD_CREATE") {
-			Guild *tmp_guild = new Guild(data, _token);
 
-			for (unsigned int i = 0; i < _guilds.size(); i++) {
-				if (tmp_guild->id == _guilds[i]->id) {
-					_guilds[i] = tmp_guild;
-					log.debug("Updated guild data");
-					return;
-				}
+				log.info("successfully resumed session " + _session_id + " with trace " + str + " ]");
 			}
+			else if (event_name == "MESSAGE_CREATE") {
+				pplx::create_task([this, data] {
+					try {
+						on_message(Message(data, _token));
+					}
+					catch (const std::exception &e) {
+						log.error("ignoring exception in on_message: " + string(e.what()));
+					}
+				});
+			}
+			else if (event_name == "GUILD_CREATE") {
+				Guild *tmp_guild = new Guild(this, data, _token);
+
+				for (unsigned int i = 0; i < _guilds.size(); i++) {
+					if (tmp_guild->id == _guilds[i]->id) {
+						_guilds[i] = tmp_guild;
+						log.debug("Updated guild data");
+						return;
+					}
+				}
 
 				_guilds.push_back(tmp_guild);
 				log.debug("data of new guild added");
@@ -391,9 +349,10 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				log.warning("ignoring event: " + event_name);
 				//log.debug(conversions::to_utf8string(data.serialize()));
 			}
-		//catch (exception &e) {
-		//	log.error("error while handling event " + event_name + ": " + e.what());
-		//}
+		}
+		catch (exception &e) {
+			log.error("error while handling event " + event_name + ": " + e.what());
+		}
 	});
 }
 

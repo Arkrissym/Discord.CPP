@@ -1,6 +1,7 @@
 #include "DiscordObject.h"
 #include "static.h"
 #include "Logger.h"
+#include "Exceptions.h"
 
 using namespace std;
 using namespace web::json;
@@ -56,6 +57,8 @@ pplx::task<void> manage_cache() {
 	@param[in]	data			(optional) JSON data to send
 	@param[in]	content_type	(optional) the Content-Type of data
 	@param[in]	cache			(optional) wether to cache results or not (only GET requests can be cached)
+	@return		json::value		API response
+	@throws		HTTPError
 */
 value DiscordCPP::DiscordObject::api_call(string url, method method, value data, string content_type, bool cache) {
 	if (method == methods::GET && cache == true) {
@@ -126,10 +129,14 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 	} while (code == 429);
 
 	switch (code) {
-		case 400: throw runtime_error("Malformed/Invalid API call(400)");
-		case 401: throw runtime_error("Unauthorized API call(401)");
-		case 403: throw runtime_error("Permission denied(403)");
-		case 500: throw runtime_error("Server error(500)");
+		case 400: throw HTTPError("Malformed/Invalid API call", code);
+		case 401: throw HTTPError("Unauthorized API call", code);
+		case 403: throw HTTPError("Permission denied", code);
+		case 500: throw HTTPError("Server error", code);
+		default:  
+			if (code >= 300) {
+				throw HTTPError("Unknown HTTPError: " + to_string(code), code);
+			}
 	}
 
 	return ret;

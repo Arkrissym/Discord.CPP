@@ -1,6 +1,7 @@
 #include "Embed.h"
 #include "static.h"
 #include "Logger.h"
+#include "Exceptions.h"
 
 #include <string>
 
@@ -91,9 +92,15 @@ void DiscordCPP::Embed::set_color(int color) {
 	_color = color;
 }
 
+/**	add a field to the Embed
+	@param[in]	name	the name of the field
+	@param[in]	value	the value of the field
+	@param[in]	Inline	(optional) wether the field shall be displayed inline or not(default is true)
+	@throws	SizeError
+*/
 void DiscordCPP::Embed::add_field(string name, string value, bool Inline) {
 	if (_fields.size() >= 25) {
-		throw length_error("Embed: Cannot add more than 25 fields.");
+		throw SizeError("Embed: Cannot add more than 25 fields.");
 	}
 
 	Field field;
@@ -131,6 +138,10 @@ void DiscordCPP::Embed::set_video(string url) {
 	_video.url = url;
 }
 
+/**	generates json from Embed
+	@return	json::value
+	@throws	SizeError
+*/
 value DiscordCPP::Embed::to_json() {
 	value ret;
 
@@ -176,7 +187,7 @@ value DiscordCPP::Embed::to_json() {
 		ret[U("thumbnail")][U("url")] = value(conversions::to_string_t(_thumbnail.url));
 
 	if (ret.size() == 0) {
-		throw invalid_argument("Cannot create JSON from empty Embed");
+		throw SizeError("Cannot create JSON from empty Embed");
 	}
 
 	//Logger("discord.embed").debug(conversions::to_utf8string(ret.serialize()));

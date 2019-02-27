@@ -125,6 +125,8 @@
     <ClCompile Include="DiscordObject.cpp" />
     <ClCompile Include="DMChannel.cpp" />
     <ClCompile Include="Embed.cpp" />
+    <ClCompile Include="Exceptions.cpp" />
+    <ClCompile Include="FileAudioSource.cpp" />
     <ClCompile Include="Guild.cpp" />
     <ClCompile Include="GuildChannel.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -139,11 +141,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activity.h" />
+    <ClInclude Include="AudioSource.h" />
     <ClInclude Include="Channel.h" />
     <ClInclude Include="Discord.h" />
     <ClInclude Include="DiscordObject.h" />
     <ClInclude Include="DMChannel.h" />
     <ClInclude Include="Embed.h" />
+    <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="FileAudioSource.h" />
     <ClInclude Include="Guild.h" />
     <ClInclude Include="GuildChannel.h" />
     <ClInclude Include="Logger.h" />

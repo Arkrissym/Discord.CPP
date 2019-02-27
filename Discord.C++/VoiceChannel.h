@@ -16,8 +16,12 @@ namespace DiscordCPP {
 	using namespace utility;
 
 	class Guild;
+	class Discord;
+	class VoiceClient;
 
 	class VoiceChannel : public Channel	{
+	private:
+		Discord *_client;
 	public:
 		///the channel's bitrate
 		int bitrate;
@@ -28,11 +32,14 @@ namespace DiscordCPP {
 		///the guild the channel belongs to
 		Guild *guild = NULL;
 
-		DLL_EXPORT VoiceChannel(value data, string_t token);
-		DLL_EXPORT VoiceChannel(string id, string_t token);
+		DLL_EXPORT VoiceChannel(Discord *client, value data, string_t token);
+		DLL_EXPORT VoiceChannel(Discord *client, string id, string_t token);
 		DLL_EXPORT VoiceChannel(const VoiceChannel &old);
 		DLL_EXPORT VoiceChannel();
 		DLL_EXPORT ~VoiceChannel();
+
+		///connect to this VoiceChannel
+		DLL_EXPORT VoiceClient *connect();
 	};
 
 }

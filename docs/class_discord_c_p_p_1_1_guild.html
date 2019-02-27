@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.4.0</span>
+   &#160;<span id="projectnumber">0.5.1</span>
    </div>
   </td>
  </tr>
@@ -88,10 +88,10 @@ Inheritance diagram for DiscordCPP::Guild:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad19236634e38f7e27bdcd1d29276eff5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#ad19236634e38f7e27bdcd1d29276eff5">Guild</a> (value data, string_t token)</td></tr>
-<tr class="separator:ad19236634e38f7e27bdcd1d29276eff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5e36de07032221824593f7c7723e6f7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#af5e36de07032221824593f7c7723e6f7">Guild</a> (string <a class="el" href="class_discord_c_p_p_1_1_discord_object.html#af31400604ee115cf1dcd7ce366a31dca">id</a>, string_t token)</td></tr>
-<tr class="separator:af5e36de07032221824593f7c7723e6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a297cc96b0d02ec45d253cffd59561232"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#a297cc96b0d02ec45d253cffd59561232">Guild</a> (<a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> *client, value data, string_t token)</td></tr>
+<tr class="separator:a297cc96b0d02ec45d253cffd59561232"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a555c9f8d780693615272031a5da0d539"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#a555c9f8d780693615272031a5da0d539">Guild</a> (<a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> *client, string <a class="el" href="class_discord_c_p_p_1_1_discord_object.html#af31400604ee115cf1dcd7ce366a31dca">id</a>, string_t token)</td></tr>
+<tr class="separator:a555c9f8d780693615272031a5da0d539"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b9839697aca0883a44bfd205350eae0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#a2b9839697aca0883a44bfd205350eae0">Guild</a> (const <a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a> &amp;old)</td></tr>
 <tr class="separator:a2b9839697aca0883a44bfd205350eae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4b6939b45331a47bd3dff69057026ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#ad4b6939b45331a47bd3dff69057026ca">Guild</a> ()</td></tr>
@@ -200,8 +200,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a865d607b61a7a138272de9e1be4e6958 inherit pro_attribs_class_discord_c_p_p_1_1_discord_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad19236634e38f7e27bdcd1d29276eff5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad19236634e38f7e27bdcd1d29276eff5">&#9670;&nbsp;</a></span>Guild() <span class="overload">[1/4]</span></h2>
+<a id="a297cc96b0d02ec45d253cffd59561232"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a297cc96b0d02ec45d253cffd59561232">&#9670;&nbsp;</a></span>Guild() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,6 +209,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">DiscordCPP::Guild::Guild </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> *&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">value&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
@@ -228,8 +234,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="af5e36de07032221824593f7c7723e6f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5e36de07032221824593f7c7723e6f7">&#9670;&nbsp;</a></span>Guild() <span class="overload">[2/4]</span></h2>
+<a id="a555c9f8d780693615272031a5da0d539"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a555c9f8d780693615272031a5da0d539">&#9670;&nbsp;</a></span>Guild() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,6 +243,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">DiscordCPP::Guild::Guild </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> *&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">string&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>

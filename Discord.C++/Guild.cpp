@@ -12,7 +12,7 @@ using namespace utility;
 using namespace web::http;
 using namespace web::http::client;
 
-DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject(token) {
+DiscordCPP::Guild::Guild(Discord *client, value data, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("dicord.guild");
 
 	if (is_valid_field("id"))
@@ -37,7 +37,7 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 		region = conversions::to_utf8string(data.at(U("region")).as_string());
 
 	if (is_valid_field("afk_channel_id")) {
-		afk_channel = new VoiceChannel(conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
+		afk_channel = new VoiceChannel(client, conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
 	}
 
 	if (is_valid_field("afk_timeout"))
@@ -116,7 +116,7 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 				channels.push_back((Channel *)new TextChannel(tmp[i], token));
 				break;
 			case ChannelType::GUILD_VOICE:
-				channels.push_back((Channel *)new VoiceChannel(tmp[i], token));
+				channels.push_back((Channel *)new VoiceChannel(client, tmp[i], token));
 				break;
 			case ChannelType::DM:
 			case ChannelType::GROUP_DM:
@@ -133,12 +133,12 @@ DiscordCPP::Guild::Guild(value data, string_t token) : DiscordCPP::DiscordObject
 	//_log.debug("created guild object");
 }
 
-DiscordCPP::Guild::Guild(string id, string_t token) : DiscordCPP::DiscordObject(token) {
+DiscordCPP::Guild::Guild(Discord *client, string id, string_t token) : DiscordCPP::DiscordObject(token) {
 	//_log = Logger("discord.guild");
 
 	string url = "/guilds/" + id;
 
-	*this = Guild(api_call(url), token);
+	*this = Guild(client, api_call(url), token);
 }
 
 DiscordCPP::Guild::Guild(const Guild & old) {

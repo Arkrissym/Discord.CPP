@@ -2,6 +2,7 @@
 #include "Message.h"
 #include "Embed.h"
 #include "static.h"
+#include "Exceptions.h"
 
 using namespace std;
 using namespace web::json;
@@ -83,11 +84,14 @@ vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int lim
 	return ret;
 }
 
+/**	@param[in]	messages	vector containing the messages to delete
+	@throws	SizeError
+*/
 void DiscordCPP::TextChannel::delete_messages(vector<shared_ptr<Message>> messages) {
 	if (messages.size() < 2)
-		throw out_of_range("Cannot delete less than 2 messages: use Message::delete_msg() instead");
+		throw SizeError("Cannot delete less than 2 messages: use Message::delete_msg() instead");
 	else if (messages.size() > 100)
-		throw out_of_range("Cannot delete more than 100 messages");
+		throw SizeError("Cannot delete more than 100 messages");
 
 	string url = "/channels/" + id + "/messages/bulk-delete";
 

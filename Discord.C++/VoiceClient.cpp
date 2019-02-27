@@ -1,10 +1,13 @@
 #include "VoiceClient.h"
 #include "static.h"
 #include "Logger.h"
+#include "Exceptions.h"
 
 #include <queue>
+#ifndef _WIN32
 #include <chrono>
 #include <thread>
+#endif
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
@@ -344,18 +347,20 @@ pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
 	});
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
-	return pplx::create_task([this, filename] {
+/**	@throws	OpusError	ClientException
+*/
+pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource *source) {
+	return pplx::create_task([this, source] {
 		//_log.debug("creating opus encoder");
 		int error;
 		OpusEncoder *encoder = opus_encoder_create(SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_AUDIO, &error);
 		if (error < 0) {
-			throw runtime_error("failed to create opus encoder: " + string(opus_strerror(error)));
+			throw OpusError("failed to create opus encoder: " + string(opus_strerror(error)), error);
 		}
 
 		error = opus_encoder_ctl(encoder, OPUS_SET_BITRATE(BITRATE));
 		if (error < 0) {
-			throw runtime_error("failed to set bitrate for opus encoder: " + string(opus_strerror(error)));
+			throw OpusError("failed to set bitrate for opus encoder: " + string(opus_strerror(error)), error);
 		}
 		
 		opus_encoder_ctl(encoder, OPUS_SET_INBAND_FEC(1));
@@ -364,11 +369,8 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 
 		//_log.debug("initialising libsodium");
 		if (sodium_init() == -1) {
-			throw runtime_error("libsodium initialisation failed");
+			throw ClientException("libsodium initialisation failed");
 		}
-
-		ifstream file;
-		file.open(filename, ios_base::binary);
 
 		int num_opus_bytes;
 		unsigned char *pcm_data = new unsigned char[FRAME_SIZE * CHANNELS * 2];
@@ -395,29 +397,40 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		auto timer = pplx::create_task([run_timer, this, buffer] {
 			waitFor(chrono::milliseconds(5 * FRAME_MILLIS)).wait();
 			while (run_timer->get_is_set() || buffer->size() > 0) {
+#ifdef _WIN32
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).then([this, buffer] {
 					if (buffer->size() > 0) {
 						_udp->send(buffer->front());
 						buffer->pop();
 					}
 				}).wait();
+#else
+				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS));
+				if (buffer->size() > 0) {
+					_udp->send(buffer->front());
+					buffer->pop();
+			}
+#endif
 			}
 		});
 
 		while(1) {
 			if (buffer->size() >= 20) {
+#ifdef _WIN32
 				waitFor(chrono::milliseconds(FRAME_MILLIS)).wait();
+#else
+				this_thread::sleep_for(chrono::milliseconds(FRAME_MILLIS));
+#endif
 			}
 
-			file.read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2);
-			if(file.gcount() == 0)
+			if (source->read((char *)pcm_data, FRAME_SIZE * CHANNELS * 2) != true)
 				break;
 
 			in_data = reinterpret_cast<opus_int16*>(pcm_data);
 
 			num_opus_bytes = opus_encode(encoder, in_data, FRAME_SIZE, opus_data.data(), MAX_PACKET_SIZE);
 			if (num_opus_bytes <= 0) {
-				throw runtime_error("failed to encode frame: " + string(opus_strerror(num_opus_bytes)));
+				throw OpusError("failed to encode frame: " + string(opus_strerror(num_opus_bytes)), num_opus_bytes);
 			}
 
 			//_log.debug(to_string(num_opus_bytes) + "/" + to_string(MAX_PACKET_SIZE) + " used");
@@ -475,7 +488,6 @@ pplx::task<void> DiscordCPP::VoiceClient::play(string filename) {
 		opus_encoder_destroy(encoder);
 
 		delete[] pcm_data;
-		file.close();
 		
 		//_log.debug("finished playing audio");
 	});

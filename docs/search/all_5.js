@@ -12,6 +12,9 @@ var searchData=
   ['embeds',['embeds',['../class_discord_c_p_p_1_1_message.html#a9188f067282d5d3768b7f175ea1656ec',1,'DiscordCPP::Message']]],
   ['endpoint',['endpoint',['../class_discord_c_p_p_1_1_voice_state.html#a9c252900f53fcbf636de17f46e803537',1,'DiscordCPP::VoiceState']]],
   ['error',['error',['../class_logger.html#ade9e0898dc8cefe41ca72fa20f1a1706',1,'Logger::error()'],['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdca2fd6f336d08340583bd620a7f5694c90',1,'ERROR():&#160;Logger.h']]],
+  ['error_5fcode',['error_code',['../class_discord_c_p_p_1_1_status_code_exception.html#a31f9ed0236e637171a22e268703b5f50',1,'DiscordCPP::StatusCodeException']]],
+  ['exceptions_2ecpp',['Exceptions.cpp',['../_exceptions_8cpp.html',1,'']]],
+  ['exceptions_2eh',['Exceptions.h',['../_exceptions_8h.html',1,'']]],
   ['explicit_5fcontent_5ffilter',['explicit_content_filter',['../class_discord_c_p_p_1_1_guild.html#ac5c0fb2612723bf85beba4c25e0250c9',1,'DiscordCPP::Guild']]],
   ['explicitcontentfilterlevel',['ExplicitContentFilterLevel',['../namespace_discord_c_p_p_1_1_explicit_content_filter_level.html#aa3826261bb36372611c15559b881f712',1,'DiscordCPP::ExplicitContentFilterLevel']]]
 ];

@@ -6,8 +6,6 @@
 #include "Logger.h"
 #include "Exceptions.h"
 
-#include <cpprest/http_client.h>
-
 using namespace web::http;
 using namespace web::http::client;
 using namespace web::json;
@@ -72,6 +70,8 @@ DiscordCPP::VoiceClient * DiscordCPP::VoiceChannel::connect() {
 		}
 	}
 
+	unsigned int shard_id = (stoull(guild->id) >> 22) % _client->_num_shards;
+
 	value payload = value();
 	payload[U("op")] = value(4);
 	payload[U("d")][U("guild_id")] = value(conversions::to_string_t(guild->id));
@@ -79,17 +79,14 @@ DiscordCPP::VoiceClient * DiscordCPP::VoiceChannel::connect() {
 	payload[U("d")][U("self_mute")] = value(false);
 	payload[U("d")][U("self_deaf")] = value(false);
 
-	websocket_outgoing_message msg;
-	msg.set_utf8_message(conversions::to_utf8string(payload.serialize()));
-
-	_client->_client->send(msg).then([this] {
+	_client->_gateways[shard_id]->send(payload).then([this] {
 		Logger("discord.voicechannel").debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
 	});
 
 	while (true) {
 		for (unsigned int i = 0; i < _client->_voice_states.size(); i++) {
 			if ((_client->_voice_states[i]->channel_id == conversions::to_string_t(this->id)) && (_client->_voice_states[i]->endpoint.length() > 1)) {
-				return new VoiceClient(&_client->_client, _client->_voice_states[i]->voice_token, _client->_voice_states[i]->endpoint, _client->_voice_states[i]->session_id, _client->_voice_states[i]->guild_id, _client->_voice_states[i]->channel_id, conversions::to_string_t(_client->_user->id));
+				return new VoiceClient(&_client->_gateways[shard_id], _client->_voice_states[i]->voice_token, _client->_voice_states[i]->endpoint, _client->_voice_states[i]->session_id, _client->_voice_states[i]->guild_id, _client->_voice_states[i]->channel_id, conversions::to_string_t(_client->_user->id));
 			}
 		}
 		//this_thread::sleep_for(chrono::milliseconds(10));

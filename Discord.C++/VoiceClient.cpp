@@ -62,14 +62,7 @@ DiscordCPP::udp_client::udp_client(string_t ip, int port) {
 
 	_socket->open(udp::v4());
 }
-/*
-DiscordCPP::udp_client::udp_client(udp_client & old) : _io_service(old._io_service) {
-	this->_log = old._log;
-	this->_recv_buffer = old._recv_buffer;
-	this->_socket = old._socket;
-	this->_remote = old._remote;
-}
-*/
+
 DiscordCPP::udp_client::~udp_client() {
 	_log.debug("~udp_client");
 	_socket->close();
@@ -97,51 +90,6 @@ string DiscordCPP::udp_client::receive() {
 	}
 
 	return string(_recv_buffer.begin(), _recv_buffer.begin() + len);
-}
-
-pplx::task<void> DiscordCPP::VoiceClient::identify() {
-	return pplx::create_task([this] {
-		value out_payload;
-		websocket_outgoing_message out;
-
-		out_payload[U("op")] = value(0);
-		out_payload[U("d")][U("server_id")] = value(_guild_id);
-		out_payload[U("d")][U("user_id")] = value(_user_id);
-		out_payload[U("d")][U("session_id")] = value(_session_id);
-		out_payload[U("d")][U("token")] = value(_voice_token);
-
-		out.set_utf8_message(conversions::to_utf8string(out_payload.serialize()));
-		_voice_ws.send(out).then([this] {
-			Logger("Discord.VoiceClient").info("Identify payload has been sent");
-		}).wait();
-	});
-}
-
-pplx::task<void> DiscordCPP::VoiceClient::create_heartbeat_task() {
-	return pplx::create_task([this] {
-		while (_heartbeat_interval == 0)
-			//this_thread::sleep_for(chrono::milliseconds(50));
-			waitFor(chrono::milliseconds(50)).wait();
-
-		while (_keepalive) {
-			try {
-				websocket_outgoing_message heartbeat_msg = websocket_outgoing_message();
-				heartbeat_msg.set_utf8_message("{\"op\": 3, \"d\": " + to_string(time(NULL)) + "}");
-				_voice_ws.send(heartbeat_msg).then([this] {
-					_log.debug("Heartbeat message has been sent");
-				}).wait();
-			}
-			catch (websocket_exception &e) {
-				_log.error("Cannot send heartbeat message: " + string(e.what()) + " (" + to_string(e.error_code().value()) + ": " + e.error_code().message() + ")");
-			}
-			catch (exception &e) {
-				_log.error("Cannot send heartbeat message: " + string(e.what()));
-			}
-
-			//this_thread::sleep_for(chrono::milliseconds(_heartbeat_interval));
-			waitFor(chrono::milliseconds(_heartbeat_interval)).wait();
-		}
-	});
 }
 
 pplx::task<void> DiscordCPP::VoiceClient::connect_voice_udp() {
@@ -192,10 +140,7 @@ pplx::task<void> DiscordCPP::VoiceClient::select_protocol() {
 		payload[U("d")][U("data")][U("port")] = value(_my_port);
 		payload[U("d")][U("data")][U("mode")] = value(U("xsalsa20_poly1305"));
 
-		websocket_outgoing_message msg;
-		msg.set_utf8_message(conversions::to_utf8string(payload.serialize()));
-
-		_voice_ws.send(msg).then([this] {
+		_voice_ws->send(payload).then([this] {
 			_log.debug("Opcode 1 Select Protocol Payload has been sent");
 		}).wait();
 	});
@@ -219,37 +164,23 @@ pplx::task<void> DiscordCPP::VoiceClient::speak(bool speak) {
 		payload[U("d")][U("delay")] = value(0);
 		payload[U("d")][U("ssrc")] = value(_ssrc);
 
-		websocket_outgoing_message msg;
-		msg.set_utf8_message(conversions::to_utf8string(payload.serialize()));
-
-		_voice_ws.send(msg).then([this] {
+		_voice_ws->send(payload).then([this] {
 			_log.debug("Opcode 5 Speaking Payload has been sent");
 		}).wait();
 	});
 }
 
-DiscordCPP::VoiceClient::VoiceClient(websocket_callback_client **main_ws, string_t voice_token, string_t endpoint, string_t session_id, string_t guild_id, string_t channel_id, string_t user_id) {
-	_voice_token = voice_token;
-	_endpoint = endpoint;
-	_session_id = session_id;
+DiscordCPP::VoiceClient::VoiceClient(MainGateway **main_ws, string_t voice_token, string_t endpoint, string_t session_id, string_t guild_id, string_t channel_id, string_t user_id) {
 	_guild_id = guild_id;
 	_channel_id = channel_id;
-	_user_id = user_id;
 
 	_log = Logger("Discord.VoiceClient");
 	_log.info("connecting to endpoint " + conversions::to_utf8string(_endpoint));
 
 	_main_ws = main_ws;
-	_voice_ws = websocket_callback_client();
+	_voice_ws = new VoiceGateway(conversions::to_utf8string(voice_token), conversions::to_utf8string(session_id), conversions::to_utf8string(guild_id), conversions::to_utf8string(user_id));
 
-	_voice_ws.set_close_handler([this](websocket_close_status close_status, string_t reason, error_code error) {
-		_log.warning("websocket closed with status: " + to_string((int)close_status) + ": " + conversions::to_utf8string(reason) + " (" + to_string(error.value()) + ": " + error.message() + ")");
-	});
-
-	_voice_ws.set_message_handler([this](websocket_incoming_message msg) {
-		string msg_string = msg.extract_string().get();
-		value data = value::parse(conversions::to_string_t(msg_string));
-
+	_voice_ws->set_message_handler([this](value data) {
 		switch (data.at(U("op")).as_integer()) {
 		case 2:
 			_ssrc = data[U("d")][U("ssrc")].as_integer();
@@ -274,49 +205,21 @@ DiscordCPP::VoiceClient::VoiceClient(websocket_callback_client **main_ws, string
 			});
 			break;
 		case 6:
-			_log.debug("received heartbeat ack");
-			break;
 		case 8:
-			_heartbeat_interval = (int)(data[U("d")][U("heartbeat_interval")].as_integer() * 0.75);
-			identify();
 			break;
 		default:
-			_log.debug(msg_string);
+			_log.debug(conversions::to_utf8string(data.serialize()));
 			break;
 		}
 	});
 
-	_voice_ws.connect(_endpoint).then([this] {
-		_heartbeat_task = create_heartbeat_task();
-		_log.info("connected to voice websocket");
-	});
+	_voice_ws->connect(conversions::to_utf8string(endpoint));
 
 	while (_ready == false)	{
-		//this_thread::sleep_for(chrono::milliseconds(10));
 		waitFor(chrono::milliseconds(10)).wait();
 	}
 }
-/*
-DiscordCPP::VoiceClient::VoiceClient(const VoiceClient & old) {
-	this->_channel_id = old._channel_id;
-	this->_guild_id = old._guild_id;
-	this->_session_id = old._session_id;
-	this->_user_id = old._user_id;
-	this->_heartbeat_interval = old._heartbeat_interval;
-	this->_server_ip = old._server_ip;
-	this->_server_port = old._server_port;
-	this->_endpoint = old._endpoint;
-	this->_voice_ws = old._voice_ws;
-	this->_voice_token = old._voice_token;
-	this->_log = old._log;
-	this->_ready = old._ready;
-	this->_ssrc = old._ssrc;
-	this->_udp = old._udp;
-	this->_my_ip = old._my_ip;
-	this->_my_port = old._my_port;
-	this->_secret_key = old._secret_key;
-}
-*/
+
 DiscordCPP::VoiceClient::VoiceClient() {
 
 }
@@ -325,7 +228,8 @@ DiscordCPP::VoiceClient::~VoiceClient() {
 	_log.debug("~VoiceClient");
 	disconnect().wait();
 	_keepalive = false;
-	_voice_ws.close(websocket_close_status::normal, U("class VoiceClient was destroyed"));
+	_voice_ws->close().wait();
+	delete _voice_ws;
 	delete _udp;
 }
 
@@ -338,10 +242,7 @@ pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
 		payload[U("d")][U("self_mute")] = value(true);
 		payload[U("d")][U("self_deaf")] = value(true);
 
-		websocket_outgoing_message msg;
-		msg.set_utf8_message(conversions::to_utf8string(payload.serialize()));
-
-		(*_main_ws)->send(msg).then([this] {
+		(*_main_ws)->send(payload).then([this] {
 			_log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
 		}).wait();
 	});

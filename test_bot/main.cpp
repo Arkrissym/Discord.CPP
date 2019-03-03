@@ -119,7 +119,7 @@ public:
 		}
 	}
 
-	myClient(string token) : Discord(token) {};
+	myClient(string token, unsigned int num_shards = 1) : Discord(token, num_shards) {};
 };
 
 int main() {
@@ -134,7 +134,7 @@ int main() {
 	token = getenv("DISCORD_TEST_TOKEN");
 #endif
 
-	myClient *client = new myClient(token);
+	myClient *client = new myClient(token, 2);
 
 #ifdef _WIN32
 	free(token);

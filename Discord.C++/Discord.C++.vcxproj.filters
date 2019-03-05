@@ -72,6 +72,15 @@
     <ClCompile Include="Exceptions.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Gateway.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="VoiceGateway.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGateway.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Discord.h">
@@ -132,6 +141,15 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Exceptions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Gateway.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="VoiceGateway.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGateway.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

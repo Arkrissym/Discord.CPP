@@ -5,24 +5,19 @@
 
 namespace DiscordCPP {
 
-	using namespace std;
-	using namespace web::json;
-	using namespace web::http;
-	using namespace utility;
-
 	class DiscordObject {
 	protected:
 		///token to authentificate with the discord api
-		string_t _token;
+		utility::string_t _token;
 
 		///helper function to communicate with the http api
-		value api_call(string url, method method = methods::GET, value data = value(), string content_type="", bool cache=true);
+		web::json::value api_call(std::string url, web::http::method method = web::http::methods::GET, web::json::value data = web::json::value(), std::string content_type="", bool cache=true);
 	public:
 		///the id of the object
-		string id;	//snowflake
+		std::string id;	//snowflake
 
 		DiscordObject();
-		DiscordObject(string_t token);
+		DiscordObject(utility::string_t token);
 	};
 
 }

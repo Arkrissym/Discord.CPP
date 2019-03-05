@@ -6,6 +6,7 @@
 
 using namespace std;
 using namespace web::json;
+using namespace web::http;
 using namespace utility;
 
 DiscordCPP::TextChannel::TextChannel(value data, string_t token) : DiscordCPP::Channel(data, token) {

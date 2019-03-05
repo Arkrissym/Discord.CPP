@@ -19,6 +19,8 @@
 #include "AudioSource.h"
 #include "FileAudioSource.h"
 #include "Exceptions.h"
+#include "MainGateway.h"
+#include "DiscordObject.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -34,56 +36,36 @@ namespace DiscordCPP {
 	using namespace concurrency;
 	using namespace std;
 
-	class Discord {
+	class Discord : public DiscordObject {
 	protected:
-		///discord token
-		string_t _token;
-		///websocket client
-		websocket_callback_client *_client;
-		///heartbeat interval in milliseconds
-		int _heartbeat_interval = 0;
-		///current sequence number
-		unsigned int _sequence_number = 0;
-		///session id
-		string _session_id;
-		///indicator if we have a invalid session
-		bool _invalid_session = false;
+		///websocket clients
+		vector<MainGateway *>_gateways;
+		///number of shards
+		unsigned int _num_shards;
 		///the user
 		User *_user;
 		///private channels of the user 
 		vector<Channel *> _private_channels;
 		///the guilds the user is a member
 		vector<Guild *> _guilds;
-		///array of servers connected to
-		vector<string> _trace;
-		///sometimes it is better a few seconds before reconnecting...
-		unsigned int _reconnect_timeout = 0;
-		///timestamp of last heartbeat ack
-		time_t _last_heartbeat_ack;
-
+		
 		///array of VoiceStates
 		vector<VoiceState *> _voice_states;
-		///the task that sends the heartbeat messages
-		pplx::task<void> _heartbeat_task;
-		///wether to keep the websocket alive or not
-		bool _keepalive = true;
-
+		
 		friend VoiceClient * VoiceChannel::connect();
 
-		DLL_EXPORT pplx::task<void> create_heartbeat_task();
+		DLL_EXPORT MainGateway * get_shard(unsigned int shard_id);
+
 		DLL_EXPORT pplx::task<void> connect();
-
-		DLL_EXPORT void on_websocket_incoming_message(websocket_incoming_message msg);
-		DLL_EXPORT void on_websocket_disconnnect(websocket_close_status status, string reason, error_code error);
-
+		
+		DLL_EXPORT void on_websocket_incoming_message(value payload);
 		DLL_EXPORT pplx::task<void> handle_raw_event(std::string event_name, value data);	//op: 0
-		DLL_EXPORT pplx::task<void> send_heartbeat_ack();			//op: 1
-		DLL_EXPORT pplx::task<void> handle_hello_msg(value data);	//op: 10
 	public:
 		Logger log;
 
-		DLL_EXPORT Discord(string token);
-		DLL_EXPORT ~Discord();
+		DLL_EXPORT Discord(string token, unsigned int num_shards = 0);
+		DLL_EXPORT Discord(string token, unsigned int shard_id, unsigned int num_shards);
+		DLL_EXPORT virtual ~Discord();
 
 		///called when successfully logged in
 		DLL_EXPORT virtual void on_ready(User user);
@@ -91,7 +73,7 @@ namespace DiscordCPP {
 		DLL_EXPORT virtual void on_message(Message message);
 
 		///updates the presence of user
-		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity=Activity(), bool afk=false);
+		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity = Activity(), bool afk = false, int shard_id = -1);
 	};
 
 }

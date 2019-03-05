@@ -19,7 +19,7 @@ DiscordCPP::DiscordObject::DiscordObject() {
 }
 
 ///	@param[in]	token	Discord token
-DiscordCPP::DiscordObject::DiscordObject(string_t token) {
+DiscordCPP::DiscordObject::DiscordObject(utility::string_t token) {
 	_token = token;
 
 	if (cache_manager_active == false) {

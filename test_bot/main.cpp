@@ -16,7 +16,7 @@ public:
 	void on_ready(User user) {
 		log.info("logged in as: " + user.username);
 
-		this->update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game));
+		this->update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game)).wait();
 	}
 
 	void on_message(Message message) {
@@ -97,9 +97,10 @@ public:
 			for (unsigned int i = 0; i < guild->channels.size(); i++) {
 				if (guild->channels[i]->name.compare(channel_name) == 0) {
 					VoiceClient *vc = ((VoiceChannel *)guild->channels[i])->connect();
+					FileAudioSource *source = new FileAudioSource("test.wav");
 
 					try {
-						vc->play(&FileAudioSource("test.wav")).wait();
+						vc->play(source).wait();
 					}
 					catch (const OpusError &e) {
 						log.error("Opus error: " + string(e.what()) + " (code: " + to_string(e.get_error_code()) + ")");
@@ -109,6 +110,7 @@ public:
 					}
 					vc->disconnect().wait();
 					
+					delete source;
 					delete vc;
 
 					return;
@@ -119,7 +121,7 @@ public:
 		}
 	}
 
-	myClient(string token) : Discord(token) {};
+	myClient(string token, unsigned int num_shards = 0) : Discord(token, num_shards) {};
 };
 
 int main() {

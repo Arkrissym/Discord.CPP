@@ -1,9 +1,10 @@
 #pragma once
 #include "Logger.h"
 #include "AudioSource.h"
+#include "MainGateway.h"
+#include "VoiceGateway.h"
 
 #include <cpprest/json.h>
-#include <cpprest/ws_client.h>
 
 #include <boost/asio.hpp>
 #include <boost/asio/ip/udp.hpp>
@@ -69,8 +70,8 @@ namespace DiscordCPP {
 		string_t _mode;
 		vector<unsigned char> _secret_key;
 
-		websocket_callback_client **_main_ws;
-		websocket_callback_client _voice_ws;
+		MainGateway **_main_ws;
+		VoiceGateway *_voice_ws;
 		pplx::task<void> _heartbeat_task;
 		bool _keepalive = true;
 
@@ -81,14 +82,12 @@ namespace DiscordCPP {
 
 		Logger _log;
 
-		DLL_EXPORT pplx::task<void> identify();
-		DLL_EXPORT pplx::task<void> create_heartbeat_task();
 		DLL_EXPORT pplx::task<void> connect_voice_udp();
 		DLL_EXPORT pplx::task<void> select_protocol();
 		DLL_EXPORT pplx::task<void> load_session_description(value data);
 		DLL_EXPORT pplx::task<void> speak(bool speak = true);
 	public:
-		DLL_EXPORT VoiceClient(websocket_callback_client **main_ws, string_t voice_token, string_t endpoint, string_t session_id, string_t guild_id, string_t channel_id, string_t user_id);
+		DLL_EXPORT VoiceClient(MainGateway **main_ws, string_t voice_token, string_t endpoint, string_t session_id, string_t guild_id, string_t channel_id, string_t user_id);
 		DLL_EXPORT VoiceClient(const VoiceClient &old) = delete;
 		DLL_EXPORT VoiceClient();
 		DLL_EXPORT ~VoiceClient();

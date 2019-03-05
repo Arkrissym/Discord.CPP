@@ -1,10 +1,15 @@
 #include "Exceptions.h"
 
-DiscordCPP::DiscordException::DiscordException(std::string what) : std::exception(what.c_str()) {
+DiscordCPP::DiscordException::DiscordException(std::string what) {
+	_what = what;
 }
 
 DiscordCPP::DiscordException::~DiscordException() {
 
+}
+
+const char * DiscordCPP::DiscordException::what() const noexcept {
+	return _what.c_str();
 }
 
 

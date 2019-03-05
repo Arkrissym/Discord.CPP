@@ -44,7 +44,7 @@ namespace DiscordCPP {
 		DLL_EXPORT User();
 		DLL_EXPORT User(value data, string_t token);
 		DLL_EXPORT User(string id, string_t token);
-		DLL_EXPORT ~User();
+		DLL_EXPORT virtual ~User();
 		///get/create the DMChannel for this user
 		DLL_EXPORT DMChannel get_dmchannel();
 		///send a message to this user

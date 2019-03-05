@@ -51,7 +51,7 @@ namespace DiscordCPP {
 		DLL_EXPORT Channel(string id, string_t token);
 		DLL_EXPORT Channel(const Channel &old);
 		DLL_EXPORT Channel();
-		DLL_EXPORT ~Channel();
+		DLL_EXPORT virtual ~Channel();
 
 		///Delete this channel
 		DLL_EXPORT void delete_channel();

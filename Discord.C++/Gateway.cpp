@@ -102,8 +102,7 @@ DiscordCPP::Gateway::Gateway(std::string token) {
 		utility::string_t message = to_string_t(str.get());
 
 		value payload = value::parse(message);
-		int op = payload.at(U("op")).as_integer();
-
+		
 		on_websocket_incoming_message(payload);
 	});
 

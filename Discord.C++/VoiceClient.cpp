@@ -109,7 +109,7 @@ pplx::task<void> DiscordCPP::VoiceClient::connect_voice_udp() {
 		//_log.debug("Received message(length: " + to_string(msg.size()) + "): " + msg);
 
 		string my_ip = recv_msg.substr(4, 16);
-		for (int i = 0; i < my_ip.size(); i++) {
+		for (unsigned int i = 0; i < my_ip.size(); i++) {
 			if (my_ip[i] == 0) {
 				my_ip.resize(i, '\0');
 				break;

@@ -10,9 +10,13 @@
 
 namespace DiscordCPP {
 	class DiscordException : public std::exception {
+		protected:
+			std::string _what;
 		public:
 			DLL_EXPORT DiscordException(std::string what);
 			DLL_EXPORT virtual ~DiscordException();
+
+			DLL_EXPORT const char *what() const;
 	};
 
 	class StatusCodeException : public DiscordException {

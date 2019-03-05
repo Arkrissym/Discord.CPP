@@ -65,7 +65,7 @@ namespace DiscordCPP {
 
 		DLL_EXPORT Discord(string token, unsigned int num_shards = 0);
 		DLL_EXPORT Discord(string token, unsigned int shard_id, unsigned int num_shards);
-		DLL_EXPORT ~Discord();
+		DLL_EXPORT virtual ~Discord();
 
 		///called when successfully logged in
 		DLL_EXPORT virtual void on_ready(User user);

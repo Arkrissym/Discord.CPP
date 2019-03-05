@@ -20,6 +20,7 @@
 #include "FileAudioSource.h"
 #include "Exceptions.h"
 #include "MainGateway.h"
+#include "DiscordObject.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -35,10 +36,8 @@ namespace DiscordCPP {
 	using namespace concurrency;
 	using namespace std;
 
-	class Discord {
+	class Discord : public DiscordObject {
 	protected:
-		///discord token
-		string_t _token;
 		///websocket clients
 		vector<MainGateway *>_gateways;
 		///number of shards
@@ -55,6 +54,8 @@ namespace DiscordCPP {
 		
 		friend VoiceClient * VoiceChannel::connect();
 
+		DLL_EXPORT MainGateway * get_shard(unsigned int shard_id);
+
 		DLL_EXPORT pplx::task<void> connect();
 		
 		DLL_EXPORT void on_websocket_incoming_message(value payload);
@@ -62,7 +63,8 @@ namespace DiscordCPP {
 	public:
 		Logger log;
 
-		DLL_EXPORT Discord(string token, unsigned int num_shards = 1);
+		DLL_EXPORT Discord(string token, unsigned int num_shards = 0);
+		DLL_EXPORT Discord(string token, unsigned int shard_id, unsigned int num_shards);
 		DLL_EXPORT ~Discord();
 
 		///called when successfully logged in

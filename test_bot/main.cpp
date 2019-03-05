@@ -16,7 +16,7 @@ public:
 	void on_ready(User user) {
 		log.info("logged in as: " + user.username);
 
-		this->update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game));
+		this->update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game)).wait();
 	}
 
 	void on_message(Message message) {
@@ -119,7 +119,7 @@ public:
 		}
 	}
 
-	myClient(string token, unsigned int num_shards = 1) : Discord(token, num_shards) {};
+	myClient(string token, unsigned int num_shards = 0) : Discord(token, num_shards) {};
 };
 
 int main() {
@@ -134,7 +134,7 @@ int main() {
 	token = getenv("DISCORD_TEST_TOKEN");
 #endif
 
-	myClient *client = new myClient(token, 2);
+	myClient *client = new myClient(token);
 
 #ifdef _WIN32
 	free(token);

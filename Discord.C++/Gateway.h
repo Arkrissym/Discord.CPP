@@ -29,6 +29,8 @@ namespace DiscordCPP {
 			time_t _last_heartbeat_ack;
 			///heartbeat task
 			pplx::task<void> _heartbeat_task;
+			///indicator if Gateway is connected
+			bool _connected;
 			Logger _log;
 			///the message handler set by using set_message_handler
 			std::function<void(web::json::value payload)> _message_handler;

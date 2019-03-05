@@ -176,3 +176,7 @@ DiscordCPP::MainGateway::MainGateway(std::string token, int shard_id, unsigned i
 
 DiscordCPP::MainGateway::~MainGateway() {
 }
+
+unsigned int DiscordCPP::MainGateway::get_shard_id() {
+	return _shard_id;
+}

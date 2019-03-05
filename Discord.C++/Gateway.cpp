@@ -1,4 +1,5 @@
 #include "Gateway.h"
+#include "Exceptions.h"
 #include "static.h"
 #include <time.h>
 #include <chrono>
@@ -92,6 +93,8 @@ DiscordCPP::Gateway::Gateway(std::string token) {
 	_keepalive = new bool;
 	*_keepalive = true;
 
+	_connected = false;
+
 	_client = new websocket_callback_client();
 
 	_client->set_message_handler([this](websocket_incoming_message msg) {
@@ -122,11 +125,15 @@ pplx::task<void> DiscordCPP::Gateway::connect(std::string url) {
 	_url = url;
 	_log.info("connecting to websocket: " + url);
 	return _client->connect(to_string_t(url)).then([this] {
+		_connected = true;
 		start_heartbeating();
 	});
 }
 
+///@throws	ClientException
 pplx::task<void> DiscordCPP::Gateway::send(value message) {
+	if (_connected == false)
+		throw ClientException("Gateway not connected");
 	web::websockets::client::websocket_outgoing_message msg;
 	msg.set_utf8_message(to_utf8string(message.serialize()));
 	return _client->send(msg);
@@ -134,5 +141,6 @@ pplx::task<void> DiscordCPP::Gateway::send(value message) {
 
 pplx::task<void> DiscordCPP::Gateway::close() {
 	*_keepalive = false;
+	_connected = false;
 	return _client->close();
 }

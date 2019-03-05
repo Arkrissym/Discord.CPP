@@ -9,17 +9,56 @@ using namespace utility;
 using namespace web::json;
 using namespace std;
 
+/**	Creates a Discord instance with one or more shards
+	@param[in]	token		Bot token for authentication
+	@param[in]	num_shards	(optional) number of shards that exist (default: 0 used for automatic sharding)
+*/
 DiscordCPP::Discord::Discord(string token, unsigned int num_shards) {
 	_token = conversions::to_string_t(token);
-	_num_shards = num_shards;
-
+	_num_shards = num_shards; 
+	id = "0";
 	log = Logger("discord");
+
+	if (num_shards == 0) {
+		value tmp = api_call("/gateway/bot", web::http::methods::GET, value(), "", false);
+		_num_shards = tmp[U("shards")].as_integer();
+	}
+
+	for (unsigned int i = 0; i < _num_shards; i++) {
+		MainGateway *_client = new MainGateway(conversions::to_utf8string(_token), i, _num_shards);
+	
+		_client->set_message_handler([this](value payload) {
+			on_websocket_incoming_message(payload);
+		});
+
+		_gateways.push_back(_client);
+	}
 
 	connect();
 
 	srand((unsigned int)time(NULL));
 
 	//log.debug("created Discord object");
+}
+
+/**	Creates a Discord instance with ONE shard
+	@param[in]	token		Bot token for authentication
+	@param[in]	shard_id	(optional) the id of the shard (default: 0)
+	@param[in]	num_shards	(optional) number of shards that exist (default: 1)
+*/
+DiscordCPP::Discord::Discord(string token, unsigned int shard_id, unsigned int num_shards) {
+	_token = conversions::to_string_t(token);
+	_num_shards = num_shards;
+	id = to_string(shard_id);
+	log = Logger("discord");
+
+	MainGateway *_client = new MainGateway(conversions::to_utf8string(_token), shard_id, _num_shards);
+
+	_gateways.push_back(_client);
+
+	connect();
+
+	srand((unsigned int)time(NULL));
 }
 
 DiscordCPP::Discord::~Discord() {
@@ -68,28 +107,31 @@ pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity ac
 	return pplx::create_task([this, presence, shard_id] {
 		if (shard_id == -1) {
 			for (unsigned int i = 0; i < _gateways.size(); i++) {
-				_gateways[i]->send(presence);
+				_gateways[i]->send(presence).wait();
 			}
 		}
 		else
-			_gateways[shard_id]->send(presence);
+			get_shard(shard_id)->send(presence).wait();
 	});
+}
+
+DiscordCPP::MainGateway * DiscordCPP::Discord::get_shard(unsigned int shard_id) {
+	for (unsigned int i = 0; i < _gateways.size(); i++) {
+		if (_gateways[i]->get_shard_id() == shard_id)
+			return _gateways[i];
+	}
+
+	throw ClientException("shard with id " + to_string(shard_id) + " not found");
+
+	return NULL;
 }
 
 pplx::task<void> DiscordCPP::Discord::connect() {
 	return pplx::create_task([this] {
 		log.info("connecting to websocket: " + string(GATEWAY_URL));
 
-		//TODO: Autosharding
-		for (unsigned int i = 0; i < _num_shards; i++) {
-			MainGateway *_client = new MainGateway(conversions::to_utf8string(_token), i, _num_shards);
-			_client->connect(GATEWAY_URL);
-
-			_client->set_message_handler([this](value payload) {
-				on_websocket_incoming_message(payload);
-			});
-
-			_gateways.push_back(_client);
+		for (unsigned int i = 0; i < _gateways.size(); i++) {
+			_gateways[i]->connect(GATEWAY_URL);
 
 			waitFor(chrono::milliseconds(10000)).wait();
 		}
@@ -108,7 +150,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(value payload) {
 		case 9:
 		case 10:
 		case 11:
-			//already handleb by MainGateway
+			//already handled by MainGateway
 			break;
 		default:
 			log.debug(conversions::to_utf8string(payload.serialize()));
@@ -142,7 +184,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					try {
 						on_ready(User(*_user));
 					}
-					catch (const std::exception &e) {
+					catch (const exception &e) {
 						log.error("ignoring exception in on_ready: " + string(e.what()));
 					}
 				});

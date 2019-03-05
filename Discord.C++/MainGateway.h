@@ -25,6 +25,8 @@ namespace DiscordCPP {
 		public:
 			DLL_EXPORT MainGateway(std::string token, int shard_id = 0, unsigned int num_shards = 1);
 			DLL_EXPORT ~MainGateway();
+
+			DLL_EXPORT unsigned int get_shard_id();
 	};
 
 }

@@ -16,7 +16,7 @@ namespace DiscordCPP {
 			DLL_EXPORT DiscordException(std::string what);
 			DLL_EXPORT virtual ~DiscordException();
 
-			DLL_EXPORT const char *what() const;
+			DLL_EXPORT const char *what() const noexcept;
 	};
 
 	class StatusCodeException : public DiscordException {

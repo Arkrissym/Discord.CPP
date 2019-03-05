@@ -8,7 +8,7 @@ DiscordCPP::DiscordException::~DiscordException() {
 
 }
 
-const char * DiscordCPP::DiscordException::what() const {
+const char * DiscordCPP::DiscordException::what() const noexcept {
 	return _what.c_str();
 }
 

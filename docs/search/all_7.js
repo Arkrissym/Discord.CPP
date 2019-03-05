@@ -1,8 +1,15 @@
 var searchData=
 [
   ['game',['Game',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018ae352d33692eabb2c77ae7ad60e7d1112',1,'DiscordCPP::ActivityTypes']]],
+  ['gateway',['Gateway',['../class_discord_c_p_p_1_1_gateway.html',1,'DiscordCPP::Gateway'],['../class_discord_c_p_p_1_1_gateway.html#a85898bc01673021e33711ef40b16c18d',1,'DiscordCPP::Gateway::Gateway()']]],
+  ['gateway_2ecpp',['Gateway.cpp',['../_gateway_8cpp.html',1,'']]],
+  ['gateway_2eh',['Gateway.h',['../_gateway_8h.html',1,'']]],
   ['gateway_5furl',['GATEWAY_URL',['../static_8h.html#a5f44de4dc2f28bd239034f62914329ba',1,'static.h']]],
   ['get_5fdmchannel',['get_dmchannel',['../class_discord_c_p_p_1_1_user.html#a90dfcdcdce6aad804121e71579f12edc',1,'DiscordCPP::User']]],
+  ['get_5ferror_5fcode',['get_error_code',['../class_discord_c_p_p_1_1_status_code_exception.html#a2ac0ea9f66dc1fa6b57f7ca8d96b8a09',1,'DiscordCPP::StatusCodeException']]],
+  ['get_5fheartbeat_5fpayload',['get_heartbeat_payload',['../class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504',1,'DiscordCPP::Gateway']]],
+  ['get_5fshard',['get_shard',['../class_discord_c_p_p_1_1_discord.html#aafbd0224fb9ae81f455aa6c052ee6760',1,'DiscordCPP::Discord']]],
+  ['get_5fshard_5fid',['get_shard_id',['../class_discord_c_p_p_1_1_main_gateway.html#a72d0b8c62cb066c7e6d9190ff811e645',1,'DiscordCPP::MainGateway']]],
   ['group_5fdm',['GROUP_DM',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2ae8da07fe958618e18cd4030c2f8348a0',1,'DiscordCPP::ChannelType']]],
   ['guild',['Guild',['../class_discord_c_p_p_1_1_guild.html',1,'DiscordCPP::Guild'],['../class_discord_c_p_p_1_1_guild_channel.html#aeae1fc3b57a9a7d62dd247a519445f6e',1,'DiscordCPP::GuildChannel::guild()'],['../class_discord_c_p_p_1_1_voice_channel.html#a1d1aae024f572639072ca13be3eb4082',1,'DiscordCPP::VoiceChannel::guild()'],['../class_discord_c_p_p_1_1_guild.html#a297cc96b0d02ec45d253cffd59561232',1,'DiscordCPP::Guild::Guild(Discord *client, value data, string_t token)'],['../class_discord_c_p_p_1_1_guild.html#a555c9f8d780693615272031a5da0d539',1,'DiscordCPP::Guild::Guild(Discord *client, string id, string_t token)'],['../class_discord_c_p_p_1_1_guild.html#a2b9839697aca0883a44bfd205350eae0',1,'DiscordCPP::Guild::Guild(const Guild &amp;old)'],['../class_discord_c_p_p_1_1_guild.html#ad4b6939b45331a47bd3dff69057026ca',1,'DiscordCPP::Guild::Guild()']]],
   ['guild_2ecpp',['Guild.cpp',['../_guild_8cpp.html',1,'']]],

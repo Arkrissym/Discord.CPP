@@ -1,5 +1,8 @@
 var searchData=
 [
+  ['maingateway',['MainGateway',['../class_discord_c_p_p_1_1_main_gateway.html',1,'DiscordCPP::MainGateway'],['../class_discord_c_p_p_1_1_main_gateway.html#a33ab0642bd1477dda14fe2701c780e7b',1,'DiscordCPP::MainGateway::MainGateway()']]],
+  ['maingateway_2ecpp',['MainGateway.cpp',['../_main_gateway_8cpp.html',1,'']]],
+  ['maingateway_2eh',['MainGateway.h',['../_main_gateway_8h.html',1,'']]],
   ['manage_5fcache',['manage_cache',['../_discord_object_8cpp.html#a3955b4051f520389666aa25e70663b63',1,'DiscordObject.cpp']]],
   ['max_5fpacket_5fsize',['MAX_PACKET_SIZE',['../_voice_client_8cpp.html#a879456c3b8e2853f7044d764e9c180d4',1,'VoiceClient.cpp']]],
   ['medium',['MEDIUM',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4a19624218056a732a9da1dd66c56acf68',1,'DiscordCPP::VerificationLevel']]],

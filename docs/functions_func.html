@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.5.1</span>
+   &#160;<span id="projectnumber">0.5.2</span>
    </div>
   </td>
  </tr>
@@ -72,7 +72,7 @@ $(function() {
 : <a class="el" href="class_discord_c_p_p_1_1_embed.html#aea81b046fb1306ccc808c10a4003c742">DiscordCPP::Embed</a>
 </li>
 <li>api_call()
-: <a class="el" href="class_discord_c_p_p_1_1_discord_object.html#a7379c9f14b51880bca10a8ea479544dd">DiscordCPP::DiscordObject</a>
+: <a class="el" href="class_discord_c_p_p_1_1_discord_object.html#a20ce3d8bcd3561990e333576b9edc417">DiscordCPP::DiscordObject</a>
 </li>
 <li>AudioSource()
 : <a class="el" href="class_discord_c_p_p_1_1_audio_source.html#a6796e86a66473d7c522bb3cb1274f6ca">DiscordCPP::AudioSource</a>
@@ -87,15 +87,16 @@ $(function() {
 <li>ClientException()
 : <a class="el" href="class_discord_c_p_p_1_1_client_exception.html#a6978460910616e9d0d14ce8abedab801">DiscordCPP::ClientException</a>
 </li>
+<li>close()
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a3d7c7654b4875c1d511bdff8ac79abd8">DiscordCPP::Gateway</a>
+</li>
 <li>connect()
 : <a class="el" href="class_discord_c_p_p_1_1_discord.html#a1f2a887bd57befcf15130cce6cfe01eb">DiscordCPP::Discord</a>
+, <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a58d3f4abc85f49f6f531c5f87b9fe6ce">DiscordCPP::Gateway</a>
 , <a class="el" href="class_discord_c_p_p_1_1_voice_channel.html#a55bad700680ec8f3dcc48a0ca6869fe9">DiscordCPP::VoiceChannel</a>
 </li>
 <li>copy()
 : <a class="el" href="class_discord_c_p_p_1_1_channel.html#a7f9e1bd37680b9fd7468fb3a505e5e23">DiscordCPP::Channel</a>
-</li>
-<li>create_heartbeat_task()
-: <a class="el" href="class_discord_c_p_p_1_1_discord.html#ac2012e3ce07e05ed3f54da7fd9fed7fe">DiscordCPP::Discord</a>
 </li>
 </ul>
 
@@ -117,16 +118,16 @@ $(function() {
 : <a class="el" href="class_discord_c_p_p_1_1_voice_client.html#a03f23233918cc6349c693bc67932eb67">DiscordCPP::VoiceClient</a>
 </li>
 <li>Discord()
-: <a class="el" href="class_discord_c_p_p_1_1_discord.html#a5588a90d77766f5b759b1c7971818c29">DiscordCPP::Discord</a>
+: <a class="el" href="class_discord_c_p_p_1_1_discord.html#ab5cb267dba76a3551388bb326d0d910f">DiscordCPP::Discord</a>
 </li>
 <li>DiscordException()
 : <a class="el" href="class_discord_c_p_p_1_1_discord_exception.html#aab1760aeb36d8ed166f6c40976b580f5">DiscordCPP::DiscordException</a>
 </li>
 <li>DiscordObject()
-: <a class="el" href="class_discord_c_p_p_1_1_discord_object.html#a9eca7cfde19e35f78c51517c83c4cf2b">DiscordCPP::DiscordObject</a>
+: <a class="el" href="class_discord_c_p_p_1_1_discord_object.html#a8050efa6682380f04f9fcf8aa8e3652d">DiscordCPP::DiscordObject</a>
 </li>
 <li>DMChannel()
-: <a class="el" href="class_discord_c_p_p_1_1_d_m_channel.html#af04afdd9bf4e950e4e005ff7a946ab99">DiscordCPP::DMChannel</a>
+: <a class="el" href="class_discord_c_p_p_1_1_d_m_channel.html#ac749a8c17cc8a39fd023bc992643e171">DiscordCPP::DMChannel</a>
 </li>
 </ul>
 
@@ -141,9 +142,6 @@ $(function() {
 <li>error()
 : <a class="el" href="class_logger.html#ade9e0898dc8cefe41ca72fa20f1a1706">Logger</a>
 </li>
-<li>error_code()
-: <a class="el" href="class_discord_c_p_p_1_1_status_code_exception.html#a31f9ed0236e637171a22e268703b5f50">DiscordCPP::StatusCodeException</a>
-</li>
 </ul>
 
 
@@ -155,22 +153,34 @@ $(function() {
 
 
 <h3><a id="index_g"></a>- g -</h3><ul>
+<li>Gateway()
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a85898bc01673021e33711ef40b16c18d">DiscordCPP::Gateway</a>
+</li>
 <li>get_dmchannel()
 : <a class="el" href="class_discord_c_p_p_1_1_user.html#a90dfcdcdce6aad804121e71579f12edc">DiscordCPP::User</a>
 </li>
+<li>get_error_code()
+: <a class="el" href="class_discord_c_p_p_1_1_status_code_exception.html#a2ac0ea9f66dc1fa6b57f7ca8d96b8a09">DiscordCPP::StatusCodeException</a>
+</li>
+<li>get_heartbeat_payload()
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504">DiscordCPP::Gateway</a>
+</li>
+<li>get_shard()
+: <a class="el" href="class_discord_c_p_p_1_1_discord.html#aafbd0224fb9ae81f455aa6c052ee6760">DiscordCPP::Discord</a>
+</li>
+<li>get_shard_id()
+: <a class="el" href="class_discord_c_p_p_1_1_main_gateway.html#a72d0b8c62cb066c7e6d9190ff811e645">DiscordCPP::MainGateway</a>
+</li>
 <li>Guild()
-: <a class="el" href="class_discord_c_p_p_1_1_guild.html#a297cc96b0d02ec45d253cffd59561232">DiscordCPP::Guild</a>
+: <a class="el" href="class_discord_c_p_p_1_1_guild.html#ad4b6939b45331a47bd3dff69057026ca">DiscordCPP::Guild</a>
 </li>
 <li>GuildChannel()
-: <a class="el" href="class_discord_c_p_p_1_1_guild_channel.html#a8a8588981d77e92bafaff5e6ba8a2400">DiscordCPP::GuildChannel</a>
+: <a class="el" href="class_discord_c_p_p_1_1_guild_channel.html#ae2bad6f9305056a1a55c50dae9293415">DiscordCPP::GuildChannel</a>
 </li>
 </ul>
 
 
 <h3><a id="index_h"></a>- h -</h3><ul>
-<li>handle_hello_msg()
-: <a class="el" href="class_discord_c_p_p_1_1_discord.html#a5a7cd15f7ab513135798e74590e64858">DiscordCPP::Discord</a>
-</li>
 <li>handle_raw_event()
 : <a class="el" href="class_discord_c_p_p_1_1_discord.html#a4b5d73b8f6ffbadbf02e18a7e4a13919">DiscordCPP::Discord</a>
 </li>
@@ -184,6 +194,9 @@ $(function() {
 
 
 <h3><a id="index_i"></a>- i -</h3><ul>
+<li>identify()
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a9ffb374ae58193e1951af50db76580e6">DiscordCPP::Gateway</a>
+</li>
 <li>info()
 : <a class="el" href="class_logger.html#a17dd1302a17b15291d750d6ad3a75fa2">Logger</a>
 </li>
@@ -198,11 +211,14 @@ $(function() {
 
 
 <h3><a id="index_m"></a>- m -</h3><ul>
+<li>MainGateway()
+: <a class="el" href="class_discord_c_p_p_1_1_main_gateway.html#a33ab0642bd1477dda14fe2701c780e7b">DiscordCPP::MainGateway</a>
+</li>
 <li>Member()
 : <a class="el" href="class_discord_c_p_p_1_1_member.html#a52ea7360aad5a5cd5024b279b87c7c79">DiscordCPP::Member</a>
 </li>
 <li>Message()
-: <a class="el" href="class_discord_c_p_p_1_1_message.html#a9f4c8e841c510c06237a4870092822c2">DiscordCPP::Message</a>
+: <a class="el" href="class_discord_c_p_p_1_1_message.html#aec1a859d9ac9502854a3cbc8f5e783bb">DiscordCPP::Message</a>
 </li>
 </ul>
 
@@ -215,10 +231,11 @@ $(function() {
 : <a class="el" href="class_discord_c_p_p_1_1_discord.html#a388f3b9e8658106de3d078d30df6dc6d">DiscordCPP::Discord</a>
 </li>
 <li>on_websocket_disconnnect()
-: <a class="el" href="class_discord_c_p_p_1_1_discord.html#ac1443b0c3fc2d699d86f8b184e46ed22">DiscordCPP::Discord</a>
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#ae2238c2729f78249df6f962eb5b92797">DiscordCPP::Gateway</a>
 </li>
 <li>on_websocket_incoming_message()
-: <a class="el" href="class_discord_c_p_p_1_1_discord.html#ad508f2e56a2f058669d55fcc3a388d80">DiscordCPP::Discord</a>
+: <a class="el" href="class_discord_c_p_p_1_1_discord.html#a9d9ad39e51491c13e34052c50ad3b163">DiscordCPP::Discord</a>
+, <a class="el" href="class_discord_c_p_p_1_1_gateway.html#adba35ce4973ff01b40b1dd1537678733">DiscordCPP::Gateway</a>
 </li>
 <li>operator string()
 : <a class="el" href="class_discord_c_p_p_1_1_channel.html#a824750f84caa53e4479ab2760118ae3d">DiscordCPP::Channel</a>
@@ -258,12 +275,10 @@ $(function() {
 
 <h3><a id="index_s"></a>- s -</h3><ul>
 <li>send()
-: <a class="el" href="class_discord_c_p_p_1_1_text_channel.html#a1835b37300b37e42d6d86c223545585c">DiscordCPP::TextChannel</a>
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a37df183d1ab6430718ae8e116ef2fed4">DiscordCPP::Gateway</a>
+, <a class="el" href="class_discord_c_p_p_1_1_text_channel.html#a1835b37300b37e42d6d86c223545585c">DiscordCPP::TextChannel</a>
 , <a class="el" href="class_discord_c_p_p_1_1udp__client.html#ac6e5251e47c03cb7d1a3094f4d06a2c2">DiscordCPP::udp_client</a>
-, <a class="el" href="class_discord_c_p_p_1_1_user.html#adc4291f99fd2767a210a96d3c0a1682d">DiscordCPP::User</a>
-</li>
-<li>send_heartbeat_ack()
-: <a class="el" href="class_discord_c_p_p_1_1_discord.html#a5f6d2d2dcc98da0cc261e1f140bd9c30">DiscordCPP::Discord</a>
+, <a class="el" href="class_discord_c_p_p_1_1_user.html#ad5ac480fbc39f3f8375a27926d3a39bc">DiscordCPP::User</a>
 </li>
 <li>set_author()
 : <a class="el" href="class_discord_c_p_p_1_1_embed.html#a03e3a4283b34bb8753295e77b8819fcc">DiscordCPP::Embed</a>
@@ -280,6 +295,9 @@ $(function() {
 <li>set_log_level()
 : <a class="el" href="class_logger.html#a30814544444b5bd922df5a405fa6691f">Logger</a>
 </li>
+<li>set_message_handler()
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a4ed26e926e0d0a72ad4850f7d407a111">DiscordCPP::Gateway</a>
+</li>
 <li>set_provider()
 : <a class="el" href="class_discord_c_p_p_1_1_embed.html#a11b5d1ca8c416bb40cee10f64a15aa52">DiscordCPP::Embed</a>
 </li>
@@ -291,6 +309,9 @@ $(function() {
 </li>
 <li>SizeError()
 : <a class="el" href="class_discord_c_p_p_1_1_size_error.html#a4f7f7d83a799144c445c03635fe20d5d">DiscordCPP::SizeError</a>
+</li>
+<li>start_heartbeating()
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#aae926a59675b60a84cc6618e59b796cd">DiscordCPP::Gateway</a>
 </li>
 <li>StatusCodeException()
 : <a class="el" href="class_discord_c_p_p_1_1_status_code_exception.html#afdb4282347340b9f568e1100f7f2e82f">DiscordCPP::StatusCodeException</a>
@@ -314,7 +335,7 @@ $(function() {
 : <a class="el" href="class_discord_c_p_p_1_1udp__client.html#a5d3345fb845d02039308e55273b70c7f">DiscordCPP::udp_client</a>
 </li>
 <li>update_presence()
-: <a class="el" href="class_discord_c_p_p_1_1_discord.html#a1e983525381fb1c1a3e3cfdceaa24df2">DiscordCPP::Discord</a>
+: <a class="el" href="class_discord_c_p_p_1_1_discord.html#a78a5a116b813e8146b536be42204a2ad">DiscordCPP::Discord</a>
 </li>
 <li>User()
 : <a class="el" href="class_discord_c_p_p_1_1_user.html#af07cc95329eccfbef2440e1fa33bc0b8">DiscordCPP::User</a>
@@ -327,7 +348,10 @@ $(function() {
 : <a class="el" href="class_discord_c_p_p_1_1_voice_channel.html#adbdcb07c1deb7b172a5051a1aec7e9ee">DiscordCPP::VoiceChannel</a>
 </li>
 <li>VoiceClient()
-: <a class="el" href="class_discord_c_p_p_1_1_voice_client.html#ad7b07376195e13a267b44a75151d9cd7">DiscordCPP::VoiceClient</a>
+: <a class="el" href="class_discord_c_p_p_1_1_voice_client.html#a099a7886f0e114915ba5084dd10b2c1f">DiscordCPP::VoiceClient</a>
+</li>
+<li>VoiceGateway()
+: <a class="el" href="class_discord_c_p_p_1_1_voice_gateway.html#ac6965371735d16cd7027a6b58ece37c5">DiscordCPP::VoiceGateway</a>
 </li>
 <li>VoiceState()
 : <a class="el" href="class_discord_c_p_p_1_1_voice_state.html#a8aa193c9d50a1f0d6dcd75d52824a0e0">DiscordCPP::VoiceState</a>
@@ -367,6 +391,9 @@ $(function() {
 <li>~FileAudioSource()
 : <a class="el" href="class_discord_c_p_p_1_1_file_audio_source.html#aecdc8d48f808999c27ade51a9107b992">DiscordCPP::FileAudioSource</a>
 </li>
+<li>~Gateway()
+: <a class="el" href="class_discord_c_p_p_1_1_gateway.html#a29c850847b9a2eb5b3a11cfe7464c76d">DiscordCPP::Gateway</a>
+</li>
 <li>~Guild()
 : <a class="el" href="class_discord_c_p_p_1_1_guild.html#a925889148da3c315a248ad526e9d335b">DiscordCPP::Guild</a>
 </li>
@@ -375,6 +402,9 @@ $(function() {
 </li>
 <li>~Logger()
 : <a class="el" href="class_logger.html#acb668a9e186a25fbaad2e4af6d1ed00a">Logger</a>
+</li>
+<li>~MainGateway()
+: <a class="el" href="class_discord_c_p_p_1_1_main_gateway.html#a924f8e2bab4a8234a58992a90f38bf95">DiscordCPP::MainGateway</a>
 </li>
 <li>~Member()
 : <a class="el" href="class_discord_c_p_p_1_1_member.html#aa49b807411fb4a32316a09a2c6011f2d">DiscordCPP::Member</a>
@@ -399,6 +429,9 @@ $(function() {
 </li>
 <li>~VoiceClient()
 : <a class="el" href="class_discord_c_p_p_1_1_voice_client.html#a28b1a49f0d7505a43d0d13beb42517cc">DiscordCPP::VoiceClient</a>
+</li>
+<li>~VoiceGateway()
+: <a class="el" href="class_discord_c_p_p_1_1_voice_gateway.html#aa76871211233812fc495a03fdc75f418">DiscordCPP::VoiceGateway</a>
 </li>
 <li>~VoiceState()
 : <a class="el" href="class_discord_c_p_p_1_1_voice_state.html#aad24e2cfe4a97ef67b9813c67c701c8b">DiscordCPP::VoiceState</a>

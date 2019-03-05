@@ -89,6 +89,7 @@ void DiscordCPP::Discord::on_message(Message message) {
 /**	@param[in]	status		the new status (see DiscordStatus)
 	@param[in]	activity	(optional) the Activity
 	@param[in]	afk			(optional) wether the bot/user is afk or not
+	@param[in]	shard_id	(optional) the shard whose presence will be updated (use -1 for all shards, default is -1)
 */
 pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity activity, bool afk, int shard_id) {
 	value presence;

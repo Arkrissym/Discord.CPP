@@ -11,8 +11,8 @@ var searchData=
   ['channels',['channels',['../class_discord_c_p_p_1_1_guild.html#abcb905817b04a4c67548fd8d45835871',1,'DiscordCPP::Guild::channels()'],['../_voice_client_8cpp.html#a19b7f1b22403d61234a92decaeb6953a',1,'CHANNELS():&#160;VoiceClient.cpp']]],
   ['channeltype',['ChannelType',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2',1,'DiscordCPP::ChannelType']]],
   ['clientexception',['ClientException',['../class_discord_c_p_p_1_1_client_exception.html',1,'DiscordCPP::ClientException'],['../class_discord_c_p_p_1_1_client_exception.html#a6978460910616e9d0d14ce8abedab801',1,'DiscordCPP::ClientException::ClientException()']]],
-  ['connect',['connect',['../class_discord_c_p_p_1_1_discord.html#a1f2a887bd57befcf15130cce6cfe01eb',1,'DiscordCPP::Discord::connect()'],['../class_discord_c_p_p_1_1_voice_channel.html#a55bad700680ec8f3dcc48a0ca6869fe9',1,'DiscordCPP::VoiceChannel::connect()']]],
+  ['close',['close',['../class_discord_c_p_p_1_1_gateway.html#a3d7c7654b4875c1d511bdff8ac79abd8',1,'DiscordCPP::Gateway']]],
+  ['connect',['connect',['../class_discord_c_p_p_1_1_discord.html#a1f2a887bd57befcf15130cce6cfe01eb',1,'DiscordCPP::Discord::connect()'],['../class_discord_c_p_p_1_1_gateway.html#a58d3f4abc85f49f6f531c5f87b9fe6ce',1,'DiscordCPP::Gateway::connect()'],['../class_discord_c_p_p_1_1_voice_channel.html#a55bad700680ec8f3dcc48a0ca6869fe9',1,'DiscordCPP::VoiceChannel::connect()']]],
   ['content',['content',['../class_discord_c_p_p_1_1_message.html#a05ec39a76d2dbf66bb30166f17ee6071',1,'DiscordCPP::Message']]],
-  ['copy',['copy',['../class_discord_c_p_p_1_1_channel.html#a7f9e1bd37680b9fd7468fb3a505e5e23',1,'DiscordCPP::Channel']]],
-  ['create_5fheartbeat_5ftask',['create_heartbeat_task',['../class_discord_c_p_p_1_1_discord.html#ac2012e3ce07e05ed3f54da7fd9fed7fe',1,'DiscordCPP::Discord']]]
+  ['copy',['copy',['../class_discord_c_p_p_1_1_channel.html#a7f9e1bd37680b9fd7468fb3a505e5e23',1,'DiscordCPP::Channel']]]
 ];

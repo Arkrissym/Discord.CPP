@@ -5,6 +5,8 @@ var searchData=
   ['pinned',['pinned',['../class_discord_c_p_p_1_1_message.html#a30c397fd5102155f3582c7bb2ac781ee',1,'DiscordCPP::Message']]],
   ['play',['play',['../class_discord_c_p_p_1_1_voice_client.html#aeff7a33bcfa903d92911f1f8cc02a719',1,'DiscordCPP::VoiceClient']]],
   ['position',['position',['../class_discord_c_p_p_1_1_channel.html#a6d54a320606d2dc962a40b38f29e4a76',1,'DiscordCPP::Channel']]],
+  ['premium_5ftype',['premium_type',['../class_discord_c_p_p_1_1_user.html#a02f22305ee286229f67614ac22d3799c',1,'DiscordCPP::User']]],
+  ['premiumtypes',['PremiumTypes',['../class_discord_c_p_p_1_1_user.html#a54885f78aec356ea66c3613c8953a910',1,'DiscordCPP::User']]],
   ['print',['print',['../class_logger.html#aa20f73127a7004b57728374fcad23530',1,'Logger']]],
   ['provider',['Provider',['../struct_discord_c_p_p_1_1_embed_1_1_provider.html',1,'DiscordCPP::Embed']]],
   ['proxy_5ficon_5furl',['proxy_icon_url',['../struct_discord_c_p_p_1_1_embed_1_1_footer.html#a57bb934aea6170ed664d6ab9f0f87d0c',1,'DiscordCPP::Embed::Footer::proxy_icon_url()'],['../struct_discord_c_p_p_1_1_embed_1_1_author.html#a7c274c8552cfea56ba3e06ec30baf6b2',1,'DiscordCPP::Embed::Author::proxy_icon_url()']]],

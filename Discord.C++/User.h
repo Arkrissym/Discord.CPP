@@ -51,7 +51,7 @@ namespace DiscordCPP {
 		///the flags on a user's account
 		int flags = 0;
 		///the type of Nitro subscription on a user's account
-		int premium_type = 0;
+		int premium_type = PremiumTypes::None;
 
 		DLL_EXPORT User();
 		DLL_EXPORT User(value data, string_t token);

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.5.2</span>
+   &#160;<span id="projectnumber">0.5.3</span>
    </div>
   </td>
  </tr>
@@ -68,6 +68,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_discord_c_p_p_1_1_discord_exception-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DiscordCPP::DiscordException Class Reference</div>  </div>
@@ -91,10 +92,17 @@ Inheritance diagram for DiscordCPP::DiscordException:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aab1760aeb36d8ed166f6c40976b580f5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_exception.html#aab1760aeb36d8ed166f6c40976b580f5">DiscordException</a> (std::string what)</td></tr>
+<tr class="memitem:aab1760aeb36d8ed166f6c40976b580f5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_exception.html#aab1760aeb36d8ed166f6c40976b580f5">DiscordException</a> (std::string <a class="el" href="class_discord_c_p_p_1_1_discord_exception.html#a1b55f622e10da40c7f1da273ee52f2aa">what</a>)</td></tr>
 <tr class="separator:aab1760aeb36d8ed166f6c40976b580f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaf09bf0d04c03dcb4be97a65c865af6"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_exception.html#aeaf09bf0d04c03dcb4be97a65c865af6">~DiscordException</a> ()</td></tr>
 <tr class="separator:aeaf09bf0d04c03dcb4be97a65c865af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b55f622e10da40c7f1da273ee52f2aa"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_exception.html#a1b55f622e10da40c7f1da273ee52f2aa">what</a> () const noexcept</td></tr>
+<tr class="separator:a1b55f622e10da40c7f1da273ee52f2aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:ac061a07b39ba2d67b78be5212662c77b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_exception.html#ac061a07b39ba2d67b78be5212662c77b">_what</a></td></tr>
+<tr class="separator:ac061a07b39ba2d67b78be5212662c77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aab1760aeb36d8ed166f6c40976b580f5"></a>
@@ -134,6 +142,55 @@ Public Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1b55f622e10da40c7f1da273ee52f2aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b55f622e10da40c7f1da273ee52f2aa">&#9670;&nbsp;</a></span>what()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * DiscordCPP::DiscordException::what </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ac061a07b39ba2d67b78be5212662c77b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac061a07b39ba2d67b78be5212662c77b">&#9670;&nbsp;</a></span>_what</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string DiscordCPP::DiscordException::_what</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

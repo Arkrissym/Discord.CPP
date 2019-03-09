@@ -23,7 +23,8 @@ namespace DiscordCPP {
 			DM,
 			GUILD_VOICE,
 			GROUP_DM,
-			GUILD_CATEGORY
+			GUILD_CATEGORY,
+			GUILD_NEWS
 		};
 	}
 

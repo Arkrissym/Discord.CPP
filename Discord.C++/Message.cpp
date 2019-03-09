@@ -33,6 +33,7 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 		//Logger("discord.message").debug(conversions::to_utf8string(channel_data.serialize()));
 		switch (channel_data.at(U("type")).as_integer()) {
 		case ChannelType::GUILD_TEXT:
+		case ChannelType::GUILD_NEWS:
 			channel = (TextChannel *)new GuildChannel(channel_data, token);
 			break;
 		case ChannelType::DM:

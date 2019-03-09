@@ -205,3 +205,15 @@ DiscordCPP::Guild::~Guild() {
 		delete channels[i];
 	}
 }
+
+///@throws HTTPError
+void DiscordCPP::Guild::leave() {
+	string url = "/guilds/@me/guilds/" + id;
+	api_call(url, methods::DEL);
+}
+
+///@throws HTTPError
+void DiscordCPP::Guild::delete_guild() {
+	string url = "/guilds/" + id;
+	api_call(url, methods::DEL);
+}

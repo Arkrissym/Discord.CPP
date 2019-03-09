@@ -122,6 +122,10 @@ namespace DiscordCPP {
 
 		///@return Guildname as std::string
 		DLL_EXPORT operator string() { return name; };
+		///leave this guild
+		DLL_EXPORT void leave();
+		///delete this guild
+		DLL_EXPORT void delete_guild();
 	};
 
 }

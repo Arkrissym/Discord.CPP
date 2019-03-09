@@ -26,6 +26,12 @@ namespace DiscordCPP {
 
 	class User : public DiscordObject {
 	public:
+		enum PremiumTypes {
+			None,
+			NitroClassic,
+			Nitro
+		};
+
 		///ther user's name
 		string username;
 		///the user's discord-tag
@@ -36,10 +42,16 @@ namespace DiscordCPP {
 		bool bot = false;
 		///true, if the user has enabled two factor authentification
 		bool mfa_enabled = false;
+		///the user's chosen language option
+		string locale;
 		///true, if the user's email has been verified
 		bool verified = false;
 		///the user's email
 		string email;
+		///the flags on a user's account
+		int flags = 0;
+		///the type of Nitro subscription on a user's account
+		int premium_type = 0;
 
 		DLL_EXPORT User();
 		DLL_EXPORT User(value data, string_t token);

@@ -36,6 +36,9 @@ DiscordCPP::User::User(value data, string_t token) : DiscordCPP::DiscordObject(t
 	if (is_valid_field("bot"))
 		bot = data.at(U("bot")).as_bool();
 
+	if (is_valid_field("locale"))
+		locale = conversions::to_utf8string(data.at(U("locale")).as_string());
+
 	if (is_valid_field("mfa_enabled"))
 		mfa_enabled = data.at(U("mfa_enabled")).as_bool();
 	
@@ -44,6 +47,12 @@ DiscordCPP::User::User(value data, string_t token) : DiscordCPP::DiscordObject(t
 
 	if (is_valid_field("email"))
 		email = conversions::to_utf8string(data.at(U("email")).as_string());
+
+	if (is_valid_field("flags"))
+		flags = data.at(U("flags")).as_integer();
+
+	if (is_valid_field("premium_type"))
+		premium_type = data.at(U("premium_type")).as_integer();
 
 	//_log.debug("created user object");
 }

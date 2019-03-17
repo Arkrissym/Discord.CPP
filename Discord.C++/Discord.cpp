@@ -68,9 +68,6 @@ DiscordCPP::Discord::~Discord() {
 	}
 
 	delete _user;
-	for (unsigned int i = 0; i < _private_channels.size(); i++) {
-		delete _private_channels[i];
-	}
 	for (unsigned int i = 0; i < _guilds.size(); i++) {
 		delete _guilds[i];
 	}

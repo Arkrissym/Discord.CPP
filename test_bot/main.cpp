@@ -56,7 +56,6 @@ public:
 			embed.set_footer("Footer", "https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
 			embed.set_thumbnail("https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
 			embed.set_image("https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
-			embed.set_provider("Provider", "https://github.com");
 
 			for (int i = 0; i < 4; i++) {
 				embed.add_field("Field", to_string(i));
@@ -118,6 +117,79 @@ public:
 			}
 
 			message.channel->send("Channel not found");
+		}
+		else if (message.content == "?leave_guild") {
+			if (message.channel->type == ChannelType::GUILD_TEXT) {
+				((GuildChannel *)message.channel)->guild->leave();
+			}
+			else {
+				message.channel->send("This is not a guild channel.");
+			}
+		}
+		else if (message.content == "?delete_guild") {
+			if (message.channel->type == ChannelType::GUILD_TEXT) {
+				((GuildChannel *)message.channel)->guild->delete_guild();
+			}
+			else {
+				message.channel->send("This is not a guild channel.");
+			}
+		}
+		else if (message.content.compare(0, 6, "?kick ") == 0) {
+			if (message.channel->type == ChannelType::GUILD_TEXT) {
+				Guild *guild = NULL;
+
+				for (unsigned int i = 0; i < _guilds.size(); i++) {
+					if (((GuildChannel *)message.channel)->guild->id == _guilds[i]->id) {
+						guild = _guilds[i];
+						break;
+					}
+				}
+
+				string user_name = message.content.substr(6);
+				Member *user = NULL;
+
+				for (unsigned int i = 0; i < guild->members.size(); i++) {
+					if (string(*guild->members[i]) == user_name) {
+						user = guild->members[i];
+						break;
+					}
+				}
+				guild->kick(user);
+			}
+			else {
+				message.channel->send("This is not a guild channel.");
+			}
+		}
+		else if (message.content.compare(0, 5, "?ban ") == 0) {
+			if (message.channel->type == ChannelType::GUILD_TEXT) {
+				Guild *guild = NULL;
+
+				for (unsigned int i = 0; i < _guilds.size(); i++) {
+					if (((GuildChannel *)message.channel)->guild->id == _guilds[i]->id) {
+						guild = _guilds[i];
+						break;
+					}
+				}
+
+				string user_name = message.content.substr(5);
+				Member *user = NULL;
+
+				for (unsigned int i = 0; i < guild->members.size(); i++) {
+					if (string(*guild->members[i]) == user_name) {
+						user = guild->members[i];
+						break;
+					}
+				}
+			
+				guild->ban(user, "testing the library", 0);
+
+				this_thread::sleep_for(chrono::seconds(10));
+
+				guild->unban(user);
+			}
+			else {
+				message.channel->send("This is not a guild channel.");
+			}
 		}
 	}
 

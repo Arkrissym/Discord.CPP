@@ -31,8 +31,7 @@ namespace DiscordCPP {
 
 		DLL_EXPORT Member(value data, string_t token);
 		DLL_EXPORT Member();
-		DLL_EXPORT ~Member();
-
+		
 		///@return Nickname (Username if not present) as std::string
 		DLL_EXPORT operator string();
 	};

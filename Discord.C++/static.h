@@ -16,3 +16,6 @@
 #include <cpprest/asyncrt_utils.h>
 
 DLL_EXPORT pplx::task<void> waitFor(const std::chrono::milliseconds ms);
+
+DLL_EXPORT void hexchar(unsigned char c, unsigned char &hex1, unsigned char &hex2);
+DLL_EXPORT std::string urlencode(std::string s);

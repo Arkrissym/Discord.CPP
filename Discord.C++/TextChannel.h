@@ -29,8 +29,7 @@ namespace DiscordCPP {
 		DLL_EXPORT TextChannel(string id, string_t token);
 		DLL_EXPORT TextChannel(const TextChannel &old);
 		DLL_EXPORT TextChannel();
-		DLL_EXPORT virtual ~TextChannel();
-
+		
 		///Send a Message to this channel.
 		DLL_EXPORT Message send(string content, bool tts=false);
 		DLL_EXPORT Message send(Embed embed);

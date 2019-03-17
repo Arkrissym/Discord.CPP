@@ -193,11 +193,16 @@ DiscordCPP::Guild::Guild() {
 DiscordCPP::Guild::~Guild() {
 	//_log.debug("destroyed guild object");
 
-	delete owner;
-	delete afk_channel;
-	delete embed_channel;
-	delete widget_channel;
-	delete embed_channel;
+	if (owner != NULL)
+		delete owner;
+	if (afk_channel != NULL)
+		delete afk_channel;
+	if (embed_channel != NULL)
+		delete embed_channel;
+	if (widget_channel != NULL)
+		delete widget_channel;
+	if (system_channel != NULL)
+		delete system_channel;
 	for (unsigned int i = 0; i < members.size(); i++) {
 		delete members[i];
 	}
@@ -215,5 +220,31 @@ void DiscordCPP::Guild::leave() {
 ///@throws HTTPError
 void DiscordCPP::Guild::delete_guild() {
 	string url = "/guilds/" + id;
+	api_call(url, methods::DEL);
+}
+
+/**	@param[in]	user	User to kick
+	@throws HTTPError
+*/
+void DiscordCPP::Guild::kick(User * user) {
+	string url = "/guilds/" + id + "/members/" + user->id;
+	api_call(url, methods::DEL);
+}
+
+/**	@param[in]	user				User to ban
+	@param[in]	reason				reason, why the User should be banned
+	@param[in]	delete_message_days	(optional) number of days to delete messages from user (0-7)
+	@throws HTTPError
+*/
+void DiscordCPP::Guild::ban(User * user, string reason, int delete_message_days) {
+	string url = "/guilds/" + id + "/bans/" + user->id + "?delete-message-days=" + to_string(delete_message_days) + "&reason=" + urlencode(reason);
+	api_call(url, methods::PUT);
+}
+
+/**	@param[in]	user	User to kick
+	@throws HTTPError
+*/
+void DiscordCPP::Guild::unban(User * user) {
+	string url = "/guilds/" + id + "/bans/" + user->id;
 	api_call(url, methods::DEL);
 }

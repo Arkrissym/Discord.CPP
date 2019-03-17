@@ -149,12 +149,19 @@ public:
 				Member *user = NULL;
 
 				for (unsigned int i = 0; i < guild->members.size(); i++) {
+					log.debug(string(*guild->members[i]));
 					if (string(*guild->members[i]) == user_name) {
 						user = guild->members[i];
 						break;
 					}
 				}
-				guild->kick(user);
+
+				if (user == NULL) {
+					message.channel->send("User " + user_name + " not found.");
+				}
+				else {
+					guild->kick(user);
+				}
 			}
 			else {
 				message.channel->send("This is not a guild channel.");
@@ -181,11 +188,16 @@ public:
 					}
 				}
 			
-				guild->ban(user, "testing the library", 0);
+				if (user == NULL) {
+					message.channel->send("User " + user_name + " not found.");
+				}
+				else {
+					guild->ban(user, "testing the library", 1);
 
-				this_thread::sleep_for(chrono::seconds(10));
+					this_thread::sleep_for(chrono::seconds(10));
 
-				guild->unban(user);
+					guild->unban(user);
+				}
 			}
 			else {
 				message.channel->send("This is not a guild channel.");

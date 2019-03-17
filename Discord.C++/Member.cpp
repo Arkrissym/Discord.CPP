@@ -29,10 +29,6 @@ DiscordCPP::Member::Member() {
 	//_log.debug("created empty member object");
 }
 
-DiscordCPP::Member::~Member() {
-	//_log.debug("destroyed member object");
-}
-
 DiscordCPP::Member::operator string() {
 	if (nick == "")
 		return username;

@@ -41,6 +41,8 @@ DiscordCPP::GuildChannel::GuildChannel() {
 }
 
 DiscordCPP::GuildChannel::~GuildChannel() {
-	delete guild;
-	delete parent;
+	if (guild != NULL)
+		delete guild;
+	if (parent != NULL)
+		delete parent;
 }

@@ -146,11 +146,12 @@ DiscordCPP::Message::Message() {
 }
 
 DiscordCPP::Message::~Message() {
-	//_log.debug("destroyed message object");
+	Logger("dicord.Message").debug("destroyed message object");
 
-	//if(channel != NULL)
-	delete channel;
-	delete author;
+	if(channel != NULL)
+		delete channel;
+	if (author != NULL)
+		delete author;
 	for (unsigned int i = 0; i < mentions.size(); i++) {
 		delete mentions[i];
 	}

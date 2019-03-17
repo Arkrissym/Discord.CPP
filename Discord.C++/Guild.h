@@ -122,10 +122,18 @@ namespace DiscordCPP {
 
 		///@return Guildname as std::string
 		DLL_EXPORT operator string() { return name; };
+
 		///leave this guild
 		DLL_EXPORT void leave();
 		///delete this guild
 		DLL_EXPORT void delete_guild();
+
+		///kicks the given User from this Guild
+		DLL_EXPORT void kick(User *user);
+		///bans the given User from this Guild
+		DLL_EXPORT void ban(User *user, string reason, int delete_message_days = 0);
+		///unbans the given User from this Guild
+		DLL_EXPORT void unban(User *user);
 	};
 
 }

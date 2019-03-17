@@ -28,10 +28,6 @@ DiscordCPP::TextChannel::TextChannel() {
 
 }
 
-DiscordCPP::TextChannel::~TextChannel() {
-
-}
-
 /**	@param[in]	content	The string message to send.
 	@param[in]	tts		(optional) Wether to send as tts-message or not. Default is false.
 	@return	The message that was sent.

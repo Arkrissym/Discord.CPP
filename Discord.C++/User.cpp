@@ -65,10 +65,6 @@ DiscordCPP::User::User(string id, string_t token) : DiscordCPP::DiscordObject(to
 	*this = User(api_call(url), token);
 }
 
-DiscordCPP::User::~User() {
-	//_log.debug("destroyed user object");
-}
-
 /** @return DMChannel
 */
 DiscordCPP::DMChannel DiscordCPP::User::get_dmchannel() {

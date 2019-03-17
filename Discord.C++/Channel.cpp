@@ -76,12 +76,6 @@ DiscordCPP::Channel::Channel() {
 	//_log.debug("created empty channel object");
 }
 
-DiscordCPP::Channel::~Channel() {
-	//_log.debug("destroyed channel object");
-
-	//overwrites
-}
-
 void DiscordCPP::Channel::delete_channel() {
 	string url = "/channels/" + id;
 

@@ -121,21 +121,12 @@ void DiscordCPP::Embed::set_footer(string text, string icon_url) {
 	_footer.icon_url = icon_url;
 }
 
-void DiscordCPP::Embed::set_provider(string name, string url) {
-	_provider.name = name;
-	_provider.url = url;
-}
-
 void DiscordCPP::Embed::set_image(string url) {
 	_image.url = url;
 }
 
 void DiscordCPP::Embed::set_thumbnail(string url) {
 	_thumbnail.url = url;
-}
-
-void DiscordCPP::Embed::set_video(string url) {
-	_video.url = url;
 }
 
 /**	generates json from Embed

@@ -63,11 +63,9 @@ namespace DiscordCPP {
 		DLL_EXPORT void add_field(string name, string value, bool Inline = true);
 		DLL_EXPORT void set_author(string name, string url="", string icon_url="");
 		DLL_EXPORT void set_footer(string text, string icon_url = "");
-		DLL_EXPORT void set_provider(string name, string url = "");
 		DLL_EXPORT void set_image(string url);
 		DLL_EXPORT void set_thumbnail(string url);
-		DLL_EXPORT void set_video(string url);
-
+		
 		DLL_EXPORT value to_json();
 	};
 

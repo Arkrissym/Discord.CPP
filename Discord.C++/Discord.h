@@ -44,8 +44,6 @@ namespace DiscordCPP {
 		unsigned int _num_shards;
 		///the user
 		User *_user;
-		///private channels of the user 
-		vector<Channel *> _private_channels;
 		///the guilds the user is a member
 		vector<Guild *> _guilds;
 		

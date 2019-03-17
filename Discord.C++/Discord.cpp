@@ -167,13 +167,6 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			if (event_name == "READY") {
 				_user = new User(data.at(U("user")), _token);
 
-				//_private_channels
-				if (is_valid_field("private_channels")) {
-					web::json::array tmp = data.at(U("private_channels")).as_array();
-					for (unsigned int i = 0; i < tmp.size(); i++)
-						_private_channels.push_back(new DMChannel(tmp[i], _token));
-				}
-
 				//_guilds
 				if (is_valid_field("guilds")) {
 					web::json::array tmp = data.at(U("guilds")).as_array();

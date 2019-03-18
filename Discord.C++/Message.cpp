@@ -31,18 +31,7 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 
 		value channel_data = api_call(url);
 		//Logger("discord.message").debug(conversions::to_utf8string(channel_data.serialize()));
-		switch (channel_data.at(U("type")).as_integer()) {
-		case ChannelType::GUILD_TEXT:
-		case ChannelType::GUILD_NEWS:
-			channel = (TextChannel *)new GuildChannel(channel_data, token);
-			break;
-		case ChannelType::DM:
-		case ChannelType::GROUP_DM:
-			channel = (TextChannel *)new DMChannel(channel_data, token);
-			break;
-		default:
-			channel = new TextChannel(channel_data, token);
-		}
+		channel = (TextChannel *)Channel::from_data(NULL, channel_data, token);
 	}
 
 	if (is_valid_field("author"))

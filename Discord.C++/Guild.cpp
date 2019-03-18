@@ -111,21 +111,7 @@ DiscordCPP::Guild::Guild(Discord *client, value data, string_t token) : DiscordC
 	if (is_valid_field("channels")) {
 		web::json::array tmp = data.at(U("channels")).as_array();
 		for (unsigned int i = 0; i < tmp.size(); i++) {
-			switch (tmp[i].at(U("type")).as_integer()) {
-			case ChannelType::GUILD_TEXT:
-			case ChannelType::GUILD_NEWS:
-				channels.push_back((Channel *)new TextChannel(tmp[i], token));
-				break;
-			case ChannelType::GUILD_VOICE:
-				channels.push_back((Channel *)new VoiceChannel(client, tmp[i], token));
-				break;
-			case ChannelType::DM:
-			case ChannelType::GROUP_DM:
-				channels.push_back((Channel *)new DMChannel(tmp[i], token));
-				break;
-			default:
-				channels.push_back(new Channel(tmp[i], token));
-			}
+			channels.push_back(Channel::from_data(client, tmp[i], token));
 		}
 	}
 

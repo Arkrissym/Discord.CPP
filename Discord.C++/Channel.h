@@ -29,6 +29,7 @@ namespace DiscordCPP {
 	}
 
 	class User;
+	class Discord;
 
 	class Channel : public DiscordObject {
 	public:
@@ -53,6 +54,8 @@ namespace DiscordCPP {
 		DLL_EXPORT Channel(const Channel &old);
 		DLL_EXPORT Channel();
 		
+		DLL_EXPORT static Channel *from_data(Discord *client, value data, string_t token);
+
 		///Delete this channel
 		DLL_EXPORT void delete_channel();
 

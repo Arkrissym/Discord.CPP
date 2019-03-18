@@ -1,5 +1,6 @@
 #include "Channel.h"
 #include "static.h"
+#include "Discord.h"
 
 #include <cpprest/http_client.h>
 
@@ -74,6 +75,28 @@ DiscordCPP::Channel::Channel(const Channel & old) {
 DiscordCPP::Channel::Channel() {
 	//_log = Logger("discord.channel");
 	//_log.debug("created empty channel object");
+}
+
+DiscordCPP::Channel * DiscordCPP::Channel::from_data(Discord * client, value data, string_t token) {
+	Channel *channel;
+
+	switch (data.at(U("type")).as_integer()) {
+	case ChannelType::GUILD_TEXT:
+	case ChannelType::GUILD_NEWS:
+		channel = (Channel *)new TextChannel(data, token);
+		break;
+	case ChannelType::GUILD_VOICE:
+		channel = (Channel *)new VoiceChannel(client, data, token);
+		break;
+	case ChannelType::DM:
+	case ChannelType::GROUP_DM:
+		channel = new DMChannel(data, token);
+		break;
+	default:
+		channel = new Channel(data, token);
+	}
+
+	return channel;
 }
 
 void DiscordCPP::Channel::delete_channel() {

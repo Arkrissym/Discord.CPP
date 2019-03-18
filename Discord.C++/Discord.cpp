@@ -160,7 +160,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(value payload) {
 
 pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
 	return pplx::create_task([this, event_name, data] {
-		try {
+		try {	//https://discordapp.com/developers/docs/topics/gateway#commands-and-events-gateway-events
 			if (event_name == "READY") {
 				_user = new User(data.at(U("user")), _token);
 
@@ -179,6 +179,59 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 						log.error("ignoring exception in on_ready: " + string(e.what()));
 					}
 				});
+			}
+			else if (event_name == "CHANNEL_CREATE") {
+				if (is_valid_field("guild_id")) {
+					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+					Channel *channel = Channel::from_data(this, data, _token);
+
+					for (unsigned int i = 0; i < _guilds.size(); i++) {
+						if (_guilds[i]->id == guild_id) {
+							_guilds[i]->channels.push_back(channel);
+
+							break;
+						}
+					}
+				}
+			}
+			else if (event_name == "CHANNEL_UPDATE") {
+				if (is_valid_field("guild_id")) {
+					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+					Channel *channel = Channel::from_data(this, data, _token);
+
+					for (unsigned int i = 0; i < _guilds.size(); i++) {
+						if (_guilds[i]->id == guild_id) {
+							for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
+								if (_guilds[i]->channels[j]->id == channel->id) {
+									_guilds[i]->channels.erase(_guilds[i]->channels.begin() + j);
+									_guilds[i]->channels.push_back(channel);
+									break;
+								}
+							}
+
+							break;
+						}
+					}
+				}
+			}
+			else if (event_name == "CHANNEL_DELETE") {
+				if (is_valid_field("guild_id")) {
+					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+					string channel_id = conversions::to_utf8string(data.at(U("id")).as_string());
+
+					for (unsigned int i = 0; i < _guilds.size(); i++) {
+						if (_guilds[i]->id == guild_id) {
+							for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
+								if (_guilds[i]->channels[j]->id == channel_id) {
+									_guilds[i]->channels.erase(_guilds[i]->channels.begin() + j);
+									break;
+								}
+							}
+
+							break;
+						}
+					}
+				}
 			}
 			else if (event_name == "MESSAGE_CREATE") {
 				pplx::create_task([this, data] {

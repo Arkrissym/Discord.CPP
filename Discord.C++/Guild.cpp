@@ -111,7 +111,7 @@ DiscordCPP::Guild::Guild(Discord *client, value data, string_t token) : DiscordC
 	if (is_valid_field("channels")) {
 		web::json::array tmp = data.at(U("channels")).as_array();
 		for (unsigned int i = 0; i < tmp.size(); i++) {
-			channels.push_back(Channel::from_data(client, tmp[i], token));
+			channels.push_back(Channel::from_json(client, tmp[i], token));
 		}
 	}
 

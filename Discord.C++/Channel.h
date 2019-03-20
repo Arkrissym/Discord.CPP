@@ -54,7 +54,7 @@ namespace DiscordCPP {
 		DLL_EXPORT Channel(const Channel &old);
 		DLL_EXPORT Channel();
 		
-		DLL_EXPORT static Channel *from_data(Discord *client, value data, string_t token);
+		DLL_EXPORT static Channel *from_json(Discord *client, value data, string_t token);
 
 		///Delete this channel
 		DLL_EXPORT void delete_channel();

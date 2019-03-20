@@ -31,7 +31,7 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 
 		value channel_data = api_call(url);
 		//Logger("discord.message").debug(conversions::to_utf8string(channel_data.serialize()));
-		channel = (TextChannel *)Channel::from_data(NULL, channel_data, token);
+		channel = (TextChannel *)Channel::from_json(NULL, channel_data, token);
 	}
 
 	if (is_valid_field("author"))

@@ -77,7 +77,7 @@ DiscordCPP::Channel::Channel() {
 	//_log.debug("created empty channel object");
 }
 
-DiscordCPP::Channel * DiscordCPP::Channel::from_data(Discord * client, value data, string_t token) {
+DiscordCPP::Channel * DiscordCPP::Channel::from_json(Discord * client, value data, string_t token) {
 	Channel *channel;
 
 	switch (data.at(U("type")).as_integer()) {

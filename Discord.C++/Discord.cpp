@@ -183,7 +183,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			else if (event_name == "CHANNEL_CREATE") {
 				if (is_valid_field("guild_id")) {
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-					Channel *channel = Channel::from_data(this, data, _token);
+					Channel *channel = Channel::from_json(this, data, _token);
 
 					for (unsigned int i = 0; i < _guilds.size(); i++) {
 						if (_guilds[i]->id == guild_id) {
@@ -197,7 +197,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			else if (event_name == "CHANNEL_UPDATE") {
 				if (is_valid_field("guild_id")) {
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-					Channel *channel = Channel::from_data(this, data, _token);
+					Channel *channel = Channel::from_json(this, data, _token);
 
 					for (unsigned int i = 0; i < _guilds.size(); i++) {
 						if (_guilds[i]->id == guild_id) {

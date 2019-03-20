@@ -57,10 +57,7 @@ DiscordCPP::Channel::Channel(const Channel & old) {
 	position = old.position;
 	//permission_overwrites
 	name = old.name;
-	nsfw = old.nsfw;
-	last_message_id = old.last_message_id;
 	icon = old.icon;
-	last_pin_timestamp = old.last_pin_timestamp;
 }
 
 DiscordCPP::Channel::Channel() {

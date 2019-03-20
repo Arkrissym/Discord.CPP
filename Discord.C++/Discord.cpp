@@ -233,6 +233,9 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					}
 				}
 			}
+			else if (event_name == "CHANNEL_PINS_UPDATE") {
+
+			}
 			else if (event_name == "MESSAGE_CREATE") {
 				pplx::create_task([this, data] {
 					try {

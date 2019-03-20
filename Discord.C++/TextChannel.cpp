@@ -31,6 +31,10 @@ DiscordCPP::TextChannel::TextChannel(string id, string_t token) {
 
 DiscordCPP::TextChannel::TextChannel(const TextChannel & old) : DiscordCPP::Channel(old) {
 	topic = old.topic;
+	nsfw = old.nsfw;
+	last_message_id = old.last_message_id;
+	last_pin_timestamp = old.last_pin_timestamp;
+
 }
 
 DiscordCPP::TextChannel::TextChannel() {

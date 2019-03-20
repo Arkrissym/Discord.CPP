@@ -40,14 +40,8 @@ namespace DiscordCPP {
 		//vector<Overwrite *> permission_overwrites;
 		///the channel's name
 		string name;
-		///true if nsfw is enabled
-		bool nsfw;
-		///the id of the last message
-		string last_message_id;	//snowflake
 		///the channel's icon hash
 		string icon;
-		///when the last message was pinned
-		string last_pin_timestamp;	//ISO8601 timestamp
 
 		DLL_EXPORT Channel(value data, string_t token);
 		DLL_EXPORT Channel(string id, string_t token);

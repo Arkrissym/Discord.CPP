@@ -24,6 +24,12 @@ namespace DiscordCPP {
 	public:
 		///the topic of the channel
 		string topic;
+		///true if nsfw is enabled
+		bool nsfw;
+		///the id of the last message
+		string last_message_id;	//snowflake
+		///when the last message was pinned
+		string last_pin_timestamp;	//ISO8601 timestamp
 
 		DLL_EXPORT TextChannel(value data, string_t token);
 		DLL_EXPORT TextChannel(string id, string_t token);

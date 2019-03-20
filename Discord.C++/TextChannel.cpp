@@ -12,6 +12,15 @@ using namespace utility;
 DiscordCPP::TextChannel::TextChannel(value data, string_t token) : DiscordCPP::Channel(data, token) {
 	if (is_valid_field("topic"))
 		topic = conversions::to_utf8string(data.at(U("topic")).as_string());
+
+	if (is_valid_field("nsfw"))
+		nsfw = data.at(U("nsfw")).as_bool();
+
+	if (is_valid_field("last_message_id"))
+		last_message_id = conversions::to_utf8string(data.at(U("last_message_id")).as_string());
+
+	if (is_valid_field("last_pin_timestamp"))
+		last_pin_timestamp = conversions::to_utf8string(data.at(U("last_pin_timestamp")).as_string());
 }
 
 DiscordCPP::TextChannel::TextChannel(string id, string_t token) {

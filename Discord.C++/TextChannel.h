@@ -30,6 +30,8 @@ namespace DiscordCPP {
 		string last_message_id;	//snowflake
 		///when the last message was pinned
 		string last_pin_timestamp;	//ISO8601 timestamp
+		///amount of seconds a User has to wait before sending another message(0-120). Bots, as well as Users with MANAGE_MESSAGES or MANAGE_CHANNELS Permissions are unaffected.
+		int rate_limit_per_user = 0;
 
 		DLL_EXPORT TextChannel(value data, string_t token);
 		DLL_EXPORT TextChannel(string id, string_t token);

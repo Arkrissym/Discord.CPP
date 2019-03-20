@@ -21,6 +21,9 @@ DiscordCPP::TextChannel::TextChannel(value data, string_t token) : DiscordCPP::C
 
 	if (is_valid_field("last_pin_timestamp"))
 		last_pin_timestamp = conversions::to_utf8string(data.at(U("last_pin_timestamp")).as_string());
+
+	if (is_valid_field("rate_limit_per_user"))
+		rate_limit_per_user = data.at(U("rate_limit_per_user")).as_integer();
 }
 
 DiscordCPP::TextChannel::TextChannel(string id, string_t token) {
@@ -34,7 +37,7 @@ DiscordCPP::TextChannel::TextChannel(const TextChannel & old) : DiscordCPP::Chan
 	nsfw = old.nsfw;
 	last_message_id = old.last_message_id;
 	last_pin_timestamp = old.last_pin_timestamp;
-
+	rate_limit_per_user = old.rate_limit_per_user;
 }
 
 DiscordCPP::TextChannel::TextChannel() {

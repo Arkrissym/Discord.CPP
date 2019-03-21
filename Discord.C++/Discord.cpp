@@ -287,6 +287,21 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					}
 				}
 			}
+			else if (event_name == "GUILD_DELETE") {
+				string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+
+				for (unsigned int i = 0; i < _guilds.size(); i++) {
+					if (_guilds[i]->id == guild_id) {
+						if (is_valid_field("unavailable") && (data.at(U("unavailable")).as_bool() == true)) {
+							_guilds[i]->unavailable = true;
+						}
+						else {
+							_guilds.erase(_guilds.begin() + i);
+						}
+						break;
+					}
+				}
+			}
 			else if (event_name == "VOICE_STATE_UPDATE") {
 				if (_user->id != conversions::to_utf8string(data.at(U("user_id")).as_string()))
 					return;

@@ -8,10 +8,10 @@
 #endif
 
 enum Loglevel {
-	DEBUG,
-	INFO,
-	WARNING,
-	ERROR
+	Debug,
+	Info,
+	Warning,
+	Error
 };
 
 class Logger {

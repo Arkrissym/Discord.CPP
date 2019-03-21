@@ -226,7 +226,7 @@ int main() {
 	free(token);
 #endif
 
-	client->log.set_log_level(DEBUG);
+	client->log.set_log_level(Debug);
 
 	while (1) {
 		this_thread::sleep_for(chrono::seconds(1));

@@ -233,9 +233,21 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					}
 				}
 			}
-//			else if (event_name == "CHANNEL_PINS_UPDATE") {
+			else if (event_name == "CHANNEL_PINS_UPDATE") {
+				if (is_valid_field("channel_id") && is_valid_field("last_pin_timestamp")) {
+					string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
+					string last_pin = conversions::to_utf8string(data.at(U("last_pin_timestamp")).as_string());
 
-//			}
+					for (unsigned int i = 0; i < _guilds.size(); i++) {
+						for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
+							if (_guilds[i]->channels[j]->id == channel_id) {
+								((TextChannel *)_guilds[i]->channels[j])->last_pin_timestamp = last_pin;
+								return;
+							}
+						}
+					}
+				}
+			}
 			else if (event_name == "MESSAGE_CREATE") {
 				pplx::create_task([this, data] {
 					try {
@@ -251,7 +263,9 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 
 				for (unsigned int i = 0; i < _guilds.size(); i++) {
 					if (tmp_guild->id == _guilds[i]->id) {
+						Guild *old = _guilds[i];
 						_guilds[i] = tmp_guild;
+						delete old;
 						log.debug("Updated guild data");
 						return;
 					}
@@ -259,6 +273,19 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 
 				_guilds.push_back(tmp_guild);
 				log.debug("data of new guild added");
+			}
+			else if (event_name == "GUILD_UPDATE") {
+				Guild *tmp_guild = new Guild(this, data, _token);
+
+				for (unsigned int i = 0; i < _guilds.size(); i++) {
+					if (tmp_guild->id == _guilds[i]->id) {
+						Guild *old = _guilds[i];
+						_guilds[i] = tmp_guild;
+						delete old;
+						log.debug("Updated guild data");
+						return;
+					}
+				}
 			}
 			else if (event_name == "VOICE_STATE_UPDATE") {
 				if (_user->id != conversions::to_utf8string(data.at(U("user_id")).as_string()))

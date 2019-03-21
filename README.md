@@ -54,14 +54,14 @@ However below is an overview of features based on Discord's [library comparision
 #### Server management
 |Feature   |working? |
 |----------|---------|
-|Ban|Yes|
-|Ban List|No|
 |Create|No|
 |Delete|Yes|
 |Edit|No|
 |Info|Yes|
 |Kick|Yes|
+|Ban|Yes|
 |Unban|Yes|
+|Ban List|No|
 |Change owner|No|
 
 #### User management

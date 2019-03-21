@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.5.3</span>
+   &#160;<span id="projectnumber">0.6.0</span>
    </div>
   </td>
  </tr>
@@ -106,6 +106,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af4490753c885472c959bec997866640f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#af4490753c885472c959bec997866640f">delete_guild</a> ()</td></tr>
 <tr class="memdesc:af4490753c885472c959bec997866640f"><td class="mdescLeft">&#160;</td><td class="mdescRight">delete this guild  <a href="#af4490753c885472c959bec997866640f">More...</a><br /></td></tr>
 <tr class="separator:af4490753c885472c959bec997866640f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a658a344bd44213b4eb17560abf21c60f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#a658a344bd44213b4eb17560abf21c60f">kick</a> (<a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> *user)</td></tr>
+<tr class="memdesc:a658a344bd44213b4eb17560abf21c60f"><td class="mdescLeft">&#160;</td><td class="mdescRight">kicks the given <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> from this <a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a>  <a href="#a658a344bd44213b4eb17560abf21c60f">More...</a><br /></td></tr>
+<tr class="separator:a658a344bd44213b4eb17560abf21c60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab64d99d700316926d2062c23e2e4dc6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#ab64d99d700316926d2062c23e2e4dc6d">ban</a> (<a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> *user, string reason, int delete_message_days=0)</td></tr>
+<tr class="memdesc:ab64d99d700316926d2062c23e2e4dc6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">bans the given <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> from this <a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a>  <a href="#ab64d99d700316926d2062c23e2e4dc6d">More...</a><br /></td></tr>
+<tr class="separator:ab64d99d700316926d2062c23e2e4dc6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8c9af4f6110f36f464455da9a84f2af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_guild.html#af8c9af4f6110f36f464455da9a84f2af">unban</a> (<a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> *user)</td></tr>
+<tr class="memdesc:af8c9af4f6110f36f464455da9a84f2af"><td class="mdescLeft">&#160;</td><td class="mdescRight">unbans the given <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> from this <a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a>  <a href="#af8c9af4f6110f36f464455da9a84f2af">More...</a><br /></td></tr>
+<tr class="separator:af8c9af4f6110f36f464455da9a84f2af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_discord_c_p_p_1_1_discord_object"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_discord_c_p_p_1_1_discord_object')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_discord_c_p_p_1_1_discord_object.html">DiscordCPP::DiscordObject</a></td></tr>
 <tr class="memitem:a8050efa6682380f04f9fcf8aa8e3652d inherit pub_methods_class_discord_c_p_p_1_1_discord_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_object.html#a8050efa6682380f04f9fcf8aa8e3652d">DiscordObject</a> ()</td></tr>
 <tr class="separator:a8050efa6682380f04f9fcf8aa8e3652d inherit pub_methods_class_discord_c_p_p_1_1_discord_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,6 +336,56 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab64d99d700316926d2062c23e2e4dc6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab64d99d700316926d2062c23e2e4dc6d">&#9670;&nbsp;</a></span>ban()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DiscordCPP::Guild::ban </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> *&#160;</td>
+          <td class="paramname"><em>user</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>reason</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>delete_message_days</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>bans the given <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> from this <a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">user</td><td><a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> to ban </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">reason</td><td>reason, why the <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> should be banned </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">delete_message_days</td><td>(optional) number of days to delete messages from user (0-7) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="class_discord_c_p_p_1_1_h_t_t_p_error.html">HTTPError</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="af4490753c885472c959bec997866640f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4490753c885472c959bec997866640f">&#9670;&nbsp;</a></span>delete_guild()</h2>
 
@@ -343,6 +402,38 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>delete this guild </p>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="class_discord_c_p_p_1_1_h_t_t_p_error.html">HTTPError</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a658a344bd44213b4eb17560abf21c60f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a658a344bd44213b4eb17560abf21c60f">&#9670;&nbsp;</a></span>kick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DiscordCPP::Guild::kick </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> *&#160;</td>
+          <td class="paramname"><em>user</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>kicks the given <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> from this <a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">user</td><td><a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> to kick </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="class_discord_c_p_p_1_1_h_t_t_p_error.html">HTTPError</a></td><td></td></tr>
@@ -400,6 +491,38 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Guildname as std::string </dd></dl>
+
+</div>
+</div>
+<a id="af8c9af4f6110f36f464455da9a84f2af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8c9af4f6110f36f464455da9a84f2af">&#9670;&nbsp;</a></span>unban()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DiscordCPP::Guild::unban </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> *&#160;</td>
+          <td class="paramname"><em>user</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>unbans the given <a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> from this <a class="el" href="class_discord_c_p_p_1_1_guild.html">Guild</a> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">user</td><td><a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> to kick </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="class_discord_c_p_p_1_1_h_t_t_p_error.html">HTTPError</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

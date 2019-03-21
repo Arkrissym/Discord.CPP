@@ -8,5 +8,6 @@ var searchData=
   ['flags',['flags',['../class_discord_c_p_p_1_1_user.html#a1a2fe00f26691215b4d662d414a67835',1,'DiscordCPP::User']]],
   ['footer',['Footer',['../struct_discord_c_p_p_1_1_embed_1_1_footer.html',1,'DiscordCPP::Embed']]],
   ['frame_5fmillis',['FRAME_MILLIS',['../_voice_client_8cpp.html#a7871dc8fe492942c80bb29949556a3d2',1,'VoiceClient.cpp']]],
-  ['frame_5fsize',['FRAME_SIZE',['../_voice_client_8cpp.html#af9b1b2ba12857a4bf11289dac8c5462d',1,'VoiceClient.cpp']]]
+  ['frame_5fsize',['FRAME_SIZE',['../_voice_client_8cpp.html#af9b1b2ba12857a4bf11289dac8c5462d',1,'VoiceClient.cpp']]],
+  ['from_5fjson',['from_json',['../class_discord_c_p_p_1_1_channel.html#a431a79046920f694c8f903fd645048d4',1,'DiscordCPP::Channel']]]
 ];

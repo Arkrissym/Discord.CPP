@@ -1,14 +1,15 @@
 var searchData=
 [
-  ['parent',['parent',['../class_discord_c_p_p_1_1_guild_channel.html#af7b6e8be4b10c3b838fbebc4bdff9224',1,'DiscordCPP::GuildChannel::parent()'],['../class_discord_c_p_p_1_1_voice_channel.html#aa0ae5e2937df510213a428d9f9194cd1',1,'DiscordCPP::VoiceChannel::parent()']]],
-  ['permissions',['permissions',['../class_discord_c_p_p_1_1_guild.html#a31427cbac58bd13bb214064083d2fa77',1,'DiscordCPP::Guild']]],
-  ['pinned',['pinned',['../class_discord_c_p_p_1_1_message.html#a30c397fd5102155f3582c7bb2ac781ee',1,'DiscordCPP::Message']]],
-  ['play',['play',['../class_discord_c_p_p_1_1_voice_client.html#aeff7a33bcfa903d92911f1f8cc02a719',1,'DiscordCPP::VoiceClient']]],
-  ['position',['position',['../class_discord_c_p_p_1_1_channel.html#a6d54a320606d2dc962a40b38f29e4a76',1,'DiscordCPP::Channel']]],
-  ['premium_5ftype',['premium_type',['../class_discord_c_p_p_1_1_user.html#a02f22305ee286229f67614ac22d3799c',1,'DiscordCPP::User']]],
-  ['premiumtypes',['PremiumTypes',['../class_discord_c_p_p_1_1_user.html#a54885f78aec356ea66c3613c8953a910',1,'DiscordCPP::User']]],
-  ['print',['print',['../class_logger.html#aa20f73127a7004b57728374fcad23530',1,'Logger']]],
-  ['provider',['Provider',['../struct_discord_c_p_p_1_1_embed_1_1_provider.html',1,'DiscordCPP::Embed']]],
-  ['proxy_5ficon_5furl',['proxy_icon_url',['../struct_discord_c_p_p_1_1_embed_1_1_footer.html#a57bb934aea6170ed664d6ab9f0f87d0c',1,'DiscordCPP::Embed::Footer::proxy_icon_url()'],['../struct_discord_c_p_p_1_1_embed_1_1_author.html#a7c274c8552cfea56ba3e06ec30baf6b2',1,'DiscordCPP::Embed::Author::proxy_icon_url()']]],
-  ['proxy_5furl',['proxy_url',['../struct_discord_c_p_p_1_1_embed_1_1_image.html#a49d1a10ee685157024239b3ce319975c',1,'DiscordCPP::Embed::Image']]]
+  ['on_5fmessage',['on_message',['../class_discord_c_p_p_1_1_discord.html#aa492a81b01db3db673c012686cf6edd6',1,'DiscordCPP::Discord']]],
+  ['on_5fready',['on_ready',['../class_discord_c_p_p_1_1_discord.html#a388f3b9e8658106de3d078d30df6dc6d',1,'DiscordCPP::Discord']]],
+  ['on_5fuser_5fban',['on_user_ban',['../class_discord_c_p_p_1_1_discord.html#a87da659a6006e068645c62e4321a6958',1,'DiscordCPP::Discord']]],
+  ['on_5fuser_5funban',['on_user_unban',['../class_discord_c_p_p_1_1_discord.html#a21ca25e38da767c2adf54ef0aee04834',1,'DiscordCPP::Discord']]],
+  ['on_5fwebsocket_5fdisconnnect',['on_websocket_disconnnect',['../class_discord_c_p_p_1_1_gateway.html#ae2238c2729f78249df6f962eb5b92797',1,'DiscordCPP::Gateway']]],
+  ['on_5fwebsocket_5fincoming_5fmessage',['on_websocket_incoming_message',['../class_discord_c_p_p_1_1_discord.html#a9d9ad39e51491c13e34052c50ad3b163',1,'DiscordCPP::Discord::on_websocket_incoming_message()'],['../class_discord_c_p_p_1_1_gateway.html#adba35ce4973ff01b40b1dd1537678733',1,'DiscordCPP::Gateway::on_websocket_incoming_message()']]],
+  ['online',['Online',['../namespace_discord_c_p_p_1_1_discord_status.html#ad705bf4775c2ee9ef7d01ea2bf896bea',1,'DiscordCPP::DiscordStatus']]],
+  ['only_5fmentions',['ONLY_MENTIONS',['../namespace_discord_c_p_p_1_1_default_message_notification_level.html#a37b8b25ee33335283a508e781be2a840a6d3f96c6f9e23d130fe228e513ff8cf9',1,'DiscordCPP::DefaultMessageNotificationLevel']]],
+  ['operator_20string',['operator string',['../class_discord_c_p_p_1_1_channel.html#a824750f84caa53e4479ab2760118ae3d',1,'DiscordCPP::Channel::operator string()'],['../class_discord_c_p_p_1_1_guild.html#a4767a25d8010cfb676a572bdd75552fa',1,'DiscordCPP::Guild::operator string()'],['../class_discord_c_p_p_1_1_member.html#aa0887dc3b83120336d58eb40ef84e3bb',1,'DiscordCPP::Member::operator string()'],['../class_discord_c_p_p_1_1_user.html#ad0b9ba657b7297b2d6022638d990c320',1,'DiscordCPP::User::operator string()']]],
+  ['operator_3d',['operator=',['../class_discord_c_p_p_1_1udp__client.html#a8549adc4098ced7fdbb23500e765ccbc',1,'DiscordCPP::udp_client']]],
+  ['opuserror',['OpusError',['../class_discord_c_p_p_1_1_opus_error.html',1,'DiscordCPP::OpusError'],['../class_discord_c_p_p_1_1_opus_error.html#a9c968872103705aae5d14b84c02fde14',1,'DiscordCPP::OpusError::OpusError()']]],
+  ['owner',['owner',['../class_discord_c_p_p_1_1_d_m_channel.html#a8583c61d820fd9427b98a2ac07ea7767',1,'DiscordCPP::DMChannel::owner()'],['../class_discord_c_p_p_1_1_guild.html#a23cdb2e36f9b07235b137ae87c62cfa8',1,'DiscordCPP::Guild::owner()']]]
 ];

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.5.3</span>
+   &#160;<span id="projectnumber">0.6.0</span>
    </div>
   </td>
  </tr>
@@ -68,6 +68,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="class_discord_c_p_p_1_1_channel-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -100,8 +101,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1e1563f88f21815790bf1d44cf769828"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9e33dcedf845775141a9f56a8a2e34a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#ac9e33dcedf845775141a9f56a8a2e34a">Channel</a> ()</td></tr>
 <tr class="separator:ac9e33dcedf845775141a9f56a8a2e34a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff7646650db2228e950710372f2441a7"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#aff7646650db2228e950710372f2441a7">~Channel</a> ()</td></tr>
-<tr class="separator:aff7646650db2228e950710372f2441a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcdb6d1d0fc5294aaefca48f906d278c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#abcdb6d1d0fc5294aaefca48f906d278c">delete_channel</a> ()</td></tr>
 <tr class="memdesc:abcdb6d1d0fc5294aaefca48f906d278c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete this channel.  <a href="#abcdb6d1d0fc5294aaefca48f906d278c">More...</a><br /></td></tr>
 <tr class="separator:abcdb6d1d0fc5294aaefca48f906d278c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,6 +115,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac8bf7a309a37eff57f87c489238de2c9 inherit pub_methods_class_discord_c_p_p_1_1_discord_object"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_object.html#ac8bf7a309a37eff57f87c489238de2c9">DiscordObject</a> (utility::string_t token)</td></tr>
 <tr class="separator:ac8bf7a309a37eff57f87c489238de2c9 inherit pub_methods_class_discord_c_p_p_1_1_discord_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a431a79046920f694c8f903fd645048d4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_discord_c_p_p_1_1_channel.html">Channel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#a431a79046920f694c8f903fd645048d4">from_json</a> (<a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> *client, value data, string_t token)</td></tr>
+<tr class="separator:a431a79046920f694c8f903fd645048d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a557bbeba646631fd88fb9eba4695b666"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#a557bbeba646631fd88fb9eba4695b666">type</a></td></tr>
@@ -127,18 +131,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8ce84521d81f270663018bacee18b22f"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#a8ce84521d81f270663018bacee18b22f">name</a></td></tr>
 <tr class="memdesc:a8ce84521d81f270663018bacee18b22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">the channel's name  <a href="#a8ce84521d81f270663018bacee18b22f">More...</a><br /></td></tr>
 <tr class="separator:a8ce84521d81f270663018bacee18b22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a864c30354a50db06b955bc98d585e238"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#a864c30354a50db06b955bc98d585e238">nsfw</a></td></tr>
-<tr class="memdesc:a864c30354a50db06b955bc98d585e238"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if nsfw is enabled  <a href="#a864c30354a50db06b955bc98d585e238">More...</a><br /></td></tr>
-<tr class="separator:a864c30354a50db06b955bc98d585e238"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99e60053a551d0a90a4629beff5ef605"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#a99e60053a551d0a90a4629beff5ef605">last_message_id</a></td></tr>
-<tr class="memdesc:a99e60053a551d0a90a4629beff5ef605"><td class="mdescLeft">&#160;</td><td class="mdescRight">the id of the last message  <a href="#a99e60053a551d0a90a4629beff5ef605">More...</a><br /></td></tr>
-<tr class="separator:a99e60053a551d0a90a4629beff5ef605"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a4f75cc0bee94bc24368255eafb2766"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#a8a4f75cc0bee94bc24368255eafb2766">icon</a></td></tr>
 <tr class="memdesc:a8a4f75cc0bee94bc24368255eafb2766"><td class="mdescLeft">&#160;</td><td class="mdescRight">the channel's icon hash  <a href="#a8a4f75cc0bee94bc24368255eafb2766">More...</a><br /></td></tr>
 <tr class="separator:a8a4f75cc0bee94bc24368255eafb2766"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe46df327c6b08854fe20dcd32f0106d"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_channel.html#afe46df327c6b08854fe20dcd32f0106d">last_pin_timestamp</a></td></tr>
-<tr class="memdesc:afe46df327c6b08854fe20dcd32f0106d"><td class="mdescLeft">&#160;</td><td class="mdescRight">when the last message was pinned  <a href="#afe46df327c6b08854fe20dcd32f0106d">More...</a><br /></td></tr>
-<tr class="separator:afe46df327c6b08854fe20dcd32f0106d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_class_discord_c_p_p_1_1_discord_object"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_discord_c_p_p_1_1_discord_object')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="class_discord_c_p_p_1_1_discord_object.html">DiscordCPP::DiscordObject</a></td></tr>
 <tr class="memitem:a4fd0bc1808def0e1d0a021ad7c48a9ae inherit pub_attribs_class_discord_c_p_p_1_1_discord_object"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord_object.html#a4fd0bc1808def0e1d0a021ad7c48a9ae">id</a></td></tr>
 <tr class="memdesc:a4fd0bc1808def0e1d0a021ad7c48a9ae inherit pub_attribs_class_discord_c_p_p_1_1_discord_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">the id of the object  <a href="class_discord_c_p_p_1_1_discord_object.html#a4fd0bc1808def0e1d0a021ad7c48a9ae">More...</a><br /></td></tr>
@@ -261,31 +256,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aff7646650db2228e950710372f2441a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff7646650db2228e950710372f2441a7">&#9670;&nbsp;</a></span>~Channel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">DiscordCPP::Channel::~Channel </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7f9e1bd37680b9fd7468fb3a505e5e23"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7f9e1bd37680b9fd7468fb3a505e5e23">&#9670;&nbsp;</a></span>copy()</h2>
@@ -334,6 +304,48 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="a431a79046920f694c8f903fd645048d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a431a79046920f694c8f903fd645048d4">&#9670;&nbsp;</a></span>from_json()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_discord_c_p_p_1_1_channel.html">DiscordCPP::Channel</a> * DiscordCPP::Channel::from_json </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> *&#160;</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">value&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string_t&#160;</td>
+          <td class="paramname"><em>token</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a824750f84caa53e4479ab2760118ae3d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a824750f84caa53e4479ab2760118ae3d">&#9670;&nbsp;</a></span>operator string()</h2>
 
@@ -377,38 +389,6 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="a99e60053a551d0a90a4629beff5ef605"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99e60053a551d0a90a4629beff5ef605">&#9670;&nbsp;</a></span>last_message_id</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string DiscordCPP::Channel::last_message_id</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>the id of the last message </p>
-
-</div>
-</div>
-<a id="afe46df327c6b08854fe20dcd32f0106d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe46df327c6b08854fe20dcd32f0106d">&#9670;&nbsp;</a></span>last_pin_timestamp</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">string DiscordCPP::Channel::last_pin_timestamp</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>when the last message was pinned </p>
-
-</div>
-</div>
 <a id="a8ce84521d81f270663018bacee18b22f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8ce84521d81f270663018bacee18b22f">&#9670;&nbsp;</a></span>name</h2>
 
@@ -422,22 +402,6 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 
 <p>the channel's name </p>
-
-</div>
-</div>
-<a id="a864c30354a50db06b955bc98d585e238"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a864c30354a50db06b955bc98d585e238">&#9670;&nbsp;</a></span>nsfw</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool DiscordCPP::Channel::nsfw</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>true if nsfw is enabled </p>
 
 </div>
 </div>

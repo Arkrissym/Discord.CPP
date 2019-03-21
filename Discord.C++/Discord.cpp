@@ -83,9 +83,16 @@ void DiscordCPP::Discord::on_message(Message message) {
 	log.debug("on_message");
 }
 
+/**	@param[in]	user	the User who has been banned
+	@param[in]	guild	the Guild the User has been banned from
+*/
 void DiscordCPP::Discord::on_user_ban(User user, Guild guild) {
 	log.debug("on_member_ban");
 }
+
+/**	@param[in]	user	the User who has been unbanned
+	@param[in]	guild	the Guild the User has been unbanned from
+*/
 
 void DiscordCPP::Discord::on_user_unban(User user, Guild guild) {
 	log.debug("on_member_unban");

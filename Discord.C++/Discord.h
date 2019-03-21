@@ -69,6 +69,10 @@ namespace DiscordCPP {
 		DLL_EXPORT virtual void on_ready(User user);
 		///called when a message was received
 		DLL_EXPORT virtual void on_message(Message message);
+		///called when a member was banned
+		DLL_EXPORT virtual void on_user_ban(User user, Guild guild);
+		///called when a member was unbanned
+		DLL_EXPORT virtual void on_user_unban(User user, Guild guild);
 
 		///updates the presence of user
 		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity = Activity(), bool afk = false, int shard_id = -1);

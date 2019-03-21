@@ -83,6 +83,14 @@ void DiscordCPP::Discord::on_message(Message message) {
 	log.debug("on_message");
 }
 
+void DiscordCPP::Discord::on_user_ban(User user, Guild guild) {
+	log.debug("on_member_ban");
+}
+
+void DiscordCPP::Discord::on_user_unban(User user, Guild guild) {
+	log.debug("on_member_unban");
+}
+
 /**	@param[in]	status		the new status (see DiscordStatus)
 	@param[in]	activity	(optional) the Activity
 	@param[in]	afk			(optional) wether the bot/user is afk or not
@@ -248,16 +256,6 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					}
 				}
 			}
-			else if (event_name == "MESSAGE_CREATE") {
-				pplx::create_task([this, data] {
-					try {
-						on_message(Message(data, _token));
-					}
-					catch (const std::exception &e) {
-						log.error("ignoring exception in on_message: " + string(e.what()));
-					}
-				});
-			}
 			else if (event_name == "GUILD_CREATE") {
 				Guild *tmp_guild = new Guild(this, data, _token);
 
@@ -301,6 +299,62 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 						break;
 					}
 				}
+			}
+			else if (event_name == "GUILD_BAN_ADD") {
+				string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+				User user = User(data.at(U("user")), _token);
+
+				unsigned int i;
+				for (i = 0; i < _guilds.size(); i++) {
+					if (_guilds[i]->id == guild_id) {
+						for (unsigned int j = 0; j < _guilds[i]->members.size(); j++) {
+							if (_guilds[i]->members[j]->id == user.id) {
+								_guilds[i]->members.erase(_guilds[i]->members.begin() + j);
+								break;
+							}
+						}
+
+						break;
+					}
+				}
+
+				pplx::create_task([this, user, i] {
+					try {
+						on_user_ban(user, Guild(*_guilds[i]));
+					}
+					catch (exception &e) {
+						log.error("ignoring exception in on_user_ban: " + string(e.what()));
+					}
+				});
+			}
+			else if (event_name == "GUILD_BAN_REMOVE") {
+				string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+				User user = User(data.at(U("user")), _token);
+
+				unsigned int i;
+				for (i = 0; i < _guilds.size(); i++) {
+					if (_guilds[i]->id == guild_id)
+						break;
+				}
+
+				pplx::create_task([this, user, i] {
+					try {
+						on_user_unban(user, Guild(*_guilds[i]));
+					}
+					catch (exception &e) {
+						log.error("ignoring exception in on_user_ban: " + string(e.what()));
+					}
+				});
+			}
+			else if (event_name == "MESSAGE_CREATE") {
+				pplx::create_task([this, data] {
+					try {
+						on_message(Message(data, _token));
+					}
+					catch (const std::exception &e) {
+						log.error("ignoring exception in on_message: " + string(e.what()));
+					}
+				});
 			}
 			else if (event_name == "VOICE_STATE_UPDATE") {
 				if (_user->id != conversions::to_utf8string(data.at(U("user_id")).as_string()))

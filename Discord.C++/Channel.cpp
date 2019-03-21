@@ -71,7 +71,7 @@ DiscordCPP::Channel * DiscordCPP::Channel::from_json(Discord * client, value dat
 	switch (data.at(U("type")).as_integer()) {
 	case ChannelType::GUILD_TEXT:
 	case ChannelType::GUILD_NEWS:
-		channel = (Channel *)new TextChannel(data, token);
+		channel = (Channel *)new GuildChannel(data, token);
 		break;
 	case ChannelType::GUILD_VOICE:
 		channel = (Channel *)new VoiceChannel(client, data, token);

@@ -354,6 +354,25 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				});
 			}
 			else if (event_name == "MESSAGE_CREATE") {
+				if (is_valid_field("guild_id")) {
+					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+					string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
+					string msg_id = conversions::to_utf8string(data.at(U("id")).as_string());
+
+					for (unsigned int i = 0; i < _guilds.size(); i++) {
+						if (_guilds[i]->id == guild_id) {
+							for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
+								if (_guilds[i]->channels[j]->id == channel_id) {
+									((TextChannel *)_guilds[i]->channels[j])->last_message_id = msg_id;
+									break;
+								}
+							}
+
+							break;
+						}
+					}
+				}
+
 				pplx::create_task([this, data] {
 					try {
 						on_message(Message(data, _token));

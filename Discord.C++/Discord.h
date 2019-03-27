@@ -53,6 +53,7 @@ namespace DiscordCPP {
 		friend VoiceClient * VoiceChannel::connect();
 
 		DLL_EXPORT MainGateway * get_shard(unsigned int shard_id);
+		DLL_EXPORT Guild * get_guild(string guild_id);
 
 		DLL_EXPORT pplx::task<void> connect();
 		
@@ -67,12 +68,16 @@ namespace DiscordCPP {
 
 		///called when successfully logged in
 		DLL_EXPORT virtual void on_ready(User user);
-		///called when a message was received
+		///called when a Message was received
 		DLL_EXPORT virtual void on_message(Message message);
-		///called when a member was banned
+		///called when a Member was banned
 		DLL_EXPORT virtual void on_user_ban(User user, Guild guild);
-		///called when a member was unbanned
+		///called when a Member was unbanned
 		DLL_EXPORT virtual void on_user_unban(User user, Guild guild);
+		///called when a User joins a Guild
+		DLL_EXPORT virtual void on_user_join(Member member, Guild guild);
+		///called when a User is removed from a Guild (leave/kick/ban)
+		DLL_EXPORT virtual void on_user_remove(User user, Guild guild);
 
 		///updates the presence of user
 		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity = Activity(), bool afk = false, int shard_id = -1);

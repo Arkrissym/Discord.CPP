@@ -120,6 +120,13 @@ namespace DiscordCPP {
 		DLL_EXPORT Guild();
 		DLL_EXPORT ~Guild();
 
+		DLL_EXPORT void _add_channel(Channel *channel);
+		DLL_EXPORT void _update_channel(Channel *channel);
+		DLL_EXPORT void _remove_channel(string channel_id);
+		DLL_EXPORT void _add_member(Member *member);
+		DLL_EXPORT void _update_member(Member *member);
+		DLL_EXPORT void _remove_member(string member_id);
+
 		///@return Guildname as std::string
 		DLL_EXPORT operator string() { return name; };
 
@@ -129,11 +136,11 @@ namespace DiscordCPP {
 		DLL_EXPORT void delete_guild();
 
 		///kicks the given User from this Guild
-		DLL_EXPORT void kick(User *user);
+		DLL_EXPORT void kick(User user);
 		///bans the given User from this Guild
-		DLL_EXPORT void ban(User *user, string reason, int delete_message_days = 0);
+		DLL_EXPORT void ban(User user, string reason, int delete_message_days = 0);
 		///unbans the given User from this Guild
-		DLL_EXPORT void unban(User *user);
+		DLL_EXPORT void unban(User user);
 	};
 
 }

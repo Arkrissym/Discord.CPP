@@ -1,5 +1,5 @@
 #pragma once
-#define VERSION		"0.6.0"
+#define VERSION		"0.7.0"
 
 #define GATEWAY_URL	"wss://gateway.discord.gg?v=7&encoding=json"
 #define API_URL		"https://discordapp.com/api/v7"

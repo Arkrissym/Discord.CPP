@@ -19,6 +19,22 @@ public:
 		this->update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game)).wait();
 	}
 
+	void on_user_ban(User user, Guild guild) {
+		log.info("User " + string(user) + " has been banned from Guild " + string(guild));
+	}
+
+	void on_user_unban(User user, Guild guild) {
+		log.info("User " + string(user) + " has been unbanned from Guild " + string(guild));
+	}
+
+	void on_user_join(Member member, Guild guild) {
+		log.info("Member " + string(member) + " joined Guild " + string(guild));
+	}
+
+	void on_user_remove(User user, Guild guild) {
+		log.info("Member " + string(user) + " left Guild " + string(guild));
+	}
+
 	void on_message(Message message) {
 		//log.info(message.author->username + "\" sent " + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
 		
@@ -160,7 +176,7 @@ public:
 					message.channel->send("User " + user_name + " not found.");
 				}
 				else {
-					guild->kick(user);
+					guild->kick(*user);
 				}
 			}
 			else {
@@ -179,19 +195,21 @@ public:
 				}
 
 				string user_name = message.content.substr(5);
-				Member *user = NULL;
+				Member *user_ptr = NULL;
 
 				for (unsigned int i = 0; i < guild->members.size(); i++) {
 					if (string(*guild->members[i]) == user_name) {
-						user = guild->members[i];
+						user_ptr = guild->members[i];
 						break;
 					}
 				}
 			
-				if (user == NULL) {
+				if (user_ptr == NULL) {
 					message.channel->send("User " + user_name + " not found.");
 				}
 				else {
+					User user = User(*user_ptr);
+
 					guild->ban(user, "testing the library", 1);
 
 					this_thread::sleep_for(chrono::seconds(10));

@@ -123,8 +123,8 @@ However below is an overview of features based on Discord's [library comparision
 #### User Events
 |Event     |handled? |
 |----------|---------|
-|Join|No|
-|Leave|No|
+|Join|Yes|
+|Leave|Yes|
 |Typing|No|
 
 #### Voice

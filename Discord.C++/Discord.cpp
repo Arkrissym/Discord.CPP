@@ -111,6 +111,14 @@ void DiscordCPP::Discord::on_user_remove(User user, Guild guild) {
 	log.debug("on_member_remove");
 }
 
+/**	@param[in]	user		the User that started typing
+	@param[in]	channel		the TextChannel where the USer started typing
+	@param[in]	timestamp	(unix time) when the User started typing
+*/
+void DiscordCPP::Discord::on_typing_start(User user, TextChannel channel, string timestamp) {
+	log.debug("on_typing_start");
+}
+
 /**	@param[in]	status		the new status (see DiscordStatus)
 	@param[in]	activity	(optional) the Activity
 	@param[in]	afk			(optional) wether the bot/user is afk or not
@@ -404,6 +412,34 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					catch (const std::exception &e) {
 						log.error("ignoring exception in on_message: " + string(e.what()));
 					}
+				});
+			}
+			else if (event_name == "TYPING_START") {
+				log.debug(conversions::to_utf8string(data.serialize()));
+
+				string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
+				//string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+				User user = User(conversions::to_utf8string(data.at(U("user_id")).as_string()), _token);
+				TextChannel channel = TextChannel(channel_id, _token);
+				string timestamp = conversions::to_utf8string(data.at(U("timestamp")).as_string());
+
+				/*if (is_valid_field("guild_id")) {
+					channel = new GuildChannel(channel_id, _token);
+					((GuildChannel *)channel)->guild = get_guild(guild_id);
+				}
+				else {
+					channel = new TextChannel(channel_id, _token);
+				}*/
+
+				pplx::create_task([this, user, channel, timestamp] {
+					try {
+						on_typing_start(user, channel, timestamp);
+					}
+					catch (exception &e) {
+						log.error("ignoring exception in on_typing_start: " + string(e.what()));
+					}
+
+					//delete channel;
 				});
 			}
 			else if (event_name == "VOICE_STATE_UPDATE") {

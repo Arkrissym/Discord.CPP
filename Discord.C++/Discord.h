@@ -78,6 +78,8 @@ namespace DiscordCPP {
 		DLL_EXPORT virtual void on_user_join(Member member, Guild guild);
 		///called when a User is removed from a Guild (leave/kick/ban)
 		DLL_EXPORT virtual void on_user_remove(User user, Guild guild);
+		///called when a User starts typing
+		DLL_EXPORT virtual void on_typing_start(User user, TextChannel channel, string timestamp);
 
 		///updates the presence of user
 		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity = Activity(), bool afk = false, int shard_id = -1);

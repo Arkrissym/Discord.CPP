@@ -125,7 +125,7 @@ However below is an overview of features based on Discord's [library comparision
 |----------|---------|
 |Join|Yes|
 |Leave|Yes|
-|Typing|No|
+|Typing|Yes|
 
 #### Voice
 |Feature   |working? |

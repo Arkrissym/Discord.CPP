@@ -97,7 +97,7 @@ void DiscordCPP::Discord::on_user_unban(User user, Guild guild) {
 	log.debug("on_member_unban");
 }
 
-/**	@param[in]	user	the User who has joined
+/**	@param[in]	member	the User who has joined
 	@param[in]	guild	the Guild the User has joined
 */
 void DiscordCPP::Discord::on_user_join(Member member, Guild guild) {

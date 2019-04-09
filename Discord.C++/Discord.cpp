@@ -115,7 +115,7 @@ void DiscordCPP::Discord::on_user_remove(User user, Guild guild) {
 	@param[in]	channel		the TextChannel where the USer started typing
 	@param[in]	timestamp	(unix time) when the User started typing
 */
-void DiscordCPP::Discord::on_typing_start(User user, TextChannel channel, string timestamp) {
+void DiscordCPP::Discord::on_typing_start(User user, TextChannel channel, unsigned int timestamp) {
 	log.debug("on_typing_start");
 }
 
@@ -419,9 +419,15 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 
 				string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
 				//string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-				User user = User(conversions::to_utf8string(data.at(U("user_id")).as_string()), _token);
+				User user;
+				if (is_valid_field("user_id")) {
+					user = User(conversions::to_utf8string(data.at(U("user_id")).as_string()), _token);
+				}
+				else {
+					user = User(data.at(U("user")), _token);
+				}
 				TextChannel channel = TextChannel(channel_id, _token);
-				string timestamp = conversions::to_utf8string(data.at(U("timestamp")).as_string());
+				unsigned int timestamp = data.at(U("timestamp")).as_integer();
 
 				/*if (is_valid_field("guild_id")) {
 					channel = new GuildChannel(channel_id, _token);

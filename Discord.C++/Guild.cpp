@@ -197,6 +197,56 @@ DiscordCPP::Guild::~Guild() {
 	}
 }
 
+void DiscordCPP::Guild::_add_channel(Channel * channel) {
+	channels.push_back(channel);
+}
+
+void DiscordCPP::Guild::_update_channel(Channel * channel) {
+	for (size_t i = 0; i < channels.size(); i++) {
+		if (channels[i]->id == channel->id) {
+			delete channels[i];
+			channels.erase(channels.begin() + i);
+			channels.push_back(channel);
+			break;
+		}
+	}
+}
+
+void DiscordCPP::Guild::_remove_channel(string channel_id) {
+	for (size_t i = 0; i < channels.size(); i++) {
+		if (channels[i]->id == channel_id) {
+			delete channels[i];
+			channels.erase(channels.begin() + i);
+			break;
+		}
+	}
+}
+
+void DiscordCPP::Guild::_add_member(Member * member) {
+	members.push_back(member);
+	member_count += 1;
+}
+
+void DiscordCPP::Guild::_update_member(Member * member) {
+	for (size_t i = 0; i < members.size(); i++) {
+		if (members[i]->id == member->id) {
+			delete members[i];
+			members.erase(members.begin() + i);
+			members.push_back(member);
+		}
+	}
+}
+
+void DiscordCPP::Guild::_remove_member(string member_id) {
+	for (size_t i = 0; i < members.size(); i++) {
+		if (members[i]->id == member_id) {
+			delete members[i];
+			members.erase(members.begin() + i);
+			member_count -= 1;
+		}
+	}
+}
+
 ///@throws HTTPError
 void DiscordCPP::Guild::leave() {
 	string url = "/guilds/@me/guilds/" + id;
@@ -212,8 +262,8 @@ void DiscordCPP::Guild::delete_guild() {
 /**	@param[in]	user	User to kick
 	@throws HTTPError
 */
-void DiscordCPP::Guild::kick(User * user) {
-	string url = "/guilds/" + id + "/members/" + user->id;
+void DiscordCPP::Guild::kick(User user) {
+	string url = "/guilds/" + id + "/members/" + user.id;
 	api_call(url, methods::DEL);
 }
 
@@ -222,15 +272,15 @@ void DiscordCPP::Guild::kick(User * user) {
 	@param[in]	delete_message_days	(optional) number of days to delete messages from user (0-7)
 	@throws HTTPError
 */
-void DiscordCPP::Guild::ban(User * user, string reason, int delete_message_days) {
-	string url = "/guilds/" + id + "/bans/" + user->id + "?delete-message-days=" + to_string(delete_message_days) + "&reason=" + urlencode(reason);
+void DiscordCPP::Guild::ban(User user, string reason, int delete_message_days) {
+	string url = "/guilds/" + id + "/bans/" + user.id + "?delete-message-days=" + to_string(delete_message_days) + "&reason=" + urlencode(reason);
 	api_call(url, methods::PUT);
 }
 
 /**	@param[in]	user	User to kick
 	@throws HTTPError
 */
-void DiscordCPP::Guild::unban(User * user) {
-	string url = "/guilds/" + id + "/bans/" + user->id;
+void DiscordCPP::Guild::unban(User user) {
+	string url = "/guilds/" + id + "/bans/" + user.id;
 	api_call(url, methods::DEL);
 }

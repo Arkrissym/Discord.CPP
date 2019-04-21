@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['leave',['leave',['../class_discord_c_p_p_1_1_guild.html#aeae46cf4bd55ee57c53967916b70d2a9',1,'DiscordCPP::Guild']]],
-  ['logger',['Logger',['../class_logger.html#abc41bfb031d896170c7675fa96a6b30c',1,'Logger::Logger()'],['../class_logger.html#a9e64dc7bb0d4e6c03b69884bea650895',1,'Logger::Logger(std::string)'],['../class_logger.html#a7ebe8c09f42bcd9d428a70ea0267e231',1,'Logger::Logger(const Logger &amp;old)']]]
+  ['handle_5fraw_5fevent',['handle_raw_event',['../class_discord_c_p_p_1_1_discord.html#a4b5d73b8f6ffbadbf02e18a7e4a13919',1,'DiscordCPP::Discord']]],
+  ['hexchar',['hexchar',['../static_8cpp.html#aca55991c1588556e7c46c5477f90aa76',1,'hexchar(unsigned char c, unsigned char &amp;hex1, unsigned char &amp;hex2):&#160;static.cpp'],['../static_8h.html#aca55991c1588556e7c46c5477f90aa76',1,'hexchar(unsigned char c, unsigned char &amp;hex1, unsigned char &amp;hex2):&#160;static.cpp']]],
+  ['history',['history',['../class_discord_c_p_p_1_1_text_channel.html#ab3f02715751b8e32d07d1ead813431b6',1,'DiscordCPP::TextChannel']]],
+  ['httperror',['HTTPError',['../class_discord_c_p_p_1_1_h_t_t_p_error.html#a75a899931e1a1bbf8d05f3eb36e49f33',1,'DiscordCPP::HTTPError']]]
 ];

@@ -1,10 +1,25 @@
 var searchData=
 [
-  ['name',['name',['../class_discord_c_p_p_1_1_activity.html#a81a49ee1b1597cd81373b5403d890db1',1,'DiscordCPP::Activity::name()'],['../class_discord_c_p_p_1_1_channel.html#a8ce84521d81f270663018bacee18b22f',1,'DiscordCPP::Channel::name()'],['../struct_discord_c_p_p_1_1_embed_1_1_provider.html#a8fe5b4c48f561c355fdcce1f82f31373',1,'DiscordCPP::Embed::Provider::name()'],['../struct_discord_c_p_p_1_1_embed_1_1_author.html#adc2ae43a411986ba809d7e65391291d7',1,'DiscordCPP::Embed::Author::name()'],['../struct_discord_c_p_p_1_1_embed_1_1_field.html#ab2f680c53c4e307ca947379ae7a92aa0',1,'DiscordCPP::Embed::Field::name()'],['../class_discord_c_p_p_1_1_guild.html#a5ef6298c313e50ad8b41ab965e58e69d',1,'DiscordCPP::Guild::name()']]],
-  ['nick',['nick',['../class_discord_c_p_p_1_1_member.html#abee7c358ed918eb893f5716735c84263',1,'DiscordCPP::Member']]],
-  ['nitro',['Nitro',['../class_discord_c_p_p_1_1_user.html#a54885f78aec356ea66c3613c8953a910ad76130a9e474a98289d686d035895fa3',1,'DiscordCPP::User']]],
-  ['nitroclassic',['NitroClassic',['../class_discord_c_p_p_1_1_user.html#a54885f78aec356ea66c3613c8953a910a1485e3903e92d2fbf686091b3ef0266b',1,'DiscordCPP::User']]],
-  ['noactivity',['NoActivity',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018a098da1d85ece28ad1aa46437d17f7adf',1,'DiscordCPP::ActivityTypes']]],
-  ['none',['None',['../class_discord_c_p_p_1_1_user.html#a54885f78aec356ea66c3613c8953a910a911ef208bfbbabdb6587919be114e2a6',1,'DiscordCPP::User::None()'],['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4acad6f4ae09050c5cf56b9d40bc586967',1,'DiscordCPP::VerificationLevel::NONE()'],['../namespace_discord_c_p_p_1_1_m_f_a_level.html#af2e68d7f818558e80e74879712909d42a2a2b84c7fc109787c6dfadb94cc7f6dd',1,'DiscordCPP::MFALevel::NONE()']]],
-  ['nsfw',['nsfw',['../class_discord_c_p_p_1_1_channel.html#a864c30354a50db06b955bc98d585e238',1,'DiscordCPP::Channel']]]
+  ['maingateway',['MainGateway',['../class_discord_c_p_p_1_1_main_gateway.html',1,'DiscordCPP::MainGateway'],['../class_discord_c_p_p_1_1_main_gateway.html#a33ab0642bd1477dda14fe2701c780e7b',1,'DiscordCPP::MainGateway::MainGateway()']]],
+  ['maingateway_2ecpp',['MainGateway.cpp',['../_main_gateway_8cpp.html',1,'']]],
+  ['maingateway_2eh',['MainGateway.h',['../_main_gateway_8h.html',1,'']]],
+  ['manage_5fcache',['manage_cache',['../_discord_object_8cpp.html#a3955b4051f520389666aa25e70663b63',1,'DiscordObject.cpp']]],
+  ['max_5fpacket_5fsize',['MAX_PACKET_SIZE',['../_voice_client_8cpp.html#a879456c3b8e2853f7044d764e9c180d4',1,'VoiceClient.cpp']]],
+  ['medium',['MEDIUM',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4a19624218056a732a9da1dd66c56acf68',1,'DiscordCPP::VerificationLevel']]],
+  ['member',['Member',['../class_discord_c_p_p_1_1_member.html',1,'DiscordCPP::Member'],['../class_discord_c_p_p_1_1_member.html#a52ea7360aad5a5cd5024b279b87c7c79',1,'DiscordCPP::Member::Member(value data, string_t token)'],['../class_discord_c_p_p_1_1_member.html#a42f700c2e22e2aa5bc9bb5f29807fd72',1,'DiscordCPP::Member::Member()']]],
+  ['member_2ecpp',['Member.cpp',['../_member_8cpp.html',1,'']]],
+  ['member_2eh',['Member.h',['../_member_8h.html',1,'']]],
+  ['member_5fcount',['member_count',['../class_discord_c_p_p_1_1_guild.html#ab10c1ad384ac012715e48ac0a56bde82',1,'DiscordCPP::Guild']]],
+  ['members',['members',['../class_discord_c_p_p_1_1_guild.html#a7860e5065378f6b23b3e22004a55d253',1,'DiscordCPP::Guild']]],
+  ['members_5fwithout_5froles',['MEMBERS_WITHOUT_ROLES',['../namespace_discord_c_p_p_1_1_explicit_content_filter_level.html#aa3826261bb36372611c15559b881f712a84e5245367b8814f2396a4f7113277a0',1,'DiscordCPP::ExplicitContentFilterLevel']]],
+  ['mention_5feveryone',['mention_everyone',['../class_discord_c_p_p_1_1_message.html#aa889a6c31f4b9a8777bdd9e7f60c2c18',1,'DiscordCPP::Message']]],
+  ['mentions',['mentions',['../class_discord_c_p_p_1_1_message.html#a68a3c7cb7dcc025b826e2befcd8c4c9d',1,'DiscordCPP::Message']]],
+  ['message',['Message',['../class_discord_c_p_p_1_1_message.html',1,'DiscordCPP::Message'],['../class_discord_c_p_p_1_1_message.html#aec1a859d9ac9502854a3cbc8f5e783bb',1,'DiscordCPP::Message::Message(value data, string_t token)'],['../class_discord_c_p_p_1_1_message.html#a9f4c8e841c510c06237a4870092822c2',1,'DiscordCPP::Message::Message(const Message &amp;old)'],['../class_discord_c_p_p_1_1_message.html#a3b6faaf61a47576228e35f83efc37746',1,'DiscordCPP::Message::Message()']]],
+  ['message_2ecpp',['Message.cpp',['../_message_8cpp.html',1,'']]],
+  ['message_2eh',['Message.h',['../_message_8h.html',1,'']]],
+  ['messagetype',['MessageType',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7',1,'DiscordCPP::MessageType']]],
+  ['mfa_5fenabled',['mfa_enabled',['../class_discord_c_p_p_1_1_user.html#a1dbf0ab8ecf94b596d2884be3e04638f',1,'DiscordCPP::User']]],
+  ['mfa_5flevel',['mfa_level',['../class_discord_c_p_p_1_1_guild.html#a0f2630d2a346b5b87a094763cbd8cf67',1,'DiscordCPP::Guild']]],
+  ['mfalevel',['MFALevel',['../namespace_discord_c_p_p_1_1_m_f_a_level.html#af2e68d7f818558e80e74879712909d42',1,'DiscordCPP::MFALevel']]],
+  ['mute',['mute',['../class_discord_c_p_p_1_1_member.html#a7e46ccab614ca562b9a682b38eeaa190',1,'DiscordCPP::Member']]]
 ];

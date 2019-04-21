@@ -2,7 +2,7 @@
 
 using namespace std;
 
-static Loglevel _level = DEBUG;
+static Loglevel _level = Debug;
 
 Logger::Logger() {
 
@@ -29,16 +29,16 @@ void Logger::print(Loglevel level, std::string message) {
 	if (level >= _level) {
 		string level_name;
 		switch (level) {
-			case DEBUG:
+			case Debug:
 				level_name = "DEBUG";
 				break;
-			case INFO:
+			case Info:
 				level_name = "INFO";
 				break;
-			case WARNING:
+			case Warning:
 				level_name = "WARNING";
 				break;
-			case ERROR:
+			case Error:
 				level_name = "ERROR";
 				break;
 			default:
@@ -50,17 +50,17 @@ void Logger::print(Loglevel level, std::string message) {
 }
 
 void Logger::debug(std::string message) {
-	print(DEBUG, message);
+	print(Debug, message);
 }
 
 void Logger::info(std::string message) {
-	print(INFO, message);
+	print(Info, message);
 }
 
 void Logger::warning(std::string message) {
-	print(WARNING, message);
+	print(Warning, message);
 }
 
 void Logger::error(std::string message) {
-	print(ERROR, message);
+	print(Error, message);
 }

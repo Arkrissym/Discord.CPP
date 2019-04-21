@@ -83,6 +83,42 @@ void DiscordCPP::Discord::on_message(Message message) {
 	log.debug("on_message");
 }
 
+/**	@param[in]	user	the User who has been banned
+	@param[in]	guild	the Guild the User has been banned from
+*/
+void DiscordCPP::Discord::on_user_ban(User user, Guild guild) {
+	log.debug("on_member_ban");
+}
+
+/**	@param[in]	user	the User who has been unbanned
+	@param[in]	guild	the Guild the User has been unbanned from
+*/
+void DiscordCPP::Discord::on_user_unban(User user, Guild guild) {
+	log.debug("on_member_unban");
+}
+
+/**	@param[in]	member	the User who has joined
+	@param[in]	guild	the Guild the User has joined
+*/
+void DiscordCPP::Discord::on_user_join(Member member, Guild guild) {
+	log.debug("on_member_join");
+}
+
+/**	@param[in]	user	the User who has been removed
+	@param[in]	guild	the Guild the User has been removed from
+*/
+void DiscordCPP::Discord::on_user_remove(User user, Guild guild) {
+	log.debug("on_member_remove");
+}
+
+/**	@param[in]	user		the User that started typing
+	@param[in]	channel		the TextChannel where the USer started typing
+	@param[in]	timestamp	(unix time) when the User started typing
+*/
+void DiscordCPP::Discord::on_typing_start(User user, TextChannel channel, unsigned int timestamp) {
+	log.debug("on_typing_start");
+}
+
 /**	@param[in]	status		the new status (see DiscordStatus)
 	@param[in]	activity	(optional) the Activity
 	@param[in]	afk			(optional) wether the bot/user is afk or not
@@ -120,6 +156,18 @@ DiscordCPP::MainGateway * DiscordCPP::Discord::get_shard(unsigned int shard_id) 
 	}
 
 	throw ClientException("shard with id " + to_string(shard_id) + " not found");
+
+	return NULL;
+}
+
+DiscordCPP::Guild * DiscordCPP::Discord::get_guild(string guild_id) {
+	for (size_t i = 0; i < _guilds.size(); i++) {
+		if (_guilds[i]->id == guild_id) {
+			return _guilds[i];
+		}
+	}
+
+	throw ClientException("Guild with id " + guild_id + " not found");
 
 	return NULL;
 }
@@ -185,13 +233,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
 					Channel *channel = Channel::from_json(this, data, _token);
 
-					for (unsigned int i = 0; i < _guilds.size(); i++) {
-						if (_guilds[i]->id == guild_id) {
-							_guilds[i]->channels.push_back(channel);
-
-							break;
-						}
-					}
+					get_guild(guild_id)->_add_channel(channel);
 				}
 			}
 			else if (event_name == "CHANNEL_UPDATE") {
@@ -199,19 +241,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
 					Channel *channel = Channel::from_json(this, data, _token);
 
-					for (unsigned int i = 0; i < _guilds.size(); i++) {
-						if (_guilds[i]->id == guild_id) {
-							for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
-								if (_guilds[i]->channels[j]->id == channel->id) {
-									_guilds[i]->channels.erase(_guilds[i]->channels.begin() + j);
-									_guilds[i]->channels.push_back(channel);
-									break;
-								}
-							}
-
-							break;
-						}
-					}
+					get_guild(guild_id)->_update_channel(channel);
 				}
 			}
 			else if (event_name == "CHANNEL_DELETE") {
@@ -219,18 +249,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
 					string channel_id = conversions::to_utf8string(data.at(U("id")).as_string());
 
-					for (unsigned int i = 0; i < _guilds.size(); i++) {
-						if (_guilds[i]->id == guild_id) {
-							for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
-								if (_guilds[i]->channels[j]->id == channel_id) {
-									_guilds[i]->channels.erase(_guilds[i]->channels.begin() + j);
-									break;
-								}
-							}
-
-							break;
-						}
-					}
+					get_guild(guild_id)->_remove_channel(channel_id);
 				}
 			}
 			else if (event_name == "CHANNEL_PINS_UPDATE") {
@@ -247,16 +266,6 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 						}
 					}
 				}
-			}
-			else if (event_name == "MESSAGE_CREATE") {
-				pplx::create_task([this, data] {
-					try {
-						on_message(Message(data, _token));
-					}
-					catch (const std::exception &e) {
-						log.error("ignoring exception in on_message: " + string(e.what()));
-					}
-				});
 			}
 			else if (event_name == "GUILD_CREATE") {
 				Guild *tmp_guild = new Guild(this, data, _token);
@@ -286,6 +295,158 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 						return;
 					}
 				}
+			}
+			else if (event_name == "GUILD_DELETE") {
+				string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+
+				for (unsigned int i = 0; i < _guilds.size(); i++) {
+					if (_guilds[i]->id == guild_id) {
+						if (is_valid_field("unavailable") && (data.at(U("unavailable")).as_bool() == true)) {
+							_guilds[i]->unavailable = true;
+						}
+						else {
+							_guilds.erase(_guilds.begin() + i);
+						}
+						break;
+					}
+				}
+			}
+			else if (event_name == "GUILD_BAN_ADD") {
+				Guild guild = Guild(*get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string())));
+				User user = User(data.at(U("user")), _token);
+
+				pplx::create_task([this, user, guild] {
+					try {
+						on_user_ban(user, guild);
+					}
+					catch (exception &e) {
+						log.error("ignoring exception in on_user_ban: " + string(e.what()));
+					}
+				});
+			}
+			else if (event_name == "GUILD_BAN_REMOVE") {
+				Guild guild = Guild(*get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string())));
+				User user = User(data.at(U("user")), _token);
+
+				pplx::create_task([this, user, guild] {
+					try {
+						on_user_unban(user, guild);
+					}
+					catch (exception &e) {
+						log.error("ignoring exception in on_user_unban: " + string(e.what()));
+					}
+				});
+			}
+			//else if (event_name == "GUILD_EMOJIS_UPDATE") {
+
+			//}
+			//else if (event_name == "GUILD_INTEGRATIONS_UPDATE") {
+
+			//}
+			else if (event_name == "GUILD_MEMBER_ADD") {
+				if (is_valid_field("guild_id")) {
+					Guild *guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
+					Member *member = new Member(data, _token);
+
+					guild->_add_member(member);
+
+					pplx::create_task([this, member, guild] {
+						try {
+							on_user_join(Member(*member), Guild(*guild));
+						}
+						catch (exception &e) {
+							log.error("ignoring exception on on_member_join: " + string(e.what()));
+						}
+					});
+				}
+			}
+			else if (event_name == "GUILD_MEMBER_UPDATE") {
+				if (is_valid_field("guild_id")) {
+					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+					Member *member = new Member(data, _token);
+
+					get_guild(guild_id)->_update_member(member);
+				}
+			}
+			else if (event_name == "GUILD_MEMBER_REMOVE") {
+				if (is_valid_field("guild_id")) {
+					Guild *guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
+					User user = User(data.at(U("user")), _token);
+
+					guild->_remove_member(user.id);
+
+					pplx::create_task([this, user, guild] {
+						try {
+							on_user_remove(user, Guild(*guild));
+						}
+						catch (exception &e) {
+							log.error("ignoring exception on on_member_join: " + string(e.what()));
+						}
+					});
+				}
+			}
+			else if (event_name == "MESSAGE_CREATE") {
+				if (is_valid_field("guild_id")) {
+					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+					string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
+					string msg_id = conversions::to_utf8string(data.at(U("id")).as_string());
+
+					for (unsigned int i = 0; i < _guilds.size(); i++) {
+						if (_guilds[i]->id == guild_id) {
+							for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
+								if (_guilds[i]->channels[j]->id == channel_id) {
+									((TextChannel *)_guilds[i]->channels[j])->last_message_id = msg_id;
+									break;
+								}
+							}
+
+							break;
+						}
+					}
+				}
+
+				pplx::create_task([this, data] {
+					try {
+						on_message(Message(data, _token));
+					}
+					catch (const std::exception &e) {
+						log.error("ignoring exception in on_message: " + string(e.what()));
+					}
+				});
+			}
+			else if (event_name == "TYPING_START") {
+				log.debug(conversions::to_utf8string(data.serialize()));
+
+				string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
+				//string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+				User user;
+				if (is_valid_field("user_id")) {
+					user = User(conversions::to_utf8string(data.at(U("user_id")).as_string()), _token);
+				}
+				else {
+					user = User(data.at(U("user")), _token);
+				}
+				TextChannel channel = TextChannel(channel_id, _token);
+				unsigned int timestamp = data.at(U("timestamp")).as_integer();
+
+				/*if (is_valid_field("guild_id")) {
+					channel = new GuildChannel(channel_id, _token);
+					((GuildChannel *)channel)->guild = get_guild(guild_id);
+				}
+				else {
+					channel = new TextChannel(channel_id, _token);
+				}*/
+
+				pplx::create_task([this, user, channel, timestamp] {
+					try {
+						on_typing_start(user, channel, timestamp);
+					}
+					catch (exception &e) {
+						log.error("ignoring exception in on_typing_start: " + string(e.what()));
+					}
+
+					//delete channel;
+				});
 			}
 			else if (event_name == "VOICE_STATE_UPDATE") {
 				if (_user->id != conversions::to_utf8string(data.at(U("user_id")).as_string()))
@@ -339,7 +500,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			}
 			else {
 				log.warning("ignoring event: " + event_name);
-				//log.debug(conversions::to_utf8string(data.serialize()));
+				log.debug(conversions::to_utf8string(data.serialize()));
 			}
 		}
 		catch (exception &e) {

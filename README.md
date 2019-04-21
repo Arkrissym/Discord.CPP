@@ -115,17 +115,17 @@ However below is an overview of features based on Discord's [library comparision
 |Event     |handled? |
 |----------|---------|
 |Create|Yes|
-|Delete|No|
+|Delete|Yes|
 |Update|Yes|
-|Ban|No|
-|Unban|No|
+|Ban|Yes|
+|Unban|Yes|
 
 #### User Events
 |Event     |handled? |
 |----------|---------|
-|Join|No|
-|Leave|No|
-|Typing|No|
+|Join|Yes|
+|Leave|Yes|
+|Typing|Yes|
 
 #### Voice
 |Feature   |working? |

@@ -19,7 +19,6 @@ var searchData=
   ['_5fmessage_5fhandler',['_message_handler',['../class_discord_c_p_p_1_1_gateway.html#a4adc28e41f0e0246de2eedb5d076d326',1,'DiscordCPP::Gateway']]],
   ['_5fname',['_name',['../class_logger.html#af050fc8c757429af3e17f336339af136',1,'Logger']]],
   ['_5fnum_5fshards',['_num_shards',['../class_discord_c_p_p_1_1_discord.html#ab05d946598a186194fbf264b904690de',1,'DiscordCPP::Discord']]],
-  ['_5fprivate_5fchannels',['_private_channels',['../class_discord_c_p_p_1_1_discord.html#a3e6e122a170adaecd4af5da8a91b146a',1,'DiscordCPP::Discord']]],
   ['_5fprovider',['_provider',['../class_discord_c_p_p_1_1_embed.html#aec81744679a78ee458cfc88b7e8e70d5',1,'DiscordCPP::Embed']]],
   ['_5freconnect_5ftimeout',['_reconnect_timeout',['../class_discord_c_p_p_1_1_gateway.html#a6d0f89646622d33fe67827f5d66b3d09',1,'DiscordCPP::Gateway']]],
   ['_5fthumbnail',['_thumbnail',['../class_discord_c_p_p_1_1_embed.html#aa9519cb3915a1bb5abe6e20a272e0e30',1,'DiscordCPP::Embed']]],

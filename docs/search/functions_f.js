@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['udp_5fclient',['udp_client',['../class_discord_c_p_p_1_1udp__client.html#a5d3345fb845d02039308e55273b70c7f',1,'DiscordCPP::udp_client::udp_client()'],['../class_discord_c_p_p_1_1udp__client.html#ae9117f6321458b20cc39b60c37459154',1,'DiscordCPP::udp_client::udp_client(string_t ip, int port)'],['../class_discord_c_p_p_1_1udp__client.html#a57a6b4d603ee16170bf32e64bdf062db',1,'DiscordCPP::udp_client::udp_client(udp_client &amp;old)=delete']]],
-  ['update_5fpresence',['update_presence',['../class_discord_c_p_p_1_1_discord.html#a78a5a116b813e8146b536be42204a2ad',1,'DiscordCPP::Discord']]],
-  ['user',['User',['../class_discord_c_p_p_1_1_user.html#ad2fa751a66a7d6fb1dc65988adccd57e',1,'DiscordCPP::User::User()'],['../class_discord_c_p_p_1_1_user.html#a70058511fc437893c2f8fa9a88d21d48',1,'DiscordCPP::User::User(value data, string_t token)'],['../class_discord_c_p_p_1_1_user.html#af07cc95329eccfbef2440e1fa33bc0b8',1,'DiscordCPP::User::User(string id, string_t token)']]]
+  ['read',['read',['../class_discord_c_p_p_1_1_audio_source.html#afed76f3dfe86d169ef7b09f2115781c1',1,'DiscordCPP::AudioSource::read()'],['../class_discord_c_p_p_1_1_file_audio_source.html#af816fb5252a149a7e7e8a1685aa598e3',1,'DiscordCPP::FileAudioSource::read()']]],
+  ['receive',['receive',['../class_discord_c_p_p_1_1udp__client.html#a306e52d0a1d0d286f29d629ec2682184',1,'DiscordCPP::udp_client']]]
 ];

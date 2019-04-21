@@ -1,10 +1,24 @@
 var searchData=
 [
-  ['waitfor',['waitFor',['../static_8cpp.html#a96aca8381ac6ec864ace9b90c46fe241',1,'waitFor(const std::chrono::milliseconds ms):&#160;static.cpp'],['../static_8h.html#a96aca8381ac6ec864ace9b90c46fe241',1,'waitFor(const std::chrono::milliseconds ms):&#160;static.cpp']]],
-  ['warning',['warning',['../class_logger.html#a3306a4d8b858890ba49f59224024bd82',1,'Logger::warning()'],['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdca984de77c680eaff141ec910e25568a81',1,'WARNING():&#160;Logger.h']]],
-  ['webhook_5fid',['webhook_id',['../class_discord_c_p_p_1_1_message.html#af68fb714fdccd9c85846e5da6e0a18bd',1,'DiscordCPP::Message']]],
-  ['what',['what',['../class_discord_c_p_p_1_1_discord_exception.html#a1b55f622e10da40c7f1da273ee52f2aa',1,'DiscordCPP::DiscordException']]],
-  ['widget_5fchannel',['widget_channel',['../class_discord_c_p_p_1_1_guild.html#a8e743c8d2f6d7c9925b2c74b7bf42e03',1,'DiscordCPP::Guild']]],
-  ['widget_5fenabled',['widget_enabled',['../class_discord_c_p_p_1_1_guild.html#a64729c8024077e823479009b76363dc2',1,'DiscordCPP::Guild']]],
-  ['width',['width',['../struct_discord_c_p_p_1_1_embed_1_1_image.html#ac3b0a2a84b572ea4b0cc08084fb4f996',1,'DiscordCPP::Embed::Image::width()'],['../struct_discord_c_p_p_1_1_embed_1_1_video.html#aad31ccbfcd10719b9fef2a9db50124f0',1,'DiscordCPP::Embed::Video::width()']]]
+  ['connect',['connect',['../class_discord_c_p_p_1_1_discord.html#aef717f30b5ca56e6fd45ef31a560cc57',1,'DiscordCPP::Discord']]],
+  ['value',['value',['../struct_discord_c_p_p_1_1_embed_1_1_field.html#ac8122f5840acb8eb4f5b7392bb5e21f3',1,'DiscordCPP::Embed::Field']]],
+  ['verification_5flevel',['verification_level',['../class_discord_c_p_p_1_1_guild.html#ab98c94afe973fc7c783c5ccdef6949ce',1,'DiscordCPP::Guild']]],
+  ['verificationlevel',['VerificationLevel',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4',1,'DiscordCPP::VerificationLevel']]],
+  ['verified',['verified',['../class_discord_c_p_p_1_1_user.html#a93fb017f3d3065dc15c6f7ca9c7d9b49',1,'DiscordCPP::User']]],
+  ['version',['VERSION',['../static_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf',1,'static.h']]],
+  ['very_5fhigh',['VERY_HIGH',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4a9ece68498e80680dbe8d3a5ca71b6aa4',1,'DiscordCPP::VerificationLevel']]],
+  ['video',['Video',['../struct_discord_c_p_p_1_1_embed_1_1_video.html',1,'DiscordCPP::Embed']]],
+  ['voice_5ftoken',['voice_token',['../class_discord_c_p_p_1_1_voice_state.html#a598c7bb41ab59d125c3e345c21b3db0f',1,'DiscordCPP::VoiceState']]],
+  ['voicechannel',['VoiceChannel',['../class_discord_c_p_p_1_1_voice_channel.html',1,'DiscordCPP::VoiceChannel'],['../class_discord_c_p_p_1_1_voice_channel.html#adbdcb07c1deb7b172a5051a1aec7e9ee',1,'DiscordCPP::VoiceChannel::VoiceChannel(Discord *client, value data, string_t token)'],['../class_discord_c_p_p_1_1_voice_channel.html#a59ca23df82b810d9e27b59b8a2b3a83c',1,'DiscordCPP::VoiceChannel::VoiceChannel(Discord *client, string id, string_t token)'],['../class_discord_c_p_p_1_1_voice_channel.html#a36df0ca123c6c0fc87d824365ac63f7b',1,'DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel &amp;old)'],['../class_discord_c_p_p_1_1_voice_channel.html#acac22a781834e58e48836872bb881cb0',1,'DiscordCPP::VoiceChannel::VoiceChannel()']]],
+  ['voicechannel_2ecpp',['VoiceChannel.cpp',['../_voice_channel_8cpp.html',1,'']]],
+  ['voicechannel_2eh',['VoiceChannel.h',['../_voice_channel_8h.html',1,'']]],
+  ['voiceclient',['VoiceClient',['../class_discord_c_p_p_1_1_voice_client.html',1,'DiscordCPP::VoiceClient'],['../class_discord_c_p_p_1_1_voice_client.html#a0c496c24d8c066c33cd0973045c7db20',1,'DiscordCPP::VoiceClient::VoiceClient(MainGateway **main_ws, string_t voice_token, string_t endpoint, string_t session_id, string_t guild_id, string_t channel_id, string_t user_id)'],['../class_discord_c_p_p_1_1_voice_client.html#a099a7886f0e114915ba5084dd10b2c1f',1,'DiscordCPP::VoiceClient::VoiceClient(const VoiceClient &amp;old)=delete'],['../class_discord_c_p_p_1_1_voice_client.html#a01011c919a3cab32ee31677549ddac21',1,'DiscordCPP::VoiceClient::VoiceClient()']]],
+  ['voiceclient_2ecpp',['VoiceClient.cpp',['../_voice_client_8cpp.html',1,'']]],
+  ['voiceclient_2eh',['VoiceClient.h',['../_voice_client_8h.html',1,'']]],
+  ['voicegateway',['VoiceGateway',['../class_discord_c_p_p_1_1_voice_gateway.html',1,'DiscordCPP::VoiceGateway'],['../class_discord_c_p_p_1_1_voice_gateway.html#ac6965371735d16cd7027a6b58ece37c5',1,'DiscordCPP::VoiceGateway::VoiceGateway()']]],
+  ['voicegateway_2ecpp',['VoiceGateway.cpp',['../_voice_gateway_8cpp.html',1,'']]],
+  ['voicegateway_2eh',['VoiceGateway.h',['../_voice_gateway_8h.html',1,'']]],
+  ['voicestate',['VoiceState',['../class_discord_c_p_p_1_1_voice_state.html',1,'DiscordCPP::VoiceState'],['../class_discord_c_p_p_1_1_voice_state.html#a8aa193c9d50a1f0d6dcd75d52824a0e0',1,'DiscordCPP::VoiceState::VoiceState()']]],
+  ['voicestate_2ecpp',['VoiceState.cpp',['../_voice_state_8cpp.html',1,'']]],
+  ['voicestate_2eh',['VoiceState.h',['../_voice_state_8h.html',1,'']]]
 ];

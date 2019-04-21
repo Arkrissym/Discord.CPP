@@ -135,8 +135,6 @@ DiscordCPP::Message::Message() {
 }
 
 DiscordCPP::Message::~Message() {
-	Logger("dicord.Message").debug("destroyed message object");
-
 	if(channel != NULL)
 		delete channel;
 	if (author != NULL)

@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['voicechannel',['VoiceChannel',['../class_discord_c_p_p_1_1_voice_channel.html#adbdcb07c1deb7b172a5051a1aec7e9ee',1,'DiscordCPP::VoiceChannel::VoiceChannel(Discord *client, value data, string_t token)'],['../class_discord_c_p_p_1_1_voice_channel.html#a59ca23df82b810d9e27b59b8a2b3a83c',1,'DiscordCPP::VoiceChannel::VoiceChannel(Discord *client, string id, string_t token)'],['../class_discord_c_p_p_1_1_voice_channel.html#a36df0ca123c6c0fc87d824365ac63f7b',1,'DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel &amp;old)'],['../class_discord_c_p_p_1_1_voice_channel.html#acac22a781834e58e48836872bb881cb0',1,'DiscordCPP::VoiceChannel::VoiceChannel()']]],
+  ['voiceclient',['VoiceClient',['../class_discord_c_p_p_1_1_voice_client.html#a0c496c24d8c066c33cd0973045c7db20',1,'DiscordCPP::VoiceClient::VoiceClient(MainGateway **main_ws, string_t voice_token, string_t endpoint, string_t session_id, string_t guild_id, string_t channel_id, string_t user_id)'],['../class_discord_c_p_p_1_1_voice_client.html#a099a7886f0e114915ba5084dd10b2c1f',1,'DiscordCPP::VoiceClient::VoiceClient(const VoiceClient &amp;old)=delete'],['../class_discord_c_p_p_1_1_voice_client.html#a01011c919a3cab32ee31677549ddac21',1,'DiscordCPP::VoiceClient::VoiceClient()']]],
+  ['voicegateway',['VoiceGateway',['../class_discord_c_p_p_1_1_voice_gateway.html#ac6965371735d16cd7027a6b58ece37c5',1,'DiscordCPP::VoiceGateway']]],
+  ['voicestate',['VoiceState',['../class_discord_c_p_p_1_1_voice_state.html#a8aa193c9d50a1f0d6dcd75d52824a0e0',1,'DiscordCPP::VoiceState']]]
+];

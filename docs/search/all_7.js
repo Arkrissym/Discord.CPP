@@ -7,6 +7,7 @@ var searchData=
   ['gateway_5furl',['GATEWAY_URL',['../static_8h.html#a5f44de4dc2f28bd239034f62914329ba',1,'static.h']]],
   ['get_5fdmchannel',['get_dmchannel',['../class_discord_c_p_p_1_1_user.html#a90dfcdcdce6aad804121e71579f12edc',1,'DiscordCPP::User']]],
   ['get_5ferror_5fcode',['get_error_code',['../class_discord_c_p_p_1_1_status_code_exception.html#a2ac0ea9f66dc1fa6b57f7ca8d96b8a09',1,'DiscordCPP::StatusCodeException']]],
+  ['get_5fguild',['get_guild',['../class_discord_c_p_p_1_1_discord.html#a1eef5f3179a3c1b0655ff4ada011bcb6',1,'DiscordCPP::Discord']]],
   ['get_5fheartbeat_5fpayload',['get_heartbeat_payload',['../class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504',1,'DiscordCPP::Gateway']]],
   ['get_5fshard',['get_shard',['../class_discord_c_p_p_1_1_discord.html#aafbd0224fb9ae81f455aa6c052ee6760',1,'DiscordCPP::Discord']]],
   ['get_5fshard_5fid',['get_shard_id',['../class_discord_c_p_p_1_1_main_gateway.html#a72d0b8c62cb066c7e6d9190ff811e645',1,'DiscordCPP::MainGateway']]],

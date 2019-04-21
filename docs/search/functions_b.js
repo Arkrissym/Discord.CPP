@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['play',['play',['../class_discord_c_p_p_1_1_voice_client.html#aeff7a33bcfa903d92911f1f8cc02a719',1,'DiscordCPP::VoiceClient']]],
-  ['print',['print',['../class_logger.html#aa20f73127a7004b57728374fcad23530',1,'Logger']]]
+  ['leave',['leave',['../class_discord_c_p_p_1_1_guild.html#aeae46cf4bd55ee57c53967916b70d2a9',1,'DiscordCPP::Guild']]],
+  ['logger',['Logger',['../class_logger.html#abc41bfb031d896170c7675fa96a6b30c',1,'Logger::Logger()'],['../class_logger.html#a9e64dc7bb0d4e6c03b69884bea650895',1,'Logger::Logger(std::string)'],['../class_logger.html#a7ebe8c09f42bcd9d428a70ea0267e231',1,'Logger::Logger(const Logger &amp;old)']]]
 ];

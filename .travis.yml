@@ -9,7 +9,7 @@ compiler:
 addons:
   apt:
     packages:
-    - cpprest-dev
+    - libcpprest-dev
     - libsodium-dev
     - libopus-dev
 

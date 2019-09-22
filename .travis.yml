@@ -1,0 +1,17 @@
+sudo: false
+
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    packages:
+    - cpprest-dev
+    - libsodium-dev
+    - libopus-dev
+
+script:
+  - make

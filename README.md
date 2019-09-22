@@ -1,4 +1,4 @@
-# Discord.CPP
+# Discord.CPP [![Build Status](https://travis-ci.com/Arkrissym/Discord.CPP.svg?branch=master)](https://travis-ci.com/Arkrissym/Discord.CPP)
 Discord.CPP or Discord.C++ is a C++ library for interaction with the Discord API.
 
 ## Documentation

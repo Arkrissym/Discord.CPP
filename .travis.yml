@@ -9,9 +9,12 @@ compiler:
 addons:
   apt:
     packages:
-    - libcpprest-dev
-    - libsodium-dev
-    - libopus-dev
+      - libcpprest-dev
+      - libsodium-dev
+      - libopus-dev
 
 script:
+  - mkdir build
+  - cd build
+  - cmake ..
   - make

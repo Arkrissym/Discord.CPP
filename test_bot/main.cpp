@@ -8,6 +8,10 @@
 #include <chrono>
 #include <thread>
 
+/*	Compile with smth. like this:
+	g++ -Wall -o test main.cpp -ldiscord_cpp -lcpprest -lpthread -lssl -lcrypto
+*/
+
 using namespace DiscordCPP;
 using namespace std;
 
@@ -36,15 +40,15 @@ public:
 	}
 
 	void on_message(Message message) {
-		//log.info(message.author->username + "\" sent " + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
-		
+		log.debug(message.author->username + "\" sent " + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
+
 		if (message.content.compare("?hello") == 0) {
 			Message msg = message.channel->send("Hello World!");
 			log.info("message sent (id: " + msg.channel->id + ")");
 		}
 		else if (message.content == "?guild") {
 			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				message.channel->send(*((GuildChannel *)message.channel)->guild);
+				message.channel->send(*((GuildChannel*)message.channel)->guild);
 			}
 			else {
 				message.channel->send("This is not a guild channel.");
@@ -79,7 +83,7 @@ public:
 			for (int i = 4; i < 7; i++) {
 				embed.add_field("Field", to_string(i), false);
 			}
-			
+
 			message.channel->send(embed);
 		}
 		else if (message.content == "?dm") {
@@ -100,10 +104,10 @@ public:
 
 			string channel_name = message.content.substr(6);
 
-			Guild *guild = NULL;
+			Guild* guild = NULL;
 
 			for (unsigned int i = 0; i < _guilds.size(); i++) {
-				if (((GuildChannel *)message.channel)->guild->id == _guilds[i]->id) {
+				if (((GuildChannel*)message.channel)->guild->id == _guilds[i]->id) {
 					guild = _guilds[i];
 					break;
 				}
@@ -111,20 +115,20 @@ public:
 
 			for (unsigned int i = 0; i < guild->channels.size(); i++) {
 				if (guild->channels[i]->name.compare(channel_name) == 0) {
-					VoiceClient *vc = ((VoiceChannel *)guild->channels[i])->connect();
-					FileAudioSource *source = new FileAudioSource("test.wav");
+					VoiceClient* vc = ((VoiceChannel*)guild->channels[i])->connect();
+					FileAudioSource* source = new FileAudioSource("test.wav");
 
 					try {
 						vc->play(source).wait();
 					}
-					catch (const OpusError &e) {
+					catch (const OpusError& e) {
 						log.error("Opus error: " + string(e.what()) + " (code: " + to_string(e.get_error_code()) + ")");
 					}
-					catch (const ClientException &e) {
+					catch (const ClientException& e) {
 						log.error("ClientException in vc->play: " + string(e.what()));
 					}
 					vc->disconnect().wait();
-					
+
 					delete source;
 					delete vc;
 
@@ -136,7 +140,7 @@ public:
 		}
 		else if (message.content == "?leave_guild") {
 			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				((GuildChannel *)message.channel)->guild->leave();
+				((GuildChannel*)message.channel)->guild->leave();
 			}
 			else {
 				message.channel->send("This is not a guild channel.");
@@ -144,7 +148,7 @@ public:
 		}
 		else if (message.content == "?delete_guild") {
 			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				((GuildChannel *)message.channel)->guild->delete_guild();
+				((GuildChannel*)message.channel)->guild->delete_guild();
 			}
 			else {
 				message.channel->send("This is not a guild channel.");
@@ -152,17 +156,17 @@ public:
 		}
 		else if (message.content.compare(0, 6, "?kick ") == 0) {
 			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				Guild *guild = NULL;
+				Guild* guild = NULL;
 
 				for (unsigned int i = 0; i < _guilds.size(); i++) {
-					if (((GuildChannel *)message.channel)->guild->id == _guilds[i]->id) {
+					if (((GuildChannel*)message.channel)->guild->id == _guilds[i]->id) {
 						guild = _guilds[i];
 						break;
 					}
 				}
 
 				string user_name = message.content.substr(6);
-				Member *user = NULL;
+				Member* user = NULL;
 
 				for (unsigned int i = 0; i < guild->members.size(); i++) {
 					log.debug(string(*guild->members[i]));
@@ -185,17 +189,17 @@ public:
 		}
 		else if (message.content.compare(0, 5, "?ban ") == 0) {
 			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				Guild *guild = NULL;
+				Guild* guild = NULL;
 
 				for (unsigned int i = 0; i < _guilds.size(); i++) {
-					if (((GuildChannel *)message.channel)->guild->id == _guilds[i]->id) {
+					if (((GuildChannel*)message.channel)->guild->id == _guilds[i]->id) {
 						guild = _guilds[i];
 						break;
 					}
 				}
 
 				string user_name = message.content.substr(5);
-				Member *user_ptr = NULL;
+				Member* user_ptr = NULL;
 
 				for (unsigned int i = 0; i < guild->members.size(); i++) {
 					if (string(*guild->members[i]) == user_name) {
@@ -203,7 +207,7 @@ public:
 						break;
 					}
 				}
-			
+
 				if (user_ptr == NULL) {
 					message.channel->send("User " + user_name + " not found.");
 				}
@@ -227,7 +231,7 @@ public:
 };
 
 int main() {
-	char *token;
+	char* token;
 #ifdef _WIN32
 	size_t len;
 	if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {
@@ -238,19 +242,14 @@ int main() {
 	token = getenv("DISCORD_TEST_TOKEN");
 #endif
 
-	myClient *client = new myClient(token);
+	myClient client = myClient(token);
 
-#ifdef _WIN32
-	free(token);
-#endif
 
-	client->log.set_log_level(Debug);
+	client.log.set_log_level(Debug);
 
 	while (1) {
 		this_thread::sleep_for(chrono::seconds(1));
 	}
-
-	delete client;
 
 	return 0;
 }

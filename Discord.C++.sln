@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Discord.C++", "Discord.C++\Discord.C++.vcxproj", "{41D6DDB3-E6FC-4287-9DF3-3C409DD42E65}"
 EndProject
@@ -12,8 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bot", "test_bot\test_b
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C11FCB8A-DBDC-47BA-A82B-B42FAB0B8C16}"
 	ProjectSection(SolutionItems) = preProject
+		CMakeLists.txt = CMakeLists.txt
 		Dockerfile = Dockerfile
-		Makefile = Makefile
 		README.md = README.md
 	EndProjectSection
 EndProject

@@ -1,9 +1,6 @@
-os:
-  - linux
-  - osx
+os: linux
 
 dist: bionic
-osx_image: xcode11
 
 language: cpp
 
@@ -17,11 +14,6 @@ addons:
       - libcpprest-dev
       - libsodium-dev
       - libopus-dev
-  homebrew:
-    packages:
-      - cpprestsdk
-      - libsodium
-      - opus
 
 script:
   - mkdir build

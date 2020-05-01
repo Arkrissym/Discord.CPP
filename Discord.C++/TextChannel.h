@@ -1,7 +1,5 @@
 #pragma once
 #include "Channel.h"
-//#include "Message.h"
-//#include "Embed.h"
 
 #include <cpprest/json.h>
 
@@ -33,20 +31,20 @@ namespace DiscordCPP {
 		///amount of seconds a User has to wait before sending another message(0-120). Bots, as well as Users with MANAGE_MESSAGES or MANAGE_CHANNELS Permissions are unaffected.
 		int rate_limit_per_user = 0;
 
-		DLL_EXPORT TextChannel(value data, string_t token);
-		DLL_EXPORT TextChannel(string id, string_t token);
-		DLL_EXPORT TextChannel(const TextChannel &old);
+		DLL_EXPORT TextChannel(const value& data, const string_t& token);
+		DLL_EXPORT TextChannel(const string& id, const string_t& token);
+		DLL_EXPORT TextChannel(const TextChannel& old);
 		DLL_EXPORT TextChannel();
-		
+
 		///Send a Message to this channel.
-		DLL_EXPORT Message send(string content, bool tts=false);
+		DLL_EXPORT Message send(const string& content, const bool tts = false);
 		DLL_EXPORT Message send(Embed embed);
 
 		///Get messages from channel history
-		DLL_EXPORT vector<shared_ptr<Message>> history(int limit=100, string before="", string after="", string around="");
+		DLL_EXPORT vector<shared_ptr<Message>> history(const int limit = 100, const string& before = "", const string& after = "", const string& around = "");
 
 		///Delete multiple messages from this channel
-		DLL_EXPORT void delete_messages(vector<shared_ptr<Message>> messages);
+		DLL_EXPORT void delete_messages(const vector<shared_ptr<Message>>& messages);
 	};
 
 }

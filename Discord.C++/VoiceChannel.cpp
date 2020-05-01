@@ -12,9 +12,7 @@ using namespace web::json;
 using namespace utility;
 using namespace std;
 
-DiscordCPP::VoiceChannel::VoiceChannel(Discord *client, value data, string_t token) : DiscordCPP::Channel(data, token) {
-	//_log = Logger("discord.voicechannel");
-
+DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const value& data, const string_t& token) : DiscordCPP::Channel(data, token) {
 	_client = client;
 
 	if (is_valid_field("bitrate"))
@@ -30,23 +28,21 @@ DiscordCPP::VoiceChannel::VoiceChannel(Discord *client, value data, string_t tok
 		guild = new Guild(client, conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
 }
 
-DiscordCPP::VoiceChannel::VoiceChannel(Discord *client, string id, string_t token) {
-	//_log = Logger("discord.voicechannel");
-
+DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const string& id, const string_t& token) {
 	string url = "/channels/" + id;
 	_token = token;
 	*this = VoiceChannel(client, api_call(url), token);
 }
 
-DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel & old) : DiscordCPP::Channel(old) {
+DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel& old) : DiscordCPP::Channel(old) {
 	bitrate = old.bitrate;
 	user_limit = old.user_limit;
 	if (old.parent != NULL)
-		parent=new Channel(*old.parent);
+		parent = new Channel(*old.parent);
 }
 
 DiscordCPP::VoiceChannel::VoiceChannel() {
-	//_log = Logger("discord.voicechannel");
+
 }
 
 DiscordCPP::VoiceChannel::~VoiceChannel() {
@@ -57,12 +53,12 @@ DiscordCPP::VoiceChannel::~VoiceChannel() {
 /*	@return		VoiceClient
 	@throws	ClientException
 **/
-DiscordCPP::VoiceClient * DiscordCPP::VoiceChannel::connect() {
+DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
 	if (this->type != ChannelType::GUILD_VOICE) {
 		throw ClientException("channel must be a voice channel");
 	}
 
-	Guild *guild = NULL;
+	const Guild* guild = NULL;
 	for (unsigned int i = 0; i < _client->_guilds.size(); i++) {
 		for (unsigned int j = 0; j < _client->_guilds[i]->channels.size(); j++) {
 			if (_client->_guilds[i]->channels[j]->id == this->id)
@@ -96,7 +92,7 @@ DiscordCPP::VoiceClient * DiscordCPP::VoiceChannel::connect() {
 				return new VoiceClient(&_client->_gateways[gw_id], _client->_voice_states[i]->voice_token, _client->_voice_states[i]->endpoint, _client->_voice_states[i]->session_id, _client->_voice_states[i]->guild_id, _client->_voice_states[i]->channel_id, conversions::to_string_t(_client->_user->id));
 			}
 		}
-		//this_thread::sleep_for(chrono::milliseconds(10));
+
 		waitFor(chrono::milliseconds(10)).wait();
 	}
 

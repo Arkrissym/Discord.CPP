@@ -9,13 +9,12 @@ using namespace std;
 using namespace web::json;
 using namespace utility;
 
-DiscordCPP::Embed::Embed(string title, string description) {
+DiscordCPP::Embed::Embed(const string& title, const string& description) {
 	_title = title;
 	_description = description;
 }
 
 DiscordCPP::Embed::Embed(value data) {
-	//Logger("discord.embed").debug(conversions::to_utf8string(data.serialize()));
 	if (is_valid_field("title")) {
 		_title = conversions::to_utf8string(data.at(U("title")).as_string());
 	}
@@ -98,7 +97,7 @@ void DiscordCPP::Embed::set_color(int color) {
 	@param[in]	Inline	(optional) wether the field shall be displayed inline or not(default is true)
 	@throws	SizeError
 */
-void DiscordCPP::Embed::add_field(string name, string value, bool Inline) {
+void DiscordCPP::Embed::add_field(const string& name, const string& value, bool Inline) {
 	if (_fields.size() >= 25) {
 		throw SizeError("Embed: Cannot add more than 25 fields.");
 	}
@@ -110,22 +109,22 @@ void DiscordCPP::Embed::add_field(string name, string value, bool Inline) {
 	_fields.push_back(field);
 }
 
-void DiscordCPP::Embed::set_author(string name, string url, string icon_url) {
+void DiscordCPP::Embed::set_author(const string& name, const string& url, const string& icon_url) {
 	_author.name = name;
 	_author.url = url;
 	_author.icon_url = icon_url;
 }
 
-void DiscordCPP::Embed::set_footer(string text, string icon_url) {
+void DiscordCPP::Embed::set_footer(const string& text, const string& icon_url) {
 	_footer.text = text;
 	_footer.icon_url = icon_url;
 }
 
-void DiscordCPP::Embed::set_image(string url) {
+void DiscordCPP::Embed::set_image(const string& url) {
 	_image.url = url;
 }
 
-void DiscordCPP::Embed::set_thumbnail(string url) {
+void DiscordCPP::Embed::set_thumbnail(const string& url) {
 	_thumbnail.url = url;
 }
 
@@ -180,8 +179,6 @@ value DiscordCPP::Embed::to_json() {
 	if (ret.size() == 0) {
 		throw SizeError("Cannot create JSON from empty Embed");
 	}
-
-	//Logger("discord.embed").debug(conversions::to_utf8string(ret.serialize()));
 
 	return ret;
 }

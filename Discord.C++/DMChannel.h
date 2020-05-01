@@ -16,15 +16,15 @@ namespace DiscordCPP {
 	class DMChannel : public TextChannel {
 	public:
 		///the recipients if the channel is DM
-		vector<User *> recipients;
+		vector<User*> recipients;
 		///the owner of this DM channel
-		User *owner = NULL;
+		User* owner = NULL;
 		///the application id of the group DM creator if it was bot-created
 		string application_id;	//snowflake
 
-		DLL_EXPORT DMChannel(value data, string_t token);
-		DLL_EXPORT DMChannel(string id, string_t token);
-		DLL_EXPORT DMChannel(const DMChannel & old);
+		DLL_EXPORT DMChannel(const value& data, const string_t& token);
+		DLL_EXPORT DMChannel(const string& id, const string_t& token);
+		DLL_EXPORT DMChannel(const DMChannel& old);
 		DLL_EXPORT ~DMChannel();
 	};
 

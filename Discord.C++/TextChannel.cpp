@@ -9,7 +9,7 @@ using namespace web::json;
 using namespace web::http;
 using namespace utility;
 
-DiscordCPP::TextChannel::TextChannel(value data, string_t token) : DiscordCPP::Channel(data, token) {
+DiscordCPP::TextChannel::TextChannel(const value& data, const string_t& token) : DiscordCPP::Channel(data, token) {
 	if (is_valid_field("topic"))
 		topic = conversions::to_utf8string(data.at(U("topic")).as_string());
 
@@ -26,13 +26,13 @@ DiscordCPP::TextChannel::TextChannel(value data, string_t token) : DiscordCPP::C
 		rate_limit_per_user = data.at(U("rate_limit_per_user")).as_integer();
 }
 
-DiscordCPP::TextChannel::TextChannel(string id, string_t token) {
-	string url = "/channels/" + id; 
+DiscordCPP::TextChannel::TextChannel(const string& id, const string_t& token) {
+	string url = "/channels/" + id;
 	_token = token;
 	*this = TextChannel(api_call(url), token);
 }
 
-DiscordCPP::TextChannel::TextChannel(const TextChannel & old) : DiscordCPP::Channel(old) {
+DiscordCPP::TextChannel::TextChannel(const TextChannel& old) : DiscordCPP::Channel(old) {
 	topic = old.topic;
 	nsfw = old.nsfw;
 	last_message_id = old.last_message_id;
@@ -48,7 +48,7 @@ DiscordCPP::TextChannel::TextChannel() {
 	@param[in]	tts		(optional) Wether to send as tts-message or not. Default is false.
 	@return	The message that was sent.
 */
-DiscordCPP::Message DiscordCPP::TextChannel::send(string content, bool tts) {
+DiscordCPP::Message DiscordCPP::TextChannel::send(const string& content, const bool tts) {
 	string url = "/channels/" + id + "/messages";
 
 	value data;
@@ -75,9 +75,9 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
 	@param[in]	around	Get messages around this message id
 	@return	Array of messages
 */
-vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int limit, string before, string after, string around) {
+vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(const int limit, const string& before, const string& after, const string& around) {
 	vector<shared_ptr<Message>> ret;
-	
+
 	string url = "/channels/" + id + "/messages" + "?limit=" + to_string(limit);
 
 	if (before.length() > 0)
@@ -90,7 +90,6 @@ vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int lim
 	web::json::array msgs = api_call(url, methods::GET, value(), "", false).as_array();
 
 	for (unsigned int i = 0; i < msgs.size(); i++) {
-		//cout << endl << conversions::to_utf8string(msgs[i].serialize());
 		ret.push_back(make_shared<Message>(Message(msgs[i], _token)));
 	}
 
@@ -100,7 +99,7 @@ vector<shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(int lim
 /**	@param[in]	messages	vector containing the messages to delete
 	@throws	SizeError
 */
-void DiscordCPP::TextChannel::delete_messages(vector<shared_ptr<Message>> messages) {
+void DiscordCPP::TextChannel::delete_messages(const vector<shared_ptr<Message>>& messages) {
 	if (messages.size() < 2)
 		throw SizeError("Cannot delete less than 2 messages: use Message::delete_msg() instead");
 	else if (messages.size() > 100)

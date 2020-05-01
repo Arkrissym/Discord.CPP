@@ -13,9 +13,9 @@ using namespace std;
 	@param[in]	token		Bot token for authentication
 	@param[in]	num_shards	(optional) number of shards that exist (default: 0 used for automatic sharding)
 */
-DiscordCPP::Discord::Discord(string token, unsigned int num_shards) {
+DiscordCPP::Discord::Discord(const string& token, const unsigned int num_shards) {
 	_token = conversions::to_string_t(token);
-	_num_shards = num_shards; 
+	_num_shards = num_shards;
 	id = "0";
 	log = Logger("discord");
 
@@ -25,8 +25,8 @@ DiscordCPP::Discord::Discord(string token, unsigned int num_shards) {
 	}
 
 	for (unsigned int i = 0; i < _num_shards; i++) {
-		MainGateway *_client = new MainGateway(conversions::to_utf8string(_token), i, _num_shards);
-	
+		MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), i, _num_shards);
+
 		_client->set_message_handler([this](value payload) {
 			on_websocket_incoming_message(payload);
 		});
@@ -37,8 +37,6 @@ DiscordCPP::Discord::Discord(string token, unsigned int num_shards) {
 	connect();
 
 	srand((unsigned int)time(NULL));
-
-	//log.debug("created Discord object");
 }
 
 /**	Creates a Discord instance with ONE shard
@@ -46,13 +44,13 @@ DiscordCPP::Discord::Discord(string token, unsigned int num_shards) {
 	@param[in]	shard_id	(optional) the id of the shard (default: 0)
 	@param[in]	num_shards	(optional) number of shards that exist (default: 1)
 */
-DiscordCPP::Discord::Discord(string token, unsigned int shard_id, unsigned int num_shards) {
+DiscordCPP::Discord::Discord(const string& token, const unsigned int shard_id, const unsigned int num_shards) {
 	_token = conversions::to_string_t(token);
 	_num_shards = num_shards;
 	id = to_string(shard_id);
 	log = Logger("discord");
 
-	MainGateway *_client = new MainGateway(conversions::to_utf8string(_token), shard_id, _num_shards);
+	MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), shard_id, _num_shards);
 
 	_gateways.push_back(_client);
 
@@ -124,7 +122,7 @@ void DiscordCPP::Discord::on_typing_start(User user, TextChannel channel, unsign
 	@param[in]	afk			(optional) wether the bot/user is afk or not
 	@param[in]	shard_id	(optional) the shard whose presence will be updated (use -1 for all shards, default is -1)
 */
-pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity activity, bool afk, int shard_id) {
+pplx::task<void> DiscordCPP::Discord::update_presence(const string& status, Activity activity, const bool afk, const int shard_id) {
 	value presence;
 
 	presence[U("op")] = value(3);
@@ -149,7 +147,7 @@ pplx::task<void> DiscordCPP::Discord::update_presence(string status, Activity ac
 	});
 }
 
-DiscordCPP::MainGateway * DiscordCPP::Discord::get_shard(unsigned int shard_id) {
+DiscordCPP::MainGateway* DiscordCPP::Discord::get_shard(unsigned int shard_id) {
 	for (unsigned int i = 0; i < _gateways.size(); i++) {
 		if (_gateways[i]->get_shard_id() == shard_id)
 			return _gateways[i];
@@ -160,7 +158,7 @@ DiscordCPP::MainGateway * DiscordCPP::Discord::get_shard(unsigned int shard_id) 
 	return NULL;
 }
 
-DiscordCPP::Guild * DiscordCPP::Discord::get_guild(string guild_id) {
+DiscordCPP::Guild* DiscordCPP::Discord::get_guild(const string& guild_id) {
 	for (size_t i = 0; i < _guilds.size(); i++) {
 		if (_guilds[i]->id == guild_id) {
 			return _guilds[i];
@@ -184,29 +182,29 @@ pplx::task<void> DiscordCPP::Discord::connect() {
 	});
 }
 
-void DiscordCPP::Discord::on_websocket_incoming_message(value payload) {
+void DiscordCPP::Discord::on_websocket_incoming_message(const value& payload) {
 	int op = payload.at(U("op")).as_integer();
 
 	switch (op) {
-		case 0:
-			handle_raw_event(conversions::to_utf8string(payload.at(U("t")).as_string()), payload.at(U("d")));
-			break;
-		case 1:
-		case 7:
-		case 9:
-		case 10:
-		case 11:
-			//already handled by MainGateway
-			break;
-		default:
-			log.debug(conversions::to_utf8string(payload.serialize()));
+	case 0:
+		handle_raw_event(conversions::to_utf8string(payload.at(U("t")).as_string()), payload.at(U("d")));
+		break;
+	case 1:
+	case 7:
+	case 9:
+	case 10:
+	case 11:
+		//already handled by MainGateway
+		break;
+	default:
+		log.debug(conversions::to_utf8string(payload.serialize()));
 
-			log.warning("ignoring payload with op-code: " + to_string(op));
-			break;
+		log.warning("ignoring payload with op-code: " + to_string(op));
+		break;
 	}
 }
 
-pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value data) {
+pplx::task<void> DiscordCPP::Discord::handle_raw_event(const string& event_name, const value& data) {
 	return pplx::create_task([this, event_name, data] {
 		try {	//https://discordapp.com/developers/docs/topics/gateway#commands-and-events-gateway-events
 			if (event_name == "READY") {
@@ -223,7 +221,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					try {
 						on_ready(User(*_user));
 					}
-					catch (const exception &e) {
+					catch (const exception& e) {
 						log.error("ignoring exception in on_ready: " + string(e.what()));
 					}
 				});
@@ -231,7 +229,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			else if (event_name == "CHANNEL_CREATE") {
 				if (is_valid_field("guild_id")) {
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-					Channel *channel = Channel::from_json(this, data, _token);
+					Channel* channel = Channel::from_json(this, data, _token);
 
 					get_guild(guild_id)->_add_channel(channel);
 				}
@@ -239,7 +237,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			else if (event_name == "CHANNEL_UPDATE") {
 				if (is_valid_field("guild_id")) {
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-					Channel *channel = Channel::from_json(this, data, _token);
+					Channel* channel = Channel::from_json(this, data, _token);
 
 					get_guild(guild_id)->_update_channel(channel);
 				}
@@ -260,7 +258,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					for (unsigned int i = 0; i < _guilds.size(); i++) {
 						for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
 							if (_guilds[i]->channels[j]->id == channel_id) {
-								((TextChannel *)_guilds[i]->channels[j])->last_pin_timestamp = last_pin;
+								((TextChannel*)_guilds[i]->channels[j])->last_pin_timestamp = last_pin;
 								return;
 							}
 						}
@@ -268,11 +266,11 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				}
 			}
 			else if (event_name == "GUILD_CREATE") {
-				Guild *tmp_guild = new Guild(this, data, _token);
+				Guild* tmp_guild = new Guild(this, data, _token);
 
 				for (unsigned int i = 0; i < _guilds.size(); i++) {
 					if (tmp_guild->id == _guilds[i]->id) {
-						Guild *old = _guilds[i];
+						Guild* old = _guilds[i];
 						_guilds[i] = tmp_guild;
 						delete old;
 						log.debug("Updated guild data");
@@ -284,11 +282,11 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				log.debug("data of new guild added");
 			}
 			else if (event_name == "GUILD_UPDATE") {
-				Guild *tmp_guild = new Guild(this, data, _token);
+				Guild* tmp_guild = new Guild(this, data, _token);
 
 				for (unsigned int i = 0; i < _guilds.size(); i++) {
 					if (tmp_guild->id == _guilds[i]->id) {
-						Guild *old = _guilds[i];
+						Guild* old = _guilds[i];
 						_guilds[i] = tmp_guild;
 						delete old;
 						log.debug("Updated guild data");
@@ -319,7 +317,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					try {
 						on_user_ban(user, guild);
 					}
-					catch (exception &e) {
+					catch (exception& e) {
 						log.error("ignoring exception in on_user_ban: " + string(e.what()));
 					}
 				});
@@ -332,21 +330,15 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					try {
 						on_user_unban(user, guild);
 					}
-					catch (exception &e) {
+					catch (exception& e) {
 						log.error("ignoring exception in on_user_unban: " + string(e.what()));
 					}
 				});
 			}
-			//else if (event_name == "GUILD_EMOJIS_UPDATE") {
-
-			//}
-			//else if (event_name == "GUILD_INTEGRATIONS_UPDATE") {
-
-			//}
 			else if (event_name == "GUILD_MEMBER_ADD") {
 				if (is_valid_field("guild_id")) {
-					Guild *guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
-					Member *member = new Member(data, _token);
+					Guild* guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
+					Member* member = new Member(data, _token);
 
 					guild->_add_member(member);
 
@@ -354,7 +346,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 						try {
 							on_user_join(Member(*member), Guild(*guild));
 						}
-						catch (exception &e) {
+						catch (exception& e) {
 							log.error("ignoring exception on on_member_join: " + string(e.what()));
 						}
 					});
@@ -363,14 +355,14 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 			else if (event_name == "GUILD_MEMBER_UPDATE") {
 				if (is_valid_field("guild_id")) {
 					string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-					Member *member = new Member(data, _token);
+					Member* member = new Member(data, _token);
 
 					get_guild(guild_id)->_update_member(member);
 				}
 			}
 			else if (event_name == "GUILD_MEMBER_REMOVE") {
 				if (is_valid_field("guild_id")) {
-					Guild *guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
+					Guild* guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
 					User user = User(data.at(U("user")), _token);
 
 					guild->_remove_member(user.id);
@@ -379,7 +371,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 						try {
 							on_user_remove(user, Guild(*guild));
 						}
-						catch (exception &e) {
+						catch (exception& e) {
 							log.error("ignoring exception on on_member_join: " + string(e.what()));
 						}
 					});
@@ -395,7 +387,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 						if (_guilds[i]->id == guild_id) {
 							for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
 								if (_guilds[i]->channels[j]->id == channel_id) {
-									((TextChannel *)_guilds[i]->channels[j])->last_message_id = msg_id;
+									((TextChannel*)_guilds[i]->channels[j])->last_message_id = msg_id;
 									break;
 								}
 							}
@@ -409,7 +401,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 					try {
 						on_message(Message(data, _token));
 					}
-					catch (const std::exception &e) {
+					catch (const std::exception& e) {
 						log.error("ignoring exception in on_message: " + string(e.what()));
 					}
 				});
@@ -418,7 +410,6 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				log.debug(conversions::to_utf8string(data.serialize()));
 
 				string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
-				//string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
 				User user;
 				if (is_valid_field("user_id")) {
 					user = User(conversions::to_utf8string(data.at(U("user_id")).as_string()), _token);
@@ -429,30 +420,20 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				TextChannel channel = TextChannel(channel_id, _token);
 				unsigned int timestamp = data.at(U("timestamp")).as_integer();
 
-				/*if (is_valid_field("guild_id")) {
-					channel = new GuildChannel(channel_id, _token);
-					((GuildChannel *)channel)->guild = get_guild(guild_id);
-				}
-				else {
-					channel = new TextChannel(channel_id, _token);
-				}*/
-
 				pplx::create_task([this, user, channel, timestamp] {
 					try {
 						on_typing_start(user, channel, timestamp);
 					}
-					catch (exception &e) {
+					catch (exception& e) {
 						log.error("ignoring exception in on_typing_start: " + string(e.what()));
 					}
-
-					//delete channel;
 				});
 			}
 			else if (event_name == "VOICE_STATE_UPDATE") {
 				if (_user->id != conversions::to_utf8string(data.at(U("user_id")).as_string()))
 					return;
 
-				VoiceState *voice_state = NULL;
+				VoiceState* voice_state = NULL;
 				for (unsigned int i = 0; i < _voice_states.size(); i++) {
 					if (_voice_states[i]->guild_id == data.at(U("guild_id")).as_string()) {
 						voice_state = _voice_states[i];
@@ -479,7 +460,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				}
 			}
 			else if (event_name == "VOICE_SERVER_UPDATE") {
-				VoiceState *voice_state = NULL;
+				VoiceState* voice_state = NULL;
 				for (unsigned int i = 0; i < _voice_states.size(); i++) {
 					if (_voice_states[i]->guild_id == data.at(U("guild_id")).as_string()) {
 						voice_state = _voice_states[i];
@@ -503,7 +484,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(string event_name, value 
 				log.debug(conversions::to_utf8string(data.serialize()));
 			}
 		}
-		catch (exception &e) {
+		catch (exception& e) {
 			log.error("error while handling event " + event_name + ": " + e.what());
 		}
 	});

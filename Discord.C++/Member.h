@@ -1,5 +1,4 @@
 #pragma once
-//#include "Logger.h"
 #include "User.h"
 
 #include <iostream>
@@ -29,9 +28,9 @@ namespace DiscordCPP {
 		///true, if the member is muted
 		bool mute = false;
 
-		DLL_EXPORT Member(value data, string_t token);
+		DLL_EXPORT Member(const value& data, const string_t& token);
 		DLL_EXPORT Member();
-		
+
 		///@return Nickname (Username if not present) as std::string
 		DLL_EXPORT operator string();
 	};

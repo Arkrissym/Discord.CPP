@@ -12,24 +12,19 @@ using namespace web::http;
 using namespace web::http::client;
 
 DiscordCPP::User::User() {
-	//_log = Logger("discord.user");
-	//_log.debug("created empty user object");
+
 }
 
-DiscordCPP::User::User(value data, string_t token) : DiscordCPP::DiscordObject(token) {
-	//_log = Logger("discord.user");
-
-	//_log.debug(conversions::to_utf8string(data.serialize()));
-
+DiscordCPP::User::User(const value& data, const string_t& token) : DiscordCPP::DiscordObject(token) {
 	if (is_valid_field("id"))
 		id = conversions::to_utf8string(data.at(U("id")).as_string());
-	
+
 	if (is_valid_field("username"))
 		username = conversions::to_utf8string(data.at(U("username")).as_string());
-	
+
 	if (is_valid_field("discrimminator"))
 		discriminator = conversions::to_utf8string(data.at(U("discriminator")).as_string());
-	
+
 	if (is_valid_field("avatar"))
 		avatar = conversions::to_utf8string(data.at(U("avatar")).as_string());
 
@@ -41,7 +36,7 @@ DiscordCPP::User::User(value data, string_t token) : DiscordCPP::DiscordObject(t
 
 	if (is_valid_field("mfa_enabled"))
 		mfa_enabled = data.at(U("mfa_enabled")).as_bool();
-	
+
 	if (is_valid_field("verified"))
 		verified = data.at(U("verified")).as_bool();
 
@@ -53,13 +48,9 @@ DiscordCPP::User::User(value data, string_t token) : DiscordCPP::DiscordObject(t
 
 	if (is_valid_field("premium_type"))
 		premium_type = data.at(U("premium_type")).as_integer();
-
-	//_log.debug("created user object");
 }
 
-DiscordCPP::User::User(string id, string_t token) : DiscordCPP::DiscordObject(token) {
-	//_log = Logger("discord.user");
-
+DiscordCPP::User::User(const string& id, const string_t& token) : DiscordCPP::DiscordObject(token) {
 	string url = "/users/" + id;
 
 	*this = User(api_call(url), token);
@@ -78,13 +69,13 @@ DiscordCPP::DMChannel DiscordCPP::User::get_dmchannel() {
 @param[in]	tts		(optional) Wether to send as tts-message or not. Default is false.
 @return	The message that was sent.
 */
-DiscordCPP::Message DiscordCPP::User::send(string content, bool tts) {
+DiscordCPP::Message DiscordCPP::User::send(const string& content, const bool tts) {
 	return Message(get_dmchannel().send(content, tts));
 }
 
 /**	@param[in]	embed	The Embed to send.
 @return	The message that was sent.
 */
-DiscordCPP::Message DiscordCPP::User::send(DiscordCPP::Embed embed) {
+DiscordCPP::Message DiscordCPP::User::send(const DiscordCPP::Embed& embed) {
 	return Message(get_dmchannel().send(embed));
 }

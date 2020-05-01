@@ -38,7 +38,7 @@ namespace DiscordCPP {
 		string url;
 
 		DLL_EXPORT Activity();
-		DLL_EXPORT Activity(string name, int type, string url="");
+		DLL_EXPORT Activity(const string& name, const int type, const string& url = "");
 		DLL_EXPORT ~Activity();
 
 		DLL_EXPORT value to_json();

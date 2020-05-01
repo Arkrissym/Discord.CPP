@@ -19,7 +19,7 @@ DiscordCPP::DiscordObject::DiscordObject() {
 }
 
 ///	@param[in]	token	Discord token
-DiscordCPP::DiscordObject::DiscordObject(utility::string_t token) {
+DiscordCPP::DiscordObject::DiscordObject(const utility::string_t& token) {
 	_token = token;
 
 	if (cache_manager_active == false) {
@@ -32,7 +32,7 @@ pplx::task<void> manage_cache() {
 	return pplx::create_task([] {
 		while (1) {
 			auto it = _cache.begin();
-			while(it != _cache.end()) {
+			while (it != _cache.end()) {
 				shared_ptr<value> ptr = *it;
 
 				if ((time(0) - ptr->at(U("time")).as_integer()) > 60) {
@@ -46,8 +46,7 @@ pplx::task<void> manage_cache() {
 				}
 			}
 
-			//this_thread::sleep_for(chrono::seconds(10));
-			waitFor(chrono::milliseconds(10000)).wait();
+			waitFor(chrono::seconds(10)).wait();
 		}
 	});
 }
@@ -60,7 +59,7 @@ pplx::task<void> manage_cache() {
 	@return		json::value		API response
 	@throws		HTTPError
 */
-value DiscordCPP::DiscordObject::api_call(string url, method method, value data, string content_type, bool cache) {
+value DiscordCPP::DiscordObject::api_call(const string& url, const method& method, const value& data, const string& content_type, const bool cache) {
 	if (method == methods::GET && cache == true) {
 		for (unsigned int i = 0; i < _cache.size(); i++) {
 			if (conversions::to_utf8string(_cache[i]->at(U("url")).as_string()) == url) {
@@ -101,20 +100,19 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 			requestTask.wait();
 			ret = value::parse(requestTask.get().extract_string().get());
 		}
-		catch (const std::exception &e) {
+		catch (const std::exception& e) {
 			Logger("discord.object.api_call").error("Error exception: " + string(e.what()));
 			return value();
 		}
 
 		code = requestTask.get().status_code();
 
-		if ((code == 200) && (method == methods::GET))  {
+		if ((code == 200) && (method == methods::GET)) {
 			value tmp = value();
 			tmp[U("url")] = value(conversions::to_string_t(url));
 			tmp[U("time")] = value(time(0));
 			tmp[U("data")] = ret;
 
-			//cache.push_back(new value(tmp));
 			_cache.push_back(make_shared<value>(tmp));
 
 			Logger("discord.object.api_call").debug("caching object");
@@ -123,20 +121,19 @@ value DiscordCPP::DiscordObject::api_call(string url, method method, value data,
 		if (code == 429) {
 			Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
 
-			//this_thread::sleep_for(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str())));
 			waitFor(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()))).wait();
 		}
 	} while (code == 429);
 
 	switch (code) {
-		case 400: throw HTTPError("Malformed/Invalid API call", code);
-		case 401: throw HTTPError("Unauthorized API call", code);
-		case 403: throw HTTPError("Permission denied", code);
-		case 500: throw HTTPError("Server error", code);
-		default:  
-			if (code >= 300) {
-				throw HTTPError("Unknown HTTPError: " + to_string(code), code);
-			}
+	case 400: throw HTTPError("Malformed/Invalid API call", code);
+	case 401: throw HTTPError("Unauthorized API call", code);
+	case 403: throw HTTPError("Permission denied", code);
+	case 500: throw HTTPError("Server error", code);
+	default:
+		if (code >= 300) {
+			throw HTTPError("Unknown HTTPError: " + to_string(code), code);
+		}
 	}
 
 	return ret;

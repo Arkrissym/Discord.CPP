@@ -13,9 +13,7 @@ using namespace web::http::client;
 /**	@param[in]	data	JSON data
 	@param[in]	token	discord token
 */
-DiscordCPP::Channel::Channel(value data, string_t token) : DiscordCPP::DiscordObject(token) {
-	//_log = Logger("discord.channel");
-
+DiscordCPP::Channel::Channel(const value& data, const string_t& token) : DiscordCPP::DiscordObject(token) {
 	if (is_valid_field("id"))
 		id = conversions::to_utf8string(data.at(U("id")).as_string());
 
@@ -32,16 +30,12 @@ DiscordCPP::Channel::Channel(value data, string_t token) : DiscordCPP::DiscordOb
 
 	if (is_valid_field("icon"))
 		icon = conversions::to_utf8string(data.at(U("icon")).as_string());
-
-	//_log.debug("created channel object");
 }
 
 /**	@param[in]	id		the channel's id
 	@param[in]	token	discord token
 */
-DiscordCPP::Channel::Channel(string id, string_t token) : DiscordCPP::DiscordObject(token) {
-	//_log = Logger("discord.channel");
-
+DiscordCPP::Channel::Channel(const string& id, const string_t& token) : DiscordCPP::DiscordObject(token) {
 	string url = "/channels/" + id;
 
 	*this = Channel(api_call(url), token);
@@ -49,8 +43,7 @@ DiscordCPP::Channel::Channel(string id, string_t token) : DiscordCPP::DiscordObj
 
 /*	@param[in]	old	the Channel to copy
 */
-DiscordCPP::Channel::Channel(const Channel & old) {
-	//_log = old._log;
+DiscordCPP::Channel::Channel(const Channel& old) {
 	_token = old._token;
 	id = old.id;
 	type = old.type;
@@ -61,20 +54,19 @@ DiscordCPP::Channel::Channel(const Channel & old) {
 }
 
 DiscordCPP::Channel::Channel() {
-	//_log = Logger("discord.channel");
-	//_log.debug("created empty channel object");
+
 }
 
-DiscordCPP::Channel * DiscordCPP::Channel::from_json(Discord * client, value data, string_t token) {
-	Channel *channel;
+DiscordCPP::Channel* DiscordCPP::Channel::from_json(Discord* client, const value& data, const string_t& token) {
+	Channel* channel;
 
 	switch (data.at(U("type")).as_integer()) {
 	case ChannelType::GUILD_TEXT:
 	case ChannelType::GUILD_NEWS:
-		channel = (Channel *)new GuildChannel(data, token);
+		channel = (Channel*)new GuildChannel(data, token);
 		break;
 	case ChannelType::GUILD_VOICE:
-		channel = (Channel *)new VoiceChannel(client, data, token);
+		channel = (Channel*)new VoiceChannel(client, data, token);
 		break;
 	case ChannelType::DM:
 	case ChannelType::GROUP_DM:

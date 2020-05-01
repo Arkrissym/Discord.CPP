@@ -10,8 +10,8 @@ using namespace web::json;
 using namespace utility::conversions;
 
 void DiscordCPP::Gateway::start_heartbeating() {
-	_heartbeat_task=pplx::create_task([this] {
-		bool *keepalive = _keepalive;
+	_heartbeat_task = pplx::create_task([this] {
+		bool* keepalive = _keepalive;
 
 		while (_heartbeat_interval == 0)
 			waitFor(std::chrono::milliseconds(50)).wait();
@@ -24,22 +24,22 @@ void DiscordCPP::Gateway::start_heartbeating() {
 				try {
 					_client->close(websocket_close_status::going_away, U("Server not responding")).wait();
 				}
-				catch (std::exception &e) {
+				catch (std::exception& e) {
 					_log.error("Cannot close websocket: " + std::string(e.what()));
 				}
 			}
 			else {
 				value payload = this->get_heartbeat_payload();
-				
+
 				try {
 					this->send(payload).then([this] {
 						_log.debug("Heartbeat message has been sent");
 					}).wait();
 				}
-				catch (websocket_exception &e) {
+				catch (websocket_exception& e) {
 					_log.error("Cannot send heartbeat message: " + std::string(e.what()) + " (" + std::to_string(e.error_code().value()) + ": " + e.error_code().message());
 				}
-				catch (const std::exception &e) {
+				catch (const std::exception& e) {
 					_log.error("Cannot send heartbeat message: " + std::string(e.what()));
 				}
 			}
@@ -51,7 +51,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
 	});
 }
 
-void DiscordCPP::Gateway::on_websocket_disconnnect(web::websockets::client::websocket_close_status status, std::string reason, std::error_code error) {
+void DiscordCPP::Gateway::on_websocket_disconnnect(const web::websockets::client::websocket_close_status& status, const std::string& reason, const std::error_code& error) {
 	if (*_keepalive == false) {
 		return;
 	}
@@ -62,7 +62,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect(web::websockets::client::webs
 		try {
 			delete _client;
 		}
-		catch (const std::exception &e) {
+		catch (const std::exception& e) {
 			_log.error("error while deleting old websocket client: " + std::string(e.what()));
 		}
 
@@ -81,7 +81,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect(web::websockets::client::webs
 	});
 }
 
-DiscordCPP::Gateway::Gateway(std::string token) {
+DiscordCPP::Gateway::Gateway(const std::string& token) {
 	_log = Logger("Discord.Gateway");
 
 	_token = token;
@@ -102,7 +102,7 @@ DiscordCPP::Gateway::Gateway(std::string token) {
 		utility::string_t message = to_string_t(str.get());
 
 		value payload = value::parse(message);
-		
+
 		on_websocket_incoming_message(payload);
 	});
 
@@ -120,7 +120,7 @@ void DiscordCPP::Gateway::set_message_handler(const std::function<void(web::json
 	_message_handler = handler;
 }
 
-pplx::task<void> DiscordCPP::Gateway::connect(std::string url) {
+pplx::task<void> DiscordCPP::Gateway::connect(const std::string& url) {
 	_url = url;
 	_log.info("connecting to websocket: " + url);
 	return _client->connect(to_string_t(url)).then([this] {
@@ -130,7 +130,7 @@ pplx::task<void> DiscordCPP::Gateway::connect(std::string url) {
 }
 
 ///@throws	ClientException
-pplx::task<void> DiscordCPP::Gateway::send(value message) {
+pplx::task<void> DiscordCPP::Gateway::send(const value& message) {
 	if (_connected == false)
 		throw ClientException("Gateway not connected");
 	web::websockets::client::websocket_outgoing_message msg;

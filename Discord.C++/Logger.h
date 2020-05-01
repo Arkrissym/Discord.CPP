@@ -20,16 +20,16 @@ protected:
 public:
 	DLL_EXPORT Logger();
 	DLL_EXPORT ~Logger();
-	DLL_EXPORT Logger(std::string);
-	DLL_EXPORT Logger(const Logger &old);
+	DLL_EXPORT Logger(const std::string&);
+	DLL_EXPORT Logger(const Logger& old);
 
-	DLL_EXPORT void set_log_level(Loglevel level);
+	DLL_EXPORT void set_log_level(const Loglevel& level);
 
-	DLL_EXPORT void print(Loglevel level, std::string message);
+	DLL_EXPORT void print(const Loglevel level, const std::string& message);
 
-	DLL_EXPORT void debug(std::string message);
-	DLL_EXPORT void info(std::string message);
-	DLL_EXPORT void warning(std::string message);
-	DLL_EXPORT void error(std::string message);
+	DLL_EXPORT void debug(const std::string& message);
+	DLL_EXPORT void info(const std::string& message);
+	DLL_EXPORT void warning(const std::string& message);
+	DLL_EXPORT void error(const std::string& message);
 };
 

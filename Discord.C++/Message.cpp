@@ -20,18 +20,15 @@ using namespace utility;
 	@param[in]	token	discord token for the API
 	@return	Message object
 */
-DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordObject(token) {
-	//_log = Logger("discord.message");
-
-	if(is_valid_field("id"))
+DiscordCPP::Message::Message(const value& data, const string_t& token) : DiscordCPP::DiscordObject(token) {
+	if (is_valid_field("id"))
 		id = conversions::to_utf8string(data.at(U("id")).as_string());
-	
+
 	if (is_valid_field("channel_id")) {
 		string url = "/channels/" + conversions::to_utf8string(data.at(U("channel_id")).as_string());
 
 		value channel_data = api_call(url);
-		//Logger("discord.message").debug(conversions::to_utf8string(channel_data.serialize()));
-		channel = (TextChannel *)Channel::from_json(NULL, channel_data, token);
+		channel = (TextChannel*)Channel::from_json(NULL, channel_data, token);
 	}
 
 	if (is_valid_field("author"))
@@ -83,23 +80,20 @@ DiscordCPP::Message::Message(value data, string_t token) : DiscordCPP::DiscordOb
 	//activity
 
 	//application
-
-	//_log.debug("created message object");
 }
 
 /**	@param[in]	old	Message object to copy
-	@return		copied Message object 
+	@return		copied Message object
 */
-DiscordCPP::Message::Message(const Message & old) {
-	//_log = old._log;
+DiscordCPP::Message::Message(const Message& old) {
 	_token = old._token;
 	id = old.id;
-	
+
 	if (old.channel != NULL) {
 		try {
-			channel = (TextChannel *)old.channel->copy(*old.channel);
+			channel = (TextChannel*)old.channel->copy(*old.channel);
 		}
-		catch (std::exception &e) {
+		catch (std::exception& e) {
 			Logger("discord.message").error("Error in channel copy: " + string(e.what()));
 		}
 	}
@@ -114,7 +108,6 @@ DiscordCPP::Message::Message(const Message & old) {
 	edited_timestamp = old.edited_timestamp;
 	tts = old.tts;
 	mention_everyone = old.mention_everyone;
-	//mentions = old.mentions;
 	for (unsigned int i = 0; i < old.mentions.size(); i++) {
 		mentions.push_back(new User(*old.mentions[i]));
 	}
@@ -130,12 +123,11 @@ DiscordCPP::Message::Message(const Message & old) {
 }
 
 DiscordCPP::Message::Message() {
-	//_log = Logger("discord.message");
-	//_log.debug("created empty message object");
+
 }
 
 DiscordCPP::Message::~Message() {
-	if(channel != NULL)
+	if (channel != NULL)
 		delete channel;
 	if (author != NULL)
 		delete author;
@@ -150,7 +142,7 @@ DiscordCPP::Message::~Message() {
 /**	@param[in]	content	New message-content.
 	@return		Updated message object.
 */
-DiscordCPP::Message DiscordCPP::Message::edit(string content) {
+DiscordCPP::Message DiscordCPP::Message::edit(const string& content) {
 	string url = "/channels/" + channel->id + "/messages/" + id;
 
 	value data;

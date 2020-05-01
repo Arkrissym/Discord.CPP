@@ -11,13 +11,13 @@ namespace DiscordCPP {
 		utility::string_t _token;
 
 		///helper function to communicate with the http api
-		web::json::value api_call(std::string url, web::http::method method = web::http::methods::GET, web::json::value data = web::json::value(), std::string content_type="", bool cache=true);
+		web::json::value api_call(const std::string& url, const web::http::method& method = web::http::methods::GET, const web::json::value& data = web::json::value(), const std::string& content_type = "", const bool cache = true);
 	public:
 		///the id of the object
 		std::string id;	//snowflake
 
 		DiscordObject();
-		DiscordObject(utility::string_t token);
+		DiscordObject(const utility::string_t& token);
 	};
 
 }

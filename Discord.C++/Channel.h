@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "DiscordObject.h"
-//#include "User.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -43,25 +42,25 @@ namespace DiscordCPP {
 		///the channel's icon hash
 		string icon;
 
-		DLL_EXPORT Channel(value data, string_t token);
-		DLL_EXPORT Channel(string id, string_t token);
-		DLL_EXPORT Channel(const Channel &old);
+		DLL_EXPORT Channel(const value& data, const string_t& token);
+		DLL_EXPORT Channel(const string& id, const string_t& token);
+		DLL_EXPORT Channel(const Channel& old);
 		DLL_EXPORT Channel();
-		
-		DLL_EXPORT static Channel *from_json(Discord *client, value data, string_t token);
+
+		DLL_EXPORT static Channel* from_json(Discord* client, const value& data, const string_t& token);
 
 		///Delete this channel
 		DLL_EXPORT void delete_channel();
 
 		template <class T>
-		DLL_EXPORT Channel *copy(T obj);
+		DLL_EXPORT Channel* copy(T obj);
 
 		///@return Channelname as std::string
 		DLL_EXPORT operator string() { return name; };
 	};
 
 	template<class T>
-	inline Channel * Channel::copy(T obj) {
+	inline Channel* Channel::copy(T obj) {
 		T* derivedptr = new T(obj);
 		Channel* baseptr = dynamic_cast<Channel*>(derivedptr);
 		if (baseptr != NULL) {

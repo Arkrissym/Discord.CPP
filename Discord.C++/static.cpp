@@ -14,11 +14,11 @@ pplx::task<void> waitFor(const std::chrono::milliseconds ms) {
 	pplx::task_completion_event<void> tce;
 
 #ifndef _WIN32
-	auto &ioService = crossplat::threadpool::shared_instance().service();
+	auto& ioService = crossplat::threadpool::shared_instance().service();
 
 	auto timer = std::make_shared<boost::asio::deadline_timer>(ioService);
 	timer->expires_from_now(boost::posix_time::milliseconds(ms.count()));
-	timer->async_wait([timer, tce](const boost::system::error_code &error) {
+	timer->async_wait([timer, tce](const boost::system::error_code& error) {
 		if (error) {
 			std::stringstream ss;
 			ss << "timer error or cancel, because: " << error.message();
@@ -36,7 +36,7 @@ pplx::task<void> waitFor(const std::chrono::milliseconds ms) {
 	return pplx::create_task(tce);
 }
 
-void hexchar(unsigned char c, unsigned char &hex1, unsigned char &hex2) {
+void hexchar(unsigned char c, unsigned char& hex1, unsigned char& hex2) {
 	hex1 = c / 16;
 	hex2 = c % 16;
 	hex1 += hex1 <= 9 ? '0' : 'a' - 10;
@@ -44,7 +44,7 @@ void hexchar(unsigned char c, unsigned char &hex1, unsigned char &hex2) {
 }
 
 std::string urlencode(std::string s) {
-	const char *str = s.c_str();
+	const char* str = s.c_str();
 	std::vector<char> v(s.size());
 	v.clear();
 	for (size_t i = 0, l = s.size(); i < l; i++) {

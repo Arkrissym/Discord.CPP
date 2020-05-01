@@ -13,10 +13,10 @@ namespace DiscordCPP {
 	private:
 		std::ifstream _file;
 	public:
-		DLL_EXPORT FileAudioSource(std::string filename);
+		DLL_EXPORT FileAudioSource(const std::string& filename);
 		DLL_EXPORT ~FileAudioSource();
 
-		DLL_EXPORT bool read(char *pcm_data, int length);
+		DLL_EXPORT bool read(char* pcm_data, const int length);
 	};
 
 }

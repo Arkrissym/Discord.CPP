@@ -1,6 +1,6 @@
 #include "Exceptions.h"
 
-DiscordCPP::DiscordException::DiscordException(std::string what) {
+DiscordCPP::DiscordException::DiscordException(const std::string& what) {
 	_what = what;
 }
 
@@ -8,12 +8,12 @@ DiscordCPP::DiscordException::~DiscordException() {
 
 }
 
-const char * DiscordCPP::DiscordException::what() const noexcept {
+const char* DiscordCPP::DiscordException::what() const noexcept {
 	return _what.c_str();
 }
 
 
-DiscordCPP::StatusCodeException::StatusCodeException(std::string what, int error_code) : DiscordException(what) {
+DiscordCPP::StatusCodeException::StatusCodeException(const std::string& what, int error_code) : DiscordException(what) {
 	_error_code = error_code;
 }
 
@@ -26,19 +26,19 @@ int DiscordCPP::StatusCodeException::get_error_code() const {
 }
 
 
-DiscordCPP::ClientException::ClientException(std::string what) : DiscordException(what) {
+DiscordCPP::ClientException::ClientException(const std::string& what) : DiscordException(what) {
 
 }
 
 
-DiscordCPP::SizeError::SizeError(std::string what) : DiscordException(what) {
+DiscordCPP::SizeError::SizeError(const std::string& what) : DiscordException(what) {
 
 }
 
 
-DiscordCPP::OpusError::OpusError(std::string what, int error_code) : StatusCodeException(what, error_code) {
+DiscordCPP::OpusError::OpusError(const std::string& what, int error_code) : StatusCodeException(what, error_code) {
 }
 
 
-DiscordCPP::HTTPError::HTTPError(std::string what, int error_code) : StatusCodeException(what, error_code) {
+DiscordCPP::HTTPError::HTTPError(const std::string& what, int error_code) : StatusCodeException(what, error_code) {
 }

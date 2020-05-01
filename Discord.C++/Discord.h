@@ -39,31 +39,31 @@ namespace DiscordCPP {
 	class Discord : public DiscordObject {
 	protected:
 		///websocket clients
-		vector<MainGateway *>_gateways;
+		vector<MainGateway*> _gateways;
 		///number of shards
 		unsigned int _num_shards;
 		///the user
-		User *_user;
+		User* _user;
 		///the guilds the user is a member
-		vector<Guild *> _guilds;
-		
-		///array of VoiceStates
-		vector<VoiceState *> _voice_states;
-		
-		friend VoiceClient * VoiceChannel::connect();
+		vector<Guild*> _guilds;
 
-		DLL_EXPORT MainGateway * get_shard(unsigned int shard_id);
-		DLL_EXPORT Guild * get_guild(string guild_id);
+		///array of VoiceStates
+		vector<VoiceState*> _voice_states;
+
+		friend VoiceClient* VoiceChannel::connect();
+
+		DLL_EXPORT MainGateway* get_shard(const unsigned int shard_id);
+		DLL_EXPORT Guild* get_guild(const string& guild_id);
 
 		DLL_EXPORT pplx::task<void> connect();
-		
-		DLL_EXPORT void on_websocket_incoming_message(value payload);
-		DLL_EXPORT pplx::task<void> handle_raw_event(std::string event_name, value data);	//op: 0
+
+		DLL_EXPORT void on_websocket_incoming_message(const value& payload);
+		DLL_EXPORT pplx::task<void> handle_raw_event(const std::string& event_name, const value& data);	//op: 0
 	public:
 		Logger log;
 
-		DLL_EXPORT Discord(string token, unsigned int num_shards = 0);
-		DLL_EXPORT Discord(string token, unsigned int shard_id, unsigned int num_shards);
+		DLL_EXPORT Discord(const string& token, const unsigned int num_shards = 0);
+		DLL_EXPORT Discord(const string& token, const unsigned int shard_id, const unsigned int num_shards);
 		DLL_EXPORT virtual ~Discord();
 
 		///called when successfully logged in
@@ -82,7 +82,7 @@ namespace DiscordCPP {
 		DLL_EXPORT virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp);
 
 		///updates the presence of user
-		DLL_EXPORT pplx::task<void> update_presence(string status, Activity activity = Activity(), bool afk = false, int shard_id = -1);
+		DLL_EXPORT pplx::task<void> update_presence(const string& status, Activity activity = Activity(), const bool afk = false, const int shard_id = -1);
 	};
 
 }

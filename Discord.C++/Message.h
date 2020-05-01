@@ -2,9 +2,6 @@
 #include <iostream>
 
 #include "DiscordObject.h"
-//#include "User.h"
-//#include "TextChannel.h"
-//#include "Embed.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -38,11 +35,11 @@ namespace DiscordCPP {
 	class Message : public DiscordObject {
 	public:
 		///the channel the message was sent in
-		TextChannel *channel = NULL;
+		TextChannel* channel = NULL;
 		///The author of this message
-		User *author = NULL;
+		User* author = NULL;
 		///The content of this message
-		string content;	
+		string content;
 		//ISO8601 timestamp
 		///when the message was created
 		string timestamp;
@@ -54,11 +51,11 @@ namespace DiscordCPP {
 		///true, if everyone is mentioned
 		bool mention_everyone;
 		///array of mentioned users
-		vector<User *> mentions;
+		vector<User*> mentions;
 		//vector<Role> mention_roles;
 		//vector<Attachments> attachments;
 		///Array of embeds
-		vector<Embed *> embeds;
+		vector<Embed*> embeds;
 		//vector<Reaction> reactions;
 		///true, if this message has been pinned
 		bool pinned;
@@ -69,13 +66,13 @@ namespace DiscordCPP {
 		//MessageAcivity activity;
 		//MessageApplication application;
 
-		DLL_EXPORT Message(value data, string_t token);
-		DLL_EXPORT Message(const Message &old);
+		DLL_EXPORT Message(const value& data, const string_t& token);
+		DLL_EXPORT Message(const Message& old);
 		DLL_EXPORT Message();
 		DLL_EXPORT ~Message();
 
 		///Edit this message
-		DLL_EXPORT Message edit(string content);
+		DLL_EXPORT Message edit(const string& content);
 		///Delete this message
 		DLL_EXPORT void delete_msg();
 	};

@@ -1,8 +1,5 @@
 #pragma once
 #include "DiscordObject.h"
-//#include "Message.h"
-//#include "Embed.h"
-//#include "DMChannel.h"
 
 #include <iostream>
 
@@ -54,15 +51,15 @@ namespace DiscordCPP {
 		int premium_type = PremiumTypes::None;
 
 		DLL_EXPORT User();
-		DLL_EXPORT User(value data, string_t token);
-		DLL_EXPORT User(string id, string_t token);
-		
+		DLL_EXPORT User(const value& data, const string_t& token);
+		DLL_EXPORT User(const string& id, const string_t& token);
+
 		///get/create the DMChannel for this user
 		DLL_EXPORT DMChannel get_dmchannel();
 		///send a message to this user
-		DLL_EXPORT Message send(string content, bool tts = false);
+		DLL_EXPORT Message send(const string& content, const bool tts = false);
 		///send an embed to this user
-		DLL_EXPORT Message send(Embed embed);
+		DLL_EXPORT Message send(const Embed& embed);
 
 		///@return Username as std::string
 		DLL_EXPORT virtual operator string() { return username; };

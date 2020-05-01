@@ -12,9 +12,7 @@ using namespace utility;
 using namespace web::http;
 using namespace web::http::client;
 
-DiscordCPP::Guild::Guild(Discord *client, value data, string_t token) : DiscordCPP::DiscordObject(token) {
-	//_log = Logger("dicord.guild");
-
+DiscordCPP::Guild::Guild(Discord* client, const value& data, const string_t& token) : DiscordCPP::DiscordObject(token) {
 	if (is_valid_field("id"))
 		id = conversions::to_utf8string(data.at(U("id")).as_string());
 
@@ -47,7 +45,6 @@ DiscordCPP::Guild::Guild(Discord *client, value data, string_t token) : DiscordC
 		embed_enabled = data.at(U("embed_enabled")).as_bool();
 
 	if (is_valid_field("embed_channel_id")) {
-		//embed_channel = new GuildChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
 		embed_channel = new TextChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
 	}
 
@@ -84,7 +81,6 @@ DiscordCPP::Guild::Guild(Discord *client, value data, string_t token) : DiscordC
 	}
 
 	if (is_valid_field("system_channel_id")) {
-		//system_channel = new GuildChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
 		system_channel = new TextChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
 	}
 
@@ -116,19 +112,15 @@ DiscordCPP::Guild::Guild(Discord *client, value data, string_t token) : DiscordC
 	}
 
 	//presences
-
-	//_log.debug("created guild object");
 }
 
-DiscordCPP::Guild::Guild(Discord *client, string id, string_t token) : DiscordCPP::DiscordObject(token) {
-	//_log = Logger("discord.guild");
-
+DiscordCPP::Guild::Guild(Discord* client, const string& id, const string_t& token) : DiscordCPP::DiscordObject(token) {
 	string url = "/guilds/" + id;
 
 	*this = Guild(client, api_call(url), token);
 }
 
-DiscordCPP::Guild::Guild(const Guild & old) {
+DiscordCPP::Guild::Guild(const Guild& old) {
 	_token = old._token;
 	id = old.id;
 	name = old.name;
@@ -172,13 +164,10 @@ DiscordCPP::Guild::Guild(const Guild & old) {
 }
 
 DiscordCPP::Guild::Guild() {
-	//_log = Logger("dicord.guild");
-	//_log.debug("created empty guild object");
+
 }
 
 DiscordCPP::Guild::~Guild() {
-	//_log.debug("destroyed guild object");
-
 	if (owner != NULL)
 		delete owner;
 	if (afk_channel != NULL)
@@ -197,11 +186,11 @@ DiscordCPP::Guild::~Guild() {
 	}
 }
 
-void DiscordCPP::Guild::_add_channel(Channel * channel) {
+void DiscordCPP::Guild::_add_channel(Channel* channel) {
 	channels.push_back(channel);
 }
 
-void DiscordCPP::Guild::_update_channel(Channel * channel) {
+void DiscordCPP::Guild::_update_channel(Channel* channel) {
 	for (size_t i = 0; i < channels.size(); i++) {
 		if (channels[i]->id == channel->id) {
 			delete channels[i];
@@ -212,7 +201,7 @@ void DiscordCPP::Guild::_update_channel(Channel * channel) {
 	}
 }
 
-void DiscordCPP::Guild::_remove_channel(string channel_id) {
+void DiscordCPP::Guild::_remove_channel(const string& channel_id) {
 	for (size_t i = 0; i < channels.size(); i++) {
 		if (channels[i]->id == channel_id) {
 			delete channels[i];
@@ -222,12 +211,12 @@ void DiscordCPP::Guild::_remove_channel(string channel_id) {
 	}
 }
 
-void DiscordCPP::Guild::_add_member(Member * member) {
+void DiscordCPP::Guild::_add_member(Member* member) {
 	members.push_back(member);
 	member_count += 1;
 }
 
-void DiscordCPP::Guild::_update_member(Member * member) {
+void DiscordCPP::Guild::_update_member(Member* member) {
 	for (size_t i = 0; i < members.size(); i++) {
 		if (members[i]->id == member->id) {
 			delete members[i];
@@ -237,7 +226,7 @@ void DiscordCPP::Guild::_update_member(Member * member) {
 	}
 }
 
-void DiscordCPP::Guild::_remove_member(string member_id) {
+void DiscordCPP::Guild::_remove_member(const string& member_id) {
 	for (size_t i = 0; i < members.size(); i++) {
 		if (members[i]->id == member_id) {
 			delete members[i];
@@ -262,7 +251,7 @@ void DiscordCPP::Guild::delete_guild() {
 /**	@param[in]	user	User to kick
 	@throws HTTPError
 */
-void DiscordCPP::Guild::kick(User user) {
+void DiscordCPP::Guild::kick(const User& user) {
 	string url = "/guilds/" + id + "/members/" + user.id;
 	api_call(url, methods::DEL);
 }
@@ -272,7 +261,7 @@ void DiscordCPP::Guild::kick(User user) {
 	@param[in]	delete_message_days	(optional) number of days to delete messages from user (0-7)
 	@throws HTTPError
 */
-void DiscordCPP::Guild::ban(User user, string reason, int delete_message_days) {
+void DiscordCPP::Guild::ban(const User& user, const string& reason, const int delete_message_days) {
 	string url = "/guilds/" + id + "/bans/" + user.id + "?delete-message-days=" + to_string(delete_message_days) + "&reason=" + urlencode(reason);
 	api_call(url, methods::PUT);
 }
@@ -280,7 +269,7 @@ void DiscordCPP::Guild::ban(User user, string reason, int delete_message_days) {
 /**	@param[in]	user	User to kick
 	@throws HTTPError
 */
-void DiscordCPP::Guild::unban(User user) {
+void DiscordCPP::Guild::unban(const User& user) {
 	string url = "/guilds/" + id + "/bans/" + user.id;
 	api_call(url, methods::DEL);
 }

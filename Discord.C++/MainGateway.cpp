@@ -1,6 +1,5 @@
 #include "MainGateway.h"
 #include "static.h"
-//#include <vector>
 
 using namespace web::json;
 using namespace utility::conversions;
@@ -18,7 +17,7 @@ value DiscordCPP::MainGateway::get_heartbeat_payload() {
 	return payload;
 }
 
-void DiscordCPP::MainGateway::on_websocket_incoming_message(web::json::value payload) {
+void DiscordCPP::MainGateway::on_websocket_incoming_message(const web::json::value& payload) {
 	int op = payload.at(U("op")).as_integer();
 
 	if ((payload.has_field(U("s"))) && (!payload.at(U("s")).is_null())) {
@@ -26,66 +25,66 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(web::json::value pay
 	}
 
 	switch (op) {
-		case 0:
-			if (to_utf8string(payload.at(U("t")).as_string()) == "READY") {
-				_reconnect_timeout = 0;
-				_last_heartbeat_ack = time(0);
-
-				_invalid_session = false;
-
-				_session_id = to_utf8string(payload.at(U("d")).at(U("session_id")).as_string());
-
-				web::json::array tmp = payload.at(U("d")).at(U("_trace")).as_array();
-				std::string str = "[ ";
-				for (unsigned int i = 0; i < tmp.size(); i++) {
-					_trace.push_back(to_utf8string(tmp[i].as_string()));
-					if (i == 0)
-						str = str + to_utf8string(tmp[i].as_string());
-					else
-						str = str + ", " + to_utf8string(tmp[i].as_string());
-				}
-
-				_log.info("connected to: " + str + " ]");
-				_log.info("session id: " + _session_id);
-			}
-			else if (to_utf8string(payload.at(U("t")).as_string()) == "RESUMED") {
-				_reconnect_timeout = 0;
-				_last_heartbeat_ack = time(0);
-
-				web::json::array tmp = payload.at(U("d")).at(U("_trace")).as_array();
-				std::string str = "[ ";
-				for (unsigned int i = 0; i < tmp.size(); i++) {
-					_trace.push_back(to_utf8string(tmp[i].as_string()));
-					if (i == 0)
-						str = str + to_utf8string(tmp[i].as_string());
-					else
-						str = str + ", " + to_utf8string(tmp[i].as_string());
-				}
-
-				_log.info("successfully resumed session " + _session_id + " with trace " + str + " ]");
-			}
-			break;
-		case 1:
-			send_heartbeat_ack();
-			break;
-		case 7:
-			_log.info("received opcode 7: reconnecting to the gateway");
-			_client->close(web::websockets::client::websocket_close_status::normal, U("received opcode 7"));
-			break;
-		case 9:
-			_invalid_session = true;
-			break;
-		case 10:
-			_heartbeat_interval = payload.at(U("d")).at(U("heartbeat_interval")).as_integer();
-			_log.debug("set heartbeat_interval: " + std::to_string(_heartbeat_interval));
-			identify();
-			break;
-		case 11:
-			_log.debug("received heartbeat ACK");
+	case 0:
+		if (to_utf8string(payload.at(U("t")).as_string()) == "READY") {
+			_reconnect_timeout = 0;
 			_last_heartbeat_ack = time(0);
-			break;
-		default:
-			break;
+
+			_invalid_session = false;
+
+			_session_id = to_utf8string(payload.at(U("d")).at(U("session_id")).as_string());
+
+			web::json::array tmp = payload.at(U("d")).at(U("_trace")).as_array();
+			std::string str = "[ ";
+			for (unsigned int i = 0; i < tmp.size(); i++) {
+				_trace.push_back(to_utf8string(tmp[i].as_string()));
+				if (i == 0)
+					str = str + to_utf8string(tmp[i].as_string());
+				else
+					str = str + ", " + to_utf8string(tmp[i].as_string());
+			}
+
+			_log.info("connected to: " + str + " ]");
+			_log.info("session id: " + _session_id);
+		}
+		else if (to_utf8string(payload.at(U("t")).as_string()) == "RESUMED") {
+			_reconnect_timeout = 0;
+			_last_heartbeat_ack = time(0);
+
+			web::json::array tmp = payload.at(U("d")).at(U("_trace")).as_array();
+			std::string str = "[ ";
+			for (unsigned int i = 0; i < tmp.size(); i++) {
+				_trace.push_back(to_utf8string(tmp[i].as_string()));
+				if (i == 0)
+					str = str + to_utf8string(tmp[i].as_string());
+				else
+					str = str + ", " + to_utf8string(tmp[i].as_string());
+			}
+
+			_log.info("successfully resumed session " + _session_id + " with trace " + str + " ]");
+		}
+		break;
+	case 1:
+		send_heartbeat_ack();
+		break;
+	case 7:
+		_log.info("received opcode 7: reconnecting to the gateway");
+		_client->close(web::websockets::client::websocket_close_status::normal, U("received opcode 7"));
+		break;
+	case 9:
+		_invalid_session = true;
+		break;
+	case 10:
+		_heartbeat_interval = payload.at(U("d")).at(U("heartbeat_interval")).as_integer();
+		_log.debug("set heartbeat_interval: " + std::to_string(_heartbeat_interval));
+		identify();
+		break;
+	case 11:
+		_log.debug("received heartbeat ACK");
+		_last_heartbeat_ack = time(0);
+		break;
+	default:
+		break;
 	}
 
 	_message_handler(payload);
@@ -123,13 +122,12 @@ pplx::task<void> DiscordCPP::MainGateway::identify() {
 				if (_sequence_number > seq) {
 					return;
 				}
-				//this_thread::sleep_for(chrono::milliseconds(100));
+
 				waitFor(std::chrono::milliseconds(100)).wait();
 			}
 
 			_log.info("cannot resume session");
 
-			//this_thread::sleep_for(chrono::milliseconds(1000 + rand() % 4001));
 			waitFor(std::chrono::milliseconds(1000 + rand() % 4001)).wait();
 		}
 
@@ -139,10 +137,11 @@ pplx::task<void> DiscordCPP::MainGateway::identify() {
 		out_json[U("d")][U("token")] = value(to_string_t(_token));
 		out_json[U("d")][U("shard")][0] = value(_shard_id);
 		out_json[U("d")][U("shard")][1] = value(_num_shards);
+		out_json[U("d")][U("large_threshold")] = value(250);
 #ifdef _WIN32
 		out_json[U("d")][U("properties")][U("$os")] = value(U("Windows"));
 #elif __APPLE__
-		out_json[U("d")][U("properties")][U("$os")] = value(U("OS X"));
+		out_json[U("d")][U("properties")][U("$os")] = value(U("macOS"));
 #elif __linux__
 		out_json[U("d")][U("properties")][U("$os")] = value(U("Linux"));
 #elif __unix__
@@ -159,7 +158,7 @@ pplx::task<void> DiscordCPP::MainGateway::identify() {
 	});
 }
 
-DiscordCPP::MainGateway::MainGateway(std::string token, int shard_id, unsigned int num_shards) : Gateway::Gateway(token) {
+DiscordCPP::MainGateway::MainGateway(const std::string& token, const int shard_id, const unsigned int num_shards) : Gateway::Gateway(token) {
 	_log = Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) + ", " + std::to_string(num_shards) + "] )");
 
 	_invalid_session = false;

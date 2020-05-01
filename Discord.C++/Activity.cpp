@@ -8,7 +8,7 @@ DiscordCPP::Activity::Activity() {
 	type = ActivityTypes::NoActivity;
 }
 
-DiscordCPP::Activity::Activity(string name, int type, string url) {
+DiscordCPP::Activity::Activity(const string& name, const int type, const string& url) {
 	this->name = name;
 	this->type = type;
 	this->url = url;

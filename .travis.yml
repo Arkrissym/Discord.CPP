@@ -1,4 +1,8 @@
-sudo: false
+os:
+  - linux
+  - osx
+
+dist: bionic
 
 language: cpp
 
@@ -12,6 +16,11 @@ addons:
       - libcpprest-dev
       - libsodium-dev
       - libopus-dev
+  homebrew:
+    packages:
+      - cpprestsdk
+      - libsodium
+      - libopus
 
 script:
   - mkdir build

@@ -21,7 +21,7 @@ addons:
     packages:
       - cpprestsdk
       - libsodium
-      - libopus
+      - opus
 
 script:
   - mkdir build

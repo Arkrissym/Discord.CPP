@@ -18,6 +18,7 @@ set ( src_discord_cpp
       Discord.C++/DMChannel.cpp
       Discord.C++/Embed.cpp
       Discord.C++/Exceptions.cpp
+      Discord.C++/FFmpegAudioSource.cpp
       Discord.C++/FileAudioSource.cpp
       Discord.C++/Gateway.cpp
       Discord.C++/Guild.cpp
@@ -56,6 +57,7 @@ install(FILES
       Discord.C++/DMChannel.h
       Discord.C++/Embed.h
       Discord.C++/Exceptions.h
+      Discord.C++/FFmpegAudioSource.h
       Discord.C++/FileAudioSource.h
       Discord.C++/Gateway.h
       Discord.C++/Guild.h

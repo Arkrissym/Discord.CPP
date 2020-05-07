@@ -16,6 +16,35 @@ using namespace DiscordCPP;
 using namespace std;
 
 class myClient : public Discord {
+private:
+	Channel* findChannel(const string& name, const string& guild_id) {
+		for (unsigned int i = 0; i < _guilds.size(); i++) {
+			if (guild_id == _guilds[i]->id) {
+				for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
+					if (_guilds[i]->channels[j]->name.compare(name) == 0) {
+						return _guilds[i]->channels[j];
+					}
+				}
+			}
+		}
+		return NULL;
+	}
+	void play(VoiceChannel* channel, AudioSource* source) {
+		VoiceClient* vc = channel->connect();
+
+		try {
+			vc->play(source).wait();
+		}
+		catch (const OpusError& e) {
+			log.error("Opus error: " + string(e.what()) + " (code: " + to_string(e.get_error_code()) + ")");
+		}
+		catch (const ClientException& e) {
+			log.error("ClientException in vc->play: " + string(e.what()));
+		}
+		vc->disconnect().wait();
+
+		delete vc;
+	}
 public:
 	void on_ready(User user) {
 		log.info("logged in as: " + user.username);
@@ -40,7 +69,7 @@ public:
 	}
 
 	void on_message(Message message) {
-		log.debug(message.author->username + "\" sent " + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
+		log.debug(message.author->username + " sent \"" + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
 
 		if (message.content.compare("?hello") == 0) {
 			Message msg = message.channel->send("Hello World!");
@@ -97,46 +126,29 @@ public:
 			log.info("num messages: " + to_string(messages.size()));
 			message.channel->delete_messages(messages);
 		}
-		else if (message.content.compare(0, 6, "?join ") == 0) {
+		else if (message.content.compare(0, 9, "?playwav ") == 0) {
 			if (message.channel->type != ChannelType::GUILD_TEXT) {
 				return;
 			}
 
-			string channel_name = message.content.substr(6);
+			FileAudioSource* source = new FileAudioSource("test.wav");
+			string channel_name = message.content.substr(9);
 
-			Guild* guild = NULL;
+			play((VoiceChannel*)findChannel(channel_name, ((GuildChannel*)message.channel)->guild->id), source);
 
-			for (unsigned int i = 0; i < _guilds.size(); i++) {
-				if (((GuildChannel*)message.channel)->guild->id == _guilds[i]->id) {
-					guild = _guilds[i];
-					break;
-				}
+			delete source;
+		}
+		else if (message.content.compare(0, 12, "?playffmpeg ") == 0) {
+			if (message.channel->type != ChannelType::GUILD_TEXT) {
+				return;
 			}
 
-			for (unsigned int i = 0; i < guild->channels.size(); i++) {
-				if (guild->channels[i]->name.compare(channel_name) == 0) {
-					VoiceClient* vc = ((VoiceChannel*)guild->channels[i])->connect();
-					FileAudioSource* source = new FileAudioSource("test.wav");
+			FFmpegAudioSource* source = new FFmpegAudioSource("test.mp3");
+			string channel_name = message.content.substr(12);
 
-					try {
-						vc->play(source).wait();
-					}
-					catch (const OpusError& e) {
-						log.error("Opus error: " + string(e.what()) + " (code: " + to_string(e.get_error_code()) + ")");
-					}
-					catch (const ClientException& e) {
-						log.error("ClientException in vc->play: " + string(e.what()));
-					}
-					vc->disconnect().wait();
+			play((VoiceChannel*)findChannel(channel_name, ((GuildChannel*)message.channel)->guild->id), source);
 
-					delete source;
-					delete vc;
-
-					return;
-				}
-			}
-
-			message.channel->send("Channel not found");
+			delete source;
 		}
 		else if (message.content == "?leave_guild") {
 			if (message.channel->type == ChannelType::GUILD_TEXT) {

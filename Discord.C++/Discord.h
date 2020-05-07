@@ -18,6 +18,7 @@
 #include "VoiceState.h"
 #include "AudioSource.h"
 #include "FileAudioSource.h"
+#include "FFmpegAudioSource.h"
 #include "Exceptions.h"
 #include "MainGateway.h"
 #include "DiscordObject.h"

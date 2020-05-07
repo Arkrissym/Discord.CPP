@@ -77,6 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,6 +87,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -97,6 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -112,6 +115,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -126,6 +130,7 @@
     <ClCompile Include="DMChannel.cpp" />
     <ClCompile Include="Embed.cpp" />
     <ClCompile Include="Exceptions.cpp" />
+    <ClCompile Include="FFmpegAudioSource.cpp" />
     <ClCompile Include="FileAudioSource.cpp" />
     <ClCompile Include="Gateway.cpp" />
     <ClCompile Include="Guild.cpp" />
@@ -151,6 +156,7 @@
     <ClInclude Include="DMChannel.h" />
     <ClInclude Include="Embed.h" />
     <ClInclude Include="Exceptions.h" />
+    <ClInclude Include="FFmpegAudioSource.h" />
     <ClInclude Include="FileAudioSource.h" />
     <ClInclude Include="Gateway.h" />
     <ClInclude Include="Guild.h" />
@@ -166,6 +172,9 @@
     <ClInclude Include="VoiceClient.h" />
     <ClInclude Include="VoiceGateway.h" />
     <ClInclude Include="VoiceState.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

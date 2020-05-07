@@ -81,6 +81,9 @@
     <ClCompile Include="MainGateway.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="FFmpegAudioSource.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Discord.h">
@@ -152,5 +155,11 @@
     <ClInclude Include="MainGateway.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="FFmpegAudioSource.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

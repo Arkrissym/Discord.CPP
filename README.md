@@ -6,6 +6,7 @@ Doxygen-generated documentiomenation is available [here](https://arkrissym.githu
 
 ## Dependencies
 - [cpprestsdk](https://github.com/Microsoft/cpprestsdk)
+- boost-process
 - libsodium
 - libopus
 

@@ -2,9 +2,6 @@
 
 using namespace std;
 
-/**	@param[in]	filename		the name of the file to use as AudioSource
-	@return		FileAudioSource	playable AudioSource
-*/
 DiscordCPP::FileAudioSource::FileAudioSource(const std::string& filename) {
 	_file.open(filename, ios_base::binary);
 }

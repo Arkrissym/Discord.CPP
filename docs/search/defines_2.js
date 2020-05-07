@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['channels',['CHANNELS',['../_voice_client_8cpp.html#a19b7f1b22403d61234a92decaeb6953a',1,'VoiceClient.cpp']]]
+  ['gateway_5furl_703',['GATEWAY_URL',['../static_8h.html#a5f44de4dc2f28bd239034f62914329ba',1,'static.h']]]
 ];

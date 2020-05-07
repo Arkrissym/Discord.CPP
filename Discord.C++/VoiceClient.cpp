@@ -232,8 +232,6 @@ pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
 	});
 }
 
-/**	@throws	OpusError	ClientException
-*/
 pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
 	return pplx::create_task([this, source] {
 		_log.debug("creating opus encoder");
@@ -247,10 +245,6 @@ pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
 		if (error < 0) {
 			throw OpusError("failed to set bitrate for opus encoder: " + string(opus_strerror(error)), error);
 		}
-
-		opus_encoder_ctl(encoder, OPUS_SET_INBAND_FEC(1));
-		opus_encoder_ctl(encoder, OPUS_SET_PACKET_LOSS_PERC(15));
-
 
 		_log.debug("initialising libsodium");
 		if (sodium_init() == -1) {

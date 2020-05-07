@@ -13,6 +13,9 @@ namespace DiscordCPP {
 	private:
 		std::ifstream _file;
 	public:
+		/**	@param[in]	filename		the name of the file to use as AudioSource
+			@return		FileAudioSource	playable AudioSource
+		*/
 		DLL_EXPORT FileAudioSource(const std::string& filename);
 		DLL_EXPORT ~FileAudioSource();
 

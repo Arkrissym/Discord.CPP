@@ -94,7 +94,9 @@ namespace DiscordCPP {
 
 		///Disconnect from the VoiceChannel
 		DLL_EXPORT pplx::task<void> disconnect();
-		///play an AudioSource
+		/** play an AudioSource
+			@throws	OpusError	ClientException
+		*/
 		DLL_EXPORT pplx::task<void> play(AudioSource* source);
 	};
 

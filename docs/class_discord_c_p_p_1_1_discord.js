@@ -1,0 +1,26 @@
+var class_discord_c_p_p_1_1_discord =
+[
+    [ "Discord", "class_discord_c_p_p_1_1_discord.html#a2e9d606650955f3f8338c685d3b138bd", null ],
+    [ "Discord", "class_discord_c_p_p_1_1_discord.html#af07396600223625b8e008c7ae0b8a03e", null ],
+    [ "~Discord", "class_discord_c_p_p_1_1_discord.html#a33748fd4c9e42f9316b4d2f064e09307", null ],
+    [ "connect", "class_discord_c_p_p_1_1_discord.html#a1f2a887bd57befcf15130cce6cfe01eb", null ],
+    [ "get_guild", "class_discord_c_p_p_1_1_discord.html#adaeefdeac6c57d118b35ba87d0d5def5", null ],
+    [ "get_shard", "class_discord_c_p_p_1_1_discord.html#a7f81af18040afae33fee33e5b52200f7", null ],
+    [ "handle_raw_event", "class_discord_c_p_p_1_1_discord.html#ae727cc96d37761dff3b04bf2e472ed1e", null ],
+    [ "on_message", "class_discord_c_p_p_1_1_discord.html#aa492a81b01db3db673c012686cf6edd6", null ],
+    [ "on_ready", "class_discord_c_p_p_1_1_discord.html#a388f3b9e8658106de3d078d30df6dc6d", null ],
+    [ "on_typing_start", "class_discord_c_p_p_1_1_discord.html#a5890569ca6af4cba707633e36c6a7f99", null ],
+    [ "on_user_ban", "class_discord_c_p_p_1_1_discord.html#a87da659a6006e068645c62e4321a6958", null ],
+    [ "on_user_join", "class_discord_c_p_p_1_1_discord.html#af8f5fda6a63e8f25e9c7516e6513772a", null ],
+    [ "on_user_remove", "class_discord_c_p_p_1_1_discord.html#a0de737357cf9a4fd90f33148596a1811", null ],
+    [ "on_user_unban", "class_discord_c_p_p_1_1_discord.html#a21ca25e38da767c2adf54ef0aee04834", null ],
+    [ "on_websocket_incoming_message", "class_discord_c_p_p_1_1_discord.html#a84422ed84a149be462219da564c2d6ed", null ],
+    [ "update_presence", "class_discord_c_p_p_1_1_discord.html#a6b637b0c4db7011c621d5245408d8ae2", null ],
+    [ "VoiceChannel::connect", "class_discord_c_p_p_1_1_discord.html#aef717f30b5ca56e6fd45ef31a560cc57", null ],
+    [ "_gateways", "class_discord_c_p_p_1_1_discord.html#ae1bb612f95605a358fbeee944d95cf4a", null ],
+    [ "_guilds", "class_discord_c_p_p_1_1_discord.html#ad758076bc8c78fe67563acda2dc08bd4", null ],
+    [ "_num_shards", "class_discord_c_p_p_1_1_discord.html#ab05d946598a186194fbf264b904690de", null ],
+    [ "_user", "class_discord_c_p_p_1_1_discord.html#aaa6c48ecf3243535a5c815335a88c9df", null ],
+    [ "_voice_states", "class_discord_c_p_p_1_1_discord.html#ac50d4a1838df02a76649b6407eca3f4b", null ],
+    [ "log", "class_discord_c_p_p_1_1_discord.html#aceea847167519beaf0718e25ade2482a", null ]
+];

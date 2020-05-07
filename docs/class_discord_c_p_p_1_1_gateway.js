@@ -1,0 +1,25 @@
+var class_discord_c_p_p_1_1_gateway =
+[
+    [ "Gateway", "class_discord_c_p_p_1_1_gateway.html#a64b4b255b761effebe03b58684a87d19", null ],
+    [ "~Gateway", "class_discord_c_p_p_1_1_gateway.html#a29c850847b9a2eb5b3a11cfe7464c76d", null ],
+    [ "close", "class_discord_c_p_p_1_1_gateway.html#a3d7c7654b4875c1d511bdff8ac79abd8", null ],
+    [ "connect", "class_discord_c_p_p_1_1_gateway.html#a8b1964276bab1833f03ea33e445faa7e", null ],
+    [ "get_heartbeat_payload", "class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504", null ],
+    [ "identify", "class_discord_c_p_p_1_1_gateway.html#a9ffb374ae58193e1951af50db76580e6", null ],
+    [ "on_websocket_disconnnect", "class_discord_c_p_p_1_1_gateway.html#aed14f037d1a16136e98971589505d0da", null ],
+    [ "on_websocket_incoming_message", "class_discord_c_p_p_1_1_gateway.html#aada4b4c19d005d373797125772de3bd9", null ],
+    [ "send", "class_discord_c_p_p_1_1_gateway.html#a36e17ba1ad03cfe50b46486e52ee5024", null ],
+    [ "set_message_handler", "class_discord_c_p_p_1_1_gateway.html#a4ed26e926e0d0a72ad4850f7d407a111", null ],
+    [ "start_heartbeating", "class_discord_c_p_p_1_1_gateway.html#aae926a59675b60a84cc6618e59b796cd", null ],
+    [ "_client", "class_discord_c_p_p_1_1_gateway.html#ab65fd1d5a2cedc4efb925e69390e5afe", null ],
+    [ "_connected", "class_discord_c_p_p_1_1_gateway.html#a11c41119682712f54c52699f145cd358", null ],
+    [ "_heartbeat_interval", "class_discord_c_p_p_1_1_gateway.html#a15efceb1418919ee5aa30dc84d2e7a63", null ],
+    [ "_heartbeat_task", "class_discord_c_p_p_1_1_gateway.html#a9d65f3b24c454768eb4f184ae2f2a718", null ],
+    [ "_keepalive", "class_discord_c_p_p_1_1_gateway.html#a61a5541583b00552f6096f6be94d8d83", null ],
+    [ "_last_heartbeat_ack", "class_discord_c_p_p_1_1_gateway.html#aaa10626364081978b6dd2f48ea1847b8", null ],
+    [ "_log", "class_discord_c_p_p_1_1_gateway.html#a93a86555e416d42474ce1dcb39d31190", null ],
+    [ "_message_handler", "class_discord_c_p_p_1_1_gateway.html#a4adc28e41f0e0246de2eedb5d076d326", null ],
+    [ "_reconnect_timeout", "class_discord_c_p_p_1_1_gateway.html#a6d0f89646622d33fe67827f5d66b3d09", null ],
+    [ "_token", "class_discord_c_p_p_1_1_gateway.html#a2478900fa267576f8060585b9a92d9a0", null ],
+    [ "_url", "class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed", null ]
+];

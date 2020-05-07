@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ban',['ban',['../class_discord_c_p_p_1_1_guild.html#adce0f1e9342b94d8408551b92babc049',1,'DiscordCPP::Guild']]]
+  ['ban_436',['ban',['../class_discord_c_p_p_1_1_guild.html#a21907fb180519cd8e8bd20b20cba5d59',1,'DiscordCPP::Guild']]]
 ];

@@ -21,7 +21,6 @@ public:
 	DLL_EXPORT Logger();
 	DLL_EXPORT ~Logger();
 	DLL_EXPORT Logger(const std::string&);
-	DLL_EXPORT Logger(const Logger& old);
 
 	DLL_EXPORT void set_log_level(const Loglevel& level);
 

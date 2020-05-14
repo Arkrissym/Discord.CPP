@@ -79,7 +79,7 @@ value DiscordCPP::DiscordObject::api_call(const string& url, const method& metho
 
 	request.set_request_uri(uri(conversions::to_string_t(url)));
 	request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(_token)));
-	request.headers().add(U("User-Agent"), conversions::to_string_t("DiscordBot (github.com/Arkrissym/Discord.CPP, " + string(VERSION) + ")"));
+	request.headers().add(U("User-Agent"), conversions::to_string_t("DiscordBot (Discord.C++, " + string(VERSION) + ")"));
 	if (content_type != "")
 		request.headers().set_content_type(conversions::to_string_t(content_type));
 
@@ -91,7 +91,7 @@ value DiscordCPP::DiscordObject::api_call(const string& url, const method& metho
 
 	do {
 		pplx::task<http_response> requestTask = c.request(request).then([this, url](http_response response) {
-			Logger("discord.object.api_call").debug("api call sent: " + url + ": " + to_string(response.status_code()));
+			Logger("discord.object.api_call").debug("api call sent: " + string(API_URL) + url + ": " + to_string(response.status_code()));
 
 			return response;
 		});

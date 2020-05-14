@@ -48,7 +48,7 @@ target_link_libraries( ${PROJECT_NAME} crypto )
 target_link_libraries( ${PROJECT_NAME} ssl )
 
 install(TARGETS discord_cpp DESTINATION lib)
-install(FILES 
+install(FILES
       Discord.C++/Activity.h
       Discord.C++/AudioSource.h
       Discord.C++/Channel.h

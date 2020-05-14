@@ -16,10 +16,6 @@ Logger::Logger(const std::string& name) {
 	_name = name;
 }
 
-Logger::Logger(const Logger& old) {
-	_name = old._name;
-}
-
 void Logger::set_log_level(const Loglevel& level) {
 	_level = level;
 }

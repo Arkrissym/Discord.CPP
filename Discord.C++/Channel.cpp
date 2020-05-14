@@ -43,8 +43,7 @@ DiscordCPP::Channel::Channel(const string& id, const string_t& token) : DiscordC
 
 /*	@param[in]	old	the Channel to copy
 */
-DiscordCPP::Channel::Channel(const Channel& old) {
-	_token = old._token;
+DiscordCPP::Channel::Channel(const Channel& old) : DiscordCPP::DiscordObject(old) {
 	id = old.id;
 	type = old.type;
 	position = old.position;

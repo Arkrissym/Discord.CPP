@@ -260,7 +260,7 @@ int main() {
 	client.log.set_log_level(Debug);
 
 	while (1) {
-		this_thread::sleep_for(chrono::seconds(1));
+		waitFor(chrono::seconds(5)).wait();
 	}
 
 	return 0;

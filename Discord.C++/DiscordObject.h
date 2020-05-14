@@ -3,6 +3,12 @@
 #include <cpprest/json.h>
 #include <cpprest/http_client.h>
 
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
+
 namespace DiscordCPP {
 
 	class DiscordObject {
@@ -16,8 +22,8 @@ namespace DiscordCPP {
 		///the id of the object
 		std::string id;	//snowflake
 
-		DiscordObject();
-		DiscordObject(const utility::string_t& token);
+		DLL_EXPORT DiscordObject();
+		DLL_EXPORT DiscordObject(const utility::string_t& token);
 	};
 
 }

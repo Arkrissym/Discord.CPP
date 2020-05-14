@@ -72,40 +72,40 @@ DiscordCPP::Discord::~Discord() {
 }
 
 ///	@param[in]	user	the User
-void DiscordCPP::Discord::on_ready(User user) {
+void DiscordCPP::Discord::on_ready(User) {
 	log.debug("on_ready");
 }
 
 ///	@param[in]	message	the Message that was received
-void DiscordCPP::Discord::on_message(Message message) {
+void DiscordCPP::Discord::on_message(Message) {
 	log.debug("on_message");
 }
 
 /**	@param[in]	user	the User who has been banned
 	@param[in]	guild	the Guild the User has been banned from
 */
-void DiscordCPP::Discord::on_user_ban(User user, Guild guild) {
+void DiscordCPP::Discord::on_user_ban(User, Guild) {
 	log.debug("on_member_ban");
 }
 
 /**	@param[in]	user	the User who has been unbanned
 	@param[in]	guild	the Guild the User has been unbanned from
 */
-void DiscordCPP::Discord::on_user_unban(User user, Guild guild) {
+void DiscordCPP::Discord::on_user_unban(User, Guild) {
 	log.debug("on_member_unban");
 }
 
 /**	@param[in]	member	the User who has joined
 	@param[in]	guild	the Guild the User has joined
 */
-void DiscordCPP::Discord::on_user_join(Member member, Guild guild) {
+void DiscordCPP::Discord::on_user_join(Member, Guild) {
 	log.debug("on_member_join");
 }
 
 /**	@param[in]	user	the User who has been removed
 	@param[in]	guild	the Guild the User has been removed from
 */
-void DiscordCPP::Discord::on_user_remove(User user, Guild guild) {
+void DiscordCPP::Discord::on_user_remove(User, Guild) {
 	log.debug("on_member_remove");
 }
 
@@ -113,7 +113,7 @@ void DiscordCPP::Discord::on_user_remove(User user, Guild guild) {
 	@param[in]	channel		the TextChannel where the USer started typing
 	@param[in]	timestamp	(unix time) when the User started typing
 */
-void DiscordCPP::Discord::on_typing_start(User user, TextChannel channel, unsigned int timestamp) {
+void DiscordCPP::Discord::on_typing_start(User, TextChannel, unsigned int) {
 	log.debug("on_typing_start");
 }
 

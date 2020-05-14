@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Logger.h"
+#include "static.h"
 
 #include "User.h"
 #include "Message.h"

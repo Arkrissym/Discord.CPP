@@ -168,7 +168,7 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token, const int shard_i
 
 	_sequence_number = 0;
 
-	_message_handler = [this](value payload) {
+	_message_handler = [this](value) {
 		_log.info("dummy message handler called");
 	};
 }

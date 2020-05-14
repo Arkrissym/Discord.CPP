@@ -64,8 +64,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_activity_8cpp.html",
-"class_discord_c_p_p_1_1_gateway.html#a3d7c7654b4875c1d511bdff8ac79abd8",
-"static_8cpp.html"
+"class_discord_c_p_p_1_1_gateway.html#a29c850847b9a2eb5b3a11cfe7464c76d",
+"namespacemembers_vars.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

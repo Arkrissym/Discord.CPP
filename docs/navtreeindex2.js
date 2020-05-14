@@ -1,5 +1,8 @@
 var NAVTREEINDEX2 =
 {
+"namespacemembers_vars.html":[0,1,1],
+"namespaces.html":[0,0],
+"pages.html":[],
 "static_8cpp.html":[2,0,0,33],
 "static_8cpp.html#a6ee5c1de153aea9f809324eccbfc1eb6":[2,0,0,33,1],
 "static_8cpp.html#a96aca8381ac6ec864ace9b90c46fe241":[2,0,0,33,2],

@@ -4,6 +4,7 @@ var class_discord_c_p_p_1_1_gateway =
     [ "~Gateway", "class_discord_c_p_p_1_1_gateway.html#a29c850847b9a2eb5b3a11cfe7464c76d", null ],
     [ "close", "class_discord_c_p_p_1_1_gateway.html#a3d7c7654b4875c1d511bdff8ac79abd8", null ],
     [ "connect", "class_discord_c_p_p_1_1_gateway.html#a8b1964276bab1833f03ea33e445faa7e", null ],
+    [ "decompress_message", "class_discord_c_p_p_1_1_gateway.html#a4b9acf3f26b466b86c0021f63fad9e03", null ],
     [ "get_heartbeat_payload", "class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504", null ],
     [ "identify", "class_discord_c_p_p_1_1_gateway.html#a9ffb374ae58193e1951af50db76580e6", null ],
     [ "on_websocket_disconnnect", "class_discord_c_p_p_1_1_gateway.html#aed14f037d1a16136e98971589505d0da", null ],
@@ -21,5 +22,6 @@ var class_discord_c_p_p_1_1_gateway =
     [ "_message_handler", "class_discord_c_p_p_1_1_gateway.html#a4adc28e41f0e0246de2eedb5d076d326", null ],
     [ "_reconnect_timeout", "class_discord_c_p_p_1_1_gateway.html#a6d0f89646622d33fe67827f5d66b3d09", null ],
     [ "_token", "class_discord_c_p_p_1_1_gateway.html#a2478900fa267576f8060585b9a92d9a0", null ],
-    [ "_url", "class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed", null ]
+    [ "_url", "class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed", null ],
+    [ "zs", "class_discord_c_p_p_1_1_gateway.html#a17486b39362c3d1d1b344cdc73b61893", null ]
 ];

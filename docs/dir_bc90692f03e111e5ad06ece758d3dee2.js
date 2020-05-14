@@ -8,9 +8,7 @@ var dir_bc90692f03e111e5ad06ece758d3dee2 =
     [ "Discord.cpp", "_discord_8cpp.html", null ],
     [ "Discord.h", "_discord_8h.html", "_discord_8h" ],
     [ "DiscordObject.cpp", "_discord_object_8cpp.html", "_discord_object_8cpp" ],
-    [ "DiscordObject.h", "_discord_object_8h.html", [
-      [ "DiscordObject", "class_discord_c_p_p_1_1_discord_object.html", "class_discord_c_p_p_1_1_discord_object" ]
-    ] ],
+    [ "DiscordObject.h", "_discord_object_8h.html", "_discord_object_8h" ],
     [ "DMChannel.cpp", "_d_m_channel_8cpp.html", null ],
     [ "DMChannel.h", "_d_m_channel_8h.html", "_d_m_channel_8h" ],
     [ "Embed.cpp", "_embed_8cpp.html", null ],

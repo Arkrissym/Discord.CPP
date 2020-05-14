@@ -7,12 +7,14 @@
 #define DLL_EXPORT
 #endif
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 namespace boost::process {
 	class child;
 	template<class CharT, class Traits>
 	class basic_ipstream;
 	typedef basic_ipstream<char, std::char_traits<char>> ipstream;
 }
+#endif
 
 namespace DiscordCPP {
 	class FFmpegAudioSource : public AudioSource {

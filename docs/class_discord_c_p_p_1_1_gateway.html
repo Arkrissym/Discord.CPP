@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.8.0</span>
+   &#160;<span id="projectnumber">0.9.0</span>
    </div>
   </td>
  </tr>
@@ -121,6 +121,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a4b9acf3f26b466b86c0021f63fad9e03"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_gateway.html#a4b9acf3f26b466b86c0021f63fad9e03">decompress_message</a> (const std::string &amp;message)</td></tr>
+<tr class="separator:a4b9acf3f26b466b86c0021f63fad9e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae926a59675b60a84cc6618e59b796cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_gateway.html#aae926a59675b60a84cc6618e59b796cd">start_heartbeating</a> ()</td></tr>
 <tr class="separator:aae926a59675b60a84cc6618e59b796cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20c7d8b105ccb853d0ca6913c2f3b504"><td class="memItemLeft" align="right" valign="top">virtual web::json::value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504">get_heartbeat_payload</a> ()=0</td></tr>
@@ -137,6 +139,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:ab65fd1d5a2cedc4efb925e69390e5afe"><td class="memItemLeft" align="right" valign="top">web::websockets::client::websocket_callback_client *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_gateway.html#ab65fd1d5a2cedc4efb925e69390e5afe">_client</a></td></tr>
 <tr class="memdesc:ab65fd1d5a2cedc4efb925e69390e5afe"><td class="mdescLeft">&#160;</td><td class="mdescRight">websocket client  <a href="class_discord_c_p_p_1_1_gateway.html#ab65fd1d5a2cedc4efb925e69390e5afe">More...</a><br /></td></tr>
 <tr class="separator:ab65fd1d5a2cedc4efb925e69390e5afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17486b39362c3d1d1b344cdc73b61893"><td class="memItemLeft" align="right" valign="top">z_stream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_gateway.html#a17486b39362c3d1d1b344cdc73b61893">zs</a></td></tr>
+<tr class="memdesc:a17486b39362c3d1d1b344cdc73b61893"><td class="mdescLeft">&#160;</td><td class="mdescRight">zlib control struct  <a href="class_discord_c_p_p_1_1_gateway.html#a17486b39362c3d1d1b344cdc73b61893">More...</a><br /></td></tr>
+<tr class="separator:a17486b39362c3d1d1b344cdc73b61893"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a148fe7d8d61e7a9562a85d34160849ed"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed">_url</a></td></tr>
 <tr class="memdesc:a148fe7d8d61e7a9562a85d34160849ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">the url of the gateway  <a href="class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed">More...</a><br /></td></tr>
 <tr class="separator:a148fe7d8d61e7a9562a85d34160849ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,6 +248,32 @@ Protected Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4b9acf3f26b466b86c0021f63fad9e03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b9acf3f26b466b86c0021f63fad9e03">&#9670;&nbsp;</a></span>decompress_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string DiscordCPP::Gateway::decompress_message </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -692,6 +723,30 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>the url of the gateway </p>
+
+</div>
+</div>
+<a id="a17486b39362c3d1d1b344cdc73b61893"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17486b39362c3d1d1b344cdc73b61893">&#9670;&nbsp;</a></span>zs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">z_stream DiscordCPP::Gateway::zs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>zlib control struct </p>
 
 </div>
 </div>

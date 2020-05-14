@@ -38,6 +38,7 @@ var NAVTREEINDEX0 =
 "_discord_object_8cpp.html":[2,0,0,7],
 "_discord_object_8cpp.html#a3955b4051f520389666aa25e70663b63":[2,0,0,7,0],
 "_discord_object_8h.html":[2,0,0,8],
+"_discord_object_8h.html#a1ca888bd091694c05472e1b91df1a97b":[2,0,0,8,1],
 "_discord_object_8h_source.html":[2,0,0,8],
 "_embed_8cpp.html":[2,0,0,11],
 "_embed_8h.html":[2,0,0,12],
@@ -243,11 +244,10 @@ var NAVTREEINDEX0 =
 "class_discord_c_p_p_1_1_file_audio_source.html#acd109a5ce885f349f6c68769bba89090":[1,0,0,10,2],
 "class_discord_c_p_p_1_1_file_audio_source.html#aecdc8d48f808999c27ade51a9107b992":[1,0,0,10,1],
 "class_discord_c_p_p_1_1_gateway.html":[1,0,0,11],
-"class_discord_c_p_p_1_1_gateway.html#a11c41119682712f54c52699f145cd358":[1,0,0,11,12],
-"class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed":[1,0,0,11,21],
-"class_discord_c_p_p_1_1_gateway.html#a15efceb1418919ee5aa30dc84d2e7a63":[1,0,0,11,13],
-"class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504":[1,0,0,11,4],
-"class_discord_c_p_p_1_1_gateway.html#a2478900fa267576f8060585b9a92d9a0":[1,0,0,11,20],
-"class_discord_c_p_p_1_1_gateway.html#a29c850847b9a2eb5b3a11cfe7464c76d":[1,0,0,11,1],
-"class_discord_c_p_p_1_1_gateway.html#a36e17ba1ad03cfe50b46486e52ee5024":[1,0,0,11,8]
+"class_discord_c_p_p_1_1_gateway.html#a11c41119682712f54c52699f145cd358":[1,0,0,11,13],
+"class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed":[1,0,0,11,22],
+"class_discord_c_p_p_1_1_gateway.html#a15efceb1418919ee5aa30dc84d2e7a63":[1,0,0,11,14],
+"class_discord_c_p_p_1_1_gateway.html#a17486b39362c3d1d1b344cdc73b61893":[1,0,0,11,23],
+"class_discord_c_p_p_1_1_gateway.html#a20c7d8b105ccb853d0ca6913c2f3b504":[1,0,0,11,5],
+"class_discord_c_p_p_1_1_gateway.html#a2478900fa267576f8060585b9a92d9a0":[1,0,0,11,21]
 };

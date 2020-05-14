@@ -1,6 +1,7 @@
 #pragma once
 #include <cpprest/json.h>
 #include <cpprest/ws_client.h>
+#include <zlib.h>
 #include "Logger.h"
 
 #ifdef _WIN32
@@ -15,6 +16,8 @@ namespace DiscordCPP {
 	protected:
 		///websocket client
 		web::websockets::client::websocket_callback_client* _client;
+		///zlib control struct
+		z_stream zs;
 		///the url of the gateway
 		std::string _url;
 		///token to identify with the gateway
@@ -34,6 +37,8 @@ namespace DiscordCPP {
 		Logger _log;
 		///the message handler set by using set_message_handler
 		std::function<void(web::json::value payload)> _message_handler;
+
+		DLL_EXPORT std::string decompress_message(const std::string& message);
 
 		DLL_EXPORT void start_heartbeating();
 		DLL_EXPORT virtual web::json::value get_heartbeat_payload() = 0;

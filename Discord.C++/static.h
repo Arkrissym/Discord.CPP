@@ -1,7 +1,7 @@
 #pragma once
-#define VERSION		"0.8.0"
+#define VERSION		"0.9.0"
 
-#define GATEWAY_URL	"wss://gateway.discord.gg?v=6&encoding=json"
+#define GATEWAY_URL	"wss://gateway.discord.gg?v=6&encoding=json&compress=zlib-stream"
 #define API_URL		"https://discord.com/api/v6"
 
 #define is_valid_field(name)	(data.has_field(U(name))) && (!data.at(U(name)).is_null())

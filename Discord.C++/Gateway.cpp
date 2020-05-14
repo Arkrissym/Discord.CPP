@@ -9,6 +9,33 @@ using namespace web::websockets::client;
 using namespace web::json;
 using namespace utility::conversions;
 
+std::string DiscordCPP::Gateway::decompress_message(const std::string& message) {
+	zs.next_in = (unsigned char*)message.data();
+	zs.avail_in = (uInt)message.size();
+	zs.total_out = 0;
+
+	int ret;
+	char buf[8192];
+	std::string out;
+
+	do {
+		zs.next_out = (unsigned char*)buf;
+		zs.avail_out = sizeof(buf);
+
+		ret = inflate(&zs, Z_NO_FLUSH);
+
+		if (out.size() < zs.total_out) {
+			out.append(buf, zs.total_out - out.size());
+		}
+	} while (ret == Z_OK && zs.avail_in > 0);
+
+	if (ret != Z_OK) {
+		throw ClientException("Failed to decompress message");
+	}
+
+	return out;
+}
+
 void DiscordCPP::Gateway::start_heartbeating() {
 	_heartbeat_task = pplx::create_task([this] {
 		bool* keepalive = _keepalive;
@@ -95,11 +122,31 @@ DiscordCPP::Gateway::Gateway(const std::string& token) {
 
 	_connected = false;
 
+	zs.zalloc = Z_NULL;
+	zs.zfree = Z_NULL;
+	zs.opaque = Z_NULL;
+	zs.avail_in = 0;
+	zs.next_in = Z_NULL;
+
+	if (inflateInit(&zs) != Z_OK) {
+		throw ClientException("Failed to initialize zlib");
+	}
+
 	_client = new websocket_callback_client();
 
 	_client->set_message_handler([this](websocket_incoming_message msg) {
-		pplx::task<std::string> str = msg.extract_string();
-		utility::string_t message = to_string_t(str.get());
+		std::string message;
+
+		if (msg.message_type() == websocket_message_type::binary_message) {
+			concurrency::streams::container_buffer<std::string> buf;
+			msg.body().read_to_end(buf).wait();
+			message = decompress_message(buf.collection());
+		}
+		else {
+			message = msg.extract_string().get();
+		}
+
+		_log.debug("received message: " + message);
 
 		value payload = value::parse(message);
 
@@ -116,7 +163,7 @@ DiscordCPP::Gateway::~Gateway() {
 	delete _client;
 }
 
-void DiscordCPP::Gateway::set_message_handler(const std::function<void(web::json::value payload)>& handler) {
+void DiscordCPP::Gateway::set_message_handler(const std::function<void(web::json::value)>& handler) {
 	_message_handler = handler;
 }
 
@@ -133,8 +180,10 @@ pplx::task<void> DiscordCPP::Gateway::connect(const std::string& url) {
 pplx::task<void> DiscordCPP::Gateway::send(const value& message) {
 	if (_connected == false)
 		throw ClientException("Gateway not connected");
+
 	web::websockets::client::websocket_outgoing_message msg;
 	msg.set_utf8_message(to_utf8string(message.serialize()));
+
 	return _client->send(msg);
 }
 

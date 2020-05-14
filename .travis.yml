@@ -10,10 +10,16 @@ compiler:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-bionic-9
     packages:
       - libcpprest-dev
       - libsodium-dev
       - libopus-dev
+      - gcc-9
+      - g++-9
+      - clang-9
 
 script:
   - mkdir build

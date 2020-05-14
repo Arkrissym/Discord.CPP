@@ -22,6 +22,10 @@ addons:
       - clang-9
 
 script:
+  - update-alternatives --set gcc "/usr/bin/gcc-9"
+  - update-alternatives --set g++ "/usr/bin/g++-9"
+  - update-alternatives --set clang "/usr/bin/clang-9"
+  - update-alternatives --set clang++ "/usr/bin/clang++-9"
   - mkdir build
   - cd build
   - cmake ..

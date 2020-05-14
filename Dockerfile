@@ -1,21 +1,31 @@
 FROM ubuntu
 
-RUN apt-get update && apt-get -y install build-essential \
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
 	make \
+	cmake \
 	libcpprest-dev \
 	libopus-dev \
-	libsodium-dev
+	libsodium-dev \
+	ffmpeg
 
 COPY . /app
 
 WORKDIR /app
 
-RUN make -j4
-RUN make install
+RUN mkdir build && \
+	cd build && \
+	cmake .. && \
+	make -j4 && \
+	make install && \
+	ldconfig && \
+	cd ..
 
-RUN make test
+WORKDIR /app/test_bot
+
+RUN g++ -Wall -o test main.cpp -ldiscord_cpp -lcpprest -lpthread -lssl -lcrypto
 
 ARG token
 ENV DISCORD_TEST_TOKEN=$token
 
-ENTRYPOINT ["/app/test"]
+ENTRYPOINT ["/app/test_bot/test"]

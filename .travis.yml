@@ -1,31 +1,53 @@
-os: linux
-
-dist: bionic
-
 language: cpp
 
-compiler:
-  - gcc
-  - clang
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+            - libcpprest-dev
+            - libsodium-dev
+            - libopus-dev
+      env:
+        - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-bionic-9
-    packages:
-      - libcpprest-dev
-      - libsodium-dev
-      - libopus-dev
-      - gcc-9
-      - g++-9
-      - clang-9
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-9
+          packages:
+            - clang-9
+            - libcpprest-dev
+            - libsodium-dev
+            - libopus-dev
+      env:
+        - MATRIX_EVAL="CC=clang-9 CXX=clang++-9"
+
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-10
+          packages:
+            - clang-10
+            - libcpprest-dev
+            - libsodium-dev
+            - libopus-dev
+      env:
+        - MATRIX_EVAL="CC=clang-10 CXX=clang++-10"
+
+before_script:
+  - eval "${MATRIX_EVAL}"
 
 script:
-  - update-alternatives --set gcc "/usr/bin/gcc-9"
-  - update-alternatives --set g++ "/usr/bin/g++-9"
-  - update-alternatives --set clang "/usr/bin/clang-9"
-  - update-alternatives --set clang++ "/usr/bin/clang++-9"
   - mkdir build
   - cd build
   - cmake ..

@@ -3,7 +3,7 @@ language: cpp
 jobs:
   include:
     - os: linux
-      dist: bionic
+      dist: focal
       addons:
         apt:
           sources:
@@ -17,11 +17,11 @@ jobs:
         - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
 
     - os: linux
-      dist: bionic
+      dist: focal
       addons:
         apt:
           sources:
-            - llvm-toolchain-bionic-9
+            - llvm-toolchain-focal-9
           packages:
             - clang-9
             - libcpprest-dev
@@ -31,11 +31,12 @@ jobs:
         - MATRIX_EVAL="CC=clang-9 CXX=clang++-9"
 
     - os: linux
-      dist: bionic
+      dist: focal
       addons:
         apt:
           sources:
-            - llvm-toolchain-bionic-10
+            - sourceline: 'deb https://apt.llvm.org/focal/ llvm-toolchain-focal-10 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
             - clang-10
             - libcpprest-dev

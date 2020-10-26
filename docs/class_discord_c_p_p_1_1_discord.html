@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Discord.C++
-   &#160;<span id="projectnumber">0.9.0</span>
+   &#160;<span id="projectnumber">0.10.0</span>
    </div>
   </td>
  </tr>
@@ -107,10 +107,10 @@ Inheritance diagram for DiscordCPP::Discord:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2e9d606650955f3f8338c685d3b138bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a2e9d606650955f3f8338c685d3b138bd">Discord</a> (const string &amp;token, const unsigned int num_shards=0)</td></tr>
-<tr class="separator:a2e9d606650955f3f8338c685d3b138bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af07396600223625b8e008c7ae0b8a03e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#af07396600223625b8e008c7ae0b8a03e">Discord</a> (const string &amp;token, const unsigned int shard_id, const unsigned int num_shards)</td></tr>
-<tr class="separator:af07396600223625b8e008c7ae0b8a03e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae29d5060986c43e0e20279d992ee8b9d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#ae29d5060986c43e0e20279d992ee8b9d">Discord</a> (const string &amp;token, const <a class="el" href="class_intents.html">Intents</a> &amp;intents, const unsigned int num_shards=0)</td></tr>
+<tr class="separator:ae29d5060986c43e0e20279d992ee8b9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9636b0a645448c7d0efa494e5b324948"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a9636b0a645448c7d0efa494e5b324948">Discord</a> (const string &amp;token, const <a class="el" href="class_intents.html">Intents</a> &amp;intents, const unsigned int shard_id, const unsigned int num_shards)</td></tr>
+<tr class="separator:a9636b0a645448c7d0efa494e5b324948"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33748fd4c9e42f9316b4d2f064e09307"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a33748fd4c9e42f9316b4d2f064e09307">~Discord</a> ()</td></tr>
 <tr class="separator:a33748fd4c9e42f9316b4d2f064e09307"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a388f3b9e8658106de3d078d30df6dc6d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_discord_c_p_p_1_1_discord.html#a388f3b9e8658106de3d078d30df6dc6d">on_ready</a> (<a class="el" href="class_discord_c_p_p_1_1_user.html">User</a> user)</td></tr>
@@ -197,8 +197,8 @@ Friends</h2></td></tr>
 <tr class="separator:aef717f30b5ca56e6fd45ef31a560cc57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2e9d606650955f3f8338c685d3b138bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e9d606650955f3f8338c685d3b138bd">&#9670;&nbsp;</a></span>Discord() <span class="overload">[1/2]</span></h2>
+<a id="ae29d5060986c43e0e20279d992ee8b9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae29d5060986c43e0e20279d992ee8b9d">&#9670;&nbsp;</a></span>Discord() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,6 +208,12 @@ Friends</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const string &amp;&#160;</td>
           <td class="paramname"><em>token</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_intents.html">Intents</a> &amp;&#160;</td>
+          <td class="paramname"><em>intents</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -225,6 +231,7 @@ Friends</h2></td></tr>
 <p>Creates a <a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> instance with one or more shards </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">token</td><td>Bot token for authentication </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">intents</td><td><a class="el" href="class_intents.html">Intents</a> used for the gateway. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">num_shards</td><td>(optional) number of shards that exist (default: 0 used for automatic sharding) </td></tr>
   </table>
   </dd>
@@ -232,8 +239,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="af07396600223625b8e008c7ae0b8a03e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af07396600223625b8e008c7ae0b8a03e">&#9670;&nbsp;</a></span>Discord() <span class="overload">[2/2]</span></h2>
+<a id="a9636b0a645448c7d0efa494e5b324948"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9636b0a645448c7d0efa494e5b324948">&#9670;&nbsp;</a></span>Discord() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,6 +250,12 @@ Friends</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const string &amp;&#160;</td>
           <td class="paramname"><em>token</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_intents.html">Intents</a> &amp;&#160;</td>
+          <td class="paramname"><em>intents</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -266,6 +279,7 @@ Friends</h2></td></tr>
 <p>Creates a <a class="el" href="class_discord_c_p_p_1_1_discord.html">Discord</a> instance with ONE shard </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">token</td><td>Bot token for authentication </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">intents</td><td><a class="el" href="class_intents.html">Intents</a> used for the gateway. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">shard_id</td><td>(optional) the id of the shard (default: 0) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">num_shards</td><td>(optional) number of shards that exist (default: 1) </td></tr>
   </table>

@@ -39,6 +39,7 @@ var hierarchy =
       [ "DiscordCPP::VoiceGateway", "class_discord_c_p_p_1_1_voice_gateway.html", null ]
     ] ],
     [ "DiscordCPP::Embed::Image", "struct_discord_c_p_p_1_1_embed_1_1_image.html", null ],
+    [ "Intents", "class_intents.html", null ],
     [ "Logger", "class_logger.html", null ],
     [ "DiscordCPP::Embed::Provider", "struct_discord_c_p_p_1_1_embed_1_1_provider.html", null ],
     [ "DiscordCPP::udp_client", "class_discord_c_p_p_1_1udp__client.html", null ],

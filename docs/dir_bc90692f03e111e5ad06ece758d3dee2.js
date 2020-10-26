@@ -25,6 +25,10 @@ var dir_bc90692f03e111e5ad06ece758d3dee2 =
     [ "Guild.h", "_guild_8h.html", "_guild_8h" ],
     [ "GuildChannel.cpp", "_guild_channel_8cpp.html", null ],
     [ "GuildChannel.h", "_guild_channel_8h.html", "_guild_channel_8h" ],
+    [ "Intents.cpp", "_intents_8cpp.html", null ],
+    [ "Intents.h", "_intents_8h.html", [
+      [ "Intents", "class_intents.html", "class_intents" ]
+    ] ],
     [ "Logger.cpp", "_logger_8cpp.html", null ],
     [ "Logger.h", "_logger_8h.html", "_logger_8h" ],
     [ "MainGateway.cpp", "_main_gateway_8cpp.html", null ],

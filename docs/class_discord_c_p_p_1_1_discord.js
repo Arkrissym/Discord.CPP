@@ -1,7 +1,7 @@
 var class_discord_c_p_p_1_1_discord =
 [
-    [ "Discord", "class_discord_c_p_p_1_1_discord.html#a2e9d606650955f3f8338c685d3b138bd", null ],
-    [ "Discord", "class_discord_c_p_p_1_1_discord.html#af07396600223625b8e008c7ae0b8a03e", null ],
+    [ "Discord", "class_discord_c_p_p_1_1_discord.html#ae29d5060986c43e0e20279d992ee8b9d", null ],
+    [ "Discord", "class_discord_c_p_p_1_1_discord.html#a9636b0a645448c7d0efa494e5b324948", null ],
     [ "~Discord", "class_discord_c_p_p_1_1_discord.html#a33748fd4c9e42f9316b4d2f064e09307", null ],
     [ "connect", "class_discord_c_p_p_1_1_discord.html#a1f2a887bd57befcf15130cce6cfe01eb", null ],
     [ "get_guild", "class_discord_c_p_p_1_1_discord.html#adaeefdeac6c57d118b35ba87d0d5def5", null ],

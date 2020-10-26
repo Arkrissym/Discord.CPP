@@ -84,6 +84,9 @@
     <ClCompile Include="FFmpegAudioSource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Intents.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Discord.h">
@@ -156,6 +159,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="FFmpegAudioSource.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Intents.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

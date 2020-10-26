@@ -23,6 +23,7 @@ set ( src_discord_cpp
       Discord.C++/Gateway.cpp
       Discord.C++/Guild.cpp
       Discord.C++/GuildChannel.cpp
+      Discord.C++/Intents.cpp
       Discord.C++/Logger.cpp
       Discord.C++/MainGateway.cpp
       Discord.C++/Member.cpp
@@ -62,6 +63,7 @@ install(FILES
       Discord.C++/Gateway.h
       Discord.C++/Guild.h
       Discord.C++/GuildChannel.h
+      Discord.C++/Intents.h
       Discord.C++/Logger.h
       Discord.C++/MainGateway.h
       Discord.C++/Member.h

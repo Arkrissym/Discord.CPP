@@ -11,9 +11,10 @@ using namespace std;
 
 /**	Creates a Discord instance with one or more shards
 	@param[in]	token		Bot token for authentication
+	@param[in]	intents		Intents used for the gateway.
 	@param[in]	num_shards	(optional) number of shards that exist (default: 0 used for automatic sharding)
 */
-DiscordCPP::Discord::Discord(const string& token, const unsigned int num_shards) {
+DiscordCPP::Discord::Discord(const string& token, const Intents& intents, const unsigned int num_shards) {
 	_token = conversions::to_string_t(token);
 	_num_shards = num_shards;
 	id = "0";
@@ -25,7 +26,7 @@ DiscordCPP::Discord::Discord(const string& token, const unsigned int num_shards)
 	}
 
 	for (unsigned int i = 0; i < _num_shards; i++) {
-		MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), i, _num_shards);
+		MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), intents, i, _num_shards);
 
 		_client->set_message_handler([this](value payload) {
 			on_websocket_incoming_message(payload);
@@ -41,16 +42,17 @@ DiscordCPP::Discord::Discord(const string& token, const unsigned int num_shards)
 
 /**	Creates a Discord instance with ONE shard
 	@param[in]	token		Bot token for authentication
+	@param[in]	intents		Intents used for the gateway.
 	@param[in]	shard_id	(optional) the id of the shard (default: 0)
 	@param[in]	num_shards	(optional) number of shards that exist (default: 1)
 */
-DiscordCPP::Discord::Discord(const string& token, const unsigned int shard_id, const unsigned int num_shards) {
+DiscordCPP::Discord::Discord(const string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards) {
 	_token = conversions::to_string_t(token);
 	_num_shards = num_shards;
 	id = to_string(shard_id);
 	log = Logger("discord");
 
-	MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), shard_id, _num_shards);
+	MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), intents, shard_id, _num_shards);
 
 	_gateways.push_back(_client);
 
@@ -476,7 +478,7 @@ pplx::task<void> DiscordCPP::Discord::handle_raw_event(const string& event_name,
 				}
 
 				voice_state->endpoint = conversions::to_string_t("wss://") + data.at(U("endpoint")).as_string();
-				voice_state->endpoint = voice_state->endpoint.substr(0, voice_state->endpoint.length() - 3) + conversions::to_string_t("?v=3");
+				voice_state->endpoint += conversions::to_string_t("?v=4");
 				voice_state->voice_token = data.at(U("token")).as_string();
 			}
 			else {

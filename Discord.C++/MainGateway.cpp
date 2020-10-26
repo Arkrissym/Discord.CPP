@@ -135,6 +135,7 @@ pplx::task<void> DiscordCPP::MainGateway::identify() {
 		out_json[U("op")] = value(2);
 
 		out_json[U("d")][U("token")] = value(to_string_t(_token));
+		out_json[U("d")][U("intents")] = value(_intents.getIntents());
 		out_json[U("d")][U("shard")][0] = value(_shard_id);
 		out_json[U("d")][U("shard")][1] = value(_num_shards);
 		out_json[U("d")][U("large_threshold")] = value(250);
@@ -158,7 +159,7 @@ pplx::task<void> DiscordCPP::MainGateway::identify() {
 	});
 }
 
-DiscordCPP::MainGateway::MainGateway(const std::string& token, const int shard_id, const unsigned int num_shards) : Gateway::Gateway(token) {
+DiscordCPP::MainGateway::MainGateway(const std::string& token, const Intents& intents, const int shard_id, const unsigned int num_shards) : Gateway::Gateway(token) {
 	_log = Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) + ", " + std::to_string(num_shards) + "] )");
 
 	_invalid_session = false;
@@ -167,6 +168,8 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token, const int shard_i
 	_num_shards = num_shards;
 
 	_sequence_number = 0;
+
+	_intents = intents;
 
 	_message_handler = [this](value) {
 		_log.info("dummy message handler called");

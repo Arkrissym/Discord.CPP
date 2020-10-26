@@ -109,11 +109,8 @@ pplx::task<void> DiscordCPP::VoiceClient::connect_voice_udp() {
 		}
 
 		unsigned short my_port = (recv_msg[72] << 8) | (recv_msg[73]);
-		_log.debug("my_port: " + to_string(my_port));
-
 		my_port = (my_port >> 8) | (my_port << 8);
-		_log.debug("my_port: " + to_string(my_port));
-
+		
 		_my_ip = conversions::to_string_t(my_ip);
 		_my_port = my_port;
 

@@ -22,6 +22,7 @@
 #include "FFmpegAudioSource.h"
 #include "Exceptions.h"
 #include "MainGateway.h"
+#include "Intents.h"
 #include "DiscordObject.h"
 
 #ifdef _WIN32
@@ -64,8 +65,8 @@ namespace DiscordCPP {
 	public:
 		Logger log;
 
-		DLL_EXPORT Discord(const string& token, const unsigned int num_shards = 0);
-		DLL_EXPORT Discord(const string& token, const unsigned int shard_id, const unsigned int num_shards);
+		DLL_EXPORT Discord(const string& token, const Intents& intents, const unsigned int num_shards = 0);
+		DLL_EXPORT Discord(const string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards);
 		DLL_EXPORT virtual ~Discord();
 
 		///called when successfully logged in

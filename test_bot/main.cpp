@@ -239,7 +239,7 @@ public:
 		}
 	}
 
-	myClient(string token, unsigned int num_shards = 0) : Discord(token, num_shards) {};
+	myClient(const string& token, const Intents& intents, unsigned int num_shards = 0) : Discord(token, intents, num_shards) {};
 };
 
 int main() {
@@ -254,7 +254,9 @@ int main() {
 	token = getenv("DISCORD_TEST_TOKEN");
 #endif
 
-	myClient client = myClient(token);
+	Intents intents = Intents::Default();
+	intents.add(Intents::MEMBERS);
+	myClient client = myClient(token, intents);
 
 
 	client.log.set_log_level(Debug);

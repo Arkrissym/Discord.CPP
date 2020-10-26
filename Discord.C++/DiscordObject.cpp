@@ -121,7 +121,7 @@ value DiscordCPP::DiscordObject::api_call(const string& url, const method& metho
 		if (code == 429) {
 			Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
 
-			waitFor(chrono::milliseconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()))).wait();
+			waitFor(chrono::seconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()))).wait();
 		}
 	} while (code == 429);
 

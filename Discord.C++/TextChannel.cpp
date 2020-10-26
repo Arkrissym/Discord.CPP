@@ -105,7 +105,7 @@ void DiscordCPP::TextChannel::delete_messages(const vector<shared_ptr<Message>>&
 	else if (messages.size() > 100)
 		throw SizeError("Cannot delete more than 100 messages");
 
-	string url = "/channels/" + id + "/messages/bulk-delete";
+	string url = "/channels/" + id + "/messages/bulk_delete";
 
 	value data;
 	data[U("messages")] = value();

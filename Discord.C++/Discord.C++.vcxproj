@@ -135,6 +135,7 @@
     <ClCompile Include="Gateway.cpp" />
     <ClCompile Include="Guild.cpp" />
     <ClCompile Include="GuildChannel.cpp" />
+    <ClCompile Include="Intents.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MainGateway.cpp" />
     <ClCompile Include="Member.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Gateway.h" />
     <ClInclude Include="Guild.h" />
     <ClInclude Include="GuildChannel.h" />
+    <ClInclude Include="Intents.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MainGateway.h" />
     <ClInclude Include="Member.h" />

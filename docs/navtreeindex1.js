@@ -163,11 +163,10 @@ var NAVTREEINDEX1 =
 "class_discord_c_p_p_1_1_voice_channel.html#aecc25012bd7a734c171c17295c835b08":[1,0,0,24,9],
 "class_discord_c_p_p_1_1_voice_client.html":[1,0,0,25],
 "class_discord_c_p_p_1_1_voice_client.html#a01011c919a3cab32ee31677549ddac21":[1,0,0,25,2],
-"class_discord_c_p_p_1_1_voice_client.html#a03f23233918cc6349c693bc67932eb67":[1,0,0,25,4],
 "class_discord_c_p_p_1_1_voice_client.html#a099a7886f0e114915ba5084dd10b2c1f":[1,0,0,25,1],
 "class_discord_c_p_p_1_1_voice_client.html#a1e24a21bccf90ed2f8824138e7f77cfc":[1,0,0,25,0],
 "class_discord_c_p_p_1_1_voice_client.html#a28b1a49f0d7505a43d0d13beb42517cc":[1,0,0,25,3],
-"class_discord_c_p_p_1_1_voice_client.html#aeff7a33bcfa903d92911f1f8cc02a719":[1,0,0,25,5],
+"class_discord_c_p_p_1_1_voice_client.html#aeff7a33bcfa903d92911f1f8cc02a719":[1,0,0,25,4],
 "class_discord_c_p_p_1_1_voice_gateway.html":[1,0,0,26],
 "class_discord_c_p_p_1_1_voice_gateway.html#aa76871211233812fc495a03fdc75f418":[1,0,0,26,1],
 "class_discord_c_p_p_1_1_voice_gateway.html#ab18432a639a6d6ba944033c79e83757d":[1,0,0,26,0],
@@ -244,10 +243,11 @@ var NAVTREEINDEX1 =
 "globals_vars.html":[2,1,2],
 "hierarchy.html":[1,2],
 "index.html":[],
-"namespace_discord_c_p_p.html":[1,0,0],
 "namespace_discord_c_p_p.html":[0,0,0],
+"namespace_discord_c_p_p.html":[1,0,0],
 "namespace_discord_c_p_p_1_1_activity_types.html":[0,0,0,0],
 "namespace_discord_c_p_p_1_1_channel_type.html":[0,0,0,1],
 "namespace_discord_c_p_p_1_1_default_message_notification_level.html":[0,0,0,2],
-"namespace_discord_c_p_p_1_1_discord_status.html":[0,0,0,3]
+"namespace_discord_c_p_p_1_1_discord_status.html":[0,0,0,3],
+"namespace_discord_c_p_p_1_1_explicit_content_filter_level.html":[0,0,0,4]
 };

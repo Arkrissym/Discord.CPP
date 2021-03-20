@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"namespace_discord_c_p_p_1_1_explicit_content_filter_level.html":[0,0,0,4],
 "namespace_discord_c_p_p_1_1_m_f_a_level.html":[0,0,0,6],
 "namespace_discord_c_p_p_1_1_message_type.html":[0,0,0,5],
 "namespace_discord_c_p_p_1_1_verification_level.html":[0,0,0,7],

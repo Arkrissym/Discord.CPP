@@ -1,6 +1,7 @@
 #ifdef _WIN32
-#include "Discord.h"
 #include <iostream>
+
+#include "Discord.h"
 #else
 #include <discord_cpp/Discord.h>
 #include <stdlib.h>
@@ -9,261 +10,264 @@
 #include <thread>
 
 /*	Compile with smth. like this:
-	g++ -Wall -o test main.cpp -ldiscord_cpp -lcpprest -lpthread -lssl -lcrypto
+    g++ -Wall -o test main.cpp -ldiscord_cpp -lcpprest -lpthread -lssl -lcrypto
 */
 
 using namespace DiscordCPP;
 using namespace std;
 
 class myClient : public Discord {
-private:
-	Channel* findChannel(const string& name, const string& guild_id) {
-		for (unsigned int i = 0; i < _guilds.size(); i++) {
-			if (guild_id == _guilds[i]->id) {
-				for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
-					if (_guilds[i]->channels[j]->name.compare(name) == 0) {
-						return _guilds[i]->channels[j];
-					}
-				}
-			}
-		}
-		return NULL;
-	}
-	void play(VoiceChannel* channel, AudioSource* source) {
-		VoiceClient* vc = channel->connect();
+   private:
+    Channel* findChannel(const string& name, const string& guild_id) {
+        for (unsigned int i = 0; i < _guilds.size(); i++) {
+            if (guild_id == _guilds[i]->id) {
+                for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
+                    if (_guilds[i]->channels[j]->name.compare(name) == 0) {
+                        return _guilds[i]->channels[j];
+                    }
+                }
+            }
+        }
+        return NULL;
+    }
+    void play(VoiceChannel* channel, AudioSource* source) {
+        VoiceClient* vc = channel->connect();
 
-		try {
-			vc->play(source).wait();
-		}
-		catch (const OpusError& e) {
-			log.error("Opus error: " + string(e.what()) + " (code: " + to_string(e.get_error_code()) + ")");
-		}
-		catch (const ClientException& e) {
-			log.error("ClientException in vc->play: " + string(e.what()));
-		}
-		vc->disconnect().wait();
+        try {
+            vc->play(source).wait();
+        } catch (const OpusError& e) {
+            log.error("Opus error: " + string(e.what()) +
+                      " (code: " + to_string(e.get_error_code()) + ")");
+        } catch (const ClientException& e) {
+            log.error("ClientException in vc->play: " + string(e.what()));
+        }
 
-		delete vc;
-	}
-public:
-	void on_ready(User user) {
-		log.info("logged in as: " + user.username);
+        delete vc;
+    }
 
-		this->update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game)).wait();
-	}
+   public:
+    void on_ready(User user) {
+        log.info("logged in as: " + user.username);
 
-	void on_user_ban(User user, Guild guild) {
-		log.info("User " + string(user) + " has been banned from Guild " + string(guild));
-	}
+        this->update_presence(DiscordStatus::Online,
+                              Activity("test", ActivityTypes::Game))
+            .wait();
+    }
 
-	void on_user_unban(User user, Guild guild) {
-		log.info("User " + string(user) + " has been unbanned from Guild " + string(guild));
-	}
+    void on_user_ban(User user, Guild guild) {
+        log.info("User " + string(user) + " has been banned from Guild " +
+                 string(guild));
+    }
 
-	void on_user_join(Member member, Guild guild) {
-		log.info("Member " + string(member) + " joined Guild " + string(guild));
-	}
+    void on_user_unban(User user, Guild guild) {
+        log.info("User " + string(user) + " has been unbanned from Guild " +
+                 string(guild));
+    }
 
-	void on_user_remove(User user, Guild guild) {
-		log.info("Member " + string(user) + " left Guild " + string(guild));
-	}
+    void on_user_join(Member member, Guild guild) {
+        log.info("Member " + string(member) + " joined Guild " + string(guild));
+    }
 
-	void on_message(Message message) {
-		log.debug(message.author->username + " sent \"" + message.content + "\" in channel: " + message.channel->name + " (id: " + message.channel->id + ", type: " + to_string(message.channel->type) + ").");
+    void on_user_remove(User user, Guild guild) {
+        log.info("Member " + string(user) + " left Guild " + string(guild));
+    }
 
-		if (message.content.compare("?hello") == 0) {
-			Message msg = message.channel->send("Hello World!");
-			log.info("message sent (id: " + msg.channel->id + ")");
-		}
-		else if (message.content == "?guild") {
-			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				message.channel->send(*((GuildChannel*)message.channel)->guild);
-			}
-			else {
-				message.channel->send("This is not a guild channel.");
-			}
-		}
-		else if (message.content == "?msgedit") {
-			Message msg = message.channel->send("New message");
-			this_thread::sleep_for(chrono::seconds(1));
-			msg.edit("Edited message");
-		}
-		else if (message.content == "?msgdel") {
-			Message msg = message.channel->send("Message will be deleted in 5 seconds.");
-			this_thread::sleep_for(chrono::seconds(5));
-			msg.delete_msg();
-			message.delete_msg();
-		}
-		else if (message.content == "?chdel") {
-			message.channel->delete_channel();
-		}
-		else if (message.content == "?embed") {
-			Embed embed = Embed("Embed", "description");
+    void on_message(Message message) {
+        log.debug(message.author->username + " sent \"" + message.content +
+                  "\" in channel: " + message.channel->name +
+                  " (id: " + message.channel->id +
+                  ", type: " + to_string(message.channel->type) + ").");
 
-			embed.set_color(0x00ff00);
-			embed.set_author("TestBot", "https://github.com", "https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
-			embed.set_footer("Footer", "https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
-			embed.set_thumbnail("https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
-			embed.set_image("https://cdn.pixabay.com/photo/2016/02/22/00/25/robot-1214536_960_720.png");
+        if (message.content.compare("?hello") == 0) {
+            Message msg = message.channel->send("Hello World!");
+            log.info("message sent (id: " + msg.channel->id + ")");
+        } else if (message.content == "?guild") {
+            if (message.channel->type == ChannelType::GUILD_TEXT) {
+                message.channel->send(*((GuildChannel*)message.channel)->guild);
+            } else {
+                message.channel->send("This is not a guild channel.");
+            }
+        } else if (message.content == "?msgedit") {
+            Message msg = message.channel->send("New message");
+            this_thread::sleep_for(chrono::seconds(1));
+            msg.edit("Edited message");
+        } else if (message.content == "?msgdel") {
+            Message msg =
+                message.channel->send("Message will be deleted in 5 seconds.");
+            this_thread::sleep_for(chrono::seconds(5));
+            msg.delete_msg();
+            message.delete_msg();
+        } else if (message.content == "?chdel") {
+            message.channel->delete_channel();
+        } else if (message.content == "?embed") {
+            Embed embed = Embed("Embed", "description");
 
-			for (int i = 0; i < 4; i++) {
-				embed.add_field("Field", to_string(i));
-			}
-			for (int i = 4; i < 7; i++) {
-				embed.add_field("Field", to_string(i), false);
-			}
+            embed.set_color(0x00ff00);
+            embed.set_author("TestBot", "https://github.com",
+                             "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                             "robot-1214536_960_720.png");
+            embed.set_footer("Footer",
+                             "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                             "robot-1214536_960_720.png");
+            embed.set_thumbnail(
+                "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                "robot-1214536_960_720.png");
+            embed.set_image(
+                "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                "robot-1214536_960_720.png");
 
-			message.channel->send(embed);
-		}
-		else if (message.content == "?dm") {
-			message.author->send("This is a direct text message.");
-			message.author->send(Embed("Embed", "text"));
-		}
-		else if (message.content.compare(0, 7, "?clear ") == 0) {
-			string tmp = message.content.substr(7);
-			vector<shared_ptr<Message>> messages = message.channel->history(atoi(tmp.c_str()) + 1);
+            for (int i = 0; i < 4; i++) {
+                embed.add_field("Field", to_string(i));
+            }
+            for (int i = 4; i < 7; i++) {
+                embed.add_field("Field", to_string(i), false);
+            }
 
-			log.info("num messages: " + to_string(messages.size()));
-			message.channel->delete_messages(messages);
-		}
-		else if (message.content.compare(0, 9, "?playwav ") == 0) {
-			if (message.channel->type != ChannelType::GUILD_TEXT) {
-				return;
-			}
+            message.channel->send(embed);
+        } else if (message.content == "?dm") {
+            message.author->send("This is a direct text message.");
+            message.author->send(Embed("Embed", "text"));
+        } else if (message.content.compare(0, 7, "?clear ") == 0) {
+            string tmp = message.content.substr(7);
+            vector<shared_ptr<Message>> messages =
+                message.channel->history(atoi(tmp.c_str()) + 1);
 
-			FileAudioSource* source = new FileAudioSource("test.wav");
-			string channel_name = message.content.substr(9);
+            log.info("num messages: " + to_string(messages.size()));
+            message.channel->delete_messages(messages);
+        } else if (message.content.compare(0, 9, "?playwav ") == 0) {
+            if (message.channel->type != ChannelType::GUILD_TEXT) {
+                return;
+            }
 
-			play((VoiceChannel*)findChannel(channel_name, ((GuildChannel*)message.channel)->guild->id), source);
+            FileAudioSource* source = new FileAudioSource("test.wav");
+            string channel_name = message.content.substr(9);
 
-			delete source;
-		}
-		else if (message.content.compare(0, 12, "?playffmpeg ") == 0) {
-			if (message.channel->type != ChannelType::GUILD_TEXT) {
-				return;
-			}
+            play((VoiceChannel*)findChannel(
+                     channel_name, ((GuildChannel*)message.channel)->guild->id),
+                 source);
 
-			FFmpegAudioSource* source = new FFmpegAudioSource("test.mp3");
-			string channel_name = message.content.substr(12);
+            delete source;
+        } else if (message.content.compare(0, 12, "?playffmpeg ") == 0) {
+            if (message.channel->type != ChannelType::GUILD_TEXT) {
+                return;
+            }
 
-			play((VoiceChannel*)findChannel(channel_name, ((GuildChannel*)message.channel)->guild->id), source);
+            FFmpegAudioSource* source = new FFmpegAudioSource("test.mp3");
+            string channel_name = message.content.substr(12);
 
-			delete source;
-		}
-		else if (message.content == "?leave_guild") {
-			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				((GuildChannel*)message.channel)->guild->leave();
-			}
-			else {
-				message.channel->send("This is not a guild channel.");
-			}
-		}
-		else if (message.content == "?delete_guild") {
-			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				((GuildChannel*)message.channel)->guild->delete_guild();
-			}
-			else {
-				message.channel->send("This is not a guild channel.");
-			}
-		}
-		else if (message.content.compare(0, 6, "?kick ") == 0) {
-			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				Guild* guild = NULL;
+            play((VoiceChannel*)findChannel(
+                     channel_name, ((GuildChannel*)message.channel)->guild->id),
+                 source);
 
-				for (unsigned int i = 0; i < _guilds.size(); i++) {
-					if (((GuildChannel*)message.channel)->guild->id == _guilds[i]->id) {
-						guild = _guilds[i];
-						break;
-					}
-				}
+            delete source;
+        } else if (message.content == "?leave_guild") {
+            if (message.channel->type == ChannelType::GUILD_TEXT) {
+                ((GuildChannel*)message.channel)->guild->leave();
+            } else {
+                message.channel->send("This is not a guild channel.");
+            }
+        } else if (message.content == "?delete_guild") {
+            if (message.channel->type == ChannelType::GUILD_TEXT) {
+                ((GuildChannel*)message.channel)->guild->delete_guild();
+            } else {
+                message.channel->send("This is not a guild channel.");
+            }
+        } else if (message.content.compare(0, 6, "?kick ") == 0) {
+            if (message.channel->type == ChannelType::GUILD_TEXT) {
+                Guild* guild = NULL;
 
-				string user_name = message.content.substr(6);
-				Member* user = NULL;
+                for (unsigned int i = 0; i < _guilds.size(); i++) {
+                    if (((GuildChannel*)message.channel)->guild->id ==
+                        _guilds[i]->id) {
+                        guild = _guilds[i];
+                        break;
+                    }
+                }
 
-				for (unsigned int i = 0; i < guild->members.size(); i++) {
-					log.debug(string(*guild->members[i]));
-					if (string(*guild->members[i]) == user_name) {
-						user = guild->members[i];
-						break;
-					}
-				}
+                string user_name = message.content.substr(6);
+                Member* user = NULL;
 
-				if (user == NULL) {
-					message.channel->send("User " + user_name + " not found.");
-				}
-				else {
-					guild->kick(*user);
-				}
-			}
-			else {
-				message.channel->send("This is not a guild channel.");
-			}
-		}
-		else if (message.content.compare(0, 5, "?ban ") == 0) {
-			if (message.channel->type == ChannelType::GUILD_TEXT) {
-				Guild* guild = NULL;
+                for (unsigned int i = 0; i < guild->members.size(); i++) {
+                    log.debug(string(*guild->members[i]));
+                    if (string(*guild->members[i]) == user_name) {
+                        user = guild->members[i];
+                        break;
+                    }
+                }
 
-				for (unsigned int i = 0; i < _guilds.size(); i++) {
-					if (((GuildChannel*)message.channel)->guild->id == _guilds[i]->id) {
-						guild = _guilds[i];
-						break;
-					}
-				}
+                if (user == NULL) {
+                    message.channel->send("User " + user_name + " not found.");
+                } else {
+                    guild->kick(*user);
+                }
+            } else {
+                message.channel->send("This is not a guild channel.");
+            }
+        } else if (message.content.compare(0, 5, "?ban ") == 0) {
+            if (message.channel->type == ChannelType::GUILD_TEXT) {
+                Guild* guild = NULL;
 
-				string user_name = message.content.substr(5);
-				Member* user_ptr = NULL;
+                for (unsigned int i = 0; i < _guilds.size(); i++) {
+                    if (((GuildChannel*)message.channel)->guild->id ==
+                        _guilds[i]->id) {
+                        guild = _guilds[i];
+                        break;
+                    }
+                }
 
-				for (unsigned int i = 0; i < guild->members.size(); i++) {
-					if (string(*guild->members[i]) == user_name) {
-						user_ptr = guild->members[i];
-						break;
-					}
-				}
+                string user_name = message.content.substr(5);
+                Member* user_ptr = NULL;
 
-				if (user_ptr == NULL) {
-					message.channel->send("User " + user_name + " not found.");
-				}
-				else {
-					User user = User(*user_ptr);
+                for (unsigned int i = 0; i < guild->members.size(); i++) {
+                    if (string(*guild->members[i]) == user_name) {
+                        user_ptr = guild->members[i];
+                        break;
+                    }
+                }
 
-					guild->ban(user, "testing the library", 1);
+                if (user_ptr == NULL) {
+                    message.channel->send("User " + user_name + " not found.");
+                } else {
+                    User user = User(*user_ptr);
 
-					this_thread::sleep_for(chrono::seconds(10));
+                    guild->ban(user, "testing the library", 1);
 
-					guild->unban(user);
-				}
-			}
-			else {
-				message.channel->send("This is not a guild channel.");
-			}
-		}
-	}
+                    this_thread::sleep_for(chrono::seconds(10));
 
-	myClient(const string& token, const Intents& intents, unsigned int num_shards = 0) : Discord(token, intents, num_shards) {};
+                    guild->unban(user);
+                }
+            } else {
+                message.channel->send("This is not a guild channel.");
+            }
+        }
+    }
+
+    myClient(const string& token, const Intents& intents,
+             unsigned int num_shards = 0)
+        : Discord(token, intents, num_shards){};
 };
 
 int main() {
-	char* token;
+    char* token;
 #ifdef _WIN32
-	size_t len;
-	if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {
-		cerr << "Error" << endl;
-		return -1;
-	}
+    size_t len;
+    if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {
+        cerr << "Error" << endl;
+        return -1;
+    }
 #else
-	token = getenv("DISCORD_TEST_TOKEN");
+    token = getenv("DISCORD_TEST_TOKEN");
 #endif
 
-	Intents intents = Intents::Default();
-	intents.add(Intents::MEMBERS);
-	myClient client = myClient(token, intents);
+    Intents intents = Intents::Default();
+    intents.add(Intents::MEMBERS);
+    myClient client = myClient(token, intents);
 
+    client.log.set_log_level(Debug);
 
-	client.log.set_log_level(Debug);
+    while (1) {
+        waitFor(chrono::seconds(5)).wait();
+    }
 
-	while (1) {
-		waitFor(chrono::seconds(5)).wait();
-	}
-
-	return 0;
+    return 0;
 }

@@ -14,6 +14,7 @@ start.sh
 *.in
 *.opus
 *.pcm
+.vscode/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

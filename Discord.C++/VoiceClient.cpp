@@ -1,26 +1,24 @@
 #include "VoiceClient.h"
 
-#include <algorithm>
-#include <queue>
-
-#include "Exceptions.h"
-#include "Logger.h"
-#include "static.h"
-#ifndef _WIN32
-#include <chrono>
-#include <thread>
-#endif
 #include <errno.h>
 #include <opus/opus.h>
 #include <sodium.h>
 #include <stdio.h>
 #include <time.h>
 
+#include <algorithm>
+#include <chrono>
+#include <queue>
+
+#include "Exceptions.h"
+#include "Logger.h"
+#include "static.h"
+
 const unsigned short FRAME_MILLIS = 20;
-const unsigned short FRAME_SIZE = 960;
 const unsigned short SAMPLE_RATE = 48000;
 const unsigned short CHANNELS = 2;
-const unsigned int BITRATE = 320000;
+const unsigned short FRAME_SIZE = (SAMPLE_RATE / 1000) * FRAME_MILLIS;
+const unsigned int BITRATE = 131072;
 
 #define MAX_PACKET_SIZE FRAME_SIZE * 8
 
@@ -254,12 +252,9 @@ pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
                             error);
         }
 
-        error = opus_encoder_ctl(encoder, OPUS_SET_BITRATE(BITRATE));
-        if (error < 0) {
-            throw OpusError("failed to set bitrate for opus encoder: " +
-                                string(opus_strerror(error)),
-                            error);
-        }
+        opus_encoder_ctl(encoder, OPUS_SET_BITRATE(BITRATE));
+        opus_encoder_ctl(encoder, OPUS_SET_INBAND_FEC(1));
+        opus_encoder_ctl(encoder, OPUS_SET_PACKET_LOSS_PERC(15));
 
         _log.debug("initialising libsodium");
         if (sodium_init() == -1) {
@@ -273,12 +268,9 @@ pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
 
         _log.debug("starting loop");
 
-        // chrono::milliseconds delay = chrono::milliseconds(0);
-        auto next_time = chrono::system_clock::now();
+        auto next_time = chrono::high_resolution_clock::now();
 
         while (1) {
-            // pplx::task<void> timer = waitFor(delay);
-
             if (source->read((char*)pcm_data, FRAME_SIZE * CHANNELS * 2) !=
                 true)
                 break;
@@ -332,16 +324,15 @@ pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             _udp->send(packet);
 
             next_time += chrono::milliseconds(FRAME_MILLIS);
-            chrono::milliseconds delay =
-                std::max(chrono::milliseconds(0),
-                         chrono::duration_cast<chrono::milliseconds>(
-                             next_time - chrono::system_clock::now()));
+            chrono::microseconds delay =
+                std::max(chrono::microseconds(0),
+                         chrono::duration_cast<chrono::microseconds>(
+                             next_time - chrono::high_resolution_clock::now()));
 
             waitFor(delay).wait();
         }
 
         opus_encoder_destroy(encoder);
-
         delete[] pcm_data;
 
         _log.debug("finished playing audio");

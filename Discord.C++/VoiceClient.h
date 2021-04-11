@@ -25,7 +25,6 @@ using namespace utility;
 using namespace web::websockets::client;
 using namespace boost::asio::ip;
 
-// class boost::asio::ip::udp::socket;
 class udp_client {
    private:
     Logger _log;
@@ -42,8 +41,8 @@ class udp_client {
    public:
     DLL_EXPORT udp_client();
     DLL_EXPORT udp_client(const string_t& ip, const int port);
-    DLL_EXPORT udp_client(udp_client& old) = delete;
-    DLL_EXPORT udp_client& operator=(const udp_client&) = delete;
+    udp_client(udp_client& old) = delete;
+    udp_client& operator=(const udp_client&) = delete;
     DLL_EXPORT ~udp_client();
     // DLL_EXPORT void connect(string_t ip, int port);
     DLL_EXPORT void send(const string& msg);
@@ -59,7 +58,6 @@ class VoiceClient {
     string_t _channel_id;
     string_t _user_id;
 
-    int _heartbeat_interval = 0;
     bool _ready = false;
 
     unsigned int _ssrc = 0;
@@ -92,7 +90,7 @@ class VoiceClient {
                            const string_t& endpoint, const string_t& session_id,
                            const string_t& guild_id, const string_t& channel_id,
                            const string_t& user_id);
-    DLL_EXPORT VoiceClient(const VoiceClient& old) = delete;
+    VoiceClient(const VoiceClient& old) = delete;
     DLL_EXPORT VoiceClient();
     DLL_EXPORT ~VoiceClient();
 

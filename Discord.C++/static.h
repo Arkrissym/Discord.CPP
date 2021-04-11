@@ -18,7 +18,7 @@
 
 #include <chrono>
 
-DLL_EXPORT pplx::task<void> waitFor(const std::chrono::milliseconds ms);
+DLL_EXPORT pplx::task<void> waitFor(const std::chrono::microseconds time);
 
 DLL_EXPORT void hexchar(unsigned char c, unsigned char& hex1,
                         unsigned char& hex2);

@@ -16,16 +16,16 @@ WORKDIR /app
 RUN mkdir build && \
 	cd build && \
 	cmake .. && \
-	make -j4 && \
-	make install && \
+	make -j8 discord_cpp && \
+	make install discord_cpp && \
 	ldconfig && \
 	cd ..
 
-WORKDIR /app/test_bot
-
-RUN g++ -Wall -o test main.cpp -ldiscord_cpp -lcpprest -lpthread -lssl -lcrypto
+RUN cd build && \
+	make test_bot && \
+	make install test_bot
 
 ARG token
 ENV DISCORD_TEST_TOKEN=$token
 
-ENTRYPOINT ["/app/test_bot/test"]
+ENTRYPOINT ["test_bot"]

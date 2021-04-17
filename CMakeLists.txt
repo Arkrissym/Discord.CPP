@@ -2,78 +2,55 @@ cmake_minimum_required( VERSION 3.5 )
 
 project( discord_cpp )
 
-set( CMAKE_CXX_FLAGS " -g -Wall -Wextra -O2 -Wl,--no-as-needed -fPIC " )
-
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED True )
 
 include_directories( ${CMAKE_STAGING_PREFIX}/usr/include )
 link_directories( ${CMAKE_STAGING_PREFIX}/usr/lib )
 
-set ( src_discord_cpp
-      Discord.C++/Activity.cpp
-      Discord.C++/Channel.cpp
-      Discord.C++/Discord.cpp
-      Discord.C++/DiscordObject.cpp
-      Discord.C++/DMChannel.cpp
-      Discord.C++/Embed.cpp
-      Discord.C++/Exceptions.cpp
-      Discord.C++/FFmpegAudioSource.cpp
-      Discord.C++/FileAudioSource.cpp
-      Discord.C++/Gateway.cpp
-      Discord.C++/Guild.cpp
-      Discord.C++/GuildChannel.cpp
-      Discord.C++/Intents.cpp
-      Discord.C++/Logger.cpp
-      Discord.C++/MainGateway.cpp
-      Discord.C++/Member.cpp
-      Discord.C++/Message.cpp
-      Discord.C++/static.cpp
-      Discord.C++/TextChannel.cpp
-      Discord.C++/User.cpp
-      Discord.C++/VoiceChannel.cpp
-      Discord.C++/VoiceClient.cpp
-      Discord.C++/VoiceGateway.cpp
-      Discord.C++/VoiceState.cpp
-)
+FILE(GLOB PROJECT_SOURCES Discord.C++/*.cpp)
+FILE(GLOB PROJECT_HEADERS Discord.C++/*.h)
 
-add_library( ${PROJECT_NAME} SHARED ${src_discord_cpp} )
+add_library( ${PROJECT_NAME} SHARED ${PROJECT_SOURCES} )
 
 target_include_directories( ${PROJECT_NAME} PRIVATE Discord.C++ )
 
-target_link_libraries( ${PROJECT_NAME} sodium )
-target_link_libraries( ${PROJECT_NAME} cpprest )
-target_link_libraries( ${PROJECT_NAME} opus )
-target_link_libraries( ${PROJECT_NAME} pthread )
-target_link_libraries( ${PROJECT_NAME} crypto )
-target_link_libraries( ${PROJECT_NAME} ssl )
+if(MSVC)
+      set( CMAKE_CXX_FLAGS " /MP /O2 /GL /GS /Wall /sdl /Gd /EHa " )
+else(MSVC)
+      set( CMAKE_CXX_FLAGS " -g -Wall -Wextra -Ofast " )
+endif(MSVC)
+
+if(VCPKG_TOOLCHAIN)
+      find_package(unofficial-sodium CONFIG REQUIRED)
+      find_package(Opus CONFIG REQUIRED)
+      find_package(Boost COMPONENTS system filesystem REQUIRED)
+      find_package(cpprestsdk CONFIG REQUIRED)
+
+      target_link_libraries(${PROJECT_NAME}
+                        unofficial-sodium::sodium
+                        Opus::opus
+                        Boost::system
+                        Boost::filesystem
+                        cpprestsdk::cpprest
+                        cpprestsdk::cpprestsdk_zlib_internal
+                        cpprestsdk::cpprestsdk_boost_internal
+                        cpprestsdk::cpprestsdk_brotli_internal)
+else(VCPKG_TOOLCHAIN)
+      target_link_libraries(${PROJECT_NAME} sodium opus cpprest)
+endif(VCPKG_TOOLCHAIN)
 
 install(TARGETS discord_cpp DESTINATION lib)
-install(FILES
-      Discord.C++/Activity.h
-      Discord.C++/AudioSource.h
-      Discord.C++/Channel.h
-      Discord.C++/Discord.h
-      Discord.C++/DiscordObject.h
-      Discord.C++/DMChannel.h
-      Discord.C++/Embed.h
-      Discord.C++/Exceptions.h
-      Discord.C++/FFmpegAudioSource.h
-      Discord.C++/FileAudioSource.h
-      Discord.C++/Gateway.h
-      Discord.C++/Guild.h
-      Discord.C++/GuildChannel.h
-      Discord.C++/Intents.h
-      Discord.C++/Logger.h
-      Discord.C++/MainGateway.h
-      Discord.C++/Member.h
-      Discord.C++/Message.h
-      Discord.C++/static.h
-      Discord.C++/TextChannel.h
-      Discord.C++/User.h
-      Discord.C++/VoiceChannel.h
-      Discord.C++/VoiceClient.h
-      Discord.C++/VoiceGateway.h
-      Discord.C++/VoiceState.h
-      DESTINATION include/discord_cpp
-  )
+install(FILES ${PROJECT_HEADERS} DESTINATION include/discord_cpp)
+
+add_executable(test_bot test_bot/main.cpp)
+
+target_include_directories(test_bot PRIVATE Discord.C++)
+
+if(WIN32)
+      target_link_libraries(test_bot discord_cpp)
+else(WIN32)
+      target_link_libraries(test_bot discord_cpp pthread ssl crypto)
+endif(WIN32)
+
+install(TARGETS test_bot DESTINATION bin)

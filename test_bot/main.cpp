@@ -1,13 +1,12 @@
-#ifdef _WIN32
+#include <chrono>
 #include <iostream>
-
-#include "Discord.h"
-#else
-#include <discord_cpp/Discord.h>
+#include <thread>
+#ifndef _WIN32
 #include <stdlib.h>
 #endif
-#include <chrono>
-#include <thread>
+#include <boost/process.hpp>
+
+#include "Discord.h"
 
 /*	Compile with smth. like this:
     g++ -Wall -o test main.cpp -ldiscord_cpp -lcpprest -lpthread -lssl -lcrypto
@@ -155,6 +154,35 @@ class myClient : public Discord {
             FFmpegAudioSource* source = new FFmpegAudioSource("test.mp3");
             string channel_name = message.content.substr(12);
 
+            play((VoiceChannel*)findChannel(
+                     channel_name, ((GuildChannel*)message.channel)->guild->id),
+                 source);
+
+            delete source;
+        } else if (message.content.compare(0, 6, "?play ") == 0) {
+            stringstream argumentstream(message.content.substr(6));
+            string channel_name;
+            string link;
+            getline(argumentstream, link, ' ');
+            getline(argumentstream, channel_name);
+
+            boost::filesystem::path p =
+                boost::process::search_path("youtube-dl");
+            boost::process::ipstream input;
+            boost::process::system(p, "-g", "-x", "--no-playlist", link,
+                                   boost::process::std_out > input,
+                                   boost::process::std_err > stderr);
+
+            string url;
+            getline(input, url);
+
+            FFmpegAudioSource* source = new FFmpegAudioSource(
+                url,
+                "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",
+                "-af "
+                "loudnorm=i=-23.0:lra=7.0:tp=-2.0:offset=0.0:measured_i=-9.11:"
+                "measured_lra=3.5:measured_tp=-0.03:measured_thresh=-19.18:"
+                "linear=true[norm0]");
             play((VoiceChannel*)findChannel(
                      channel_name, ((GuildChannel*)message.channel)->guild->id),
                  source);

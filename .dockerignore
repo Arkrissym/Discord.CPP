@@ -1,10 +1,15 @@
+.dockerignore
+.travis.yml
 .git/
 .git*
 docs/
+Doxyfile
+Dockerfile
 LICENSE
 README.md
 lib*
 .vs/
+.vscode/
 *.sln
 *.vcxproj
 *.user

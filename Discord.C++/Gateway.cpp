@@ -121,7 +121,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect(
     });
 }
 
-DiscordCPP::Gateway::Gateway(const std::string& token) {
+DiscordCPP::Gateway::Gateway(const std::string& token) : threadpool() {
     _log = Logger("Discord.Gateway");
 
     _token = token;
@@ -161,7 +161,23 @@ DiscordCPP::Gateway::Gateway(const std::string& token) {
 
         value payload = value::parse(message);
 
-        on_websocket_incoming_message(payload);
+        std::future<std::string> f = threadpool.execute([this, payload]() {
+            on_websocket_incoming_message(payload);
+            return std::string("asdf");
+        });
+        //f.wait();
+        /*auto f2 = threadpool.execute([this, &f]() {
+            _log.debug(f.get());
+        });
+        f2.wait();*/
+        auto f2 = threadpool.then(f, [this](std::string test) {
+            _log.debug(test);
+        });
+        //f2.wait();
+        threadpool.then(f2, [this]() {
+            _log.debug("1234");
+        });
+        //f3.wait();
     });
 
     _client->set_close_handler([this](websocket_close_status close_status,
@@ -204,6 +220,6 @@ pplx::task<void> DiscordCPP::Gateway::close() {
     _keepalive = false;
     _connected = false;
     _client->set_close_handler(
-        [this](websocket_close_status, utility::string_t, std::error_code) {});
+        [](websocket_close_status, utility::string_t, std::error_code) {});
     return _client->close();
 }

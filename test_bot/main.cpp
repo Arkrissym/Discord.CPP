@@ -49,8 +49,7 @@ class myClient : public Discord {
         log.info("logged in as: " + user.username);
 
         this->update_presence(DiscordStatus::Online,
-                              Activity("test", ActivityTypes::Game))
-            .wait();
+                              Activity("test", ActivityTypes::Game));
     }
 
     void on_user_ban(User user, Guild guild) {

@@ -4,6 +4,7 @@
 #include <zlib.h>
 
 #include "Logger.h"
+#include "Threadpool.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -15,6 +16,7 @@ namespace DiscordCPP {
 
 class Gateway {
    protected:
+    Threadpool threadpool;
     /// websocket client
     web::websockets::client::websocket_callback_client* _client;
     /// zlib control struct

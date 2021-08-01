@@ -13,14 +13,14 @@ DiscordCPP::Threadpool::Threadpool(const unsigned int size) {
 
 DiscordCPP::Threadpool::~Threadpool() {
     {
-        std::unique_lock<std::mutex> lock(mutex);
+        std::lock_guard<std::mutex> lock(state_mutex);
         shutdown = true;
     }
     condition.notify_all();
 }
 
 void DiscordCPP::Threadpool::start_thread() {
-    std::unique_lock<std::mutex> lock(mutex);
+    std::lock_guard<std::mutex> lock(state_mutex);
 
     std::thread thread = std::thread(
         [this]() {
@@ -32,7 +32,7 @@ void DiscordCPP::Threadpool::start_thread() {
                 std::function<void()> task;
 
                 {
-                    std::unique_lock<std::mutex> lock(mutex);
+                    std::unique_lock<std::mutex> lock(queue_mutex);
                     condition.wait(lock, [this]() {
                         return shutdown || !task_queue.empty();
                     });
@@ -44,12 +44,11 @@ void DiscordCPP::Threadpool::start_thread() {
                     task_queue.pop();
                 }
 
-                thread_log.debug("Executing task");
                 task();
             }
 
-            Logger::unregister_thread(std::this_thread::get_id());
             thread_log.debug("Thread closed");
+            Logger::unregister_thread(std::this_thread::get_id());
         });
 
     Logger::register_thread(thread.get_id(), "Threadpool-" + std::to_string(threadpool_id) +
@@ -60,17 +59,19 @@ void DiscordCPP::Threadpool::start_thread() {
     thread_count++;
 }
 
-void DiscordCPP::Threadpool::execute(const std::function<void()>& task) {
-    std::unique_lock<std::mutex> lock(mutex);
+void DiscordCPP::Threadpool::queue_task(const std::function<void()>& task) {
+    log.debug("queuing task");
+    std::lock_guard<std::mutex> lock(queue_mutex);
     if (shutdown) {
         throw std::runtime_error("Cannot execute task on stopped threadpool");
     }
 
     if (task_queue.size() > 0 && thread_count < std::thread::hardware_concurrency()) {
+        log.debug("starting new thread");
         start_thread();
     }
 
-    log.debug("queuing task");
     task_queue.emplace(task);
     condition.notify_one();
+    log.debug("finished queuing task");
 }

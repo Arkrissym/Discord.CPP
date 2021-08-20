@@ -147,37 +147,23 @@ DiscordCPP::Gateway::Gateway(const std::string& token) : threadpool() {
     _client = new websocket_callback_client();
 
     _client->set_message_handler([this](websocket_incoming_message msg) {
-        std::string message;
+        threadpool.execute([this, msg]() {
+            std::string message;
 
-        if (msg.message_type() == websocket_message_type::binary_message) {
-            concurrency::streams::container_buffer<std::string> buf;
-            msg.body().read_to_end(buf).wait();
-            message = decompress_message(buf.collection());
-        } else {
-            message = msg.extract_string().get();
-        }
+            if (msg.message_type() == websocket_message_type::binary_message) {
+                concurrency::streams::container_buffer<std::string> buf;
+                msg.body().read_to_end(buf).wait();
+                message = decompress_message(buf.collection());
+            } else {
+                message = msg.extract_string().get();
+            }
 
-        _log.debug("received message: " + message);
+            _log.debug("received message: " + message);
 
-        value payload = value::parse(message);
+            value payload = value::parse(message);
 
-        std::future<std::string> f = threadpool.execute([this, payload]() {
             on_websocket_incoming_message(payload);
-            return std::string("asdf");
         });
-        //f.wait();
-        /*auto f2 = threadpool.execute([this, &f]() {
-            _log.debug(f.get());
-        });
-        f2.wait();*/
-        auto f2 = threadpool.then(f, [this](std::string test) {
-            _log.debug(test);
-        });
-        //f2.wait();
-        threadpool.then(f2, [this]() {
-            _log.debug("1234");
-        });
-        //f3.wait();
     });
 
     _client->set_close_handler([this](websocket_close_status close_status,
@@ -208,7 +194,9 @@ pplx::task<void> DiscordCPP::Gateway::connect(const std::string& url) {
 
 ///@throws	ClientException
 pplx::task<void> DiscordCPP::Gateway::send(const value& message) {
-    if (_connected == false) throw ClientException("Gateway not connected");
+    if (_connected == false) {
+        throw ClientException("Gateway not connected");
+    }
 
     web::websockets::client::websocket_outgoing_message msg;
     msg.set_utf8_message(to_utf8string(message.serialize()));

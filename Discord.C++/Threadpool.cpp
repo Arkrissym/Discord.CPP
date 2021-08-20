@@ -1,8 +1,8 @@
 #include "Threadpool.h"
 
 DiscordCPP::Threadpool::Threadpool(const unsigned int size) {
-    static unsigned int total_thread_pools = 0;
-    threadpool_id = total_thread_pools++;
+    static unsigned int thread_pool_index = 0;
+    threadpool_id = thread_pool_index++;
 
     log = Logger("Threadpool-" + std::to_string(threadpool_id));
 
@@ -60,7 +60,6 @@ void DiscordCPP::Threadpool::start_thread() {
 }
 
 void DiscordCPP::Threadpool::queue_task(const std::function<void()>& task) {
-    log.debug("queuing task");
     std::lock_guard<std::mutex> lock(queue_mutex);
     if (shutdown) {
         throw std::runtime_error("Cannot execute task on stopped threadpool");
@@ -73,5 +72,4 @@ void DiscordCPP::Threadpool::queue_task(const std::function<void()>& task) {
 
     task_queue.emplace(task);
     condition.notify_one();
-    log.debug("finished queuing task");
 }

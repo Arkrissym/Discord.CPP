@@ -16,7 +16,7 @@ add_library( ${PROJECT_NAME} SHARED ${PROJECT_SOURCES} )
 target_include_directories( ${PROJECT_NAME} PRIVATE Discord.C++ )
 
 if(MSVC)
-      set( CMAKE_CXX_FLAGS " /MP /O2 /GL /GS /Wall /sdl /Gd /EHa " )
+      set( CMAKE_CXX_FLAGS " /MP /O2 /GL /GS /W4 /sdl /Gd /EHa " )
 else(MSVC)
       set( CMAKE_CXX_FLAGS " -g -Wall -Wextra -Ofast " )
 endif(MSVC)

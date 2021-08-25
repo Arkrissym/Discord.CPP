@@ -100,17 +100,17 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
     _message_handler(payload);
 }
 
-pplx::task<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
-    return pplx::create_task([this] {
-        value ack;
-        ack[U("op")] = value(11);
-        this->send(ack).then(
-            [this] { _log.debug("Heartbeat ACK message has been sent"); });
+std::shared_future<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
+    value ack;
+    ack[U("op")] = value(11);
+    auto f = this->send(ack);
+    return threadpool.then(f, [this] {
+        _log.debug("Heartbeat ACK message has been sent");
     });
 }
 
-pplx::task<void> DiscordCPP::MainGateway::identify() {
-    return pplx::create_task([this] {
+std::shared_future<void> DiscordCPP::MainGateway::identify() {
+    return threadpool.execute([this] {
         value out_json;
 
         if (_sequence_number > 0) {
@@ -123,9 +123,8 @@ pplx::task<void> DiscordCPP::MainGateway::identify() {
             out_json[U("d")][U("session_id")] = value(to_string_t(_session_id));
             out_json[U("d")][U("seq")] = value(seq);
 
-            this->send(out_json)
-                .then([this] { _log.info("Resume payload has been sent"); })
-                .wait();
+            this->send(out_json).wait();
+            _log.info("Resume payload has been sent");
 
             while (_invalid_session == false) {
                 if (_sequence_number > seq) {
@@ -164,8 +163,8 @@ pplx::task<void> DiscordCPP::MainGateway::identify() {
         out_json[U("d")][U("properties")][U("$device")] =
             value(U("Discord.C++"));
 
-        this->send(out_json).then(
-            [this] { _log.info("Identify payload has been sent"); });
+        this->send(out_json).wait();
+        _log.info("Identify payload has been sent");
     });
 }
 
@@ -190,7 +189,5 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token,
         _log.info("dummy message handler called");
     };
 }
-
-DiscordCPP::MainGateway::~MainGateway() {}
 
 unsigned int DiscordCPP::MainGateway::get_shard_id() { return _shard_id; }

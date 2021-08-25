@@ -12,8 +12,8 @@ value DiscordCPP::VoiceGateway::get_heartbeat_payload() {
     return payload;
 }
 
-pplx::task<void> DiscordCPP::VoiceGateway::identify() {
-    return pplx::create_task([this] {
+std::shared_future<void> DiscordCPP::VoiceGateway::identify() {
+    return threadpool.execute([this] {
         value out_payload;
 
         out_payload[U("d")][U("server_id")] = value(to_string_t(_guild_id));
@@ -25,16 +25,14 @@ pplx::task<void> DiscordCPP::VoiceGateway::identify() {
 
             _resume = false;
 
-            this->send(out_payload)
-                .then([this] { _log.info("Resume payload has been sent"); })
-                .wait();
+            this->send(out_payload).wait();
+            _log.info("Resume payload has been sent");
         } else {
             out_payload[U("op")] = value(0);
             out_payload[U("d")][U("user_id")] = value(to_string_t(_user_id));
 
-            this->send(out_payload)
-                .then([this] { _log.info("Identify payload has been sent"); })
-                .wait();
+            this->send(out_payload).wait();
+            _log.info("Identify payload has been sent");
         }
     });
 }
@@ -83,5 +81,3 @@ DiscordCPP::VoiceGateway::VoiceGateway(const std::string& token,
     _guild_id = guild_id;
     _user_id = user_id;
 }
-
-DiscordCPP::VoiceGateway::~VoiceGateway() {}

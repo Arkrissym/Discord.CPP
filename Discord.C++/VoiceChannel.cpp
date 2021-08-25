@@ -42,9 +42,6 @@ DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel& old) : DiscordCPP::Ch
         parent = new Channel(*old.parent);
 }
 
-DiscordCPP::VoiceChannel::VoiceChannel() {
-}
-
 DiscordCPP::VoiceChannel::~VoiceChannel() {
     delete parent;
     delete guild;
@@ -82,14 +79,14 @@ DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
     payload[U("d")][U("self_mute")] = value(false);
     payload[U("d")][U("self_deaf")] = value(false);
 
-    _client->_gateways[gw_id]->send(payload).then([] {
-        Logger("discord.voicechannel").debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
-    });
+    auto current_gateway = _client->_gateways[gw_id];
+    current_gateway->send(payload).wait();
+    Logger("discord.voicechannel").debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
 
     while (true) {
         for (unsigned int i = 0; i < _client->_voice_states.size(); i++) {
             if ((_client->_voice_states[i]->channel_id == conversions::to_string_t(this->id)) && (_client->_voice_states[i]->endpoint.length() > 1)) {
-                return new VoiceClient(&_client->_gateways[gw_id], _client->_voice_states[i]->voice_token, _client->_voice_states[i]->endpoint, _client->_voice_states[i]->session_id, _client->_voice_states[i]->guild_id, _client->_voice_states[i]->channel_id, conversions::to_string_t(_client->_user->id));
+                return new VoiceClient(&current_gateway, _client->_voice_states[i]->voice_token, _client->_voice_states[i]->endpoint, _client->_voice_states[i]->session_id, _client->_voice_states[i]->guild_id, _client->_voice_states[i]->channel_id, conversions::to_string_t(_client->_user->id));
             }
         }
 

@@ -34,7 +34,7 @@ class Gateway {
     /// timestamp of last heartbeat ack
     time_t _last_heartbeat_ack;
     /// heartbeat task
-    pplx::task<void> _heartbeat_task;
+    std::thread _heartbeat_task;
     /// indicator if Gateway is connected
     bool _connected;
     Logger _log;
@@ -45,7 +45,7 @@ class Gateway {
 
     DLL_EXPORT void start_heartbeating();
     DLL_EXPORT virtual web::json::value get_heartbeat_payload() = 0;
-    DLL_EXPORT virtual pplx::task<void> identify() = 0;
+    DLL_EXPORT virtual std::shared_future<void> identify() = 0;
     DLL_EXPORT virtual void on_websocket_incoming_message(
         const web::json::value& payload) = 0;
     DLL_EXPORT void on_websocket_disconnnect(
@@ -59,9 +59,9 @@ class Gateway {
     DLL_EXPORT void set_message_handler(
         const std::function<void(web::json::value payload)>& handler);
 
-    DLL_EXPORT pplx::task<void> connect(const std::string& url);
-    DLL_EXPORT pplx::task<void> send(const web::json::value& message);
-    DLL_EXPORT pplx::task<void> close();
+    DLL_EXPORT std::shared_future<void> connect(const std::string& url);
+    DLL_EXPORT std::shared_future<void> send(const web::json::value& message);
+    DLL_EXPORT std::shared_future<void> close();
 };
 
 }  // namespace DiscordCPP

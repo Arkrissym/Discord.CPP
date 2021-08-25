@@ -17,10 +17,6 @@ void Logger::unregister_thread(const std::thread::id& id) {
     thread_names.erase(id);
 }
 
-Logger::Logger() {}
-
-Logger::~Logger() {}
-
 Logger::Logger(const std::string& name) {
     std::lock_guard<std::mutex> lock(log_mutex);
     _name = name;

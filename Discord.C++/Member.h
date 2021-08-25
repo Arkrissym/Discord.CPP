@@ -1,8 +1,9 @@
 #pragma once
-#include "User.h"
+#include <cpprest/json.h>
 
 #include <iostream>
-#include <cpprest/json.h>
+
+#include "User.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -12,27 +13,27 @@
 
 namespace DiscordCPP {
 
-	using namespace std;
-	using namespace web::json;
-	using namespace utility;
+using namespace std;
+using namespace web::json;
+using namespace utility;
 
-	class Member : public User {
-	public:
-		///the member's nickname
-		string nick;
-		//vector<Role> roles;
-		///when the member joined the server
-		string joined_at;	//ISO8601 timestamp
-		///true, if the member is defeaned
-		bool deaf = false;
-		///true, if the member is muted
-		bool mute = false;
+class Member : public User {
+   public:
+    ///the member's nickname
+    string nick;
+    //vector<Role> roles;
+    ///when the member joined the server
+    string joined_at;  //ISO8601 timestamp
+    ///true, if the member is defeaned
+    bool deaf = false;
+    ///true, if the member is muted
+    bool mute = false;
 
-		DLL_EXPORT Member(const value& data, const string_t& token);
-		DLL_EXPORT Member();
+    DLL_EXPORT Member(const value& data, const string_t& token);
+    DLL_EXPORT Member(){};
 
-		///@return Nickname (Username if not present) as std::string
-		DLL_EXPORT operator string();
-	};
+    ///@return Nickname (Username if not present) as std::string
+    DLL_EXPORT operator string();
+};
 
-}
+}  // namespace DiscordCPP

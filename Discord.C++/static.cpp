@@ -6,24 +6,25 @@
 #include <string>
 #include <vector>
 
-pplx::task<void> waitFor(const std::chrono::microseconds time) {
-    pplx::task_completion_event<void> tce;
+std::shared_future<void> waitFor(const std::chrono::microseconds time) {
+    std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
+    std::shared_future<void> future(promise->get_future());
 
     auto& ioService = crossplat::threadpool::shared_instance().service();
 
     auto timer = std::make_shared<boost::asio::deadline_timer>(ioService);
     timer->expires_from_now(boost::posix_time::microseconds(time.count()));
-    timer->async_wait([timer, tce](const boost::system::error_code& error) {
+    timer->async_wait([timer, promise](const boost::system::error_code& error) {
         if (error) {
             std::stringstream ss;
             ss << "timer error or cancel, because: " << error.message();
-            tce.set_exception(std::runtime_error(ss.str()));
+            promise->set_exception(std::make_exception_ptr(std::runtime_error(ss.str())));
         } else {
-            tce.set();
+            promise->set_value();
         }
     });
 
-    return pplx::create_task(tce);
+    return future;
 }
 
 void hexchar(unsigned char c, unsigned char& hex1, unsigned char& hex2) {

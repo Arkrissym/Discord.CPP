@@ -24,17 +24,14 @@ class Logger {
    protected:
     std::string _name;
 
+   public:
     DLL_EXPORT static void register_thread(const std::thread::id& id, const std::string& name);
     DLL_EXPORT static void unregister_thread(const std::thread::id& id);
 
-    friend DiscordCPP::Threadpool;
-
-   public:
-    DLL_EXPORT Logger();
-    DLL_EXPORT ~Logger();
-    DLL_EXPORT Logger(const std::string&);
-
     DLL_EXPORT static void set_log_level(const Loglevel& level);
+
+    DLL_EXPORT Logger(){};
+    DLL_EXPORT Logger(const std::string&);
 
     DLL_EXPORT void print(const Loglevel level, const std::string& message);
 

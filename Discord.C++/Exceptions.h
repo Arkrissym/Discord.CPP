@@ -9,43 +9,44 @@
 #endif
 
 namespace DiscordCPP {
-	class DiscordException : public std::exception {
-	protected:
-		std::string _what;
-	public:
-		DLL_EXPORT DiscordException(const std::string& what);
-		DLL_EXPORT virtual ~DiscordException();
+class DiscordException : public std::exception {
+   protected:
+    std::string _what;
 
-		DLL_EXPORT const char* what() const noexcept;
-	};
+   public:
+    DLL_EXPORT DiscordException(const std::string& what);
+    DLL_EXPORT virtual ~DiscordException();
 
-	class StatusCodeException : public DiscordException {
-	protected:
-		int _error_code;
-	public:
-		DLL_EXPORT StatusCodeException(const std::string& what, int error_code);
-		DLL_EXPORT virtual ~StatusCodeException();
-		DLL_EXPORT int get_error_code() const;
+    DLL_EXPORT const char* what() const noexcept;
+};
 
-	};
+class StatusCodeException : public DiscordException {
+   protected:
+    int _error_code;
 
-	class ClientException : public DiscordException {
-	public:
-		DLL_EXPORT ClientException(const std::string& what);
-	};
+   public:
+    DLL_EXPORT StatusCodeException(const std::string& what, int error_code);
+    DLL_EXPORT virtual ~StatusCodeException();
+    DLL_EXPORT int get_error_code() const;
+};
 
-	class SizeError : public DiscordException {
-	public:
-		DLL_EXPORT SizeError(const std::string& what);
-	};
+class ClientException : public DiscordException {
+   public:
+    DLL_EXPORT ClientException(const std::string& what);
+};
 
-	class OpusError : public StatusCodeException {
-	public:
-		DLL_EXPORT OpusError(const std::string& what, int error_code);
-	};
+class SizeError : public DiscordException {
+   public:
+    DLL_EXPORT SizeError(const std::string& what);
+};
 
-	class HTTPError : public StatusCodeException {
-	public:
-		DLL_EXPORT HTTPError(const std::string& what, int error_code);
-	};
-}
+class OpusError : public StatusCodeException {
+   public:
+    DLL_EXPORT OpusError(const std::string& what, int error_code);
+};
+
+class HTTPError : public StatusCodeException {
+   public:
+    DLL_EXPORT HTTPError(const std::string& what, int error_code);
+};
+}  // namespace DiscordCPP

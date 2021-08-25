@@ -28,8 +28,6 @@ using namespace utility;
 using namespace web::websockets::client;
 using namespace boost::asio::ip;
 
-DiscordCPP::udp_client::udp_client() {}
-
 DiscordCPP::udp_client::udp_client(const string_t& ip, const int port) {
     _log = Logger("discord.VoiceClient.udp_client");
 
@@ -72,8 +70,8 @@ string DiscordCPP::udp_client::receive() {
     return string(_recv_buffer.begin(), _recv_buffer.begin() + len);
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::connect_voice_udp() {
-    return pplx::create_task([this] {
+std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
+    return threadpool.execute([this] {
         _udp = new udp_client(_server_ip, _server_port);
 
         _log.info("performing IP Discovery");
@@ -114,8 +112,8 @@ pplx::task<void> DiscordCPP::VoiceClient::connect_voice_udp() {
     });
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::select_protocol() {
-    return pplx::create_task([this] {
+std::shared_future<void> DiscordCPP::VoiceClient::select_protocol() {
+    return threadpool.execute([this] {
         value payload;
         payload[U("op")] = value(1);
         payload[U("d")][U("protocol")] = value(U("udp"));
@@ -123,17 +121,13 @@ pplx::task<void> DiscordCPP::VoiceClient::select_protocol() {
         payload[U("d")][U("data")][U("port")] = value(_my_port);
         payload[U("d")][U("data")][U("mode")] = value(U("xsalsa20_poly1305"));
 
-        _voice_ws->send(payload)
-            .then([this] {
-                _log.debug("Opcode 1 Select Protocol Payload has been sent");
-            })
-            .wait();
+        _voice_ws->send(payload).wait();
+        _log.debug("Opcode 1 Select Protocol Payload has been sent");
     });
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::load_session_description(
-    const value& data) {
-    return pplx::create_task([this, data] {
+std::shared_future<void> DiscordCPP::VoiceClient::load_session_description(const value& data) {
+    return threadpool.execute([this, data] {
         _mode = data.at(U("mode")).as_string();
         web::json::array tmp = data.at(U("secret_key")).as_array();
         for (unsigned int i = 0; i < tmp.size(); i++) {
@@ -142,19 +136,16 @@ pplx::task<void> DiscordCPP::VoiceClient::load_session_description(
     });
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::speak(bool speak) {
-    return pplx::create_task([this, speak] {
+std::shared_future<void> DiscordCPP::VoiceClient::speak(bool speak) {
+    return threadpool.execute([this, speak] {
         value payload;
         payload[U("op")] = value(5);
         payload[U("d")][U("speaking")] = value(speak);
         payload[U("d")][U("delay")] = value(0);
         payload[U("d")][U("ssrc")] = value(_ssrc);
 
-        _voice_ws->send(payload)
-            .then([this] {
-                _log.debug("Opcode 5 Speaking Payload has been sent");
-            })
-            .wait();
+        _voice_ws->send(payload).wait();
+        _log.debug("Opcode 5 Speaking Payload has been sent");
     });
 }
 
@@ -164,7 +155,7 @@ DiscordCPP::VoiceClient::VoiceClient(MainGateway** main_ws,
                                      const string_t& session_id,
                                      const string_t& guild_id,
                                      const string_t& channel_id,
-                                     const string_t& user_id) {
+                                     const string_t& user_id) : threadpool() {
     _guild_id = guild_id;
     _channel_id = channel_id;
 
@@ -179,15 +170,18 @@ DiscordCPP::VoiceClient::VoiceClient(MainGateway** main_ws,
                                  conversions::to_utf8string(user_id));
 
     _voice_ws->set_message_handler([this](value data) {
+        std::shared_future<void> f;
         switch (data.at(U("op")).as_integer()) {
             case 2:
                 _ssrc = data[U("d")][U("ssrc")].as_integer();
                 _server_ip = data[U("d")][U("ip")].as_string();
                 _server_port = data[U("d")][U("port")].as_integer();
-                connect_voice_udp().then([this] { select_protocol(); });
+                f = connect_voice_udp();
+                threadpool.then(f, [this]() { select_protocol(); });
                 break;
             case 4:
-                load_session_description(data[U("d")]).then([this] {
+                f = load_session_description(data[U("d")]);
+                threadpool.then(f, [this]() {
                     _log.debug("mode: " + conversions::to_utf8string(_mode));
                     _log.info("handshake complete. voice connection ready.");
                     _ready = true;
@@ -210,8 +204,6 @@ DiscordCPP::VoiceClient::VoiceClient(MainGateway** main_ws,
     }
 }
 
-DiscordCPP::VoiceClient::VoiceClient() {}
-
 DiscordCPP::VoiceClient::~VoiceClient() {
     _log.debug("~VoiceClient");
     disconnect().wait();
@@ -220,28 +212,22 @@ DiscordCPP::VoiceClient::~VoiceClient() {
     delete _udp;
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::disconnect() {
-    return pplx::create_task([this] {
-        value payload = value();
-        payload[U("op")] = value(4);
-        payload[U("d")][U("guild_id")] = value(_guild_id);
-        payload[U("d")][U("channel_id")] = value::null();
-        payload[U("d")][U("self_mute")] = value(true);
-        payload[U("d")][U("self_deaf")] = value(true);
+std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
+    value payload = value();
+    payload[U("op")] = value(4);
+    payload[U("d")][U("guild_id")] = value(_guild_id);
+    payload[U("d")][U("channel_id")] = value::null();
+    payload[U("d")][U("self_mute")] = value(true);
+    payload[U("d")][U("self_deaf")] = value(true);
 
-        (*_main_ws)
-            ->send(payload)
-            .then([this] {
-                _log.debug(
-                    "Payload with Opcode 4 (Gateway Voice State Update) has "
-                    "been sent");
-            })
-            .wait();
+    auto f = (*_main_ws)->send(payload);
+    return threadpool.then(f, [this] {
+        _log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
     });
 }
 
-pplx::task<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
-    return pplx::create_task([this, source] {
+std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
+    return threadpool.execute([this, source] {
         _log.debug("creating opus encoder");
         int error;
         OpusEncoder* encoder = opus_encoder_create(

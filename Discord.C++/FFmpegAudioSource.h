@@ -26,13 +26,10 @@ class FFmpegAudioSource : public AudioSource {
     std::shared_ptr<boost::process::ipstream> _pipe;
 
    public:
-    /**	Creates an AudioSource using FFmpeg. This requires ffmpeg to be in your
-       PATH.
-            @param[in]	input				The input for ffmpeg.
-            @param[in]	before_options		[Optional] Options to place
-       before input.
-            @param[in]	options				[Optional] Options to
-       place after input.
+    /**	Creates an AudioSource using FFmpeg. This requires ffmpeg to be in your PATH.
+            @param[in]	input		     The input for ffmpeg.
+            @param[in]	before_options      [Optional] Options to place before input.
+            @param[in]	options		     [Optional] Options to place after input.
             @return		FFmpegAudioSource	playable AudioSource
     */
     DLL_EXPORT FFmpegAudioSource(const std::string& input,

@@ -41,7 +41,10 @@ std::string DiscordCPP::Gateway::decompress_message(
 }
 
 void DiscordCPP::Gateway::start_heartbeating() {
-    _heartbeat_task = pplx::create_task([this] {
+    static unsigned int heartbeat_task_index = 0;
+    unsigned int task_id = heartbeat_task_index++;
+    _heartbeat_task = std::thread([this, task_id] {
+        Logger::register_thread(std::this_thread::get_id(), "Heartbeat-Task-" + std::to_string(task_id));
         while (_heartbeat_interval == 0)
             waitFor(std::chrono::milliseconds(50)).wait();
 
@@ -66,11 +69,8 @@ void DiscordCPP::Gateway::start_heartbeating() {
                 value payload = this->get_heartbeat_payload();
 
                 try {
-                    this->send(payload)
-                        .then([this] {
-                            _log.debug("Heartbeat message has been sent");
-                        })
-                        .wait();
+                    this->send(payload).wait();
+                    _log.debug("Heartbeat message has been sent");
                 } catch (websocket_exception& e) {
                     _log.error("Cannot send heartbeat message: " +
                                std::string(e.what()) + " (" +
@@ -98,7 +98,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect(
                  std::to_string((int)status) + ": " + reason + " (" +
                  std::to_string(error.value()) + ": " + error.message() + ")");
 
-    pplx::create_task([this] {
+    threadpool.execute([this] {
         try {
             delete _client;
         } catch (const std::exception& e) {
@@ -175,6 +175,7 @@ DiscordCPP::Gateway::Gateway(const std::string& token) : threadpool() {
 
 DiscordCPP::Gateway::~Gateway() {
     _keepalive = false;
+    _heartbeat_task.join();
     delete _client;
 }
 
@@ -183,17 +184,24 @@ void DiscordCPP::Gateway::set_message_handler(
     _message_handler = handler;
 }
 
-pplx::task<void> DiscordCPP::Gateway::connect(const std::string& url) {
+std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
     _url = url;
     _log.info("connecting to websocket: " + url);
-    return _client->connect(to_string_t(url)).then([this] {
+
+    std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
+    std::shared_future<void> future(promise->get_future());
+
+    _client->connect(to_string_t(url)).then([this, promise] {
         _connected = true;
         start_heartbeating();
+        promise->set_value();
     });
+
+    return future;
 }
 
 ///@throws	ClientException
-pplx::task<void> DiscordCPP::Gateway::send(const value& message) {
+std::shared_future<void> DiscordCPP::Gateway::send(const value& message) {
     if (_connected == false) {
         throw ClientException("Gateway not connected");
     }
@@ -201,13 +209,28 @@ pplx::task<void> DiscordCPP::Gateway::send(const value& message) {
     web::websockets::client::websocket_outgoing_message msg;
     msg.set_utf8_message(to_utf8string(message.serialize()));
 
-    return _client->send(msg);
+    std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
+    std::shared_future<void> future(promise->get_future());
+
+    _client->send(msg).then([promise]() {
+        promise->set_value();
+    });
+
+    return future;
 }
 
-pplx::task<void> DiscordCPP::Gateway::close() {
+std::shared_future<void> DiscordCPP::Gateway::close() {
     _keepalive = false;
     _connected = false;
+
+    std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
+    std::shared_future<void> future(promise->get_future());
+
     _client->set_close_handler(
         [](websocket_close_status, utility::string_t, std::error_code) {});
-    return _client->close();
+    _client->close().then([promise]() {
+        promise->set_value();
+    });
+
+    return future;
 }

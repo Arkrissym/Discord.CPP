@@ -1,14 +1,14 @@
 #include "Message.h"
-#include "static.h"
-#include "VoiceChannel.h"
-#include "GuildChannel.h"
-#include "DMChannel.h"
-#include "User.h"
-#include "Embed.h"
-
-#include "Logger.h"
 
 #include <cpprest/http_client.h>
+
+#include "DMChannel.h"
+#include "Embed.h"
+#include "GuildChannel.h"
+#include "Logger.h"
+#include "User.h"
+#include "VoiceChannel.h"
+#include "static.h"
 
 using namespace web::http;
 using namespace web::http::client;
@@ -21,137 +21,134 @@ using namespace utility;
 	@return	Message object
 */
 DiscordCPP::Message::Message(const value& data, const string_t& token) : DiscordCPP::DiscordObject(token) {
-	if (is_valid_field("id"))
-		id = conversions::to_utf8string(data.at(U("id")).as_string());
+    if (is_valid_field("id"))
+        id = conversions::to_utf8string(data.at(U("id")).as_string());
 
-	if (is_valid_field("channel_id")) {
-		string url = "/channels/" + conversions::to_utf8string(data.at(U("channel_id")).as_string());
+    if (is_valid_field("channel_id")) {
+        string url = "/channels/" + conversions::to_utf8string(data.at(U("channel_id")).as_string());
 
-		value channel_data = api_call(url);
-		channel = (TextChannel*)Channel::from_json(NULL, channel_data, token);
-	}
+        value channel_data = api_call(url);
+        channel = (TextChannel*)Channel::from_json(NULL, channel_data, token);
+    }
 
-	if (is_valid_field("author"))
-		author = new User(data.at(U("author")), token);
+    if (is_valid_field("author"))
+        author = new User(data.at(U("author")), token);
 
-	if (is_valid_field("content"))
-		content = conversions::to_utf8string(data.at(U("content")).as_string());
+    if (is_valid_field("content"))
+        content = conversions::to_utf8string(data.at(U("content")).as_string());
 
-	if (is_valid_field("timestamp"))
-		timestamp = conversions::to_utf8string(data.at(U("timestamp")).as_string());
+    if (is_valid_field("timestamp"))
+        timestamp = conversions::to_utf8string(data.at(U("timestamp")).as_string());
 
-	if (is_valid_field("edited_timestamp"))
-		edited_timestamp = conversions::to_utf8string(data.at(U("edited_timestamp")).as_string());
+    if (is_valid_field("edited_timestamp"))
+        edited_timestamp = conversions::to_utf8string(data.at(U("edited_timestamp")).as_string());
 
-	if (is_valid_field("tts"))
-		tts = data.at(U("tts")).as_bool();
+    if (is_valid_field("tts"))
+        tts = data.at(U("tts")).as_bool();
 
-	if (is_valid_field("mention_everyone"))
-		tts = data.at(U("mention_everyone")).as_bool();
+    if (is_valid_field("mention_everyone"))
+        tts = data.at(U("mention_everyone")).as_bool();
 
-	if (is_valid_field("mentions")) {
-		web::json::array tmp = data.at(U("mentions")).as_array();
-		for (unsigned int i = 0; i < tmp.size(); i++)
-			mentions.push_back(new User(tmp[i], token));
-	}
+    if (is_valid_field("mentions")) {
+        web::json::array tmp = data.at(U("mentions")).as_array();
+        for (unsigned int i = 0; i < tmp.size(); i++)
+            mentions.push_back(new User(tmp[i], token));
+    }
 
-	//mention_roles
+    //mention_roles
 
-	//attachements
+    //attachements
 
-	if (is_valid_field("embeds")) {
-		web::json::array tmp = data.at(U("embeds")).as_array();
-		for (unsigned int i = 0; i < tmp.size(); i++) {
-			embeds.push_back(new Embed(tmp[i]));
-		}
-	}
+    if (is_valid_field("embeds")) {
+        web::json::array tmp = data.at(U("embeds")).as_array();
+        for (unsigned int i = 0; i < tmp.size(); i++) {
+            embeds.push_back(new Embed(tmp[i]));
+        }
+    }
 
-	//reactions
+    //reactions
 
-	if (is_valid_field("pinned"))
-		pinned = data.at(U("pinned")).as_bool();
+    if (is_valid_field("pinned"))
+        pinned = data.at(U("pinned")).as_bool();
 
-	if (is_valid_field("webhook_id"))
-		webhook_id = conversions::to_utf8string(data.at(U("webhook_id")).as_string());
+    if (is_valid_field("webhook_id"))
+        webhook_id = conversions::to_utf8string(data.at(U("webhook_id")).as_string());
 
-	if (is_valid_field("type"))
-		type = data.at(U("type")).as_integer();
+    if (is_valid_field("type"))
+        type = data.at(U("type")).as_integer();
 
-	//activity
+    //activity
 
-	//application
+    //application
 }
 
 /**	@param[in]	old	Message object to copy
 	@return		copied Message object
 */
 DiscordCPP::Message::Message(const Message& old) {
-	_token = old._token;
-	id = old.id;
+    _token = old._token;
+    id = old.id;
 
-	if (old.channel != NULL) {
-		try {
-			channel = (TextChannel*)old.channel->copy(*old.channel);
-		}
-		catch (std::exception& e) {
-			Logger("discord.message").error("Error in channel copy: " + string(e.what()));
-		}
-	}
-	else {
-		channel = NULL;
-	}
+    if (old.channel != NULL) {
+        try {
+            channel = (TextChannel*)old.channel->copy(*old.channel);
+        } catch (std::exception& e) {
+            Logger("discord.message").error("Error in channel copy: " + string(e.what()));
+        }
+    } else {
+        channel = NULL;
+    }
 
-	if (old.author != NULL)
-		author = new User(*old.author);
-	content = old.content;
-	timestamp = old.timestamp;
-	edited_timestamp = old.edited_timestamp;
-	tts = old.tts;
-	mention_everyone = old.mention_everyone;
-	for (unsigned int i = 0; i < old.mentions.size(); i++) {
-		mentions.push_back(new User(*old.mentions[i]));
-	}
-	//mention_roles
-	//attachements
-	//embeds
-	//reactions
-	pinned = old.pinned;
-	webhook_id = old.webhook_id;
-	type = old.type;
-	//activity
-	//application
+    if (old.author != NULL)
+        author = new User(*old.author);
+    content = old.content;
+    timestamp = old.timestamp;
+    edited_timestamp = old.edited_timestamp;
+    tts = old.tts;
+    mention_everyone = old.mention_everyone;
+    for (unsigned int i = 0; i < old.mentions.size(); i++) {
+        mentions.push_back(new User(*old.mentions[i]));
+    }
+    //mention_roles
+    //attachements
+    //embeds
+    //reactions
+    pinned = old.pinned;
+    webhook_id = old.webhook_id;
+    type = old.type;
+    //activity
+    //application
 }
 
 DiscordCPP::Message::Message() {
-
 }
 
 DiscordCPP::Message::~Message() {
-	if (channel != NULL)
-		delete channel;
-	if (author != NULL)
-		delete author;
-	for (unsigned int i = 0; i < mentions.size(); i++) {
-		delete mentions[i];
-	}
-	for (unsigned int i = 0; i < embeds.size(); i++) {
-		delete embeds[i];
-	}
+    if (channel != NULL)
+        delete channel;
+    if (author != NULL)
+        delete author;
+    for (unsigned int i = 0; i < mentions.size(); i++) {
+        delete mentions[i];
+    }
+    for (unsigned int i = 0; i < embeds.size(); i++) {
+        delete embeds[i];
+    }
 }
 
 /**	@param[in]	content	New message-content.
 	@return		Updated message object.
 */
 DiscordCPP::Message DiscordCPP::Message::edit(const string& content) {
-	string url = "/channels/" + channel->id + "/messages/" + id;
+    string url = "/channels/" + channel->id + "/messages/" + id;
 
-	value data;
-	data[U("content")] = value(conversions::to_string_t(content));
+    value data;
+    data[U("content")] = value(conversions::to_string_t(content));
 
-	return Message(api_call(url, methods::PATCH, data), _token);
+    return Message(api_call(url, methods::PATCH, data), _token);
 }
 
 void DiscordCPP::Message::delete_msg() {
-	string url = "/channels/" + channel->id + "/messages/" + id;
-	api_call(url, methods::DEL);
+    string url = "/channels/" + channel->id + "/messages/" + id;
+    api_call(url, methods::DEL);
 }

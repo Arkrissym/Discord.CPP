@@ -39,7 +39,6 @@ class udp_client {
     // void handle_receive(boost::system::error_code &error, size_t
     // bytes_tranferred);
    public:
-    DLL_EXPORT udp_client();
     DLL_EXPORT udp_client(const string_t& ip, const int port);
     udp_client(udp_client& old) = delete;
     udp_client& operator=(const udp_client&) = delete;
@@ -51,6 +50,8 @@ class udp_client {
 
 class VoiceClient {
    private:
+    Threadpool threadpool;
+
     string_t _voice_token;
     string_t _endpoint;
     string_t _session_id;
@@ -79,11 +80,11 @@ class VoiceClient {
 
     Logger _log;
 
-    DLL_EXPORT pplx::task<void> connect_voice_udp();
-    DLL_EXPORT pplx::task<void> select_protocol();
-    DLL_EXPORT pplx::task<void> load_session_description(const value& data);
-    DLL_EXPORT pplx::task<void> speak(bool speak = true);
-    DLL_EXPORT pplx::task<void> disconnect();
+    DLL_EXPORT std::shared_future<void> connect_voice_udp();
+    DLL_EXPORT std::shared_future<void> select_protocol();
+    DLL_EXPORT std::shared_future<void> load_session_description(const value& data);
+    DLL_EXPORT std::shared_future<void> speak(bool speak = true);
+    DLL_EXPORT std::shared_future<void> disconnect();
 
    public:
     DLL_EXPORT VoiceClient(MainGateway** main_ws, const string_t& voice_token,
@@ -91,13 +92,13 @@ class VoiceClient {
                            const string_t& guild_id, const string_t& channel_id,
                            const string_t& user_id);
     VoiceClient(const VoiceClient& old) = delete;
-    DLL_EXPORT VoiceClient();
+    DLL_EXPORT VoiceClient(){};
     DLL_EXPORT ~VoiceClient();
 
     /** play an AudioSource
-            @throws	OpusError	ClientException
+        @throws	OpusError	ClientException
     */
-    DLL_EXPORT pplx::task<void> play(AudioSource* source);
+    DLL_EXPORT std::shared_future<void> play(AudioSource* source);
 };
 
 }  // namespace DiscordCPP

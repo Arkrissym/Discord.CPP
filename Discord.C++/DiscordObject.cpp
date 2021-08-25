@@ -13,12 +13,8 @@ using namespace utility;
 static vector<shared_ptr<value>> _cache;
 static bool cache_manager_active = false;
 
-pplx::task<void> manage_cache();
+void manage_cache();
 
-DiscordCPP::DiscordObject::DiscordObject() {
-}
-
-///	@param[in]	token	Discord token
 DiscordCPP::DiscordObject::DiscordObject(const utility::string_t& token) {
     _token = token;
 
@@ -28,8 +24,10 @@ DiscordCPP::DiscordObject::DiscordObject(const utility::string_t& token) {
     }
 }
 
-pplx::task<void> manage_cache() {
-    return pplx::create_task([] {
+void manage_cache() {
+    std::thread([] {
+        Logger::register_thread(std::this_thread::get_id(), "Cache-Thread");
+        Logger log = Logger("discord.object.manage_cache");
         while (1) {
             auto it = _cache.begin();
             while (it != _cache.end()) {
@@ -39,7 +37,7 @@ pplx::task<void> manage_cache() {
                     it->reset();
                     it = _cache.erase(it);
 
-                    Logger("discord.object.manage_cache").debug("deleted old data");
+                    log.debug("deleted old data");
                 } else {
                     it++;
                 }
@@ -47,7 +45,7 @@ pplx::task<void> manage_cache() {
 
             waitFor(chrono::seconds(10)).wait();
         }
-    });
+    }).detach();
 }
 
 /**	@param[in]	url				Relative url

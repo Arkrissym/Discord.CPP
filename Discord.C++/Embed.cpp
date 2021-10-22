@@ -1,90 +1,81 @@
 #include "Embed.h"
 
-#include <string>
-
 #include "Exceptions.h"
 #include "Logger.h"
-#include "static.h"
 
-using namespace std;
-using namespace web::json;
-using namespace utility;
-
-DiscordCPP::Embed::Embed(const string& title, const string& description) {
+DiscordCPP::Embed::Embed(const std::string& title, const std::string& description) {
     _title = title;
     _description = description;
 }
 
-DiscordCPP::Embed::Embed(value data) {
-    if (is_valid_field("title")) {
-        _title = conversions::to_utf8string(data.at(U("title")).as_string());
+DiscordCPP::Embed::Embed(const json& data) {
+    _title = get_or_else<std::string>(data, "title", "");
+    _description = get_or_else<std::string>(data, "description", "");
+    _type = get_or_else<std::string>(data, "type", "");
+    _url = get_or_else<std::string>(data, "url", "");
+    _timestamp = get_or_else<std::string>(data, "timestamp", "");
+    _color = get_or_else<int>(data, "color", -1);
+
+    if (has_value(data, "footer")) {
+        json footer = data.at("footer");
+
+        _footer.text = get_or_else<std::string>(footer, "text", "");
+        _footer.icon_url = get_or_else<std::string>(footer, "icon_url", "");
+        _footer.proxy_icon_url = get_or_else<std::string>(footer, "proxy_icon_url", "");
     }
-    if (is_valid_field("description")) {
-        _description = conversions::to_utf8string(data.at(U("description")).as_string());
+
+    if (has_value(data, "image")) {
+        json image = data.at("image");
+
+        _image.width = get_or_else<int>(image, "width", 0);
+        _image.height = get_or_else<int>(image, "height", 0);
+        _image.url = get_or_else<std::string>(image, "url", "");
+        _image.proxy_url = get_or_else<std::string>(image, "proxy_url", "");
     }
-    if (is_valid_field("type")) {
-        _type = conversions::to_utf8string(data.at(U("type")).as_string());
+
+    if (has_value(data, "video")) {
+        json video = data.at("video");
+
+        _video.width = get_or_else<int>(video, "width", 0);
+        _video.height = get_or_else<int>(video, "height", 0);
+        _video.url = get_or_else<std::string>(video, "url", "");
     }
-    if (is_valid_field("url")) {
-        _url = conversions::to_utf8string(data.at(U("url")).as_string());
+
+    if (has_value(data, "thumbnail")) {
+        json thumbnail = data.at("thumbnail");
+
+        _thumbnail.width = get_or_else<int>(thumbnail, "width", 0);
+        _thumbnail.height = get_or_else<int>(thumbnail, "height", 0);
+        _thumbnail.url = get_or_else<std::string>(thumbnail, "url", "");
+        _thumbnail.proxy_url = get_or_else<std::string>(thumbnail, "proxy_url", "");
     }
-    if (is_valid_field("timestamp")) {
-        _timestamp = conversions::to_utf8string(data.at(U("timestamp")).as_string());
+
+    if (has_value(data, "author")) {
+        json author = data.at("author");
+
+        _author.name = get_or_else<std::string>(author, "name", "");
+        _author.url = get_or_else<std::string>(author, "url", "");
+        _author.icon_url = get_or_else<std::string>(author, "icon_url", "");
+        _author.proxy_icon_url = get_or_else<std::string>(author, "proxy_icon_url", "");
     }
-    if (is_valid_field("color")) {
-        _color = data.at(U("color")).as_integer();
+
+    if (has_value(data, "provider")) {
+        json provider = data.at("provider");
+
+        _provider.name = get_or_else<std::string>(provider, "name", "");
+        _provider.url = get_or_else<std::string>(provider, "url", "");
     }
-    if (is_valid_field("footer")) {
-        _footer.text = conversions::to_utf8string(data[U("footer")][U("text")].as_string());
-        if ((data[U("footer")].has_field(U("icon_url"))) && (!data[U("footer")].at(U("icon_url")).is_null()))
-            _footer.icon_url = conversions::to_utf8string(data[U("footer")][U("icon_url")].as_string());
-        if ((data[U("footer")].has_field(U("proxy_icon_url"))) && (!data[U("footer")].at(U("proxy_icon_url")).is_null()))
-            _footer.proxy_icon_url = conversions::to_utf8string(data[U("footer")][U("proxy_icon_url")].as_string());
-    }
-    if (is_valid_field("image")) {
-        _image.width = data[U("image")][U("width")].as_integer();
-        _image.height = data[U("image")][U("height")].as_integer();
-        _image.url = conversions::to_utf8string(data[U("image")][U("url")].as_string());
-        _image.proxy_url = conversions::to_utf8string(data[U("image")][U("proxy_url")].as_string());
-    }
-    if (is_valid_field("video")) {
-        _video.width = data[U("video")][U("width")].as_integer();
-        _video.height = data[U("video")][U("height")].as_integer();
-        _video.url = conversions::to_utf8string(data[U("video")][U("url")].as_string());
-    }
-    if (is_valid_field("thumbnail")) {
-        _thumbnail.width = data[U("thumbnail")][U("width")].as_integer();
-        _thumbnail.height = data[U("thumbnail")][U("height")].as_integer();
-        _thumbnail.url = conversions::to_utf8string(data[U("thumbnail")][U("url")].as_string());
-        _thumbnail.proxy_url = conversions::to_utf8string(data[U("thumbnail")][U("proxy_url")].as_string());
-    }
-    if (is_valid_field("author")) {
-        _author.name = conversions::to_utf8string(data[U("author")][U("name")].as_string());
-        if ((data[U("author")].has_field(U("url"))) && (!data[U("author")].at(U("url")).is_null()))
-            _author.url = conversions::to_utf8string(data[U("author")][U("url")].as_string());
-        if ((data[U("author")].has_field(U("icon_url"))) && (!data[U("author")].at(U("icon_url")).is_null()))
-            _author.icon_url = conversions::to_utf8string(data[U("author")][U("icon_url")].as_string());
-        if ((data[U("author")].has_field(U("proxy_icon_url"))) && (!data[U("author")].at(U("proxy_icon_url")).is_null()))
-            _author.proxy_icon_url = conversions::to_utf8string(data[U("author")][U("proxy_icon_url")].as_string());
-    }
-    if (is_valid_field("provider")) {
-        _provider.name = conversions::to_utf8string(data[U("provider")][U("name")].as_string());
-        _provider.url = conversions::to_utf8string(data[U("provider")][U("url")].as_string());
-    }
-    if (is_valid_field("fields")) {
-        web::json::array tmp = data.at(U("fields")).as_array();
-        for (unsigned int i = 0; i < tmp.size(); i++) {
+
+    if (has_value(data, "fields")) {
+        for (json field : data.at("fields")) {
             Field f;
-            f.name = conversions::to_utf8string(tmp[i].at(U("name")).as_string());
-            f.value = conversions::to_utf8string(tmp[i].at(U("value")).as_string());
-            f.is_inline = tmp[i].at(U("inline")).as_bool();
+            field.at("name").get_to<std::string>(f.name);
+            field.at("value").get_to<std::string>(f.value);
+            field.at("inline").get_to<bool>(f.is_inline);
 
             _fields.push_back(f);
         }
     }
-}
-
-DiscordCPP::Embed::~Embed() {
 }
 
 void DiscordCPP::Embed::set_color(int color) {
@@ -97,7 +88,7 @@ void DiscordCPP::Embed::set_color(int color) {
 	@param[in]	Inline	(optional) wether the field shall be displayed inline or not(default is true)
 	@throws	SizeError
 */
-void DiscordCPP::Embed::add_field(const string& name, const string& value, bool Inline) {
+void DiscordCPP::Embed::add_field(const std::string& name, const std::string& value, bool Inline) {
     if (_fields.size() >= 25) {
         throw SizeError("Embed: Cannot add more than 25 fields.");
     }
@@ -109,22 +100,22 @@ void DiscordCPP::Embed::add_field(const string& name, const string& value, bool 
     _fields.push_back(field);
 }
 
-void DiscordCPP::Embed::set_author(const string& name, const string& url, const string& icon_url) {
+void DiscordCPP::Embed::set_author(const std::string& name, const std::string& url, const std::string& icon_url) {
     _author.name = name;
     _author.url = url;
     _author.icon_url = icon_url;
 }
 
-void DiscordCPP::Embed::set_footer(const string& text, const string& icon_url) {
+void DiscordCPP::Embed::set_footer(const std::string& text, const std::string& icon_url) {
     _footer.text = text;
     _footer.icon_url = icon_url;
 }
 
-void DiscordCPP::Embed::set_image(const string& url) {
+void DiscordCPP::Embed::set_image(const std::string& url) {
     _image.url = url;
 }
 
-void DiscordCPP::Embed::set_thumbnail(const string& url) {
+void DiscordCPP::Embed::set_thumbnail(const std::string& url) {
     _thumbnail.url = url;
 }
 
@@ -132,49 +123,49 @@ void DiscordCPP::Embed::set_thumbnail(const string& url) {
 	@return	json::value
 	@throws	SizeError
 */
-value DiscordCPP::Embed::to_json() {
-    value ret;
+json DiscordCPP::Embed::to_json() {
+    json ret;
 
     if (_title.length() > 0)
-        ret[U("title")] = value(conversions::to_string_t(_title));
+        ret["title"] = _title;
     if (_description.length() > 0)
-        ret[U("description")] = value(conversions::to_string_t(_description));
+        ret["description"] = _description;
 
     if (_color >= 0)
-        ret[U("color")] = value(_color);
+        ret["color"] = _color;
 
     for (unsigned int i = 0; i < _fields.size(); i++) {
-        value f;
-        f[U("name")] = value(conversions::to_string_t(_fields[i].name));
-        f[U("value")] = value(conversions::to_string_t(_fields[i].value));
-        f[U("inline")] = value(_fields[i].is_inline);
-        ret[U("fields")][i] = f;
+        json f;
+        f["name"] = _fields[i].name;
+        f["value"] = _fields[i].value;
+        f["inline"] = _fields[i].is_inline;
+        ret["fields"].emplace_back(f);
     }
 
     if (_author.name.length() > 0) {
-        ret[U("author")][U("name")] = value(conversions::to_string_t(_author.name));
-        ret[U("author")][U("url")] = value(conversions::to_string_t(_author.url));
-        ret[U("author")][U("icon_url")] = value(conversions::to_string_t(_author.icon_url));
+        ret["author"]["name"] = _author.name;
+        ret["author"]["url"] = _author.url;
+        ret["author"]["icon_url"] = _author.icon_url;
     }
 
     if (_provider.name.length() > 0) {
-        ret[U("provider")][U("name")] = value(conversions::to_string_t(_provider.name));
-        ret[U("provider")][U("url")] = value(conversions::to_string_t(_provider.url));
+        ret["provider"]["name"] = _provider.name;
+        ret["provider"]["url"] = _provider.url;
     }
 
     if (_footer.text.length() > 0) {
-        ret[U("footer")][U("text")] = value(conversions::to_string_t(_footer.text));
-        ret[U("footer")][U("icon_url")] = value(conversions::to_string_t(_footer.icon_url));
+        ret["footer"]["text"] = _footer.text;
+        ret["footer"]["icon_url"] = _footer.icon_url;
     }
 
     if (_image.url.length() > 0)
-        ret[U("image")][U("url")] = value(conversions::to_string_t(_image.url));
+        ret["image"]["url"] = _image.url;
 
     if (_video.url.length() > 0)
-        ret[U("video")][U("url")] = value(conversions::to_string_t(_video.url));
+        ret["video"]["url"] = _video.url;
 
     if (_thumbnail.url.length() > 0)
-        ret[U("thumbnail")][U("url")] = value(conversions::to_string_t(_thumbnail.url));
+        ret["thumbnail"]["url"] = _thumbnail.url;
 
     if (ret.size() == 0) {
         throw SizeError("Cannot create JSON from empty Embed");

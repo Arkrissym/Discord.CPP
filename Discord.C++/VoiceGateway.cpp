@@ -1,45 +1,39 @@
 #include "VoiceGateway.h"
 
-using namespace web::json;
-using namespace utility::conversions;
-
-value DiscordCPP::VoiceGateway::get_heartbeat_payload() {
-    value payload = value();
-
-    payload[U("op")] = value(3);
-    payload[U("d")] = value(time(NULL));
-
-    return payload;
+DiscordCPP::json DiscordCPP::VoiceGateway::get_heartbeat_payload() {
+    return {{"op", 3}, {"d", std::to_string(time(NULL))}};
 }
 
-std::shared_future<void> DiscordCPP::VoiceGateway::identify() {
-    return threadpool.execute([this] {
-        value out_payload;
+void DiscordCPP::VoiceGateway::identify() {
+    json out_payload = {
+        {
+            "d", {
+                     {"server_id", _guild_id},     //
+                     {"session_id", _session_id},  //
+                     {"token", _token}             //
+                 }                                 //
+        }                                          //
+    };
 
-        out_payload[U("d")][U("server_id")] = value(to_string_t(_guild_id));
-        out_payload[U("d")][U("session_id")] = value(to_string_t(_session_id));
-        out_payload[U("d")][U("token")] = value(to_string_t(_token));
+    if (_resume == true) {
+        out_payload["op"] = 7;
 
-        if (_resume == true) {
-            out_payload[U("op")] = value(7);
+        _resume = false;
 
-            _resume = false;
+        this->send(out_payload).wait();
+        _log.info("Resume payload has been sent");
+    } else {
+        out_payload["op"] = 0;
+        out_payload["d"]["user_id"] = _user_id;
 
-            this->send(out_payload).wait();
-            _log.info("Resume payload has been sent");
-        } else {
-            out_payload[U("op")] = value(0);
-            out_payload[U("d")][U("user_id")] = value(to_string_t(_user_id));
-
-            this->send(out_payload).wait();
-            _log.info("Identify payload has been sent");
-        }
-    });
+        this->send(out_payload).wait();
+        _log.info("Identify payload has been sent");
+    }
 }
 
 void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
-    const web::json::value& payload) {
-    int op = payload.at(U("op")).as_integer();
+    const json& payload) {
+    int op = payload["op"].get<int>();
 
     switch (op) {
         case 2:
@@ -53,9 +47,7 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
             _last_heartbeat_ack = time(0);
             break;
         case 8:
-            _heartbeat_interval = (int)(payload.at(U("d"))
-                                            .at(U("heartbeat_interval"))
-                                            .as_integer());
+            _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
             identify();
             break;
         case 9:

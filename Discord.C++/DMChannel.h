@@ -9,23 +9,18 @@
 
 namespace DiscordCPP {
 
-using namespace std;
-using namespace web::json;
-using namespace utility;
-
 class DMChannel : public TextChannel {
    public:
     ///the recipients if the channel is DM
-    vector<User*> recipients;
+    std::vector<User> recipients;
     ///the owner of this DM channel
-    User* owner = NULL;
+    User* owner;
     ///the application id of the group DM creator if it was bot-created
-    string application_id;  //snowflake
+    std::string application_id;
 
-    DLL_EXPORT DMChannel(const value& data, const string_t& token);
-    DLL_EXPORT DMChannel(const string& id, const string_t& token);
+    DLL_EXPORT DMChannel(const json& data, const std::string& token);
+    DLL_EXPORT DMChannel(const std::string& id, const std::string& token);
     DLL_EXPORT DMChannel(const DMChannel& old);
-    DLL_EXPORT ~DMChannel();
 };
 
 }  // namespace DiscordCPP

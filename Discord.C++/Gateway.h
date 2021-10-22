@@ -1,7 +1,8 @@
 #pragma once
-#include <cpprest/json.h>
 #include <cpprest/ws_client.h>
 #include <zlib.h>
+
+#include <nlohmann/json.hpp>
 
 #include "Logger.h"
 #include "Threadpool.h"
@@ -14,6 +15,7 @@
 
 namespace DiscordCPP {
 
+using json = nlohmann::json;
 class Gateway {
    protected:
     Threadpool threadpool;
@@ -39,15 +41,15 @@ class Gateway {
     bool _connected;
     Logger _log;
     /// the message handler set by using set_message_handler
-    std::function<void(web::json::value payload)> _message_handler;
+    std::function<void(json payload)> _message_handler;
 
     DLL_EXPORT std::string decompress_message(const std::string& message);
 
     DLL_EXPORT void start_heartbeating();
-    DLL_EXPORT virtual web::json::value get_heartbeat_payload() = 0;
-    DLL_EXPORT virtual std::shared_future<void> identify() = 0;
+    DLL_EXPORT virtual json get_heartbeat_payload() = 0;
+    DLL_EXPORT virtual void identify() = 0;
     DLL_EXPORT virtual void on_websocket_incoming_message(
-        const web::json::value& payload) = 0;
+        const json& payload) = 0;
     DLL_EXPORT void on_websocket_disconnnect(
         const web::websockets::client::websocket_close_status& status,
         const std::string& reason, const std::error_code& error);
@@ -57,10 +59,10 @@ class Gateway {
     DLL_EXPORT virtual ~Gateway();
 
     DLL_EXPORT void set_message_handler(
-        const std::function<void(web::json::value payload)>& handler);
+        const std::function<void(json payload)>& handler);
 
     DLL_EXPORT std::shared_future<void> connect(const std::string& url);
-    DLL_EXPORT std::shared_future<void> send(const web::json::value& message);
+    DLL_EXPORT std::shared_future<void> send(const json& message);
     DLL_EXPORT std::shared_future<void> close();
 };
 

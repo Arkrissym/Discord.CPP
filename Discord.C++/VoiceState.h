@@ -1,19 +1,15 @@
 #pragma once
 
-#include <cpprest/json.h>
-
 namespace DiscordCPP {
-
-using namespace utility;
 
 class VoiceState {
    public:
-    string_t voice_token;
-    string_t endpoint;
+    std::string voice_token;
+    std::string endpoint;
 
-    string_t guild_id;
-    string_t channel_id;
-    string_t session_id;
+    std::string guild_id;
+    std::string channel_id;
+    std::string session_id;
     //bool deaf;
     //bool mute;
     //bool self_deaf;

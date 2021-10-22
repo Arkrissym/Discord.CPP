@@ -5,6 +5,8 @@ project( discord_cpp )
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED True )
 
+set( JSON_ImplicitConversions OFF )
+
 include_directories( ${CMAKE_STAGING_PREFIX}/usr/include )
 link_directories( ${CMAKE_STAGING_PREFIX}/usr/lib )
 
@@ -16,9 +18,9 @@ add_library( ${PROJECT_NAME} SHARED ${PROJECT_SOURCES} )
 target_include_directories( ${PROJECT_NAME} PRIVATE Discord.C++ )
 
 if(MSVC)
-      set( CMAKE_CXX_FLAGS " /MP /O2 /GL /GS /W4 /sdl /Gd /EHa " )
+      set( CMAKE_CXX_FLAGS " /MP /O2 /GL /GS /W3 /sdl /Gd /EHa " )
 else(MSVC)
-      set( CMAKE_CXX_FLAGS " -g -Wall -Wextra -Ofast " )
+      set( CMAKE_CXX_FLAGS " -Wall -Wextra -Ofast " )
 endif(MSVC)
 
 if(VCPKG_TOOLCHAIN)
@@ -26,10 +28,13 @@ if(VCPKG_TOOLCHAIN)
       find_package(Opus CONFIG REQUIRED)
       find_package(Boost COMPONENTS system filesystem REQUIRED)
       find_package(cpprestsdk CONFIG REQUIRED)
+      find_package(nlohmann_json CONFIG REQUIRED)
 
       target_link_libraries(${PROJECT_NAME}
                         unofficial-sodium::sodium
                         Opus::opus
+                        nlohmann_json
+                        nlohmann_json::nlohmann_json
                         Boost::system
                         Boost::filesystem
                         cpprestsdk::cpprest

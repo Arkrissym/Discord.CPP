@@ -10,9 +10,9 @@ class VoiceGateway : public Gateway {
     std::string _user_id;
     bool _resume = false;
 
-    DLL_EXPORT virtual web::json::value get_heartbeat_payload();
-    DLL_EXPORT virtual std::shared_future<void> identify();
-    DLL_EXPORT virtual void on_websocket_incoming_message(const web::json::value& payload);
+    DLL_EXPORT virtual json get_heartbeat_payload();
+    DLL_EXPORT virtual void identify();
+    DLL_EXPORT virtual void on_websocket_incoming_message(const json& payload);
 
    public:
     DLL_EXPORT VoiceGateway(const std::string& token, const std::string& session_id, const std::string& guild_id, const std::string& user_id);

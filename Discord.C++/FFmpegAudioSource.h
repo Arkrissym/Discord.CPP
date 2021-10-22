@@ -27,10 +27,10 @@ class FFmpegAudioSource : public AudioSource {
 
    public:
     /**	Creates an AudioSource using FFmpeg. This requires ffmpeg to be in your PATH.
-            @param[in]	input		     The input for ffmpeg.
-            @param[in]	before_options      [Optional] Options to place before input.
-            @param[in]	options		     [Optional] Options to place after input.
-            @return		FFmpegAudioSource	playable AudioSource
+        @param[in]	input                   The input for ffmpeg.
+        @param[in]	before_options          [Optional] Options to place before input.
+        @param[in]	options                 [Optional] Options to place after input.
+        @return         FFmpegAudioSource       playable AudioSource
     */
     DLL_EXPORT FFmpegAudioSource(const std::string& input,
                                  const std::string& before_options = "",

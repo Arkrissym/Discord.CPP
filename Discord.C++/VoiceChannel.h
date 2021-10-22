@@ -1,19 +1,8 @@
 #pragma once
-#include <cpprest/json.h>
 
 #include "Channel.h"
 
-#ifdef _WIN32
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
-
 namespace DiscordCPP {
-
-using namespace std;
-using namespace web::json;
-using namespace utility;
 
 class Guild;
 class Discord;
@@ -33,8 +22,8 @@ class VoiceChannel : public Channel {
     ///the guild the channel belongs to
     Guild* guild = NULL;
 
-    DLL_EXPORT VoiceChannel(Discord* client, const value& data, const string_t& token);
-    DLL_EXPORT VoiceChannel(Discord* client, const string& id, const string_t& token);
+    DLL_EXPORT VoiceChannel(Discord* client, const json& data, const std::string& token);
+    DLL_EXPORT VoiceChannel(Discord* client, const std::string& id, const std::string& token);
     DLL_EXPORT VoiceChannel(const VoiceChannel& old);
     DLL_EXPORT VoiceChannel(){};
     DLL_EXPORT ~VoiceChannel();

@@ -21,10 +21,11 @@ class MainGateway : public Gateway {
     ///Intents
     Intents _intents;
 
-    DLL_EXPORT web::json::value get_heartbeat_payload();
-    DLL_EXPORT void on_websocket_incoming_message(const web::json::value& payload);
+    DLL_EXPORT json get_heartbeat_payload();
+    DLL_EXPORT void on_websocket_incoming_message(const json& payload);
     DLL_EXPORT std::shared_future<void> send_heartbeat_ack();
-    DLL_EXPORT std::shared_future<void> identify();
+    DLL_EXPORT void identify();
+    DLL_EXPORT std::string set_trace(const json& payload);
 
    public:
     DLL_EXPORT MainGateway(const std::string& token, const Intents& intents, const int shard_id = 0, const unsigned int num_shards = 1);

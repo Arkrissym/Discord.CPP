@@ -1,6 +1,5 @@
 #pragma once
-#include <cpprest/json.h>
-
+#include <nlohmann/json.hpp>
 #include <string>
 
 #ifdef _WIN32
@@ -11,15 +10,14 @@
 
 namespace DiscordCPP {
 
-using namespace std;
-using namespace web::json;
+using json = nlohmann::json;
 
 //move this to Presence.h when implemented?
 namespace DiscordStatus {
-const string Online = "online";
-const string DoNotDisturb = "dnd";
-const string Idle = "idle";
-const string Invisible = "invisible";
+const std::string Online = "online";
+const std::string DoNotDisturb = "dnd";
+const std::string Idle = "idle";
+const std::string Invisible = "invisible";
 }  // namespace DiscordStatus
 
 namespace ActivityTypes {
@@ -33,14 +31,14 @@ enum ActivityTypes {
 
 class Activity {
    public:
-    string name;
+    std::string name;
     int type;
-    string url;
+    std::string url;
 
     DLL_EXPORT Activity();
-    DLL_EXPORT Activity(const string& name, const int type, const string& url = "");
+    DLL_EXPORT Activity(const std::string& name, const int type, const std::string& url = "");
 
-    DLL_EXPORT value to_json();
+    DLL_EXPORT json to_json();
 };
 
 }  // namespace DiscordCPP

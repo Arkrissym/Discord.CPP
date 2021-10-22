@@ -4,17 +4,7 @@
 #include "DiscordObject.h"
 #include "Logger.h"
 
-#ifdef _WIN32
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
-
 namespace DiscordCPP {
-
-using namespace std;
-using namespace web::json;
-using namespace utility;
 
 class Message;
 class Embed;
@@ -29,40 +19,40 @@ class User : public DiscordObject {
     };
 
     ///ther user's name
-    string username;
+    std::string username;
     ///the user's discord-tag
-    string discriminator;
+    std::string discriminator;
     ///the user's avatar hash
-    string avatar;
+    std::string avatar;
     ///true, if the user is a bot
     bool bot = false;
     ///true, if the user has enabled two factor authentification
     bool mfa_enabled = false;
     ///the user's chosen language option
-    string locale;
+    std::string locale;
     ///true, if the user's email has been verified
     bool verified = false;
     ///the user's email
-    string email;
+    std::string email;
     ///the flags on a user's account
     int flags = 0;
     ///the type of Nitro subscription on a user's account
     int premium_type = PremiumTypes::None;
 
     DLL_EXPORT User() {}
-    DLL_EXPORT User(const value& data, const string_t& token);
-    DLL_EXPORT User(const string& id, const string_t& token);
+    DLL_EXPORT User(const json& data, const std::string& token);
+    DLL_EXPORT User(const std::string& id, const std::string& token);
     DLL_EXPORT virtual ~User() {}
 
     ///get/create the DMChannel for this user
     DLL_EXPORT DMChannel get_dmchannel();
     ///send a message to this user
-    DLL_EXPORT Message send(const string& content, const bool tts = false);
+    DLL_EXPORT Message send(const std::string& content, const bool tts = false);
     ///send an embed to this user
     DLL_EXPORT Message send(const Embed& embed);
 
     ///@return Username as std::string
-    DLL_EXPORT virtual operator string() { return username; };
+    DLL_EXPORT virtual operator std::string() { return username; };
 };
 
 }  // namespace DiscordCPP

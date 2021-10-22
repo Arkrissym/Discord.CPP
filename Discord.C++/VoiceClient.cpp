@@ -22,18 +22,13 @@ const unsigned int BITRATE = 131072;
 
 #define MAX_PACKET_SIZE FRAME_SIZE * 8
 
-using namespace std;
-using namespace web::json;
-using namespace utility;
-using namespace web::websockets::client;
 using namespace boost::asio::ip;
 
-DiscordCPP::udp_client::udp_client(const string_t& ip, const int port) {
+DiscordCPP::udp_client::udp_client(const std::string& ip, const int port) {
     _log = Logger("discord.VoiceClient.udp_client");
 
     udp::resolver resolver(_io_service);
-    udp::resolver::query query(udp::v4(), conversions::to_utf8string(ip),
-                               to_string(port));
+    udp::resolver::query query(udp::v4(), ip, std::to_string(port));
 
     _remote = *resolver.resolve(query);
 
@@ -48,26 +43,26 @@ DiscordCPP::udp_client::~udp_client() {
     delete _socket;
 }
 
-void DiscordCPP::udp_client::send(const string& msg) {
+void DiscordCPP::udp_client::send(const std::string& msg) {
     try {
         _socket->send_to(boost::asio::buffer(msg, msg.size()), _remote);
-    } catch (exception& e) {
-        _log.error("Cannot send message: " + string(e.what()));
+    } catch (std::exception& e) {
+        _log.error("Cannot send message: " + std::string(e.what()));
     }
 }
 
-string DiscordCPP::udp_client::receive() {
+std::string DiscordCPP::udp_client::receive() {
     size_t len = 0;
 
     try {
         udp::endpoint sender_enpoint;
         len = _socket->receive_from(boost::asio::buffer(_recv_buffer),
                                     sender_enpoint);
-    } catch (exception& e) {
-        _log.error("Cannot receive message: " + string(e.what()));
+    } catch (std::exception& e) {
+        _log.error("Cannot receive message: " + std::string(e.what()));
     }
 
-    return string(_recv_buffer.begin(), _recv_buffer.begin() + len);
+    return std::string(_recv_buffer.begin(), _recv_buffer.begin() + len);
 }
 
 std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
@@ -76,7 +71,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
 
         _log.info("performing IP Discovery");
 
-        string msg;
+        std::string msg;
         msg.resize(74, '\0');
         // Type: 0x1 for request, 0x2 for response
         msg[0] = 0x1 >> 8;
@@ -92,9 +87,9 @@ std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
 
         _udp->send(msg);
 
-        string recv_msg = _udp->receive();
+        std::string recv_msg = _udp->receive();
 
-        string my_ip = recv_msg.substr(8, 20);
+        std::string my_ip = recv_msg.substr(8, 20);
         for (unsigned int i = 0; i < my_ip.size(); i++) {
             if (my_ip[i] == 0) {
                 my_ip.resize(i, '\0');
@@ -105,44 +100,54 @@ std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
         unsigned short my_port = (recv_msg[72] << 8) | (recv_msg[73]);
         my_port = (my_port >> 8) | (my_port << 8);
 
-        _my_ip = conversions::to_string_t(my_ip);
+        _my_ip = my_ip;
         _my_port = my_port;
 
-        _log.info("found own IP and port: " + my_ip + ":" + to_string(my_port));
+        _log.info("found own IP and port: " + my_ip + ":" + std::to_string(my_port));
     });
 }
 
 std::shared_future<void> DiscordCPP::VoiceClient::select_protocol() {
     return threadpool.execute([this] {
-        value payload;
-        payload[U("op")] = value(1);
-        payload[U("d")][U("protocol")] = value(U("udp"));
-        payload[U("d")][U("data")][U("address")] = value(_my_ip);
-        payload[U("d")][U("data")][U("port")] = value(_my_port);
-        payload[U("d")][U("data")][U("mode")] = value(U("xsalsa20_poly1305"));
+        json payload = {
+            {"op", 1},
+            {"d", {
+                      {"protocol", "udp"},  //
+                      {"data", {
+                                   //
+                                   {"address", _my_ip},           //
+                                   {"port", _my_port},            //
+                                   {"mode", "xsalsa20_poly1305"}  //
+                               }}                                 //
+                  }}                                              //
+        };
 
         _voice_ws->send(payload).wait();
         _log.debug("Opcode 1 Select Protocol Payload has been sent");
     });
 }
 
-std::shared_future<void> DiscordCPP::VoiceClient::load_session_description(const value& data) {
+std::shared_future<void> DiscordCPP::VoiceClient::load_session_description(const json& data) {
     return threadpool.execute([this, data] {
-        _mode = data.at(U("mode")).as_string();
-        web::json::array tmp = data.at(U("secret_key")).as_array();
-        for (unsigned int i = 0; i < tmp.size(); i++) {
-            _secret_key.push_back((unsigned char)tmp[i].as_integer());
+        _mode = data["mode"].get<std::string>();
+        for (json k : data["secret_key"]) {
+            _secret_key.push_back(k.get<unsigned char>());
         }
     });
 }
 
 std::shared_future<void> DiscordCPP::VoiceClient::speak(bool speak) {
     return threadpool.execute([this, speak] {
-        value payload;
-        payload[U("op")] = value(5);
-        payload[U("d")][U("speaking")] = value(speak);
-        payload[U("d")][U("delay")] = value(0);
-        payload[U("d")][U("ssrc")] = value(_ssrc);
+        json payload = {
+            {"op", 5},
+            {
+                "d", {
+                         {"speaking", speak},  //
+                         {"delay", 0},         //
+                         {"ssrc", _ssrc}       //
+                     }                         //
+            }                                  //
+        };
 
         _voice_ws->send(payload).wait();
         _log.debug("Opcode 5 Speaking Payload has been sent");
@@ -150,39 +155,36 @@ std::shared_future<void> DiscordCPP::VoiceClient::speak(bool speak) {
 }
 
 DiscordCPP::VoiceClient::VoiceClient(MainGateway** main_ws,
-                                     const string_t& voice_token,
-                                     const string_t& endpoint,
-                                     const string_t& session_id,
-                                     const string_t& guild_id,
-                                     const string_t& channel_id,
-                                     const string_t& user_id) : threadpool() {
+                                     const std::string& voice_token,
+                                     const std::string& endpoint,
+                                     const std::string& session_id,
+                                     const std::string& guild_id,
+                                     const std::string& channel_id,
+                                     const std::string& user_id) : threadpool() {
     _guild_id = guild_id;
     _channel_id = channel_id;
 
     _log = Logger("Discord.VoiceClient");
     _log.info("connecting to endpoint " +
-              conversions::to_utf8string(_endpoint));
+              _endpoint);
 
     _main_ws = main_ws;
-    _voice_ws = new VoiceGateway(conversions::to_utf8string(voice_token),
-                                 conversions::to_utf8string(session_id),
-                                 conversions::to_utf8string(guild_id),
-                                 conversions::to_utf8string(user_id));
+    _voice_ws = new VoiceGateway(voice_token, session_id, guild_id, user_id);
 
-    _voice_ws->set_message_handler([this](value data) {
+    _voice_ws->set_message_handler([this](json data) {
         std::shared_future<void> f;
-        switch (data.at(U("op")).as_integer()) {
+        switch (data["op"].get<int>()) {
             case 2:
-                _ssrc = data[U("d")][U("ssrc")].as_integer();
-                _server_ip = data[U("d")][U("ip")].as_string();
-                _server_port = data[U("d")][U("port")].as_integer();
+                _ssrc = data["d"]["ssrc"].get<int>();
+                _server_ip = data["d"]["ip"].get<std::string>();
+                _server_port = data["d"]["port"].get<int>();
                 f = connect_voice_udp();
                 threadpool.then(f, [this]() { select_protocol(); });
                 break;
             case 4:
-                f = load_session_description(data[U("d")]);
+                f = load_session_description(data["d"]);
                 threadpool.then(f, [this]() {
-                    _log.debug("mode: " + conversions::to_utf8string(_mode));
+                    _log.debug("mode: " + _mode);
                     _log.info("handshake complete. voice connection ready.");
                     _ready = true;
                     speak();
@@ -192,15 +194,15 @@ DiscordCPP::VoiceClient::VoiceClient(MainGateway** main_ws,
             case 8:
                 break;
             default:
-                _log.debug(conversions::to_utf8string(data.serialize()));
+                _log.debug(data.dump());
                 break;
         }
     });
 
-    _voice_ws->connect(conversions::to_utf8string(endpoint));
+    _voice_ws->connect(endpoint);
 
     while (_ready == false) {
-        waitFor(chrono::milliseconds(10)).wait();
+        waitFor(std::chrono::milliseconds(10)).wait();
     }
 }
 
@@ -213,12 +215,16 @@ DiscordCPP::VoiceClient::~VoiceClient() {
 }
 
 std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
-    value payload = value();
-    payload[U("op")] = value(4);
-    payload[U("d")][U("guild_id")] = value(_guild_id);
-    payload[U("d")][U("channel_id")] = value::null();
-    payload[U("d")][U("self_mute")] = value(true);
-    payload[U("d")][U("self_deaf")] = value(true);
+    json payload = {
+        {"op", 4},  //
+        {"d", {
+                  //
+                  {"guild_id", _guild_id},  //
+                  {"channel_id", nullptr},  //
+                  {"self_mute", true},      //
+                  {"self_deaf", true}       //
+              }}                            //
+    };
 
     auto f = (*_main_ws)->send(payload);
     return threadpool.then(f, [this] {
@@ -234,7 +240,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_AUDIO, &error);
         if (error < 0) {
             throw OpusError("failed to create opus encoder: " +
-                                string(opus_strerror(error)),
+                                std::string(opus_strerror(error)),
                             error);
         }
 
@@ -250,11 +256,11 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
         int num_opus_bytes;
         unsigned char* pcm_data = new unsigned char[FRAME_SIZE * CHANNELS * 2];
         opus_int16* in_data;
-        vector<unsigned char> opus_data(MAX_PACKET_SIZE);
+        std::vector<unsigned char> opus_data(MAX_PACKET_SIZE);
 
         _log.debug("starting loop");
 
-        auto next_time = chrono::high_resolution_clock::now();
+        auto next_time = std::chrono::high_resolution_clock::now();
 
         while (1) {
             if (source->read((char*)pcm_data, FRAME_SIZE * CHANNELS * 2) !=
@@ -267,13 +273,13 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
                                          opus_data.data(), MAX_PACKET_SIZE);
             if (num_opus_bytes <= 0) {
                 throw OpusError("failed to encode frame: " +
-                                    string(opus_strerror(num_opus_bytes)),
+                                    std::string(opus_strerror(num_opus_bytes)),
                                 num_opus_bytes);
             }
 
             opus_data.resize(num_opus_bytes);
 
-            string packet;
+            std::string packet;
             packet.resize(12 + opus_data.size() + crypto_secretbox_MACBYTES,
                           '\0');
 
@@ -296,7 +302,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             _sequence++;
             _timestamp += SAMPLE_RATE / 1000 * FRAME_MILLIS;
 
-            string nonce;
+            std::string nonce;
             nonce.resize(crypto_secretbox_NONCEBYTES, '\0');
             for (int i = 0; i < 12; i++) {
                 nonce[i] = packet[i];
@@ -309,11 +315,11 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
 
             _udp->send(packet);
 
-            next_time += chrono::milliseconds(FRAME_MILLIS);
-            chrono::microseconds delay =
-                std::max(chrono::microseconds(0),
-                         chrono::duration_cast<chrono::microseconds>(
-                             next_time - chrono::high_resolution_clock::now()));
+            next_time += std::chrono::milliseconds(FRAME_MILLIS);
+            std::chrono::microseconds delay =
+                std::max(std::chrono::microseconds(0),
+                         std::chrono::duration_cast<std::chrono::microseconds>(
+                             next_time - std::chrono::high_resolution_clock::now()));
 
             waitFor(delay).wait();
         }

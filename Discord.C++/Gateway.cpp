@@ -9,8 +9,6 @@
 #include "static.h"
 
 using namespace web::websockets::client;
-using namespace web::json;
-using namespace utility::conversions;
 
 std::string DiscordCPP::Gateway::decompress_message(
     const std::string& message) {
@@ -44,7 +42,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
     static unsigned int heartbeat_task_index = 0;
     unsigned int task_id = heartbeat_task_index++;
     _heartbeat_task = std::thread([this, task_id] {
-        Logger::register_thread(std::this_thread::get_id(), "Heartbeat-Task-" + std::to_string(task_id));
+        Logger::register_thread(std::this_thread::get_id(), "Heartbeat-Thread-" + std::to_string(task_id));
         while (_heartbeat_interval == 0)
             waitFor(std::chrono::milliseconds(50)).wait();
 
@@ -66,7 +64,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
                                std::string(e.what()));
                 }
             } else {
-                value payload = this->get_heartbeat_payload();
+                json payload = this->get_heartbeat_payload();
 
                 try {
                     this->send(payload).wait();
@@ -116,7 +114,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect(
             _reconnect_timeout = (unsigned int)(_reconnect_timeout * 1.5);
         }
 
-        _client->connect(to_string_t(_url)).wait();
+        _client->connect(utility::conversions::to_string_t(_url)).wait();
         _log.info("reconnected");
     });
 }
@@ -160,7 +158,7 @@ DiscordCPP::Gateway::Gateway(const std::string& token) : threadpool() {
 
             _log.debug("received message: " + message);
 
-            value payload = value::parse(message);
+            json payload = json::parse(message);
 
             on_websocket_incoming_message(payload);
         });
@@ -169,7 +167,7 @@ DiscordCPP::Gateway::Gateway(const std::string& token) : threadpool() {
     _client->set_close_handler([this](websocket_close_status close_status,
                                       utility::string_t reason,
                                       std::error_code error) {
-        on_websocket_disconnnect(close_status, to_utf8string(reason), error);
+        on_websocket_disconnnect(close_status, utility::conversions::to_utf8string(reason), error);
     });
 }
 
@@ -180,7 +178,7 @@ DiscordCPP::Gateway::~Gateway() {
 }
 
 void DiscordCPP::Gateway::set_message_handler(
-    const std::function<void(web::json::value)>& handler) {
+    const std::function<void(json)>& handler) {
     _message_handler = handler;
 }
 
@@ -191,7 +189,7 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
     std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
     std::shared_future<void> future(promise->get_future());
 
-    _client->connect(to_string_t(url)).then([this, promise] {
+    _client->connect(utility::conversions::to_string_t(url)).then([this, promise] {
         _connected = true;
         start_heartbeating();
         promise->set_value();
@@ -201,13 +199,16 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
 }
 
 ///@throws	ClientException
-std::shared_future<void> DiscordCPP::Gateway::send(const value& message) {
+std::shared_future<void> DiscordCPP::Gateway::send(const json& message) {
     if (_connected == false) {
         throw ClientException("Gateway not connected");
     }
 
+    std::string message_string = message.dump();
+
+    _log.debug("sending message: " + message_string);
     web::websockets::client::websocket_outgoing_message msg;
-    msg.set_utf8_message(to_utf8string(message.serialize()));
+    msg.set_utf8_message(message_string);
 
     std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
     std::shared_future<void> future(promise->get_future());

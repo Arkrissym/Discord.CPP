@@ -1,26 +1,22 @@
 #include "Activity.h"
 
-using namespace std;
-using namespace web::json;
-using namespace utility;
-
 DiscordCPP::Activity::Activity() {
     type = ActivityTypes::NoActivity;
 }
 
-DiscordCPP::Activity::Activity(const string& name, const int type, const string& url) {
+DiscordCPP::Activity::Activity(const std::string& name, const int type, const std::string& url) {
     this->name = name;
     this->type = type;
     this->url = url;
 }
 
-value DiscordCPP::Activity::to_json() {
-    value ret;
+DiscordCPP::json DiscordCPP::Activity::to_json() {
+    DiscordCPP::json json = {
+        {"name", name},
+        {"type", type}};
 
-    ret[U("name")] = value(conversions::to_string_t(name));
-    ret[U("type")] = value(type);
     if (type == ActivityTypes::Streaming)
-        ret[U("url")] = value(conversions::to_string_t(url));
+        json["url"] = url;
 
-    return ret;
+    return json;
 }

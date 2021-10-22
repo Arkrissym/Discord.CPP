@@ -5,23 +5,19 @@
 #include "Guild.h"
 #include "static.h"
 
-using namespace web::http;
-using namespace web::http::client;
-using namespace web::json;
-using namespace utility;
-using namespace std;
+DiscordCPP::GuildChannel::GuildChannel(const json& data, const std::string& token) : DiscordCPP::TextChannel(data, token) {
+    if (has_value(data, "guild_id")) {
+        guild = new Guild(NULL, data.at("guild_id").get<std::string>(), token);
+    }
 
-DiscordCPP::GuildChannel::GuildChannel(const value& data, const string_t& token) : DiscordCPP::TextChannel(data, token) {
-    if (is_valid_field("guild_id"))
-        guild = new Guild(NULL, conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
-
-    if (is_valid_field("parent_id"))
-        parent = new Channel(conversions::to_utf8string(data.at(U("parent_id")).as_string()), token);
+    if (has_value(data, "parent_id")) {
+        parent = new Channel(data.at("parent_id").get<std::string>(), token);
+    }
 }
 
-DiscordCPP::GuildChannel::GuildChannel(const string& id, const string_t& token) {
-    string url = "/channels/" + id;
+DiscordCPP::GuildChannel::GuildChannel(const std::string& id, const std::string& token) {
     _token = token;
+    std::string url = "/channels/" + id;
     *this = GuildChannel(api_call(url), token);
 }
 

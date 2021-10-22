@@ -1,9 +1,7 @@
 #include "FileAudioSource.h"
 
-using namespace std;
-
 DiscordCPP::FileAudioSource::FileAudioSource(const std::string& filename) {
-    _file.open(filename, ios_base::binary);
+    _file.open(filename, std::ios_base::binary);
 }
 
 DiscordCPP::FileAudioSource::~FileAudioSource() {

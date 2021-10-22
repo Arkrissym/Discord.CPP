@@ -2,69 +2,37 @@
 
 #include "static.h"
 
-using namespace web::json;
-using namespace utility::conversions;
-
-value DiscordCPP::MainGateway::get_heartbeat_payload() {
-    value payload = value();
-
-    payload[U("op")] = value(1);
-
-    if (_sequence_number == 0)
-        payload[U("d")] = value::null();
-    else
-        payload[U("d")] = value(_sequence_number);
-
-    return payload;
+DiscordCPP::json DiscordCPP::MainGateway::get_heartbeat_payload() {
+    return {{"op", 1}, {"d", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}};
 }
 
 void DiscordCPP::MainGateway::on_websocket_incoming_message(
-    const web::json::value& payload) {
-    int op = payload.at(U("op")).as_integer();
+    const json& payload) {
+    int op = payload["op"].get<int>();
 
-    if ((payload.has_field(U("s"))) && (!payload.at(U("s")).is_null())) {
-        _sequence_number = payload.at(U("s")).as_integer();
+    if ((payload.count("s") > 0) && payload["s"].is_number_integer()) {
+        _sequence_number = payload["s"].get<int>();
     }
 
     switch (op) {
         case 0:
-            if (to_utf8string(payload.at(U("t")).as_string()) == "READY") {
+            if (payload["t"].get<std::string>() == "READY") {
                 _reconnect_timeout = 0;
                 _last_heartbeat_ack = time(0);
 
                 _invalid_session = false;
 
-                _session_id = to_utf8string(
-                    payload.at(U("d")).at(U("session_id")).as_string());
+                _session_id = payload["d"]["session_id"].get<std::string>();
 
-                web::json::array tmp =
-                    payload.at(U("d")).at(U("_trace")).as_array();
-                std::string str = "[ ";
-                for (unsigned int i = 0; i < tmp.size(); i++) {
-                    _trace.push_back(to_utf8string(tmp[i].as_string()));
-                    if (i == 0)
-                        str = str + to_utf8string(tmp[i].as_string());
-                    else
-                        str = str + ", " + to_utf8string(tmp[i].as_string());
-                }
+                std::string str = set_trace(payload);
 
                 _log.info("connected to: " + str + " ]");
                 _log.info("session id: " + _session_id);
-            } else if (to_utf8string(payload.at(U("t")).as_string()) ==
-                       "RESUMED") {
+            } else if (payload["t"].get<std::string>() == "RESUMED") {
                 _reconnect_timeout = 0;
                 _last_heartbeat_ack = time(0);
 
-                web::json::array tmp =
-                    payload.at(U("d")).at(U("_trace")).as_array();
-                std::string str = "[ ";
-                for (unsigned int i = 0; i < tmp.size(); i++) {
-                    _trace.push_back(to_utf8string(tmp[i].as_string()));
-                    if (i == 0)
-                        str = str + to_utf8string(tmp[i].as_string());
-                    else
-                        str = str + ", " + to_utf8string(tmp[i].as_string());
-                }
+                std::string str = set_trace(payload);
 
                 _log.info("successfully resumed session " + _session_id +
                           " with trace " + str + " ]");
@@ -83,8 +51,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
             _invalid_session = true;
             break;
         case 10:
-            _heartbeat_interval =
-                payload.at(U("d")).at(U("heartbeat_interval")).as_integer();
+            _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
             _log.debug("set heartbeat_interval: " +
                        std::to_string(_heartbeat_interval));
             identify();
@@ -101,71 +68,81 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
 }
 
 std::shared_future<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
-    value ack;
-    ack[U("op")] = value(11);
-    auto f = this->send(ack);
+    auto f = this->send({{"op", 11}});
     return threadpool.then(f, [this] {
         _log.debug("Heartbeat ACK message has been sent");
     });
 }
 
-std::shared_future<void> DiscordCPP::MainGateway::identify() {
-    return threadpool.execute([this] {
-        value out_json;
+void DiscordCPP::MainGateway::identify() {
+    if (_sequence_number > 0) {
+        unsigned int seq = _sequence_number;
 
-        if (_sequence_number > 0) {
-            unsigned int seq = _sequence_number;
+        _log.info("trying to resume session");
 
-            _log.info("trying to resume session");
+        json resume_json = {
+            {"op", 6},
+            {"d", {{"token", _token}, {"session_id", _session_id}, {"seq", seq}}}};
 
-            out_json[U("op")] = value(6);
-            out_json[U("d")][U("token")] = value(to_string_t(_token));
-            out_json[U("d")][U("session_id")] = value(to_string_t(_session_id));
-            out_json[U("d")][U("seq")] = value(seq);
+        this->send(resume_json).wait();
+        _log.info("Resume payload has been sent");
 
-            this->send(out_json).wait();
-            _log.info("Resume payload has been sent");
-
-            while (_invalid_session == false) {
-                if (_sequence_number > seq) {
-                    return;
-                }
-
-                waitFor(std::chrono::milliseconds(100)).wait();
+        while (_invalid_session == false) {
+            if (_sequence_number > seq) {
+                return;
             }
 
-            _log.info("cannot resume session");
-
-            waitFor(std::chrono::milliseconds(1000 + rand() % 4001)).wait();
+            waitFor(std::chrono::milliseconds(100)).wait();
         }
 
-        out_json = value();
-        out_json[U("op")] = value(2);
+        _log.info("cannot resume session");
 
-        out_json[U("d")][U("token")] = value(to_string_t(_token));
-        out_json[U("d")][U("intents")] = value(_intents.getIntents());
-        out_json[U("d")][U("shard")][0] = value(_shard_id);
-        out_json[U("d")][U("shard")][1] = value(_num_shards);
-        out_json[U("d")][U("large_threshold")] = value(250);
+        waitFor(std::chrono::milliseconds(1000 + rand() % 4001)).wait();
+    }
+
+    json identify_json = {
+        {"op", 2},
+        {
+            "d", {
+                     //
+                     {"token", _token},                    //
+                     {"intents", _intents.getIntents()},   //
+                     {"shard", {_shard_id, _num_shards}},  //
+                     {"large_threshold", 250}              //
+                 }                                         //
+        }                                                  //
+    };
+
 #ifdef _WIN32
-        out_json[U("d")][U("properties")][U("$os")] = value(U("Windows"));
+    identify_json["d"]["properties"]["$os"] = "Windows";
 #elif __APPLE__
-        out_json[U("d")][U("properties")][U("$os")] = value(U("macOS"));
+    identify_json["d"]["properties"]["$os"] = "macOS";
 #elif __linux__
-        out_json[U("d")][U("properties")][U("$os")] = value(U("Linux"));
+    identify_json["d"]["properties"]["$os"] = "Linux";
 #elif __unix__
-        out_json[U("d")][U("properties")][U("$os")] = value(U("Unix"));
+    identify_json["d"]["properties"]["$os"] = "Unix";
 #elif __posix
-        out_json[U("d")][U("properties")][U("$os")] = value(U("POSIX"));
+    identify_json["d"]["properties"]["$os"] = "POSIX";
 #endif
-        out_json[U("d")][U("properties")][U("$browser")] =
-            value(U("Discord.C++"));
-        out_json[U("d")][U("properties")][U("$device")] =
-            value(U("Discord.C++"));
+    identify_json["d"]["properties"]["$browser"] = "Discord.C++";
+    identify_json["d"]["properties"]["$device"] = "Discord.C++";
 
-        this->send(out_json).wait();
-        _log.info("Identify payload has been sent");
-    });
+    this->send(identify_json).wait();
+    _log.info("Identify payload has been sent");
+}
+
+std::string DiscordCPP::MainGateway::set_trace(const json& payload) {
+    json tmp = payload["d"]["_trace"];
+    std::string str = "[ ";
+    for (json::iterator it = tmp.begin(); it != tmp.end(); ++it) {
+        std::string t = (*it).get<std::string>();
+        _trace.push_back(t);
+        if (it == tmp.begin())
+            str = str + t;
+        else
+            str = str + ", " + t;
+    }
+    return str;
 }
 
 DiscordCPP::MainGateway::MainGateway(const std::string& token,
@@ -185,7 +162,7 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token,
 
     _intents = intents;
 
-    _message_handler = [this](value) {
+    _message_handler = [this](json) {
         _log.info("dummy message handler called");
     };
 }

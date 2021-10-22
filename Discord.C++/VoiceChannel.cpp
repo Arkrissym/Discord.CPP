@@ -5,33 +5,24 @@
 #include "Guild.h"
 #include "Logger.h"
 #include "VoiceClient.h"
-#include "static.h"
 
-using namespace web::http;
-using namespace web::http::client;
-using namespace web::json;
-using namespace utility;
-using namespace std;
-
-DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const value& data, const string_t& token) : DiscordCPP::Channel(data, token) {
+DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const json& data, const std::string& token) : DiscordCPP::Channel(data, token) {
     _client = client;
+    bitrate = get_or_else<int>(data, "bitrate", 0);
+    user_limit = get_or_else<int>(data, "user_limit", 0);
 
-    if (is_valid_field("bitrate"))
-        bitrate = data.at(U("bitrate")).as_integer();
+    if (has_value(data, "parent_id")) {
+        parent = new Channel(data.at("parent_id").get<std::string>(), token);
+    }
 
-    if (is_valid_field("user_limit"))
-        user_limit = data.at(U("user_limit")).as_integer();
-
-    if (is_valid_field("parent_id"))
-        parent = new Channel(conversions::to_utf8string(data.at(U("parent_id")).as_string()), token);
-
-    if (is_valid_field("guild_id"))
-        guild = new Guild(client, conversions::to_utf8string(data.at(U("guild_id")).as_string()), token);
+    if (has_value(data, "guild_id")) {
+        guild = new Guild(client, data.at("guild_id").get<std::string>(), token);
+    }
 }
 
-DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const string& id, const string_t& token) {
-    string url = "/channels/" + id;
+DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const std::string& id, const std::string& token) {
     _token = token;
+    std::string url = "/channels/" + id;
     *this = VoiceChannel(client, api_call(url), token);
 }
 
@@ -72,25 +63,28 @@ DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
         }
     }
 
-    value payload = value();
-    payload[U("op")] = value(4);
-    payload[U("d")][U("guild_id")] = value(conversions::to_string_t(guild->id));
-    payload[U("d")][U("channel_id")] = value(conversions::to_string_t(this->id));
-    payload[U("d")][U("self_mute")] = value(false);
-    payload[U("d")][U("self_deaf")] = value(false);
+    json payload = {
+        {"op", 4},  //
+        {"d", {
+                  {"guild_id", guild->id},   //
+                  {"channel_id", this->id},  //
+                  {"self_mute", false},      //
+                  {"self_deaf", false}       //
+              }}                             //
+    };
 
     auto current_gateway = _client->_gateways[gw_id];
     current_gateway->send(payload).wait();
     Logger("discord.voicechannel").debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
 
     while (true) {
-        for (unsigned int i = 0; i < _client->_voice_states.size(); i++) {
-            if ((_client->_voice_states[i]->channel_id == conversions::to_string_t(this->id)) && (_client->_voice_states[i]->endpoint.length() > 1)) {
-                return new VoiceClient(&current_gateway, _client->_voice_states[i]->voice_token, _client->_voice_states[i]->endpoint, _client->_voice_states[i]->session_id, _client->_voice_states[i]->guild_id, _client->_voice_states[i]->channel_id, conversions::to_string_t(_client->_user->id));
+        for (auto voice_state : _client->_voice_states) {
+            if ((voice_state->channel_id == this->id) && (voice_state->endpoint.length() > 1)) {
+                return new VoiceClient(&current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
             }
         }
 
-        waitFor(chrono::milliseconds(10)).wait();
+        waitFor(std::chrono::milliseconds(10)).wait();
     }
 
     return new VoiceClient();

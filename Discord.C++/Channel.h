@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <optional>
 #include <vector>
 
 #include "DiscordObject.h"
@@ -11,11 +12,6 @@
 #endif
 
 namespace DiscordCPP {
-
-using namespace std;
-using namespace web::json;
-using namespace utility;
-
 namespace ChannelType {
 enum ChannelType {
     GUILD_TEXT,
@@ -35,19 +31,19 @@ class Channel : public DiscordObject {
     ///the ChannelType of the channel
     int type;
     ///the sorting position
-    int position;
+    int32_t position;
     //vector<Overwrite *> permission_overwrites;
     ///the channel's name
-    string name;
+    std::string name;
     ///the channel's icon hash
-    string icon;
+    std::string icon;
 
-    DLL_EXPORT Channel(const value& data, const string_t& token);
-    DLL_EXPORT Channel(const string& id, const string_t& token);
+    DLL_EXPORT Channel(const json& data, const std::string& token);
+    DLL_EXPORT Channel(const std::string& id, const std::string& token);
     DLL_EXPORT Channel(const Channel& old);
     DLL_EXPORT Channel(){};
 
-    DLL_EXPORT static Channel* from_json(Discord* client, const value& data, const string_t& token);
+    DLL_EXPORT static Channel* from_json(Discord* client, const json& data, const std::string& token);
 
     ///Delete this channel
     DLL_EXPORT void delete_channel();
@@ -56,7 +52,7 @@ class Channel : public DiscordObject {
     DLL_EXPORT Channel* copy(T obj);
 
     ///@return Channelname as std::string
-    DLL_EXPORT operator string() { return name; };
+    DLL_EXPORT operator std::string() { return name; };
 };
 
 template <class T>

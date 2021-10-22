@@ -8,74 +8,49 @@
 #include "Logger.h"
 #include "User.h"
 #include "VoiceChannel.h"
-#include "static.h"
-
-using namespace web::http;
-using namespace web::http::client;
-using namespace std;
-using namespace web::json;
-using namespace utility;
 
 /**	@param[in]	data	raw JSON data
 	@param[in]	token	discord token for the API
 	@return	Message object
 */
-DiscordCPP::Message::Message(const value& data, const string_t& token) : DiscordCPP::DiscordObject(token) {
-    if (is_valid_field("id"))
-        id = conversions::to_utf8string(data.at(U("id")).as_string());
+DiscordCPP::Message::Message(const json& data, const std::string& token) : DiscordCPP::DiscordObject(token) {
+    data.at("id").get_to<std::string>(id);
 
-    if (is_valid_field("channel_id")) {
-        string url = "/channels/" + conversions::to_utf8string(data.at(U("channel_id")).as_string());
+    std::string url = "/channels/" + data.at("channel_id").get<std::string>();
+    json channel_data = api_call(url);
+    channel = (TextChannel*)Channel::from_json(NULL, channel_data, token);
 
-        value channel_data = api_call(url);
-        channel = (TextChannel*)Channel::from_json(NULL, channel_data, token);
+    if (has_value(data, "author")) {
+        author = new User(data.at("author"), token);
     }
 
-    if (is_valid_field("author"))
-        author = new User(data.at(U("author")), token);
+    data.at("content").get_to<std::string>(content);
+    data.at("timestamp").get_to<std::string>(timestamp);
+    edited_timestamp = get_or_else<std::string>(data, "edited_timestamp", "");
+    tts = get_or_else(data, "tts", false);
+    mention_everyone = get_or_else(data, "mention_everyone", false);
 
-    if (is_valid_field("content"))
-        content = conversions::to_utf8string(data.at(U("content")).as_string());
-
-    if (is_valid_field("timestamp"))
-        timestamp = conversions::to_utf8string(data.at(U("timestamp")).as_string());
-
-    if (is_valid_field("edited_timestamp"))
-        edited_timestamp = conversions::to_utf8string(data.at(U("edited_timestamp")).as_string());
-
-    if (is_valid_field("tts"))
-        tts = data.at(U("tts")).as_bool();
-
-    if (is_valid_field("mention_everyone"))
-        tts = data.at(U("mention_everyone")).as_bool();
-
-    if (is_valid_field("mentions")) {
-        web::json::array tmp = data.at(U("mentions")).as_array();
-        for (unsigned int i = 0; i < tmp.size(); i++)
-            mentions.push_back(new User(tmp[i], token));
+    if (has_value(data, "mentions")) {
+        for (json mention : data.at("mentions")) {
+            mentions.push_back(new User(mention, token));
+        }
     }
 
     //mention_roles
 
     //attachements
 
-    if (is_valid_field("embeds")) {
-        web::json::array tmp = data.at(U("embeds")).as_array();
-        for (unsigned int i = 0; i < tmp.size(); i++) {
-            embeds.push_back(new Embed(tmp[i]));
+    if (has_value(data, "embeds")) {
+        for (json embed : data.at("embeds")) {
+            embeds.push_back(new Embed(embed));
         }
     }
 
     //reactions
 
-    if (is_valid_field("pinned"))
-        pinned = data.at(U("pinned")).as_bool();
-
-    if (is_valid_field("webhook_id"))
-        webhook_id = conversions::to_utf8string(data.at(U("webhook_id")).as_string());
-
-    if (is_valid_field("type"))
-        type = data.at(U("type")).as_integer();
+    pinned = get_or_else(data, "pinned", false);
+    webhook_id = get_or_else<std::string>(data, "webhook_id", "");
+    data.at("type").get_to<int>(type);
 
     //activity
 
@@ -93,7 +68,7 @@ DiscordCPP::Message::Message(const Message& old) {
         try {
             channel = (TextChannel*)old.channel->copy(*old.channel);
         } catch (std::exception& e) {
-            Logger("discord.message").error("Error in channel copy: " + string(e.what()));
+            Logger("discord.message").error("Error in channel copy: " + std::string(e.what()));
         }
     } else {
         channel = NULL;
@@ -139,16 +114,15 @@ DiscordCPP::Message::~Message() {
 /**	@param[in]	content	New message-content.
 	@return		Updated message object.
 */
-DiscordCPP::Message DiscordCPP::Message::edit(const string& content) {
-    string url = "/channels/" + channel->id + "/messages/" + id;
+DiscordCPP::Message DiscordCPP::Message::edit(const std::string& content) {
+    std::string url = "/channels/" + channel->id + "/messages/" + id;
 
-    value data;
-    data[U("content")] = value(conversions::to_string_t(content));
+    json data = {{"content", content}};
 
-    return Message(api_call(url, methods::PATCH, data), _token);
+    return Message(api_call(url, web::http::methods::PATCH, data), _token);
 }
 
 void DiscordCPP::Message::delete_msg() {
-    string url = "/channels/" + channel->id + "/messages/" + id;
-    api_call(url, methods::DEL);
+    std::string url = "/channels/" + channel->id + "/messages/" + id;
+    api_call(url, web::http::methods::DEL);
 }

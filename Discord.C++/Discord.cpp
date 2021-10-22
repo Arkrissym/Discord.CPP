@@ -7,30 +7,24 @@
 
 #include "static.h"
 
-using namespace utility;
-using namespace web::json;
-using namespace std;
-
 /**	Creates a Discord instance with one or more shards
 	@param[in]	token		Bot token for authentication
 	@param[in]	intents		Intents used for the gateway.
 	@param[in]	num_shards	(optional) number of shards that exist (default: 0 used for automatic sharding)
 */
-DiscordCPP::Discord::Discord(const string& token, const Intents& intents, const unsigned int num_shards) {
-    _token = conversions::to_string_t(token);
-    _num_shards = num_shards;
+DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int num_shards) : DiscordObject(token), _num_shards(num_shards) {
     id = "0";
     log = Logger("discord");
 
     if (num_shards == 0) {
-        value tmp = api_call("/gateway/bot", web::http::methods::GET, value(), "", false);
-        _num_shards = tmp[U("shards")].as_integer();
+        json tmp = api_call("/gateway/bot", web::http::methods::GET, json(), "", false);
+        tmp.at("shards").get_to<unsigned int>(_num_shards);
     }
 
     for (unsigned int i = 0; i < _num_shards; i++) {
-        MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), intents, i, _num_shards);
+        MainGateway* _client = new MainGateway(_token, intents, i, _num_shards);
 
-        _client->set_message_handler([this](value payload) {
+        _client->set_message_handler([this](json payload) {
             on_websocket_incoming_message(payload);
         });
 
@@ -48,13 +42,11 @@ DiscordCPP::Discord::Discord(const string& token, const Intents& intents, const 
 	@param[in]	shard_id	(optional) the id of the shard (default: 0)
 	@param[in]	num_shards	(optional) number of shards that exist (default: 1)
 */
-DiscordCPP::Discord::Discord(const string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards) {
-    _token = conversions::to_string_t(token);
-    _num_shards = num_shards;
-    id = to_string(shard_id);
+DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards) : DiscordObject(token), _num_shards(num_shards) {
+    id = std::to_string(shard_id);
     log = Logger("discord");
 
-    MainGateway* _client = new MainGateway(conversions::to_utf8string(_token), intents, shard_id, _num_shards);
+    MainGateway* _client = new MainGateway(_token, intents, shard_id, _num_shards);
 
     _gateways.push_back(_client);
 
@@ -126,19 +118,20 @@ void DiscordCPP::Discord::on_typing_start(User, TextChannel, unsigned int) {
 	@param[in]	afk			(optional) wether the bot/user is afk or not
 	@param[in]	shard_id	(optional) the shard whose presence will be updated (use -1 for all shards, default is -1)
 */
-void DiscordCPP::Discord::update_presence(const string& status, Activity activity, const bool afk, const int shard_id) {
-    value presence;
+void DiscordCPP::Discord::update_presence(const std::string& status, Activity activity, const bool afk, const int shard_id) {
+    json presence = {
+        {"op", 3},  //
+        {"d", {
+                  {"since", {}},       //
+                  {"status", status},  //
+                  {"afk", afk}         //
+              }}                       //
+    };
 
-    presence[U("op")] = value(3);
-
-    presence[U("d")][U("since")] = value();
     if (activity.type == ActivityTypes::NoActivity)
-        presence[U("d")][U("game")] = value();
+        presence["d"]["game"] = {};
     else
-        presence[U("d")][U("game")] = activity.to_json();
-
-    presence[U("d")][U("status")] = value(conversions::to_string_t(status));
-    presence[U("d")][U("afk")] = value(afk);
+        presence["d"]["game"] = activity.to_json();
 
     if (shard_id == -1) {
         for (unsigned int i = 0; i < _gateways.size(); i++) {
@@ -155,12 +148,12 @@ DiscordCPP::MainGateway* DiscordCPP::Discord::get_shard(unsigned int shard_id) {
             return _gateways[i];
     }
 
-    throw ClientException("shard with id " + to_string(shard_id) + " not found");
+    throw ClientException("shard with id " + std::to_string(shard_id) + " not found");
 
     return NULL;
 }
 
-DiscordCPP::Guild* DiscordCPP::Discord::get_guild(const string& guild_id) {
+DiscordCPP::Guild* DiscordCPP::Discord::get_guild(const std::string& guild_id) {
     for (size_t i = 0; i < _guilds.size(); i++) {
         if (_guilds[i]->id == guild_id) {
             return _guilds[i];
@@ -173,23 +166,23 @@ DiscordCPP::Guild* DiscordCPP::Discord::get_guild(const string& guild_id) {
 }
 
 void DiscordCPP::Discord::connect() {
-    log.info("connecting to websocket: " + string(GATEWAY_URL));
+    log.info("connecting to websocket: " + std::string(GATEWAY_URL));
 
     for (unsigned int i = 0; i < _gateways.size(); i++) {
         _gateways[i]->connect(GATEWAY_URL);
 
-        waitFor(chrono::milliseconds(10000)).wait();
+        waitFor(std::chrono::milliseconds(10000)).wait();
     }
 }
 
-void DiscordCPP::Discord::on_websocket_incoming_message(const value& payload) {
-    int op = payload.at(U("op")).as_integer();
+void DiscordCPP::Discord::on_websocket_incoming_message(const json& payload) {
+    int op = payload.at("op").get<int>();
 
     switch (op) {
         case 0: {
-            std::string event_name = conversions::to_utf8string(payload.at(U("t")).as_string());
+            std::string event_name = utility::conversions::to_utf8string(payload.at("t").get<std::string>());
             try {
-                handle_raw_event(event_name, payload.at(U("d")));
+                handle_raw_event(event_name, payload.at("d"));
             } catch (std::exception& e) {
                 log.error("error while handling event " + event_name + ": " + e.what());
             }
@@ -203,55 +196,53 @@ void DiscordCPP::Discord::on_websocket_incoming_message(const value& payload) {
             //already handled by MainGateway
             break;
         default:
-            log.debug(conversions::to_utf8string(payload.serialize()));
+            log.debug(payload.dump());
 
-            log.warning("ignoring payload with op-code: " + to_string(op));
+            log.warning("ignoring payload with op-code: " + std::to_string(op));
             break;
     }
 }
 
-void DiscordCPP::Discord::handle_raw_event(const string& event_name, const value& data) {
+void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const json& data) {
     //https://discordapp.com/developers/docs/topics/gateway#commands-and-events-gateway-events
     if (event_name == "READY") {
-        _user = new User(data.at(U("user")), _token);
+        _user = new User(data.at("user"), _token);
 
         //_guilds
-        if (is_valid_field("guilds")) {
-            web::json::array tmp = data.at(U("guilds")).as_array();
-            for (unsigned int i = 0; i < tmp.size(); i++)
-                _guilds.push_back(new Guild(this, tmp[i], _token));
+        for (json guild : data.at("guilds")) {
+            _guilds.push_back(new Guild(this, guild, _token));
         }
 
         try {
             on_ready(User(*_user));
-        } catch (const exception& e) {
-            log.error("ignoring exception in on_ready: " + string(e.what()));
+        } catch (const std::exception& e) {
+            log.error("ignoring exception in on_ready: " + std::string(e.what()));
         }
     } else if (event_name == "CHANNEL_CREATE") {
-        if (is_valid_field("guild_id")) {
-            string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+        if (has_value(data, "guild_id")) {
+            std::string guild_id = data.at("guild_id").get<std::string>();
             Channel* channel = Channel::from_json(this, data, _token);
 
             get_guild(guild_id)->_add_channel(channel);
         }
     } else if (event_name == "CHANNEL_UPDATE") {
-        if (is_valid_field("guild_id")) {
-            string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+        if (has_value(data, "guild_id")) {
+            std::string guild_id = data.at("guild_id").get<std::string>();
             Channel* channel = Channel::from_json(this, data, _token);
 
             get_guild(guild_id)->_update_channel(channel);
         }
     } else if (event_name == "CHANNEL_DELETE") {
-        if (is_valid_field("guild_id")) {
-            string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-            string channel_id = conversions::to_utf8string(data.at(U("id")).as_string());
+        if (has_value(data, "guild_id")) {
+            std::string guild_id = data.at("guild_id").get<std::string>();
+            std::string channel_id = data.at("id").get<std::string>();
 
             get_guild(guild_id)->_remove_channel(channel_id);
         }
     } else if (event_name == "CHANNEL_PINS_UPDATE") {
-        if (is_valid_field("channel_id") && is_valid_field("last_pin_timestamp")) {
-            string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
-            string last_pin = conversions::to_utf8string(data.at(U("last_pin_timestamp")).as_string());
+        if (has_value(data, "channel_id") && has_value(data, "last_pin_timestamp")) {
+            std::string channel_id = data.at("channel_id").get<std::string>();
+            std::string last_pin = data.at("last_pin_timestamp").get<std::string>();
 
             for (unsigned int i = 0; i < _guilds.size(); i++) {
                 for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
@@ -290,11 +281,11 @@ void DiscordCPP::Discord::handle_raw_event(const string& event_name, const value
             }
         }
     } else if (event_name == "GUILD_DELETE") {
-        string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+        std::string guild_id = data.at("guild_id").get<std::string>();
 
         for (unsigned int i = 0; i < _guilds.size(); i++) {
             if (_guilds[i]->id == guild_id) {
-                if (is_valid_field("unavailable") && (data.at(U("unavailable")).as_bool() == true)) {
+                if (has_value(data, "unavailable") && (data.at("unavailable").get<bool>() == true)) {
                     _guilds[i]->unavailable = true;
                 } else {
                     _guilds.erase(_guilds.begin() + i);
@@ -303,61 +294,61 @@ void DiscordCPP::Discord::handle_raw_event(const string& event_name, const value
             }
         }
     } else if (event_name == "GUILD_BAN_ADD") {
-        Guild guild = Guild(*get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string())));
-        User user = User(data.at(U("user")), _token);
+        Guild guild = Guild(*get_guild(data.at("guild_id").get<std::string>()));
+        User user = User(data.at("user"), _token);
 
         try {
             on_user_ban(user, guild);
-        } catch (exception& e) {
-            log.error("ignoring exception in on_user_ban: " + string(e.what()));
+        } catch (const std::exception& e) {
+            log.error("ignoring exception in on_user_ban: " + std::string(e.what()));
         }
     } else if (event_name == "GUILD_BAN_REMOVE") {
-        Guild guild = Guild(*get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string())));
-        User user = User(data.at(U("user")), _token);
+        Guild guild = Guild(*get_guild(data.at("guild_id").get<std::string>()));
+        User user = User(data.at("user"), _token);
 
         try {
             on_user_unban(user, guild);
-        } catch (exception& e) {
-            log.error("ignoring exception in on_user_unban: " + string(e.what()));
+        } catch (const std::exception& e) {
+            log.error("ignoring exception in on_user_unban: " + std::string(e.what()));
         }
     } else if (event_name == "GUILD_MEMBER_ADD") {
-        if (is_valid_field("guild_id")) {
-            Guild* guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
+        if (has_value(data, ("guild_id"))) {
+            Guild* guild = get_guild(data.at("guild_id").get<std::string>());
             Member* member = new Member(data, _token);
 
             guild->_add_member(member);
 
             try {
                 on_user_join(Member(*member), Guild(*guild));
-            } catch (exception& e) {
-                log.error("ignoring exception on on_member_join: " + string(e.what()));
+            } catch (const std::exception& e) {
+                log.error("ignoring exception on on_member_join: " + std::string(e.what()));
             }
         }
     } else if (event_name == "GUILD_MEMBER_UPDATE") {
-        if (is_valid_field("guild_id")) {
-            string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
+        if (has_value(data, ("guild_id"))) {
+            std::string guild_id = data.at("guild_id").get<std::string>();
             Member* member = new Member(data, _token);
 
             get_guild(guild_id)->_update_member(member);
         }
     } else if (event_name == "GUILD_MEMBER_REMOVE") {
-        if (is_valid_field("guild_id")) {
-            Guild* guild = get_guild(conversions::to_utf8string(data.at(U("guild_id")).as_string()));
-            User user = User(data.at(U("user")), _token);
+        if (has_value(data, ("guild_id"))) {
+            Guild* guild = get_guild(data.at("guild_id").get<std::string>());
+            User user = User(data.at("user"), _token);
 
             guild->_remove_member(user.id);
 
             try {
                 on_user_remove(user, Guild(*guild));
-            } catch (exception& e) {
-                log.error("ignoring exception on on_member_join: " + string(e.what()));
+            } catch (const std::exception& e) {
+                log.error("ignoring exception on on_member_join: " + std::string(e.what()));
             }
         }
     } else if (event_name == "MESSAGE_CREATE") {
-        if (is_valid_field("guild_id")) {
-            string guild_id = conversions::to_utf8string(data.at(U("guild_id")).as_string());
-            string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
-            string msg_id = conversions::to_utf8string(data.at(U("id")).as_string());
+        if (has_value(data, ("guild_id"))) {
+            std::string guild_id = data.at("guild_id").get<std::string>();
+            std::string channel_id = data.at("channel_id").get<std::string>();
+            std::string msg_id = data.at("id").get<std::string>();
 
             for (unsigned int i = 0; i < _guilds.size(); i++) {
                 if (_guilds[i]->id == guild_id) {
@@ -376,33 +367,32 @@ void DiscordCPP::Discord::handle_raw_event(const string& event_name, const value
         try {
             on_message(Message(data, _token));
         } catch (const std::exception& e) {
-            log.error("ignoring exception in on_message: " + string(e.what()));
+            log.error("ignoring exception in on_message: " + std::string(e.what()));
         }
     } else if (event_name == "TYPING_START") {
-        log.debug(conversions::to_utf8string(data.serialize()));
-
-        string channel_id = conversions::to_utf8string(data.at(U("channel_id")).as_string());
+        std::string channel_id = data.at("channel_id").get<std::string>();
         User user;
-        if (is_valid_field("user_id")) {
-            user = User(conversions::to_utf8string(data.at(U("user_id")).as_string()), _token);
+        if (has_value(data, ("user_id"))) {
+            user = User(data.at("user_id").get<std::string>(), _token);
         } else {
-            user = User(data.at(U("user")), _token);
+            user = User(data.at("user"), _token);
         }
         TextChannel channel = TextChannel(channel_id, _token);
-        unsigned int timestamp = data.at(U("timestamp")).as_integer();
+        unsigned int timestamp = data.at("timestamp").get<unsigned int>();
 
         try {
             on_typing_start(user, channel, timestamp);
-        } catch (exception& e) {
-            log.error("ignoring exception in on_typing_start: " + string(e.what()));
+        } catch (const std::exception& e) {
+            log.error("ignoring exception in on_typing_start: " + std::string(e.what()));
         }
     } else if (event_name == "VOICE_STATE_UPDATE") {
-        if (_user->id != conversions::to_utf8string(data.at(U("user_id")).as_string()))
+        if (_user->id != data.at("user_id").get<std::string>()) {
             return;
+        }
 
         VoiceState* voice_state = NULL;
         for (unsigned int i = 0; i < _voice_states.size(); i++) {
-            if (_voice_states[i]->guild_id == data.at(U("guild_id")).as_string()) {
+            if (_voice_states[i]->guild_id == data.at("guild_id").get<std::string>()) {
                 voice_state = _voice_states[i];
                 break;
             }
@@ -410,24 +400,24 @@ void DiscordCPP::Discord::handle_raw_event(const string& event_name, const value
 
         if (voice_state == NULL) {
             voice_state = new VoiceState();
-            voice_state->guild_id = data.at(U("guild_id")).as_string();
+            voice_state->guild_id = data.at("guild_id").get<std::string>();
 
             _voice_states.push_back(voice_state);
         }
 
-        if (data.at(U("channel_id")).is_null()) {
-            voice_state->channel_id = U("");
-            voice_state->session_id = U("");
-            voice_state->endpoint = U("");
-            voice_state->voice_token = U("");
+        if (!(has_value(data, "channel_id"))) {
+            voice_state->channel_id = "";
+            voice_state->session_id = "";
+            voice_state->endpoint = "";
+            voice_state->voice_token = "";
         } else {
-            voice_state->channel_id = data.at(U("channel_id")).as_string();
-            voice_state->session_id = data.at(U("session_id")).as_string();
+            voice_state->channel_id = data.at("channel_id").get<std::string>();
+            voice_state->session_id = data.at("session_id").get<std::string>();
         }
     } else if (event_name == "VOICE_SERVER_UPDATE") {
         VoiceState* voice_state = NULL;
         for (unsigned int i = 0; i < _voice_states.size(); i++) {
-            if (_voice_states[i]->guild_id == data.at(U("guild_id")).as_string()) {
+            if (_voice_states[i]->guild_id == data.at("guild_id").get<std::string>()) {
                 voice_state = _voice_states[i];
                 break;
             }
@@ -435,16 +425,16 @@ void DiscordCPP::Discord::handle_raw_event(const string& event_name, const value
 
         if (voice_state == NULL) {
             voice_state = new VoiceState();
-            voice_state->guild_id = data.at(U("guild_id")).as_string();
+            voice_state->guild_id = data.at("guild_id").get<std::string>();
 
             _voice_states.push_back(voice_state);
         }
 
-        voice_state->endpoint = conversions::to_string_t("wss://") + data.at(U("endpoint")).as_string();
-        voice_state->endpoint += conversions::to_string_t("?v=4");
-        voice_state->voice_token = data.at(U("token")).as_string();
+        voice_state->endpoint = "wss://" + data.at("endpoint").get<std::string>();
+        voice_state->endpoint += "?v=4";
+        voice_state->voice_token = data.at("token").get<std::string>();
     } else {
         log.warning("ignoring event: " + event_name);
-        log.debug(conversions::to_utf8string(data.serialize()));
+        log.debug(data.dump());
     }
 }

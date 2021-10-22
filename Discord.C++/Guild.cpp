@@ -7,116 +7,75 @@
 #include "VoiceChannel.h"
 #include "static.h"
 
-using namespace std;
-using namespace web::json;
-using namespace utility;
-using namespace web::http;
-using namespace web::http::client;
+DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& token) : DiscordCPP::DiscordObject(token) {
+    data.at("id").get_to<std::string>(id);
+    name = get_or_else<std::string>(data, "name", "");
+    icon = get_or_else<std::string>(data, "icon", "");
+    splash = get_or_else<std::string>(data, "splash", "");
+    permissions = get_or_else<int>(data, "permissions", 0);
+    region = get_or_else<std::string>(data, "region", "");
+    afk_timeout = get_or_else<int>(data, "afk_timeout", 0);
+    embed_enabled = get_or_else<bool>(data, "embed_enabled", false);
+    verification_level = get_or_else<int>(data, "verification_level", 0);
+    default_message_notifications = get_or_else<int>(data, "default_message_notifications", 0);
+    explicit_content_filter = get_or_else<int>(data, "explicit_content_filter", 0);
+    mfa_level = get_or_else<int>(data, "mfa_level", 0);
+    application_id = get_or_else<std::string>(data, "application_id", "");
+    widget_enabled = get_or_else<bool>(data, "widget_enabled", false);
+    joined_at = get_or_else<std::string>(data, "joined_at", "");
+    large = get_or_else<bool>(data, "large", false);
+    unavailable = get_or_else<bool>(data, "unavailable", false);
+    member_count = get_or_else<int>(data, "member_count", 0);
 
-DiscordCPP::Guild::Guild(Discord* client, const value& data, const string_t& token) : DiscordCPP::DiscordObject(token) {
-    if (is_valid_field("id"))
-        id = conversions::to_utf8string(data.at(U("id")).as_string());
-
-    if (is_valid_field("name"))
-        name = conversions::to_utf8string(data.at(U("name")).as_string());
-
-    if (is_valid_field("icon"))
-        icon = conversions::to_utf8string(data.at(U("icon")).as_string());
-
-    if (is_valid_field("splash"))
-        splash = conversions::to_utf8string(data.at(U("splash")).as_string());
-
-    if (is_valid_field("owner_id"))
-        owner = new User(conversions::to_utf8string(data.at(U("owner_id")).as_string()), token);
-
-    if (is_valid_field("permissions"))
-        permissions = data.at(U("permissions")).as_integer();
-
-    if (is_valid_field("region"))
-        region = conversions::to_utf8string(data.at(U("region")).as_string());
-
-    if (is_valid_field("afk_channel_id")) {
-        afk_channel = new VoiceChannel(client, conversions::to_utf8string(data.at(U("afk_channel_id")).as_string()), token);
+    if (has_value(data, "owner_id")) {
+        owner = new User(data.at("owner_id").get<std::string>(), token);
     }
 
-    if (is_valid_field("afk_timeout"))
-        afk_timeout = data.at(U("afk_timeout")).as_integer();
-
-    if (is_valid_field("embed_enabled"))
-        embed_enabled = data.at(U("embed_enabled")).as_bool();
-
-    if (is_valid_field("embed_channel_id")) {
-        embed_channel = new TextChannel(conversions::to_utf8string(data.at(U("embed_channel_id")).as_string()), token);
+    if (has_value(data, "afk_channel_id")) {
+        afk_channel = new VoiceChannel(client, data.at("afk_channel_id").get<std::string>(), token);
     }
 
-    if (is_valid_field("verfication_level"))
-        afk_timeout = data.at(U("verification_level")).as_integer();
-
-    if (is_valid_field("default_message_notifications"))
-        default_message_notifications = data.at(U("default_message_notifications")).as_integer();
-
-    if (is_valid_field("explicit_content_filter"))
-        explicit_content_filter = data.at(U("explicit_content_filter")).as_integer();
+    if (has_value(data, "embed_channel_id")) {
+        embed_channel = new TextChannel(data.at("embed_channel_id").get<std::string>(), token);
+    }
 
     //roles
 
     //emojis
 
-    if (is_valid_field("features")) {
-        web::json::array tmp = data.at(U("features")).as_array();
-        for (unsigned int i = 0; i < tmp.size(); i++)
-            features.push_back(conversions::to_utf8string(tmp[i].as_string()));
+    if (has_value(data, "features")) {
+        for (json feature : data.at("features")) {
+            features.push_back(feature.get<std::string>());
+        }
     }
 
-    if (is_valid_field("mfa_level"))
-        mfa_level = data.at(U("mfa_level")).as_integer();
-
-    if (is_valid_field("application_id"))
-        application_id = conversions::to_utf8string(data.at(U("application_id")).as_string());
-
-    if (is_valid_field("widget_enabled"))
-        widget_enabled = data.at(U("widget_enabled")).as_bool();
-
-    if (is_valid_field("widget_channel_id")) {
-        widget_channel = new Channel(conversions::to_utf8string(data.at(U("widget_channel_id")).as_string()), token);
+    if (has_value(data, "widget_channel_id")) {
+        widget_channel = new Channel(data.at("widget_channel_id").get<std::string>(), token);
     }
 
-    if (is_valid_field("system_channel_id")) {
-        system_channel = new TextChannel(conversions::to_utf8string(data.at(U("system_channel_id")).as_string()), token);
+    if (has_value(data, "system_channel_id")) {
+        system_channel = new TextChannel(data.at("system_channel_id").get<std::string>(), token);
     }
-
-    if (is_valid_field("joined_at"))
-        joined_at = conversions::to_utf8string(data.at(U("joined_at")).as_string());
-
-    if (is_valid_field("large"))
-        large = data.at(U("large")).as_bool();
-
-    if (is_valid_field("unavailable"))
-        unavailable = data.at(U("unavailable")).as_bool();
-
-    if (is_valid_field("member_count"))
-        member_count = data.at(U("member_count")).as_integer();
 
     //voice_states
 
-    if (is_valid_field("members")) {
-        web::json::array tmp = data.at(U("members")).as_array();
-        for (unsigned int i = 0; i < tmp.size(); i++)
-            members.push_back(new Member(tmp[i], token));
+    if (has_value(data, "members")) {
+        for (json member : data.at("members")) {
+            members.push_back(new Member(member, token));
+        }
     }
 
-    if (is_valid_field("channels")) {
-        web::json::array tmp = data.at(U("channels")).as_array();
-        for (unsigned int i = 0; i < tmp.size(); i++) {
-            channels.push_back(Channel::from_json(client, tmp[i], token));
+    if (has_value(data, "channels")) {
+        for (json channel : data.at("channels")) {
+            channels.push_back(Channel::from_json(client, channel, token));
         }
     }
 
     //presences
 }
 
-DiscordCPP::Guild::Guild(Discord* client, const string& id, const string_t& token) : DiscordCPP::DiscordObject(token) {
-    string url = "/guilds/" + id;
+DiscordCPP::Guild::Guild(Discord* client, const std::string& id, const std::string& token) : DiscordCPP::DiscordObject(token) {
+    std::string url = "/guilds/" + id;
 
     *this = Guild(client, api_call(url), token);
 }
@@ -198,7 +157,7 @@ void DiscordCPP::Guild::_update_channel(Channel* channel) {
     }
 }
 
-void DiscordCPP::Guild::_remove_channel(const string& channel_id) {
+void DiscordCPP::Guild::_remove_channel(const std::string& channel_id) {
     for (size_t i = 0; i < channels.size(); i++) {
         if (channels[i]->id == channel_id) {
             delete channels[i];
@@ -223,7 +182,7 @@ void DiscordCPP::Guild::_update_member(Member* member) {
     }
 }
 
-void DiscordCPP::Guild::_remove_member(const string& member_id) {
+void DiscordCPP::Guild::_remove_member(const std::string& member_id) {
     for (size_t i = 0; i < members.size(); i++) {
         if (members[i]->id == member_id) {
             delete members[i];
@@ -235,22 +194,22 @@ void DiscordCPP::Guild::_remove_member(const string& member_id) {
 
 ///@throws HTTPError
 void DiscordCPP::Guild::leave() {
-    string url = "/guilds/@me/guilds/" + id;
-    api_call(url, methods::DEL);
+    std::string url = "/guilds/@me/guilds/" + id;
+    api_call(url, web::http::methods::DEL);
 }
 
 ///@throws HTTPError
 void DiscordCPP::Guild::delete_guild() {
-    string url = "/guilds/" + id;
-    api_call(url, methods::DEL);
+    std::string url = "/guilds/" + id;
+    api_call(url, web::http::methods::DEL);
 }
 
 /**	@param[in]	user	User to kick
 	@throws HTTPError
 */
 void DiscordCPP::Guild::kick(const User& user) {
-    string url = "/guilds/" + id + "/members/" + user.id;
-    api_call(url, methods::DEL);
+    std::string url = "/guilds/" + id + "/members/" + user.id;
+    api_call(url, web::http::methods::DEL);
 }
 
 /**	@param[in]	user				User to ban
@@ -258,15 +217,15 @@ void DiscordCPP::Guild::kick(const User& user) {
 	@param[in]	delete_message_days	(optional) number of days to delete messages from user (0-7)
 	@throws HTTPError
 */
-void DiscordCPP::Guild::ban(const User& user, const string& reason, const int delete_message_days) {
-    string url = "/guilds/" + id + "/bans/" + user.id + "?delete-message-days=" + to_string(delete_message_days) + "&reason=" + urlencode(reason);
-    api_call(url, methods::PUT);
+void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const int delete_message_days) {
+    std::string url = "/guilds/" + id + "/bans/" + user.id + "?delete-message-days=" + std::to_string(delete_message_days) + "&reason=" + urlencode(reason);
+    api_call(url, web::http::methods::PUT);
 }
 
 /**	@param[in]	user	User to kick
 	@throws HTTPError
 */
 void DiscordCPP::Guild::unban(const User& user) {
-    string url = "/guilds/" + id + "/bans/" + user.id;
-    api_call(url, methods::DEL);
+    std::string url = "/guilds/" + id + "/bans/" + user.id;
+    api_call(url, web::http::methods::DEL);
 }

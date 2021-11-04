@@ -55,7 +55,7 @@ class Gateway {
         const std::string& reason, const std::error_code& error);
 
    public:
-    DLL_EXPORT Gateway(const std::string& token);
+    DLL_EXPORT Gateway(const std::string& token, const size_t threadpool_size);
     DLL_EXPORT virtual ~Gateway();
 
     DLL_EXPORT void set_message_handler(

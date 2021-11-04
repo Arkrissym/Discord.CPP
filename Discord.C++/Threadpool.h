@@ -37,11 +37,11 @@ class Threadpool {
 
    public:
     /** 
-     *  Creates a new Threadpool. The threapool can grow but the maximum number of threads won't be more than std::thread::hardware_concurrency() returns.
+     *  Creates a new Threadpool.
      *  
-     *  @param[in]  size    (optional) The initial size of the threadpool (default: 1)
+     *  @param[in]  size    (optional) The number of threads the threadpool should contain. Defaults to 4.
      */
-    DLL_EXPORT Threadpool(const unsigned int size = 1);
+    DLL_EXPORT Threadpool(const unsigned int size = 4);
     Threadpool(const Threadpool&) = delete;
     DLL_EXPORT ~Threadpool();
 

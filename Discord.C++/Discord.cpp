@@ -17,7 +17,7 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
     log = Logger("discord");
 
     if (num_shards == 0) {
-        json tmp = api_call("/gateway/bot", web::http::methods::GET, json(), "", false);
+        json tmp = api_call("/gateway/bot", "GET", json(), "", false);
         tmp.at("shards").get_to<unsigned int>(_num_shards);
     }
 

@@ -35,7 +35,7 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(const std::string& content, co
 
     json data = {{"content", content}, {"tts", tts}};
 
-    return Message(api_call(url, web::http::methods::POST, data), _token);
+    return Message(api_call(url, "POST", data, "application/json"), _token);
 }
 
 /**	@param[in]	embed	The Embed to send.
@@ -46,7 +46,7 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
 
     json data = {{"embed", embed.to_json()}};
 
-    return Message(api_call(url, web::http::methods::POST, data), _token);
+    return Message(api_call(url, "POST", data, "application/json"), _token);
 }
 
 /**	@param[in]	limit	Max number of messages to retrieve (1-100)
@@ -67,7 +67,7 @@ std::vector<std::shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::histo
     if (around.length() > 0)
         url += "&around" + around;
 
-    json msgs = api_call(url, web::http::methods::GET, json(), "", false);
+    json msgs = api_call(url, "GET", json(), "", false);
 
     for (json msg : msgs) {
         ret.push_back(std::make_shared<Message>(Message(msg, _token)));
@@ -92,5 +92,5 @@ void DiscordCPP::TextChannel::delete_messages(const std::vector<std::shared_ptr<
         data["messages"].emplace_back(messages[i]->id);
     }
 
-    api_call(url, web::http::methods::POST, data, "application/json");
+    api_call(url, "POST", data, "application/json");
 }

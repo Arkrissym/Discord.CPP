@@ -4,8 +4,8 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
 	make \
 	cmake \
+	git \
 	libcpprest-dev \
-	nlohmann-json-dev \
 	libopus-dev \
 	libsodium-dev
 

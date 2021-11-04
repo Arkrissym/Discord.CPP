@@ -1,9 +1,9 @@
 #pragma once
 #define VERSION "0.11.0"
 
-#define GATEWAY_URL \
-    "wss://gateway.discord.gg?v=9&encoding=json&compress=zlib-stream"
-#define API_URL "https://discord.com/api/v9"
+#define GATEWAY_URL "wss://gateway.discord.gg?v=9&encoding=json&compress=zlib-stream"
+#define API_PREFIX "/api/v9"
+#define DISCORD_HOST "discord.com"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)

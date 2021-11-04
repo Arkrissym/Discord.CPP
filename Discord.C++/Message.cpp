@@ -1,7 +1,5 @@
 #include "Message.h"
 
-#include <cpprest/http_client.h>
-
 #include "DMChannel.h"
 #include "Embed.h"
 #include "GuildChannel.h"
@@ -119,10 +117,10 @@ DiscordCPP::Message DiscordCPP::Message::edit(const std::string& content) {
 
     json data = {{"content", content}};
 
-    return Message(api_call(url, web::http::methods::PATCH, data), _token);
+    return Message(api_call(url, "PATCH", data, "application/json"), _token);
 }
 
 void DiscordCPP::Message::delete_msg() {
     std::string url = "/channels/" + channel->id + "/messages/" + id;
-    api_call(url, web::http::methods::DEL);
+    api_call(url, "DEL");
 }

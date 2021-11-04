@@ -66,7 +66,7 @@ DiscordCPP::VoiceGateway::VoiceGateway(const std::string& token,
                                        const std::string& session_id,
                                        const std::string& guild_id,
                                        const std::string& user_id)
-    : Gateway(token) {
+    : Gateway(token, 4) {
     _log = Logger("Discord.VoiceGateway (guild id: " + guild_id + ")");
 
     _session_id = session_id;

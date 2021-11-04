@@ -1,14 +1,23 @@
 #include "DiscordObject.h"
 
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ssl/error.hpp>
+#include <boost/asio/ssl/stream.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/certify/extensions.hpp>
+#include <boost/certify/https_verification.hpp>
+
 #include "Exceptions.h"
 #include "Logger.h"
 #include "static.h"
 
-using namespace web::http;
-using namespace web::http::client;
-using namespace utility;
-
-using json = nlohmann::json;
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace net = boost::asio;
+namespace ssl = net::ssl;
+using tcp = net::ip::tcp;
 
 static std::vector<std::shared_ptr<json>> _cache;
 static bool cache_manager_active = false;
@@ -56,77 +65,54 @@ void manage_cache() {
 	@return		json::value		API response
 	@throws		HTTPError
 */
-json DiscordCPP::DiscordObject::api_call(const std::string& url, const method& method, const json& data, const std::string& content_type, const bool cache) {
-    if (method == methods::GET && cache == true) {
+json DiscordCPP::DiscordObject::api_call(const std::string& url, const std::string& method, const json& data, const std::string& content_type, const bool cache) {
+    if (method == "GET" && cache == true) {
         for (unsigned int i = 0; i < _cache.size(); i++) {
-            if (conversions::to_utf8string(_cache[i]->at("url").get<std::string>()) == url) {
-                if ((time(0) - _cache[i]->at("time").get<int>()) > 60) {
-                    Logger("discord.object.api_call").debug("found old data");
-                } else {
-                    Logger("discord.object.api_call").debug("using cached result for: " + url);
-                    return json(_cache[i]->at("data"));
-                }
+            if (_cache[i]->at("url").get<std::string>() == url) {
+                Logger("discord.object.api_call").debug("using cached result for: " + url);
+                return json(_cache[i]->at("data"));
             }
         }
-    }
-
-    http_client c(U(API_URL));
-    http_request request(method);
-
-    request.set_request_uri(uri(conversions::to_string_t(url)));
-    request.headers().add(U("Authorization"), conversions::to_string_t("Bot " + conversions::to_utf8string(_token)));
-    request.headers().add(U("User-Agent"), conversions::to_string_t("DiscordBot (Discord.C++, " + std::string(VERSION) + ")"));
-    if (content_type != "")
-        request.headers().set_content_type(conversions::to_string_t(content_type));
-
-    if ((method != methods::GET) && (method != methods::HEAD)) {
-        Logger("discord.object.api_call").debug("request body: " + data.dump());
-        request.set_body(data.dump());
     }
 
     json ret;
     unsigned short code;
 
     do {
-        pplx::task<http_response> requestTask = c.request(request).then([url](http_response response) {
-            Logger("discord.object.api_call").debug("api call sent: " + std::string(API_URL) + url + ": " + std::to_string(response.status_code()));
-
-            return response;
-        });
-
+        http_response response;
         try {
-            requestTask.wait();
-            std::string response = utility::conversions::to_utf8string(requestTask.get().extract_string().get());
-            if (response.length() > 0) {
-                Logger("discord.object.api_call").debug("response: " + response);
-                ret = json::parse(response);
+            response = request_internal(API_PREFIX + url, method, data.size() > 0 ? data.dump() : "", content_type);
+
+            if (response.body.length() > 0) {
+                ret = json::parse(response.body);
             }
         } catch (const std::exception& e) {
             Logger("discord.object.api_call").error("Error exception: " + std::string(e.what()));
-            return json();
+            throw ClientException("HTTP request failed because: " + std::string(e.what()));
         }
 
-        code = requestTask.get().status_code();
-
-        if ((code == 200) && (method == methods::GET)) {
-            json tmp = json();
-            tmp["url"] = url;
-            tmp["time"] = time(0);
-            tmp["data"] = ret;
-
-            _cache.push_back(std::make_shared<json>(tmp));
-
-            Logger("discord.object.api_call").debug("caching object");
-        }
+        code = response.status_code;
 
         if (code == 429) {
-            Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]));
+            Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + response.headers.at("Retry-After"));
 
-            waitFor(std::chrono::seconds(atoi(conversions::to_utf8string(requestTask.get().headers()[U("Retry-After")]).c_str()))).wait();
+            waitFor(std::chrono::seconds(atoi(response.headers.at("Retry-After").c_str()))).wait();
         }
     } while (code == 429);
 
     switch (code) {
+        case 200:
+            if (method == "GET") {
+                json tmp = json();
+                tmp["url"] = url;
+                tmp["time"] = time(0);
+                tmp["data"] = ret;
+
+                _cache.push_back(std::make_shared<json>(tmp));
+
+                Logger("discord.object.api_call").debug("caching object");
+            }
+            break;
         case 400:
             throw HTTPError("Malformed/Invalid API call", code);
         case 401:
@@ -142,4 +128,60 @@ json DiscordCPP::DiscordObject::api_call(const std::string& url, const method& m
     }
 
     return ret;
+}
+
+DiscordCPP::DiscordObject::http_response DiscordCPP::DiscordObject::request_internal(const std::string& target, const std::string& method, const std::string& data, const std::string& content_type) {
+    Logger("discord.object.request_internal").debug("sending message " + data + " via " + method + " to https://" + DISCORD_HOST + target);
+
+    ssl::context ssl_context(ssl::context::tlsv13);
+    ssl_context.set_verify_mode(ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);
+    boost::certify::enable_native_https_server_verification(ssl_context);
+
+    net::io_context io_context;
+    tcp::resolver resolver(io_context);
+
+    auto const results = resolver.resolve(DISCORD_HOST, "https");
+    ssl::stream<tcp::socket> stream(io_context, ssl_context);
+    boost::asio::connect(stream.lowest_layer(), results);
+
+    boost::certify::set_server_hostname(stream, DISCORD_HOST);
+    boost::certify::sni_hostname(stream, DISCORD_HOST);
+
+    stream.handshake(ssl::stream_base::client);
+
+    http::request<http::string_body> request{http::string_to_verb(method), target, 11};
+    request.set(http::field::host, DISCORD_HOST);
+    request.set(http::field::user_agent, "Discord.C++ DiscordBot");
+    request.set(http::field::authorization, "Bot " + _token);
+    request.set(http::field::connection, "Close");
+    if (data.length() > 0) {
+        Logger("discord.object.request_internal").debug("setting message body \"" + data + "\" with content type \"" + content_type + "\" and content length \"" + std::to_string(data.length()) + "\"");
+        request.set(http::field::content_type, content_type);
+        request.set(http::field::content_length, std::to_string(data.length()));
+        request.body() = data;
+    }
+
+    http::write(stream, request);
+
+    beast::flat_buffer buffer;
+    http::response<http::string_body> response;
+    http::read(stream, buffer, response);
+
+    Logger("discord.object.request_internal").debug("response: " + std::to_string(response.result_int()) + ": " + response.body());
+
+    beast::error_code error_code;
+    stream.shutdown(error_code);
+
+    // according to the documentation not_connected can happen even if no real error appeared.
+    // eof is intended behaviour when closing ssl connections
+    if (error_code && error_code != beast::errc::not_connected && error_code != boost::asio::error::eof && error_code != boost::asio::ssl::error::stream_truncated) {
+        throw beast::system_error{error_code};
+    }
+
+    std::map<std::string, std::string> response_headers;
+    for (auto it = response.base().begin(); it != response.base().end(); it++) {
+        response_headers.emplace(it->name_string(), it->value());
+    }
+
+    return http_response{response.result_int(), response_headers, response.body()};
 }

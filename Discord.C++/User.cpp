@@ -3,7 +3,6 @@
 #include "DMChannel.h"
 #include "Embed.h"
 #include "Message.h"
-#include "cpprest/http_client.h"
 
 DiscordCPP::User::User(const json& data, const std::string& token) : DiscordCPP::DiscordObject(token) {
     data.at("id").get_to<std::string>(id);
@@ -30,7 +29,7 @@ DiscordCPP::User::User(const std::string& id, const std::string& token) : Discor
 DiscordCPP::DMChannel DiscordCPP::User::get_dmchannel() {
     json data = {{"recipient_id", id}};
 
-    return DMChannel(api_call("/users/@me/channels", web::http::methods::POST, data), _token);
+    return DMChannel(api_call("/users/@me/channels", "POST", data), _token);
 }
 
 /**	@param[in]	content	The string message to send.

@@ -65,11 +65,6 @@ void DiscordCPP::Threadpool::queue_task(const std::function<void()>& task) {
         throw std::runtime_error("Cannot execute task on stopped threadpool");
     }
 
-    if (task_queue.size() > 0 && thread_count < std::thread::hardware_concurrency()) {
-        log.debug("starting new thread");
-        start_thread();
-    }
-
     task_queue.emplace(task);
     condition.notify_one();
 }

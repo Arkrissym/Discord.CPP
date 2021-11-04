@@ -119,7 +119,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect(
     });
 }
 
-DiscordCPP::Gateway::Gateway(const std::string& token) : threadpool() {
+DiscordCPP::Gateway::Gateway(const std::string& token, const size_t threadpool_size) : threadpool(threadpool_size) {
     _log = Logger("Discord.Gateway");
 
     _token = token;

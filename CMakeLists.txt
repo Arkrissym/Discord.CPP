@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.5 )
+cmake_minimum_required( VERSION 3.11 )
 
 project( discord_cpp )
 
@@ -7,7 +7,27 @@ set( CMAKE_CXX_STANDARD_REQUIRED True )
 
 set( JSON_ImplicitConversions OFF )
 
-include_directories( ${CMAKE_STAGING_PREFIX}/usr/include )
+include(FetchContent)
+
+FetchContent_Declare(certify GIT_REPOSITORY https://github.com/djarek/certify)
+FetchContent_GetProperties(certify)
+if(NOT certify_POPULATED)
+  FetchContent_Populate(certify)
+endif()
+
+FetchContent_Declare(boost_beast
+                 GIT_REPOSITORY https://github.com/boostorg/beast
+                 GIT_TAG        boost-1.77.0
+)
+
+FetchContent_Declare(nlohmann_json
+  GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
+  GIT_TAG v3.10.4
+)
+
+FetchContent_MakeAvailable(boost_beast nlohmann_json)
+
+include_directories( ${CMAKE_STAGING_PREFIX}/usr/include ${certify_SOURCE_DIR}/include)
 link_directories( ${CMAKE_STAGING_PREFIX}/usr/lib )
 
 FILE(GLOB PROJECT_SOURCES Discord.C++/*.cpp)
@@ -23,13 +43,14 @@ else(MSVC)
       set( CMAKE_CXX_FLAGS " -Wall -Wextra -Ofast " )
 endif(MSVC)
 
+find_package(Boost COMPONENTS system filesystem REQUIRED)
+find_package(OpenSSL REQUIRED)
+
 if(VCPKG_TOOLCHAIN)
       find_package(unofficial-sodium CONFIG REQUIRED)
       find_package(Opus CONFIG REQUIRED)
-      find_package(Boost COMPONENTS system filesystem REQUIRED)
       find_package(cpprestsdk CONFIG REQUIRED)
-      find_package(nlohmann_json CONFIG REQUIRED)
-
+      
       target_link_libraries(${PROJECT_NAME}
                         unofficial-sodium::sodium
                         Opus::opus
@@ -37,12 +58,15 @@ if(VCPKG_TOOLCHAIN)
                         nlohmann_json::nlohmann_json
                         Boost::system
                         Boost::filesystem
+                        OpenSSL::SSL
+                        OpenSSL::Crypto
                         cpprestsdk::cpprest
                         cpprestsdk::cpprestsdk_zlib_internal
                         cpprestsdk::cpprestsdk_boost_internal
-                        cpprestsdk::cpprestsdk_brotli_internal)
+                        cpprestsdk::cpprestsdk_brotli_internal
+                        crypt32)
 else(VCPKG_TOOLCHAIN)
-      target_link_libraries(${PROJECT_NAME} sodium opus cpprest)
+      target_link_libraries(${PROJECT_NAME} sodium opus cpprest nlohmann_json::nlohmann_json)
 endif(VCPKG_TOOLCHAIN)
 
 install(TARGETS discord_cpp DESTINATION lib)

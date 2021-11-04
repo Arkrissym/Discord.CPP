@@ -195,13 +195,13 @@ void DiscordCPP::Guild::_remove_member(const std::string& member_id) {
 ///@throws HTTPError
 void DiscordCPP::Guild::leave() {
     std::string url = "/guilds/@me/guilds/" + id;
-    api_call(url, web::http::methods::DEL);
+    api_call(url, "DEL");
 }
 
 ///@throws HTTPError
 void DiscordCPP::Guild::delete_guild() {
     std::string url = "/guilds/" + id;
-    api_call(url, web::http::methods::DEL);
+    api_call(url, "DEL");
 }
 
 /**	@param[in]	user	User to kick
@@ -209,7 +209,7 @@ void DiscordCPP::Guild::delete_guild() {
 */
 void DiscordCPP::Guild::kick(const User& user) {
     std::string url = "/guilds/" + id + "/members/" + user.id;
-    api_call(url, web::http::methods::DEL);
+    api_call(url, "DEL");
 }
 
 /**	@param[in]	user				User to ban
@@ -219,7 +219,7 @@ void DiscordCPP::Guild::kick(const User& user) {
 */
 void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const int delete_message_days) {
     std::string url = "/guilds/" + id + "/bans/" + user.id + "?delete-message-days=" + std::to_string(delete_message_days) + "&reason=" + urlencode(reason);
-    api_call(url, web::http::methods::PUT);
+    api_call(url, "PUT");
 }
 
 /**	@param[in]	user	User to kick
@@ -227,5 +227,5 @@ void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const i
 */
 void DiscordCPP::Guild::unban(const User& user) {
     std::string url = "/guilds/" + id + "/bans/" + user.id;
-    api_call(url, web::http::methods::DEL);
+    api_call(url, "DEL");
 }

@@ -1,5 +1,7 @@
 #include "MainGateway.h"
 
+#include <thread>
+
 #include "static.h"
 
 DiscordCPP::json DiscordCPP::MainGateway::get_heartbeat_payload() {
@@ -148,7 +150,7 @@ std::string DiscordCPP::MainGateway::set_trace(const json& payload) {
 DiscordCPP::MainGateway::MainGateway(const std::string& token,
                                      const Intents& intents, const int shard_id,
                                      const unsigned int num_shards)
-    : Gateway::Gateway(token) {
+    : Gateway::Gateway(token, std::thread::hardware_concurrency() / num_shards) {
     _log =
         Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) +
                ", " + std::to_string(num_shards) + "])");

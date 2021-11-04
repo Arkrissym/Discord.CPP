@@ -1,7 +1,5 @@
 #include "Channel.h"
 
-#include <cpprest/http_client.h>
-
 #include "Discord.h"
 #include "static.h"
 
@@ -62,5 +60,5 @@ DiscordCPP::Channel* DiscordCPP::Channel::from_json(Discord* client, const json&
 void DiscordCPP::Channel::delete_channel() {
     std::string url = "/channels/" + id;
 
-    api_call(url, web::http::methods::DEL);
+    api_call(url, "DEL");
 }

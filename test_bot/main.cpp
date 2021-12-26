@@ -44,37 +44,36 @@ class Client : public Discord {
         delete vc;
     }
 
-   public:
-    void on_ready(User user) {
+    void on_ready(User user) override {
         log.info("logged in as: " + user.username);
 
         this->update_presence(DiscordStatus::Online,
                               Activity("test", ActivityTypes::Game));
     }
 
-    void on_user_ban(User user, Guild guild) {
+    void on_user_ban(User user, Guild guild) override {
         log.info("User " + string(user) + " has been banned from Guild " +
                  string(guild));
     }
 
-    void on_user_unban(User user, Guild guild) {
+    void on_user_unban(User user, Guild guild) override {
         log.info("User " + string(user) + " has been unbanned from Guild " +
                  string(guild));
     }
 
-    void on_user_join(Member member, Guild guild) {
+    void on_user_join(Member member, Guild guild) override {
         log.info("Member " + string(member) + " joined Guild " + string(guild));
     }
 
-    void on_user_remove(User user, Guild guild) {
+    void on_user_remove(User user, Guild guild) override {
         log.info("Member " + string(user) + " left Guild " + string(guild));
     }
 
-    void on_typing_start(User user, TextChannel channel, unsigned int) {
+    void on_typing_start(User user, TextChannel channel, unsigned int) override {
         log.debug(user.username + " started typing in " + channel.name);
     }
 
-    void on_message(Message message) {
+    void on_message(Message message) override {
         log.debug(message.author->username + " sent \"" + message.content +
                   "\" in channel: " + message.channel->name +
                   " (id: " + message.channel->id +
@@ -273,9 +272,8 @@ class Client : public Discord {
         }
     }
 
-    Client(const string& token, const Intents& intents,
-           unsigned int num_shards = 0)
-        : Discord(token, intents, num_shards){};
+   public:
+    Client(const string& token, const Intents& intents, unsigned int num_shards = 0) : Discord(token, intents, num_shards){};
 };
 
 int main() {
@@ -295,6 +293,8 @@ int main() {
     Client client = Client(token, intents);
 
     client.log.set_log_level(Debug);
+
+    client.start();
 
     while (1) {
         std::this_thread::sleep_for(std::chrono::seconds(5));

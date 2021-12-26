@@ -30,10 +30,6 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
 
         _gateways.push_back(_client);
     }
-
-    connect();
-
-    srand((unsigned int)time(NULL));
 }
 
 /**	Creates a Discord instance with ONE shard
@@ -52,10 +48,6 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
     });
 
     _gateways.push_back(_client);
-
-    connect();
-
-    srand((unsigned int)time(NULL));
 }
 
 DiscordCPP::Discord::~Discord() {
@@ -68,6 +60,11 @@ DiscordCPP::Discord::~Discord() {
     for (unsigned int i = 0; i < _guilds.size(); i++) {
         delete _guilds[i];
     }
+}
+
+void DiscordCPP::Discord::start() {
+    srand((unsigned int)time(NULL));
+    connect();
 }
 
 ///	@param[in]	user	the User

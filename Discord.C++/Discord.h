@@ -49,6 +49,21 @@ class Discord : public DiscordObject {
     DLL_EXPORT void on_websocket_incoming_message(const json& payload);
     DLL_EXPORT void handle_raw_event(const std::string& event_name, const json& data);
 
+    ///called when successfully logged in
+    virtual void on_ready(User user);
+    ///called when a Message was received
+    virtual void on_message(Message message);
+    ///called when a Member was banned
+    virtual void on_user_ban(User user, Guild guild);
+    ///called when a Member was unbanned
+    virtual void on_user_unban(User user, Guild guild);
+    ///called when a User joins a Guild
+    virtual void on_user_join(Member member, Guild guild);
+    ///called when a User is removed from a Guild (leave/kick/ban)
+    virtual void on_user_remove(User user, Guild guild);
+    ///called when a User starts typing
+    virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp);
+
    public:
     Logger log;
 
@@ -56,20 +71,8 @@ class Discord : public DiscordObject {
     DLL_EXPORT Discord(const std::string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards);
     DLL_EXPORT virtual ~Discord();
 
-    ///called when successfully logged in
-    DLL_EXPORT virtual void on_ready(User user);
-    ///called when a Message was received
-    DLL_EXPORT virtual void on_message(Message message);
-    ///called when a Member was banned
-    DLL_EXPORT virtual void on_user_ban(User user, Guild guild);
-    ///called when a Member was unbanned
-    DLL_EXPORT virtual void on_user_unban(User user, Guild guild);
-    ///called when a User joins a Guild
-    DLL_EXPORT virtual void on_user_join(Member member, Guild guild);
-    ///called when a User is removed from a Guild (leave/kick/ban)
-    DLL_EXPORT virtual void on_user_remove(User user, Guild guild);
-    ///called when a User starts typing
-    DLL_EXPORT virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp);
+    ///Starts the bot. This will not block.
+    DLL_EXPORT void start();
 
     ///updates the presence of user
     DLL_EXPORT void update_presence(const std::string& status, Activity activity = Activity(), const bool afk = false, const int shard_id = -1);

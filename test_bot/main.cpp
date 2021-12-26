@@ -15,7 +15,7 @@
 using namespace DiscordCPP;
 using namespace std;
 
-class myClient : public Discord {
+class Client : public Discord {
    private:
     Channel* findChannel(const string& name, const string& guild_id) {
         for (unsigned int i = 0; i < _guilds.size(); i++) {
@@ -68,6 +68,10 @@ class myClient : public Discord {
 
     void on_user_remove(User user, Guild guild) {
         log.info("Member " + string(user) + " left Guild " + string(guild));
+    }
+
+    void on_typing_start(User user, TextChannel channel, unsigned int) {
+        log.debug(user.username + " started typing in " + channel.name);
     }
 
     void on_message(Message message) {
@@ -269,8 +273,8 @@ class myClient : public Discord {
         }
     }
 
-    myClient(const string& token, const Intents& intents,
-             unsigned int num_shards = 0)
+    Client(const string& token, const Intents& intents,
+           unsigned int num_shards = 0)
         : Discord(token, intents, num_shards){};
 };
 
@@ -288,12 +292,12 @@ int main() {
 
     Intents intents = Intents::Default();
     intents.add(Intents::MEMBERS);
-    myClient client = myClient(token, intents);
+    Client client = Client(token, intents);
 
     client.log.set_log_level(Debug);
 
     while (1) {
-        waitFor(chrono::seconds(5)).wait();
+        std::this_thread::sleep_for(std::chrono::seconds(5));
     }
 
     return 0;

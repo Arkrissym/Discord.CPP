@@ -84,7 +84,7 @@ DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
             }
         }
 
-        waitFor(std::chrono::milliseconds(10)).wait();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     return new VoiceClient();

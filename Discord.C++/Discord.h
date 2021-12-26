@@ -1,6 +1,4 @@
 #pragma once
-#include <cpprest/ws_client.h>
-
 #include <vector>
 
 #include "Activity.h"

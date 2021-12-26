@@ -202,7 +202,7 @@ DiscordCPP::VoiceClient::VoiceClient(MainGateway** main_ws,
     _voice_ws->connect(endpoint);
 
     while (_ready == false) {
-        waitFor(std::chrono::milliseconds(10)).wait();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
@@ -316,12 +316,13 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             _udp->send(packet);
 
             next_time += std::chrono::milliseconds(FRAME_MILLIS);
-            std::chrono::microseconds delay =
-                std::max(std::chrono::microseconds(0),
-                         std::chrono::duration_cast<std::chrono::microseconds>(
-                             next_time - std::chrono::high_resolution_clock::now()));
+            //std::chrono::microseconds delay =
+            //    std::max(std::chrono::microseconds(0),
+            //             std::chrono::duration_cast<std::chrono::microseconds>(
+            //                 next_time - std::chrono::high_resolution_clock::now()));
 
-            waitFor(delay).wait();
+            //std::this_thread::sleep_for(delay);
+            std::this_thread::sleep_until(next_time);
         }
 
         opus_encoder_destroy(encoder);

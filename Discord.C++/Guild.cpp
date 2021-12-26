@@ -1,7 +1,5 @@
 #include "Guild.h"
 
-#include <cpprest/http_client.h>
-
 #include "DMChannel.h"
 #include "TextChannel.h"
 #include "VoiceChannel.h"

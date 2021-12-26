@@ -47,6 +47,9 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
     log = Logger("discord");
 
     MainGateway* _client = new MainGateway(_token, intents, shard_id, _num_shards);
+    _client->set_message_handler([this](json payload) {
+        on_websocket_incoming_message(payload);
+    });
 
     _gateways.push_back(_client);
 
@@ -171,7 +174,7 @@ void DiscordCPP::Discord::connect() {
     for (unsigned int i = 0; i < _gateways.size(); i++) {
         _gateways[i]->connect(GATEWAY_URL);
 
-        waitFor(std::chrono::milliseconds(10000)).wait();
+        std::this_thread::sleep_for(std::chrono::seconds(10));
     }
 }
 
@@ -180,7 +183,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(const json& payload) {
 
     switch (op) {
         case 0: {
-            std::string event_name = utility::conversions::to_utf8string(payload.at("t").get<std::string>());
+            std::string event_name = payload.at("t").get<std::string>();
             try {
                 handle_raw_event(event_name, payload.at("d"));
             } catch (std::exception& e) {

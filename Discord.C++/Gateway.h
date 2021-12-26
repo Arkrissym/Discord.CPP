@@ -1,26 +1,29 @@
 #pragma once
-#include <cpprest/ws_client.h>
 #include <zlib.h>
 
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ssl.hpp>
+#include <boost/beast/ssl.hpp>
+#include <boost/beast/websocket.hpp>
 #include <nlohmann/json.hpp>
 
 #include "Logger.h"
 #include "Threadpool.h"
-
-#ifdef _WIN32
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
+#include "static.h"
 
 namespace DiscordCPP {
 
-using json = nlohmann::json;
 class Gateway {
    protected:
+    /// the threadpool used for tasks handling messages
     Threadpool threadpool;
+    /// boost io context used by the websocket client
+    boost::asio::io_context io_context;
+    /// ssl context used by the websocket client
+    boost::asio::ssl::context ssl_context;
     /// websocket client
-    web::websockets::client::websocket_callback_client* _client;
+    std::unique_ptr<boost::beast::websocket::stream<boost::beast::ssl_stream<boost::asio::ip::tcp::socket>>> _client;
     /// zlib control struct
     z_stream zs;
     /// the url of the gateway
@@ -39,6 +42,7 @@ class Gateway {
     std::thread _heartbeat_task;
     /// indicator if Gateway is connected
     bool _connected;
+    /// logging instance
     Logger _log;
     /// the message handler set by using set_message_handler
     std::function<void(json payload)> _message_handler;
@@ -50,9 +54,9 @@ class Gateway {
     DLL_EXPORT virtual void identify() = 0;
     DLL_EXPORT virtual void on_websocket_incoming_message(
         const json& payload) = 0;
-    DLL_EXPORT void on_websocket_disconnnect(
-        const web::websockets::client::websocket_close_status& status,
-        const std::string& reason, const std::error_code& error);
+    //DLL_EXPORT void on_websocket_disconnnect(
+    //    const web::websockets::client::websocket_close_status& status,
+    //    const std::string& reason, const std::error_code& error);
 
    public:
     DLL_EXPORT Gateway(const std::string& token, const size_t threadpool_size);

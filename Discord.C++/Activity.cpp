@@ -10,8 +10,8 @@ DiscordCPP::Activity::Activity(const std::string& name, const int type, const st
     this->url = url;
 }
 
-DiscordCPP::json DiscordCPP::Activity::to_json() {
-    DiscordCPP::json json = {
+json DiscordCPP::Activity::to_json() {
+    json json = {
         {"name", name},
         {"type", type}};
 

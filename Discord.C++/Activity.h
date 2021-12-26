@@ -1,16 +1,9 @@
 #pragma once
-#include <nlohmann/json.hpp>
 #include <string>
 
-#ifdef _WIN32
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
+#include "static.h"
 
 namespace DiscordCPP {
-
-using json = nlohmann::json;
 
 //move this to Presence.h when implemented?
 namespace DiscordStatus {

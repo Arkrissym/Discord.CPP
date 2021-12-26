@@ -1,31 +1,8 @@
 #include "static.h"
 
-#include <pplx/threadpool.h>
-
-#include <boost/asio/deadline_timer.hpp>
+#include <boost/certify/https_verification.hpp>
 #include <string>
 #include <vector>
-
-std::shared_future<void> waitFor(const std::chrono::microseconds time) {
-    std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
-    std::shared_future<void> future(promise->get_future());
-
-    auto& ioService = crossplat::threadpool::shared_instance().service();
-
-    auto timer = std::make_shared<boost::asio::deadline_timer>(ioService);
-    timer->expires_from_now(boost::posix_time::microseconds(time.count()));
-    timer->async_wait([timer, promise](const boost::system::error_code& error) {
-        if (error) {
-            std::stringstream ss;
-            ss << "timer error or cancel, because: " << error.message();
-            promise->set_exception(std::make_exception_ptr(std::runtime_error(ss.str())));
-        } else {
-            promise->set_value();
-        }
-    });
-
-    return future;
-}
 
 void hexchar(unsigned char c, unsigned char& hex1, unsigned char& hex2) {
     hex1 = c / 16;
@@ -57,4 +34,12 @@ std::string urlencode(std::string s) {
     }
 
     return std::string(v.cbegin(), v.cend());
+}
+
+void load_ssl_certificates(boost::asio::ssl::context& ssl_context) {
+#if defined(_WIN32) || defined(__APPLE__)
+    boost::certify::enable_native_https_server_verification(ssl_context);
+#else
+    ssl_context.set_default_verify_paths();
+#endif
 }

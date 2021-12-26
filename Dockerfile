@@ -5,9 +5,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
 	make \
 	cmake \
 	git \
-	libcpprest-dev \
+	zlib1g-dev \
 	libopus-dev \
-	libsodium-dev
+	libsodium-dev \
+	libboost1.74-dev \
+	libboost-filesystem1.74-dev \
+	libssl-dev
 
 COPY . /app
 
@@ -23,10 +26,12 @@ FROM debian:bullseye-slim
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-	libcpprest \
+	zlib1g \
 	libopus0 \
 	libsodium23 \
+	libboost1.74 \
 	libboost-filesystem1.74 \
+	libssl1.1 \
 	ffmpeg \
 	python3-pip
 RUN apt-get clean

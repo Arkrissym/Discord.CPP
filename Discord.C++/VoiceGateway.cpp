@@ -1,6 +1,6 @@
 #include "VoiceGateway.h"
 
-DiscordCPP::json DiscordCPP::VoiceGateway::get_heartbeat_payload() {
+json DiscordCPP::VoiceGateway::get_heartbeat_payload() {
     return {{"op", 3}, {"d", std::to_string(time(NULL))}};
 }
 

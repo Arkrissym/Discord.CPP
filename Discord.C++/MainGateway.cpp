@@ -4,7 +4,7 @@
 
 #include "static.h"
 
-DiscordCPP::json DiscordCPP::MainGateway::get_heartbeat_payload() {
+json DiscordCPP::MainGateway::get_heartbeat_payload() {
     return {{"op", 1}, {"d", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}};
 }
 
@@ -45,9 +45,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
             break;
         case 7:
             _log.info("received opcode 7: reconnecting to the gateway");
-            _client->close(
-                web::websockets::client::websocket_close_status::normal,
-                U("received opcode 7"));
+            close();
             break;
         case 9:
             _invalid_session = true;
@@ -94,12 +92,12 @@ void DiscordCPP::MainGateway::identify() {
                 return;
             }
 
-            waitFor(std::chrono::milliseconds(100)).wait();
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 
         _log.info("cannot resume session");
 
-        waitFor(std::chrono::milliseconds(1000 + rand() % 4001)).wait();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100 + +rand() % 4001));
     }
 
     json identify_json = {

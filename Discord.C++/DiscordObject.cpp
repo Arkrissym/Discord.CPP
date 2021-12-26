@@ -6,8 +6,6 @@
 #include <boost/asio/ssl/stream.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
-#include <boost/certify/extensions.hpp>
-#include <boost/certify/https_verification.hpp>
 
 #include "Exceptions.h"
 #include "Logger.h"
@@ -52,7 +50,7 @@ void manage_cache() {
                 }
             }
 
-            waitFor(std::chrono::seconds(10)).wait();
+            std::this_thread::sleep_for(std::chrono::seconds(10));
         }
     }).detach();
 }
@@ -96,7 +94,7 @@ json DiscordCPP::DiscordObject::api_call(const std::string& url, const std::stri
         if (code == 429) {
             Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + response.headers.at("Retry-After"));
 
-            waitFor(std::chrono::seconds(atoi(response.headers.at("Retry-After").c_str()))).wait();
+            std::this_thread::sleep_for(std::chrono::seconds(atoi(response.headers.at("Retry-After").c_str())));
         }
     } while (code == 429);
 
@@ -135,7 +133,7 @@ DiscordCPP::DiscordObject::http_response DiscordCPP::DiscordObject::request_inte
 
     ssl::context ssl_context(ssl::context::tlsv13);
     ssl_context.set_verify_mode(ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);
-    boost::certify::enable_native_https_server_verification(ssl_context);
+    load_ssl_certificates(ssl_context);
 
     net::io_context io_context;
     tcp::resolver resolver(io_context);
@@ -144,8 +142,14 @@ DiscordCPP::DiscordObject::http_response DiscordCPP::DiscordObject::request_inte
     ssl::stream<tcp::socket> stream(io_context, ssl_context);
     boost::asio::connect(stream.lowest_layer(), results);
 
-    boost::certify::set_server_hostname(stream, DISCORD_HOST);
-    boost::certify::sni_hostname(stream, DISCORD_HOST);
+    //boost::certify::set_server_hostname(stream, DISCORD_HOST);
+    //boost::certify::sni_hostname(stream, DISCORD_HOST);
+    if (!SSL_set_tlsext_host_name(stream.native_handle(), DISCORD_HOST))
+        throw beast::system_error(
+            beast::error_code(
+                static_cast<int>(::ERR_get_error()),
+                net::error::get_ssl_category()),
+            "Failed to set SNI Hostname");
 
     stream.handshake(ssl::stream_base::client);
 

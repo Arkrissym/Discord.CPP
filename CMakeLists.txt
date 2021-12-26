@@ -45,28 +45,24 @@ endif(MSVC)
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(ZLIB REQUIRED)
 
 if(VCPKG_TOOLCHAIN)
       find_package(unofficial-sodium CONFIG REQUIRED)
       find_package(Opus CONFIG REQUIRED)
-      find_package(cpprestsdk CONFIG REQUIRED)
       
       target_link_libraries(${PROJECT_NAME}
                         unofficial-sodium::sodium
                         Opus::opus
-                        nlohmann_json
                         nlohmann_json::nlohmann_json
                         Boost::system
                         Boost::filesystem
                         OpenSSL::SSL
                         OpenSSL::Crypto
-                        cpprestsdk::cpprest
-                        cpprestsdk::cpprestsdk_zlib_internal
-                        cpprestsdk::cpprestsdk_boost_internal
-                        cpprestsdk::cpprestsdk_brotli_internal
-                        crypt32)
+                        crypt32
+                        ZLIB::ZLIB)
 else(VCPKG_TOOLCHAIN)
-      target_link_libraries(${PROJECT_NAME} sodium opus cpprest nlohmann_json::nlohmann_json)
+      target_link_libraries(${PROJECT_NAME} sodium opus nlohmann_json::nlohmann_json ZLIB::ZLIB OpenSSL::SSL OpenSSL::Crypto)
 endif(VCPKG_TOOLCHAIN)
 
 install(TARGETS discord_cpp DESTINATION lib)

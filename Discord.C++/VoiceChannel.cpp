@@ -39,7 +39,7 @@ DiscordCPP::VoiceChannel::~VoiceChannel() {
 }
 
 /*	@return		VoiceClient
-	@throws	ClientException
+        @throws	ClientException
 **/
 DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
     if (this->type != ChannelType::GUILD_VOICE) {
@@ -54,15 +54,6 @@ DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
         }
     }
 
-    unsigned int shard_id = (stoull(guild->id) >> 22) % _client->_num_shards;
-    unsigned int gw_id = 0;
-    for (unsigned int i = 0; i < _client->_gateways.size(); i++) {
-        if (_client->_gateways[i]->get_shard_id() == shard_id) {
-            gw_id = i;
-            break;
-        }
-    }
-
     json payload = {
         {"op", 4},  //
         {"d", {
@@ -73,14 +64,18 @@ DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
               }}                             //
     };
 
-    auto current_gateway = _client->_gateways[gw_id];
+    unsigned int shard_id = (stoull(guild->id) >> 22) % _client->_num_shards;
+    std::shared_ptr<MainGateway> current_gateway = _client->get_shard(shard_id);
+
     current_gateway->send(payload).wait();
     Logger("discord.voicechannel").debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
 
     while (true) {
         for (auto voice_state : _client->_voice_states) {
             if ((voice_state->channel_id == this->id) && (voice_state->endpoint.length() > 1)) {
-                return new VoiceClient(&current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
+                Logger("discord.voicechannel").debug("Creating new voice client.");
+
+                return new VoiceClient(current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
             }
         }
 

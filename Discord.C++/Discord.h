@@ -27,21 +27,21 @@ namespace DiscordCPP {
 
 class Discord : public DiscordObject {
    protected:
-    ///websocket clients
-    std::vector<MainGateway*> _gateways;
-    ///number of shards
+    /// websocket clients
+    std::vector<std::shared_ptr<MainGateway>> _gateways;
+    /// number of shards
     unsigned int _num_shards;
-    ///the user
+    /// the user
     User* _user;
-    ///the guilds the user is a member
+    /// the guilds the user is a member
     std::vector<Guild*> _guilds;
 
-    ///array of VoiceStates
+    /// array of VoiceStates
     std::vector<VoiceState*> _voice_states;
 
     friend VoiceClient* VoiceChannel::connect();
 
-    DLL_EXPORT MainGateway* get_shard(const unsigned int shard_id);
+    DLL_EXPORT std::shared_ptr<MainGateway> get_shard(const unsigned int shard_id);
     DLL_EXPORT Guild* get_guild(const std::string& guild_id);
 
     DLL_EXPORT void connect();
@@ -49,19 +49,19 @@ class Discord : public DiscordObject {
     DLL_EXPORT void on_websocket_incoming_message(const json& payload);
     DLL_EXPORT void handle_raw_event(const std::string& event_name, const json& data);
 
-    ///called when successfully logged in
+    /// called when successfully logged in
     virtual void on_ready(User user);
-    ///called when a Message was received
+    /// called when a Message was received
     virtual void on_message(Message message);
-    ///called when a Member was banned
+    /// called when a Member was banned
     virtual void on_user_ban(User user, Guild guild);
-    ///called when a Member was unbanned
+    /// called when a Member was unbanned
     virtual void on_user_unban(User user, Guild guild);
-    ///called when a User joins a Guild
+    /// called when a User joins a Guild
     virtual void on_user_join(Member member, Guild guild);
-    ///called when a User is removed from a Guild (leave/kick/ban)
+    /// called when a User is removed from a Guild (leave/kick/ban)
     virtual void on_user_remove(User user, Guild guild);
-    ///called when a User starts typing
+    /// called when a User starts typing
     virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp);
 
    public:
@@ -71,10 +71,10 @@ class Discord : public DiscordObject {
     DLL_EXPORT Discord(const std::string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards);
     DLL_EXPORT virtual ~Discord();
 
-    ///Starts the bot. This will not block.
+    /// Starts the bot. This will not block.
     DLL_EXPORT void start();
 
-    ///updates the presence of user
+    /// updates the presence of user
     DLL_EXPORT void update_presence(const std::string& status, Activity activity = Activity(), const bool afk = false, const int shard_id = -1);
 };
 

@@ -2,8 +2,6 @@
 #define VERSION "0.11.0"
 
 #define GATEWAY_URL "wss://gateway.discord.gg?v=9&encoding=json&compress=zlib-stream"
-#define GATEWAY_HOST "gateway.discord.gg"
-#define GATEWAY_QUERY "/?v=9&encoding=json&compress=zlib-stream"
 #define API_PREFIX "/api/v9"
 #define DISCORD_HOST "discord.com"
 
@@ -15,7 +13,6 @@
 
 #include <boost/asio/ssl/context.hpp>
 #include <nlohmann/json.hpp>
-#include <optional>
 
 using json = nlohmann::json;
 

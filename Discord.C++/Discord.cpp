@@ -8,9 +8,9 @@
 #include "static.h"
 
 /**	Creates a Discord instance with one or more shards
-	@param[in]	token		Bot token for authentication
-	@param[in]	intents		Intents used for the gateway.
-	@param[in]	num_shards	(optional) number of shards that exist (default: 0 used for automatic sharding)
+    @param[in]	token		Bot token for authentication
+    @param[in]	intents		Intents used for the gateway.
+    @param[in]	num_shards	(optional) number of shards that exist (default: 0 used for automatic sharding)
 */
 DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int num_shards) : DiscordObject(token), _num_shards(num_shards) {
     id = "0";
@@ -22,7 +22,7 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
     }
 
     for (unsigned int i = 0; i < _num_shards; i++) {
-        MainGateway* _client = new MainGateway(_token, intents, i, _num_shards);
+        std::shared_ptr<MainGateway> _client = std::make_shared<MainGateway>(_token, intents, i, _num_shards);
 
         _client->set_message_handler([this](json payload) {
             on_websocket_incoming_message(payload);
@@ -33,16 +33,16 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
 }
 
 /**	Creates a Discord instance with ONE shard
-	@param[in]	token		Bot token for authentication
-	@param[in]	intents		Intents used for the gateway.
-	@param[in]	shard_id	(optional) the id of the shard (default: 0)
-	@param[in]	num_shards	(optional) number of shards that exist (default: 1)
+    @param[in]	token		Bot token for authentication
+    @param[in]	intents		Intents used for the gateway.
+    @param[in]	shard_id	(optional) the id of the shard (default: 0)
+    @param[in]	num_shards	(optional) number of shards that exist (default: 1)
 */
 DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards) : DiscordObject(token), _num_shards(num_shards) {
     id = std::to_string(shard_id);
     log = Logger("discord");
 
-    MainGateway* _client = new MainGateway(_token, intents, shard_id, _num_shards);
+    std::shared_ptr<MainGateway> _client = std::make_shared<MainGateway>(_token, intents, shard_id, _num_shards);
     _client->set_message_handler([this](json payload) {
         on_websocket_incoming_message(payload);
     });
@@ -53,7 +53,6 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
 DiscordCPP::Discord::~Discord() {
     for (unsigned int i = 0; i < _gateways.size(); i++) {
         _gateways[i]->close().wait();
-        delete _gateways[i];
     }
 
     delete _user;
@@ -78,45 +77,45 @@ void DiscordCPP::Discord::on_message(Message) {
 }
 
 /**	@param[in]	user	the User who has been banned
-	@param[in]	guild	the Guild the User has been banned from
+    @param[in]	guild	the Guild the User has been banned from
 */
 void DiscordCPP::Discord::on_user_ban(User, Guild) {
     log.debug("on_member_ban");
 }
 
 /**	@param[in]	user	the User who has been unbanned
-	@param[in]	guild	the Guild the User has been unbanned from
+    @param[in]	guild	the Guild the User has been unbanned from
 */
 void DiscordCPP::Discord::on_user_unban(User, Guild) {
     log.debug("on_member_unban");
 }
 
 /**	@param[in]	member	the User who has joined
-	@param[in]	guild	the Guild the User has joined
+    @param[in]	guild	the Guild the User has joined
 */
 void DiscordCPP::Discord::on_user_join(Member, Guild) {
     log.debug("on_member_join");
 }
 
 /**	@param[in]	user	the User who has been removed
-	@param[in]	guild	the Guild the User has been removed from
+    @param[in]	guild	the Guild the User has been removed from
 */
 void DiscordCPP::Discord::on_user_remove(User, Guild) {
     log.debug("on_member_remove");
 }
 
 /**	@param[in]	user		the User that started typing
-	@param[in]	channel		the TextChannel where the USer started typing
-	@param[in]	timestamp	(unix time) when the User started typing
+    @param[in]	channel		the TextChannel where the USer started typing
+    @param[in]	timestamp	(unix time) when the User started typing
 */
 void DiscordCPP::Discord::on_typing_start(User, TextChannel, unsigned int) {
     log.debug("on_typing_start");
 }
 
 /**	@param[in]	status		the new status (see DiscordStatus)
-	@param[in]	activity	(optional) the Activity
-	@param[in]	afk			(optional) wether the bot/user is afk or not
-	@param[in]	shard_id	(optional) the shard whose presence will be updated (use -1 for all shards, default is -1)
+    @param[in]	activity	(optional) the Activity
+    @param[in]	afk			(optional) wether the bot/user is afk or not
+    @param[in]	shard_id	(optional) the shard whose presence will be updated (use -1 for all shards, default is -1)
 */
 void DiscordCPP::Discord::update_presence(const std::string& status, Activity activity, const bool afk, const int shard_id) {
     json presence = {
@@ -142,15 +141,13 @@ void DiscordCPP::Discord::update_presence(const std::string& status, Activity ac
     }
 }
 
-DiscordCPP::MainGateway* DiscordCPP::Discord::get_shard(unsigned int shard_id) {
+std::shared_ptr<DiscordCPP::MainGateway> DiscordCPP::Discord::get_shard(unsigned int shard_id) {
     for (unsigned int i = 0; i < _gateways.size(); i++) {
         if (_gateways[i]->get_shard_id() == shard_id)
             return _gateways[i];
     }
 
     throw ClientException("shard with id " + std::to_string(shard_id) + " not found");
-
-    return NULL;
 }
 
 DiscordCPP::Guild* DiscordCPP::Discord::get_guild(const std::string& guild_id) {
@@ -193,7 +190,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(const json& payload) {
         case 9:
         case 10:
         case 11:
-            //already handled by MainGateway
+            // already handled by MainGateway
             break;
         default:
             log.debug(payload.dump());
@@ -204,7 +201,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(const json& payload) {
 }
 
 void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const json& data) {
-    //https://discordapp.com/developers/docs/topics/gateway#commands-and-events-gateway-events
+    // https://discordapp.com/developers/docs/topics/gateway#commands-and-events-gateway-events
     if (event_name == "READY") {
         _user = new User(data.at("user"), _token);
 

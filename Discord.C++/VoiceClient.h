@@ -64,7 +64,7 @@ class VoiceClient {
     std::string _mode;
     std::vector<unsigned char> _secret_key;
 
-    MainGateway** _main_ws;
+    std::shared_ptr<MainGateway> _main_ws;
     VoiceGateway* _voice_ws;
 
     udp_client* _udp;
@@ -81,7 +81,7 @@ class VoiceClient {
     DLL_EXPORT std::shared_future<void> disconnect();
 
    public:
-    DLL_EXPORT VoiceClient(MainGateway** main_ws, const std::string& voice_token,
+    DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token,
                            const std::string& endpoint, const std::string& session_id,
                            const std::string& guild_id, const std::string& channel_id,
                            const std::string& user_id);

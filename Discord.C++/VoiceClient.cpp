@@ -154,7 +154,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::speak(bool speak) {
     });
 }
 
-DiscordCPP::VoiceClient::VoiceClient(MainGateway** main_ws,
+DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
                                      const std::string& voice_token,
                                      const std::string& endpoint,
                                      const std::string& session_id,
@@ -226,7 +226,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
               }}                            //
     };
 
-    auto f = (*_main_ws)->send(payload);
+    auto f = _main_ws->send(payload);
     return threadpool.then(f, [this] {
         _log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
     });
@@ -316,12 +316,12 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             _udp->send(packet);
 
             next_time += std::chrono::milliseconds(FRAME_MILLIS);
-            //std::chrono::microseconds delay =
-            //    std::max(std::chrono::microseconds(0),
-            //             std::chrono::duration_cast<std::chrono::microseconds>(
-            //                 next_time - std::chrono::high_resolution_clock::now()));
+            // std::chrono::microseconds delay =
+            //     std::max(std::chrono::microseconds(0),
+            //              std::chrono::duration_cast<std::chrono::microseconds>(
+            //                  next_time - std::chrono::high_resolution_clock::now()));
 
-            //std::this_thread::sleep_for(delay);
+            // std::this_thread::sleep_for(delay);
             std::this_thread::sleep_until(next_time);
         }
 

@@ -184,19 +184,42 @@ void DiscordCPP::Gateway::set_message_handler(
 }
 
 std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
-    _url = url;
+    auto connect_future = threadpool.execute([this, url]() {
+        _url = url;
+        std::string tmp_url = _url;
 
-    auto future = threadpool.execute([this]() {
-        tcp::resolver resolver{io_context};
-        auto results = resolver.resolve(GATEWAY_HOST, "443");
+        // cut protocol
+        auto index = tmp_url.find("://");
+        if (index != std::string::npos) {
+            tmp_url = tmp_url.substr(index + 3, std::string::npos);
+        }
 
+        auto port_index = tmp_url.find(":");
+        auto query_index = tmp_url.find("?");
+
+        std::string host;
+        if (port_index != std::string::npos) {
+            host = tmp_url.substr(0, port_index);
+        } else {
+            host = tmp_url.substr(0, query_index);
+        }
+
+        std::string query = "/";
+        if (query_index != std::string::npos) {
+            query = "/" + tmp_url.substr(query_index, std::string::npos);
+        }
+
+        _log.debug("host: " + host + "\t\tquery: " + query);
         _log.info("connecting to websocket: " + _url);
+
+        tcp::resolver resolver{io_context};
+        auto results = resolver.resolve(host, "443");
 
         auto endpoint = net::connect(get_lowest_layer(*_client), results);
 
         _log.debug("Connected");
 
-        if (!SSL_set_tlsext_host_name(_client->next_layer().native_handle(), GATEWAY_HOST))
+        if (!SSL_set_tlsext_host_name(_client->next_layer().native_handle(), host.c_str()))
             throw beast::system_error(
                 beast::error_code(
                     static_cast<int>(::ERR_get_error()),
@@ -210,7 +233,7 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
         _log.debug("Starting handshake");
 
         _client->next_layer().handshake(ssl::stream_base::client);
-        _client->handshake(GATEWAY_HOST + std::string(":") + std::to_string(endpoint.port()), GATEWAY_QUERY);
+        _client->handshake(host + std::string(":") + std::to_string(endpoint.port()), query);
 
         _log.debug("Handshake complete");
 
@@ -218,7 +241,7 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
         _connected = true;
     });
 
-    return threadpool.then(future, [this]() {
+    return threadpool.then(connect_future, [this]() {
         threadpool.execute([this]() {
             while (_connected) {
                 beast::flat_buffer buffer;
@@ -235,13 +258,15 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
                 std::string message = decompress_message(message_stream.str());
                 _log.debug("Received message: " + message);
 
-                try {
-                    on_websocket_incoming_message(json::parse(message));
-                } catch (const json::parse_error& e) {
-                    _log.error("Error while parsing json: " + std::string(e.what()));
-                } catch (const std::exception& e) {
-                    _log.error("Error while handling incoming message: " + std::string(e.what()));
-                }
+                threadpool.execute([this, message]() {
+                    try {
+                        on_websocket_incoming_message(json::parse(message));
+                    } catch (const json::parse_error& e) {
+                        _log.error("Error while parsing json: " + std::string(e.what()));
+                    } catch (const std::exception& e) {
+                        _log.error("Error while handling incoming message: " + std::string(e.what()));
+                    }
+                });
             }
         });
     });
@@ -249,16 +274,23 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
 
 ///@throws	ClientException
 std::shared_future<void> DiscordCPP::Gateway::send(const json& message) {
-    if (_connected == false) {
-        throw ClientException("Gateway not connected");
-    }
+    return threadpool.execute([this, message]() {
+        if (_connected == false) {
+            throw ClientException("Gateway not connected");
+        }
 
-    std::string message_string = message.dump();
+        std::string message_string = message.dump();
 
-    _log.debug("sending message: " + message_string);
+        _log.debug("sending message: " + message_string);
 
-    return threadpool.execute([this, message_string]() {
-        _client->write(net::buffer(message_string));
+        beast::error_code error_code;
+        _client->write(net::buffer(message_string), error_code);
+
+        if (error_code) {
+            throw beast::system_error{error_code};
+        }
+
+        _log.debug("Message sent: " + message_string);
     });
 }
 

@@ -1,6 +1,4 @@
 #pragma once
-#include <zlib.h>
-
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ssl.hpp>
@@ -24,8 +22,6 @@ class Gateway {
     boost::asio::ssl::context ssl_context;
     /// websocket client
     std::unique_ptr<boost::beast::websocket::stream<boost::beast::ssl_stream<boost::asio::ip::tcp::socket>>> _client;
-    /// zlib control struct
-    z_stream zs;
     /// the url of the gateway
     std::string _url;
     /// token to identify with the gateway
@@ -47,16 +43,14 @@ class Gateway {
     /// the message handler set by using set_message_handler
     std::function<void(json payload)> _message_handler;
 
-    DLL_EXPORT std::string decompress_message(const std::string& message);
-
     DLL_EXPORT void start_heartbeating();
     DLL_EXPORT virtual json get_heartbeat_payload() = 0;
     DLL_EXPORT virtual void identify() = 0;
     DLL_EXPORT virtual void on_websocket_incoming_message(
-        const json& payload) = 0;
-    //DLL_EXPORT void on_websocket_disconnnect(
-    //    const web::websockets::client::websocket_close_status& status,
-    //    const std::string& reason, const std::error_code& error);
+        const std::string& message) = 0;
+    // DLL_EXPORT void on_websocket_disconnnect(
+    //     const web::websockets::client::websocket_close_status& status,
+    //     const std::string& reason, const std::error_code& error);
 
    public:
     DLL_EXPORT Gateway(const std::string& token, const size_t threadpool_size);

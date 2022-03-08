@@ -2,14 +2,47 @@
 
 #include <thread>
 
+#include "Exceptions.h"
 #include "static.h"
+
+std::string DiscordCPP::MainGateway::decompress_message(
+    const std::string& message) {
+    zs.next_in = (unsigned char*)message.data();
+    zs.avail_in = (uInt)message.size();
+    zs.total_out = 0;
+
+    int ret;
+    char buf[8192];
+    std::string out;
+
+    do {
+        zs.next_out = (unsigned char*)buf;
+        zs.avail_out = sizeof(buf);
+
+        ret = inflate(&zs, Z_NO_FLUSH);
+
+        if (out.size() < zs.total_out) {
+            out.append(buf, zs.total_out - out.size());
+        }
+    } while (ret == Z_OK && zs.avail_in > 0);
+
+    if (ret != Z_OK) {
+        throw ClientException("Failed to decompress message");
+    }
+
+    return out;
+}
 
 json DiscordCPP::MainGateway::get_heartbeat_payload() {
     return {{"op", 1}, {"d", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}};
 }
 
 void DiscordCPP::MainGateway::on_websocket_incoming_message(
-    const json& payload) {
+    const std::string& message) {
+    std::string decompressed_message = decompress_message(message);
+    _log.debug("Received message: " + decompressed_message);
+
+    json payload = json::parse(decompressed_message);
     int op = payload["op"].get<int>();
 
     if ((payload.count("s") > 0) && payload["s"].is_number_integer()) {
@@ -152,6 +185,16 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token,
     _log =
         Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) +
                ", " + std::to_string(num_shards) + "])");
+
+    zs.zalloc = Z_NULL;
+    zs.zfree = Z_NULL;
+    zs.opaque = Z_NULL;
+    zs.avail_in = 0;
+    zs.next_in = Z_NULL;
+
+    if (inflateInit(&zs) != Z_OK) {
+        throw ClientException("Failed to initialize zlib");
+    }
 
     _invalid_session = false;
 

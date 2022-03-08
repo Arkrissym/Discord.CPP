@@ -32,7 +32,10 @@ void DiscordCPP::VoiceGateway::identify() {
 }
 
 void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
-    const json& payload) {
+    const std::string& message) {
+    _log.debug("Received message: " + message);
+
+    json payload = json::parse(message);
     int op = payload["op"].get<int>();
 
     switch (op) {

@@ -16,34 +16,6 @@ namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
-std::string DiscordCPP::Gateway::decompress_message(
-    const std::string& message) {
-    zs.next_in = (unsigned char*)message.data();
-    zs.avail_in = (uInt)message.size();
-    zs.total_out = 0;
-
-    int ret;
-    char buf[8192];
-    std::string out;
-
-    do {
-        zs.next_out = (unsigned char*)buf;
-        zs.avail_out = sizeof(buf);
-
-        ret = inflate(&zs, Z_NO_FLUSH);
-
-        if (out.size() < zs.total_out) {
-            out.append(buf, zs.total_out - out.size());
-        }
-    } while (ret == Z_OK && zs.avail_in > 0);
-
-    if (ret != Z_OK) {
-        throw ClientException("Failed to decompress message");
-    }
-
-    return out;
-}
-
 void DiscordCPP::Gateway::start_heartbeating() {
     static unsigned int heartbeat_task_index = 0;
     unsigned int task_id = heartbeat_task_index++;
@@ -118,7 +90,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
     });
 }*/
 
-DiscordCPP::Gateway::Gateway(const std::string& token, const size_t threadpool_size) : threadpool(threadpool_size), io_context(), ssl_context{ssl::context::tlsv13} {
+DiscordCPP::Gateway::Gateway(const std::string& token, const size_t threadpool_size) : threadpool(threadpool_size), io_context(), ssl_context{ssl::context::tlsv12_client} {
     _log = Logger("Discord.Gateway");
 
     _token = token;
@@ -131,42 +103,12 @@ DiscordCPP::Gateway::Gateway(const std::string& token, const size_t threadpool_s
 
     _connected = false;
 
-    zs.zalloc = Z_NULL;
-    zs.zfree = Z_NULL;
-    zs.opaque = Z_NULL;
-    zs.avail_in = 0;
-    zs.next_in = Z_NULL;
-
-    if (inflateInit(&zs) != Z_OK) {
-        throw ClientException("Failed to initialize zlib");
-    }
-
     ssl_context.set_verify_mode(ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);
     load_ssl_certificates(ssl_context);
 
     _client = std::make_unique<websocket::stream<beast::ssl_stream<tcp::socket>>>(io_context, ssl_context);
 
-    /*_client->set_message_handler([this](websocket_incoming_message msg) {
-        threadpool.execute([this, msg]() {
-            std::string message;
-
-            if (msg.message_type() == websocket_message_type::binary_message) {
-                concurrency::streams::container_buffer<std::string> buf;
-                msg.body().read_to_end(buf).wait();
-                message = decompress_message(buf.collection());
-            } else {
-                message = msg.extract_string().get();
-            }
-
-            _log.debug("received message: " + message);
-
-            json payload = json::parse(message);
-
-            on_websocket_incoming_message(payload);
-        });
-    });
-
-    _client->set_close_handler([this](websocket_close_status close_status,
+    /*_client->set_close_handler([this](websocket_close_status close_status,
                                       utility::string_t reason,
                                       std::error_code error) {
         on_websocket_disconnnect(close_status, utility::conversions::to_utf8string(reason), error);
@@ -243,10 +185,12 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
 
     return threadpool.then(connect_future, [this]() {
         threadpool.execute([this]() {
+            _log.debug("Starting message reveiving loop.");
             while (_connected) {
                 beast::flat_buffer buffer;
                 beast::error_code error_code;
-                _client->read(buffer, error_code);
+                size_t bytes = _client->read(buffer, error_code);
+                _log.debug("Received " + std::to_string(bytes) + " bytes");
 
                 if (error_code) {
                     _log.error("Error while reading message (stopping read loop): " + error_code.message());
@@ -255,12 +199,11 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
 
                 std::stringstream message_stream;
                 message_stream << beast::make_printable(buffer.data());
-                std::string message = decompress_message(message_stream.str());
-                _log.debug("Received message: " + message);
+                std::string message = message_stream.str();
 
                 threadpool.execute([this, message]() {
                     try {
-                        on_websocket_incoming_message(json::parse(message));
+                        on_websocket_incoming_message(message);
                     } catch (const json::parse_error& e) {
                         _log.error("Error while parsing json: " + std::string(e.what()));
                     } catch (const std::exception& e) {

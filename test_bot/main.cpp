@@ -30,18 +30,16 @@ class Client : public Discord {
         return NULL;
     }
     void play(VoiceChannel* channel, AudioSource* source) {
-        VoiceClient* vc = channel->connect();
+        VoiceClient vc = channel->connect();
 
         try {
-            vc->play(source).wait();
+            vc.play(source).wait();
         } catch (const OpusError& e) {
             log.error("Opus error: " + string(e.what()) +
                       " (code: " + to_string(e.get_error_code()) + ")");
         } catch (const ClientException& e) {
             log.error("ClientException in vc->play: " + string(e.what()));
         }
-
-        delete vc;
     }
 
     void on_ready(User user) override {

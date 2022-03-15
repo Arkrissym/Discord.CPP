@@ -41,7 +41,7 @@ DiscordCPP::VoiceChannel::~VoiceChannel() {
 /*	@return		VoiceClient
         @throws	ClientException
 **/
-DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
+DiscordCPP::VoiceClient DiscordCPP::VoiceChannel::connect() {
     if (this->type != ChannelType::GUILD_VOICE) {
         throw ClientException("channel must be a voice channel");
     }
@@ -75,12 +75,12 @@ DiscordCPP::VoiceClient* DiscordCPP::VoiceChannel::connect() {
             if ((voice_state->channel_id == this->id) && (voice_state->endpoint.length() > 1)) {
                 Logger("discord.voicechannel").debug("Creating new voice client.");
 
-                return new VoiceClient(current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
+                return VoiceClient(current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
             }
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    return new VoiceClient();
+    return VoiceClient();
 }

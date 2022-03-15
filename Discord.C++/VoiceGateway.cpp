@@ -68,8 +68,9 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
 DiscordCPP::VoiceGateway::VoiceGateway(const std::string& token,
                                        const std::string& session_id,
                                        const std::string& guild_id,
-                                       const std::string& user_id)
-    : Gateway(token, 4) {
+                                       const std::string& user_id,
+                                       const std::shared_ptr<Threadpool>& threadpool)
+    : Gateway(token, threadpool) {
     _log = Logger("Discord.VoiceGateway (guild id: " + guild_id + ")");
 
     _session_id = session_id;

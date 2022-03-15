@@ -15,7 +15,7 @@ class VoiceGateway : public Gateway {
     DLL_EXPORT virtual void on_websocket_incoming_message(const std::string& message);
 
    public:
-    DLL_EXPORT VoiceGateway(const std::string& token, const std::string& session_id, const std::string& guild_id, const std::string& user_id);
+    DLL_EXPORT VoiceGateway(const std::string& token, const std::string& session_id, const std::string& guild_id, const std::string& user_id, const std::shared_ptr<Threadpool>& threadpool);
     DLL_EXPORT ~VoiceGateway(){};
 };
 

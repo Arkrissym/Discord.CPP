@@ -39,7 +39,7 @@ class Discord : public DiscordObject {
     /// array of VoiceStates
     std::vector<VoiceState*> _voice_states;
 
-    friend VoiceClient* VoiceChannel::connect();
+    friend VoiceClient VoiceChannel::connect();
 
     DLL_EXPORT std::shared_ptr<MainGateway> get_shard(const unsigned int shard_id);
     DLL_EXPORT Guild* get_guild(const std::string& guild_id);

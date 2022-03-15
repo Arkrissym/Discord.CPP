@@ -67,7 +67,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
                  std::to_string((int)status) + ": " + reason + " (" +
                  std::to_string(error.value()) + ": " + error.message() + ")");
 
-    threadpool.execute([this] {
+    threadpool->execute([this] {
         try {
             delete _client;
         } catch (const std::exception& e) {
@@ -90,7 +90,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
     });
 }*/
 
-DiscordCPP::Gateway::Gateway(const std::string& token, const size_t threadpool_size) : threadpool(threadpool_size), io_context(), ssl_context{ssl::context::tlsv12_client} {
+DiscordCPP::Gateway::Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool) : threadpool(threadpool), io_context(), ssl_context{ssl::context::tlsv12_client} {
     _log = Logger("Discord.Gateway");
 
     _token = token;
@@ -126,7 +126,7 @@ void DiscordCPP::Gateway::set_message_handler(
 }
 
 std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
-    auto connect_future = threadpool.execute([this, url]() {
+    auto connect_future = threadpool->execute([this, url]() {
         _url = url;
         std::string tmp_url = _url;
 
@@ -183,8 +183,8 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
         _connected = true;
     });
 
-    return threadpool.then(connect_future, [this]() {
-        threadpool.execute([this]() {
+    return threadpool->then(connect_future, [this]() {
+        threadpool->execute([this]() {
             _log.debug("Starting message reveiving loop.");
             while (_connected) {
                 beast::flat_buffer buffer;
@@ -201,7 +201,7 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
                 message_stream << beast::make_printable(buffer.data());
                 std::string message = message_stream.str();
 
-                threadpool.execute([this, message]() {
+                threadpool->execute([this, message]() {
                     try {
                         on_websocket_incoming_message(message);
                     } catch (const json::parse_error& e) {
@@ -217,7 +217,7 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
 
 ///@throws	ClientException
 std::shared_future<void> DiscordCPP::Gateway::send(const json& message) {
-    return threadpool.execute([this, message]() {
+    return threadpool->execute([this, message]() {
         if (_connected == false) {
             throw ClientException("Gateway not connected");
         }
@@ -241,7 +241,7 @@ std::shared_future<void> DiscordCPP::Gateway::close() {
     _keepalive = false;
     _connected = false;
 
-    return threadpool.execute([this]() {
+    return threadpool->execute([this]() {
         _client->close(websocket::close_code::normal);
     });
 }

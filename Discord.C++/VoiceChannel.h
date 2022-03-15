@@ -13,13 +13,13 @@ class VoiceChannel : public Channel {
     Discord* _client;
 
    public:
-    ///the channel's bitrate
+    /// the channel's bitrate
     int bitrate;
-    ///the channel's user-limit
+    /// the channel's user-limit
     int user_limit;
-    ///the parent category channel
+    /// the parent category channel
     Channel* parent = NULL;
-    ///the guild the channel belongs to
+    /// the guild the channel belongs to
     Guild* guild = NULL;
 
     DLL_EXPORT VoiceChannel(Discord* client, const json& data, const std::string& token);
@@ -28,8 +28,8 @@ class VoiceChannel : public Channel {
     DLL_EXPORT VoiceChannel(){};
     DLL_EXPORT ~VoiceChannel();
 
-    ///connect to this VoiceChannel
-    DLL_EXPORT VoiceClient* connect();
+    /// connect to this VoiceChannel
+    DLL_EXPORT VoiceClient connect();
 };
 
 }  // namespace DiscordCPP

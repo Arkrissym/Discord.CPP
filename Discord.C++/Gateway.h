@@ -15,7 +15,7 @@ namespace DiscordCPP {
 class Gateway {
    protected:
     /// the threadpool used for tasks handling messages
-    Threadpool threadpool;
+    std::shared_ptr<Threadpool> threadpool;
     /// boost io context used by the websocket client
     boost::asio::io_context io_context;
     /// ssl context used by the websocket client
@@ -53,7 +53,7 @@ class Gateway {
     //     const std::string& reason, const std::error_code& error);
 
    public:
-    DLL_EXPORT Gateway(const std::string& token, const size_t threadpool_size);
+    DLL_EXPORT Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool);
     DLL_EXPORT virtual ~Gateway();
 
     DLL_EXPORT void set_message_handler(

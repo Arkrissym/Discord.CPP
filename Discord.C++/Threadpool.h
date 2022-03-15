@@ -36,9 +36,9 @@ class Threadpool {
     DLL_EXPORT void queue_task(const std::function<void()>& task);
 
    public:
-    /** 
+    /**
      *  Creates a new Threadpool.
-     *  
+     *
      *  @param[in]  size    (optional) The number of threads the threadpool should contain. Defaults to 4.
      */
     DLL_EXPORT Threadpool(const unsigned int size = 4);
@@ -47,7 +47,7 @@ class Threadpool {
 
     /**
      * Executes a function on the Threadpool.
-     * 
+     *
      * @param[in]   task    function to be executed.
      * @return shared future that will contain the result produced by task.
      */
@@ -71,7 +71,7 @@ class Threadpool {
 
     /**
      * Executes a function on the Threadpool.
-     * 
+     *
      * @param[in]   task    function to be executed.
      * @return shared future that will contain the result produced by task.
      */
@@ -96,7 +96,7 @@ class Threadpool {
 
     /**
      * Executes a function on the Threadpool after future has been resolved.
-     * 
+     *
      * @param[in]   future  shared future that will be awaited first.
      * @param[in]   task    function to be executed. The result of future is passed to task.
      * @return shared future that will contain the result produced by task.
@@ -113,7 +113,7 @@ class Threadpool {
 
     /**
      * Executes a function on the Threadpool after future has been resolved.
-     * 
+     *
      * @param[in]   future  shared future that will be awaited first.
      * @param[in]   task    function to be executed.
      * @return shared future that will contain the result produced by task.

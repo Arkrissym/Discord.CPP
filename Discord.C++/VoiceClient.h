@@ -24,7 +24,7 @@ class udp_client {
     Logger _log;
 
     boost::asio::io_service _io_service;
-    udp::socket* _socket;
+    std::unique_ptr<udp::socket> _socket;
     // udp::socket *_recv_socket;
     udp::endpoint _remote;
     boost::array<char, 128> _recv_buffer;
@@ -34,17 +34,14 @@ class udp_client {
     // bytes_tranferred);
    public:
     DLL_EXPORT udp_client(const std::string& ip, const int port);
-    udp_client(udp_client& old) = delete;
-    udp_client& operator=(const udp_client&) = delete;
     DLL_EXPORT ~udp_client();
-    // DLL_EXPORT void connect(string_t ip, int port);
     DLL_EXPORT void send(const std::string& msg);
     DLL_EXPORT std::string receive();
 };
 
 class VoiceClient {
    private:
-    Threadpool threadpool;
+    std::shared_ptr<Threadpool> threadpool;
 
     std::string _voice_token;
     std::string _endpoint;
@@ -65,9 +62,9 @@ class VoiceClient {
     std::vector<unsigned char> _secret_key;
 
     std::shared_ptr<MainGateway> _main_ws;
-    VoiceGateway* _voice_ws;
+    std::unique_ptr<VoiceGateway> _voice_ws;
 
-    udp_client* _udp;
+    std::unique_ptr<udp_client> _udp;
 
     unsigned short _sequence = 0;
     unsigned int _timestamp = 0;
@@ -85,7 +82,6 @@ class VoiceClient {
                            const std::string& endpoint, const std::string& session_id,
                            const std::string& guild_id, const std::string& channel_id,
                            const std::string& user_id);
-    VoiceClient(const VoiceClient& old) = delete;
     DLL_EXPORT VoiceClient(){};
     DLL_EXPORT ~VoiceClient();
 

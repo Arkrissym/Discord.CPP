@@ -102,7 +102,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
 
 std::shared_future<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
     auto f = this->send({{"op", 11}});
-    return threadpool.then(f, [this] {
+    return threadpool->then(f, [this] {
         _log.debug("Heartbeat ACK message has been sent");
     });
 }
@@ -181,7 +181,7 @@ std::string DiscordCPP::MainGateway::set_trace(const json& payload) {
 DiscordCPP::MainGateway::MainGateway(const std::string& token,
                                      const Intents& intents, const int shard_id,
                                      const unsigned int num_shards)
-    : Gateway::Gateway(token, std::thread::hardware_concurrency() / num_shards) {
+    : Gateway::Gateway(token, std::make_shared<Threadpool>(std::thread::hardware_concurrency() / num_shards)) {
     _log =
         Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) +
                ", " + std::to_string(num_shards) + "])");

@@ -8,7 +8,7 @@
 std::string DiscordCPP::MainGateway::decompress_message(
     const std::string& message) {
     zs.next_in = (unsigned char*)message.data();
-    zs.avail_in = (uInt)message.size();
+    zs.avail_in = (uInt)message.length();
     zs.total_out = 0;
 
     int ret;
@@ -27,7 +27,7 @@ std::string DiscordCPP::MainGateway::decompress_message(
     } while (ret == Z_OK && zs.avail_in > 0);
 
     if (ret != Z_OK) {
-        throw ClientException("Failed to decompress message");
+        throw ClientException("Failed to decompress message: code " + std::to_string(ret) + ": " + zs.msg);
     }
 
     return out;
@@ -117,7 +117,7 @@ void DiscordCPP::MainGateway::identify() {
             {"op", 6},
             {"d", {{"token", _token}, {"session_id", _session_id}, {"seq", seq}}}};
 
-        this->send(resume_json).wait();
+        this->send(resume_json).get();
         _log.info("Resume payload has been sent");
 
         while (_invalid_session == false) {
@@ -160,7 +160,7 @@ void DiscordCPP::MainGateway::identify() {
     identify_json["d"]["properties"]["$browser"] = "Discord.C++";
     identify_json["d"]["properties"]["$device"] = "Discord.C++";
 
-    this->send(identify_json).wait();
+    this->send(identify_json).get();
     _log.info("Identify payload has been sent");
 }
 
@@ -186,16 +186,6 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token,
         Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) +
                ", " + std::to_string(num_shards) + "])");
 
-    zs.zalloc = Z_NULL;
-    zs.zfree = Z_NULL;
-    zs.opaque = Z_NULL;
-    zs.avail_in = 0;
-    zs.next_in = Z_NULL;
-
-    if (inflateInit(&zs) != Z_OK) {
-        throw ClientException("Failed to initialize zlib");
-    }
-
     _invalid_session = false;
 
     _shard_id = shard_id;
@@ -211,3 +201,17 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token,
 }
 
 unsigned int DiscordCPP::MainGateway::get_shard_id() { return _shard_id; }
+
+std::shared_future<void> DiscordCPP::MainGateway::connect(const std::string& url) {
+    zs.zalloc = Z_NULL;
+    zs.zfree = Z_NULL;
+    zs.opaque = Z_NULL;
+    zs.avail_in = 0;
+    zs.next_in = Z_NULL;
+
+    if (inflateInit(&zs) != Z_OK) {
+        throw ClientException("Failed to initialize zlib");
+    }
+
+    return Gateway::connect(url);
+}

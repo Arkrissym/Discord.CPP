@@ -48,9 +48,7 @@ class Gateway {
     DLL_EXPORT virtual void identify() = 0;
     DLL_EXPORT virtual void on_websocket_incoming_message(
         const std::string& message) = 0;
-    // DLL_EXPORT void on_websocket_disconnnect(
-    //     const web::websockets::client::websocket_close_status& status,
-    //     const std::string& reason, const std::error_code& error);
+    DLL_EXPORT void on_websocket_disconnnect();
 
    public:
     DLL_EXPORT Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool);
@@ -59,7 +57,7 @@ class Gateway {
     DLL_EXPORT void set_message_handler(
         const std::function<void(json payload)>& handler);
 
-    DLL_EXPORT std::shared_future<void> connect(const std::string& url);
+    DLL_EXPORT virtual std::shared_future<void> connect(const std::string& url);
     DLL_EXPORT std::shared_future<void> send(const json& message);
     DLL_EXPORT std::shared_future<void> close();
 };

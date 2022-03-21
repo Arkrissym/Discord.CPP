@@ -28,26 +28,28 @@ void DiscordCPP::Gateway::start_heartbeating() {
         _last_heartbeat_ack = time(0);
 
         while (_keepalive) {
-            if (_last_heartbeat_ack * 1000 + _heartbeat_interval * 2 <
-                time(0) * 1000) {
-                _log.warning(
-                    "Gateway stopped responding. Closing and restarting "
-                    "websocket...");
-                try {
-                    _client->close(websocket::close_reason(websocket::close_code::going_away, "Server not responding"));
-                } catch (std::exception& e) {
-                    _log.error("Cannot close websocket: " +
-                               std::string(e.what()));
-                }
-            } else {
-                json payload = this->get_heartbeat_payload();
+            if (_connected) {
+                if (_last_heartbeat_ack * 1000 + _heartbeat_interval * 2 <
+                    time(0) * 1000) {
+                    _log.warning(
+                        "Gateway stopped responding. Closing and restarting "
+                        "websocket...");
+                    try {
+                        _client->close(websocket::close_reason(websocket::close_code::going_away, "Server not responding"));
+                    } catch (std::exception& e) {
+                        _log.error("Cannot close websocket: " +
+                                   std::string(e.what()));
+                    }
+                } else {
+                    json payload = this->get_heartbeat_payload();
 
-                try {
-                    this->send(payload).wait();
-                    _log.debug("Heartbeat message has been sent");
-                } catch (const std::exception& e) {
-                    _log.error("Cannot send heartbeat message: " +
-                               std::string(e.what()));
+                    try {
+                        this->send(payload).get();
+                        _log.debug("Heartbeat message has been sent");
+                    } catch (const std::exception& e) {
+                        _log.error("Cannot send heartbeat message: " +
+                                   std::string(e.what()));
+                    }
                 }
             }
 
@@ -56,25 +58,15 @@ void DiscordCPP::Gateway::start_heartbeating() {
     });
 }
 
-/*void DiscordCPP::Gateway::on_websocket_disconnnect(
-    const web::websockets::client::websocket_close_status& status,
-    const std::string& reason, const std::error_code& error) {
+void DiscordCPP::Gateway::on_websocket_disconnnect() {
+    _log.info("Websocket connection closed");
+
+    _connected = false;
     if (_keepalive == false) {
         return;
     }
 
-    _log.warning("websocket closed with status code " +
-                 std::to_string((int)status) + ": " + reason + " (" +
-                 std::to_string(error.value()) + ": " + error.message() + ")");
-
     threadpool->execute([this] {
-        try {
-            delete _client;
-        } catch (const std::exception& e) {
-            _log.error("error while deleting old websocket client: " +
-                       std::string(e.what()));
-        }
-
         _log.info("trying to reconnect in " +
                   std::to_string((double)_reconnect_timeout / 1000) + "s");
         std::this_thread::sleep_for(std::chrono::milliseconds(_reconnect_timeout));
@@ -85,10 +77,16 @@ void DiscordCPP::Gateway::start_heartbeating() {
             _reconnect_timeout = (unsigned int)(_reconnect_timeout * 1.5);
         }
 
-        _client->connect(utility::conversions::to_string_t(_url)).wait();
-        _log.info("reconnected");
+        try {
+            connect(_url).get();
+            _log.info("reconnected");
+            _reconnect_timeout = 0;
+        } catch (const beast::system_error& e) {
+            _log.error("Failed to reconnect: " + std::string(e.what()));
+            on_websocket_disconnnect();
+        }
     });
-}*/
+}
 
 DiscordCPP::Gateway::Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool) : threadpool(threadpool), io_context(), ssl_context{ssl::context::tlsv12_client} {
     _log = Logger("Discord.Gateway");
@@ -105,14 +103,6 @@ DiscordCPP::Gateway::Gateway(const std::string& token, const std::shared_ptr<Thr
 
     ssl_context.set_verify_mode(ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);
     load_ssl_certificates(ssl_context);
-
-    _client = std::make_unique<websocket::stream<beast::ssl_stream<tcp::socket>>>(io_context, ssl_context);
-
-    /*_client->set_close_handler([this](websocket_close_status close_status,
-                                      utility::string_t reason,
-                                      std::error_code error) {
-        on_websocket_disconnnect(close_status, utility::conversions::to_utf8string(reason), error);
-    });*/
 }
 
 DiscordCPP::Gateway::~Gateway() {
@@ -157,9 +147,9 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
         tcp::resolver resolver{io_context};
         auto results = resolver.resolve(host, "443");
 
-        auto endpoint = net::connect(get_lowest_layer(*_client), results);
+        _client = std::make_unique<websocket::stream<beast::ssl_stream<tcp::socket>>>(io_context, ssl_context);
 
-        _log.debug("Connected");
+        auto endpoint = net::connect(get_lowest_layer(*_client), results);
 
         if (!SSL_set_tlsext_host_name(_client->next_layer().native_handle(), host.c_str()))
             throw beast::system_error(
@@ -172,14 +162,14 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
             req.set(http::field::user_agent, "Discord.C++ DiscordBot");
         }));
 
-        _log.debug("Starting handshake");
-
         _client->next_layer().handshake(ssl::stream_base::client);
         _client->handshake(host + std::string(":") + std::to_string(endpoint.port()), query);
 
-        _log.debug("Handshake complete");
+        if (_heartbeat_task.get_id() == std::thread::id()) {
+            start_heartbeating();
+        }
 
-        start_heartbeating();
+        _log.info("Successfully connected to endpoint: " + endpoint.address().to_string() + ":" + std::to_string(endpoint.port()));
         _connected = true;
     });
 
@@ -192,9 +182,15 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
                 size_t bytes = _client->read(buffer, error_code);
                 _log.debug("Received " + std::to_string(bytes) + " bytes");
 
-                if (error_code) {
-                    _log.error("Error while reading message (stopping read loop): " + error_code.message());
+                if (error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated) {
+                    on_websocket_disconnnect();
+
                     break;
+                }
+
+                if (error_code) {
+                    _log.error("Error while reading message: " + error_code.message());
+                    continue;
                 }
 
                 std::stringstream message_stream;
@@ -243,5 +239,6 @@ std::shared_future<void> DiscordCPP::Gateway::close() {
 
     return threadpool->execute([this]() {
         _client->close(websocket::close_code::normal);
+        get_lowest_layer(*_client).close();
     });
 }

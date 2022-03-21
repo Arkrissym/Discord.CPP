@@ -124,7 +124,7 @@ class Threadpool {
         auto t = std::make_shared<typename std::remove_reference<T>::type>(std::forward<T>(task));
 
         return execute([f, t]() {
-            f->wait();
+            f->get();
             return (*t)();
         });
     }

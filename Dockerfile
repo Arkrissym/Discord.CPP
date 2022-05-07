@@ -19,8 +19,10 @@ WORKDIR /app
 RUN mkdir build && \
 	cd build && \
 	cmake .. && \
-	make -j8 discord_cpp && \
-	make test_bot
+	cmake --build . --target discord_cpp -j$(nproc --all) && \
+	cmake --build . --target test_bot -j$(nproc --all)
+#	make -j8 discord_cpp && \
+#	make test_bot
 
 FROM debian:bullseye-slim
 

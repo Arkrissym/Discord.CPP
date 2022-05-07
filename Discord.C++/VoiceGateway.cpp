@@ -33,36 +33,38 @@ void DiscordCPP::VoiceGateway::identify() {
 
 void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
     const std::string& message) {
-    _log.debug("Received message: " + message);
+    threadpool->execute([this, message] {
+        _log.debug("Received message: " + message);
 
-    json payload = json::parse(message);
-    int op = payload["op"].get<int>();
+        json payload = json::parse(message);
+        int op = payload["op"].get<int>();
 
-    switch (op) {
-        case 2:
-            _reconnect_timeout = 0;
-            _last_heartbeat_ack = time(0);
-            _resume = true;
-            _log.info("connected to: " + _url);
-            break;
-        case 6:
-            _log.debug("received heartbeat ack");
-            _last_heartbeat_ack = time(0);
-            break;
-        case 8:
-            _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
-            identify();
-            break;
-        case 9:
-            _reconnect_timeout = 0;
-            _last_heartbeat_ack = time(0);
-            _resume = true;
-            _log.info("successfully resumed session for guild with id: " +
-                      _guild_id);
-            break;
-    }
+        switch (op) {
+            case 2:
+                _reconnect_timeout = 0;
+                _last_heartbeat_ack = time(0);
+                _resume = true;
+                _log.info("connected to: " + _url);
+                break;
+            case 6:
+                _log.debug("received heartbeat ack");
+                _last_heartbeat_ack = time(0);
+                break;
+            case 8:
+                _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
+                identify();
+                break;
+            case 9:
+                _reconnect_timeout = 0;
+                _last_heartbeat_ack = time(0);
+                _resume = true;
+                _log.info("successfully resumed session for guild with id: " +
+                          _guild_id);
+                break;
+        }
 
-    _message_handler(payload);
+        _message_handler(payload);
+    });
 }
 
 DiscordCPP::VoiceGateway::VoiceGateway(const std::string& token,

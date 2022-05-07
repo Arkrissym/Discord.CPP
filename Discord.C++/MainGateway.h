@@ -27,10 +27,10 @@ class MainGateway : public Gateway {
 
     DLL_EXPORT std::string decompress_message(const std::string& message);
 
-    DLL_EXPORT json get_heartbeat_payload();
-    DLL_EXPORT void on_websocket_incoming_message(const std::string& message);
+    DLL_EXPORT json get_heartbeat_payload() override;
+    DLL_EXPORT void on_websocket_incoming_message(const std::string& message) override;
     DLL_EXPORT std::shared_future<void> send_heartbeat_ack();
-    DLL_EXPORT void identify();
+    DLL_EXPORT void identify() override;
     DLL_EXPORT std::string set_trace(const json& payload);
 
    public:

@@ -8,10 +8,6 @@
 
 #include "Discord.h"
 
-/*	Compile with smth. like this:
-    g++ -Wall -o test main.cpp -ldiscord_cpp -lcpprest -lpthread -lssl -lcrypto
-*/
-
 using namespace DiscordCPP;
 using namespace std;
 
@@ -33,7 +29,7 @@ class Client : public Discord {
         VoiceClient vc = channel->connect();
 
         try {
-            vc.play(source).wait();
+            vc.play(source).get();
         } catch (const OpusError& e) {
             log.error("Opus error: " + string(e.what()) +
                       " (code: " + to_string(e.get_error_code()) + ")");
@@ -68,14 +64,14 @@ class Client : public Discord {
     }
 
     void on_typing_start(User user, TextChannel channel, unsigned int) override {
-        log.debug(user.username + " started typing in " + channel.name);
+        log.info(user.username + " started typing in " + channel.name);
     }
 
     void on_message(Message message) override {
-        log.debug(message.author->username + " sent \"" + message.content +
-                  "\" in channel: " + message.channel->name +
-                  " (id: " + message.channel->id +
-                  ", type: " + to_string(message.channel->type) + ").");
+        log.info(message.author->username + " sent \"" + message.content +
+                 "\" in channel: " + message.channel->name +
+                 " (id: " + message.channel->id +
+                 ", type: " + to_string(message.channel->type) + ").");
 
         if (message.content.compare("?hello") == 0) {
             Message msg = message.channel->send("Hello World!");
@@ -271,7 +267,8 @@ class Client : public Discord {
     }
 
    public:
-    Client(const string& token, const Intents& intents, unsigned int num_shards = 0) : Discord(token, intents, num_shards){};
+    Client(const string& token, const Intents& intents, unsigned int num_shards = 0)
+        : Discord(token, intents, num_shards){};
 };
 
 int main() {
@@ -290,7 +287,7 @@ int main() {
     intents.add(Intents::MEMBERS);
     Client client = Client(token, intents);
 
-    client.log.set_log_level(Debug);
+    client.log.set_log_level(Info);
 
     client.start();
 

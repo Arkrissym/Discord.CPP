@@ -67,7 +67,7 @@ DiscordCPP::VoiceClient DiscordCPP::VoiceChannel::connect() {
     unsigned int shard_id = (stoull(guild->id) >> 22) % _client->_num_shards;
     std::shared_ptr<MainGateway> current_gateway = _client->get_shard(shard_id);
 
-    current_gateway->send(payload).wait();
+    current_gateway->send(payload).get();
     Logger("discord.voicechannel").debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
 
     while (true) {

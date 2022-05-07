@@ -88,7 +88,8 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
     });
 }
 
-DiscordCPP::Gateway::Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool) : threadpool(threadpool), io_context(), ssl_context{ssl::context::tlsv12_client} {
+DiscordCPP::Gateway::Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool)
+    : threadpool(threadpool), io_context(), ssl_context{ssl::context::tlsv12_client} {
     _log = Logger("Discord.Gateway");
 
     _token = token;
@@ -182,7 +183,7 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
                 size_t bytes = _client->read(buffer, error_code);
                 _log.debug("Received " + std::to_string(bytes) + " bytes");
 
-                if (error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated) {
+                if (error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated || bytes <= 0) {
                     on_websocket_disconnnect();
 
                     break;
@@ -197,15 +198,11 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
                 message_stream << beast::make_printable(buffer.data());
                 std::string message = message_stream.str();
 
-                threadpool->execute([this, message]() {
-                    try {
-                        on_websocket_incoming_message(message);
-                    } catch (const json::parse_error& e) {
-                        _log.error("Error while parsing json: " + std::string(e.what()));
-                    } catch (const std::exception& e) {
-                        _log.error("Error while handling incoming message: " + std::string(e.what()));
-                    }
-                });
+                try {
+                    on_websocket_incoming_message(message);
+                } catch (const std::exception& e) {
+                    _log.error("Error while handling incoming message: " + std::string(e.what()));
+                }
             }
         });
     });
@@ -238,7 +235,11 @@ std::shared_future<void> DiscordCPP::Gateway::close() {
     _connected = false;
 
     return threadpool->execute([this]() {
-        _client->close(websocket::close_code::normal);
-        get_lowest_layer(*_client).close();
+        try {
+            //_client->close(websocket::close_code::normal);
+            get_lowest_layer(*_client).close();
+        } catch (const std::exception& e) {
+            _log.error("Error while closing websocket: " + std::string(e.what()));
+        }
     });
 }

@@ -121,7 +121,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::select_protocol() {
                   }}                                              //
         };
 
-        _voice_ws->send(payload).wait();
+        _voice_ws->send(payload).get();
         _log.debug("Opcode 1 Select Protocol Payload has been sent");
     });
 }
@@ -148,7 +148,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::speak(bool speak) {
             }                                  //
         };
 
-        _voice_ws->send(payload).wait();
+        _voice_ws->send(payload).get();
         _log.debug("Opcode 5 Speaking Payload has been sent");
     });
 }
@@ -208,8 +208,8 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
 
 DiscordCPP::VoiceClient::~VoiceClient() {
     _log.debug("~VoiceClient");
-    disconnect().wait();
-    _voice_ws->close().wait();
+    disconnect().get();
+    _voice_ws->close().get();
 }
 
 std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {

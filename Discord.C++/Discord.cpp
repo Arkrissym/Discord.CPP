@@ -52,7 +52,7 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
 
 DiscordCPP::Discord::~Discord() {
     for (unsigned int i = 0; i < _gateways.size(); i++) {
-        _gateways[i]->close().wait();
+        _gateways[i]->close().get();
     }
 
     delete _user;
@@ -134,10 +134,10 @@ void DiscordCPP::Discord::update_presence(const std::string& status, Activity ac
 
     if (shard_id == -1) {
         for (unsigned int i = 0; i < _gateways.size(); i++) {
-            _gateways[i]->send(presence).wait();
+            _gateways[i]->send(presence).get();
         }
     } else {
-        get_shard(shard_id)->send(presence).wait();
+        get_shard(shard_id)->send(presence).get();
     }
 }
 

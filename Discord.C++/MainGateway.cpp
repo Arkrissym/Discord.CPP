@@ -27,14 +27,19 @@ std::string DiscordCPP::MainGateway::decompress_message(
     } while (ret == Z_OK && zs.avail_in > 0);
 
     if (ret != Z_OK) {
-        throw ClientException("Failed to decompress message: code " + std::to_string(ret) + ": " + zs.msg);
+        _log.error("Failed to decompress message (length: " +
+                   std::to_string(message.length()) + "): " + message);
+        throw ClientException("Failed to decompress message: code " +
+                              std::to_string(ret) + ": " + zs.msg);
     }
 
     return out;
 }
 
 json DiscordCPP::MainGateway::get_heartbeat_payload() {
-    return {{"op", 1}, {"d", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}};
+    return {
+        {"op", 1},
+        {"d", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}};
 }
 
 void DiscordCPP::MainGateway::on_websocket_incoming_message(
@@ -49,55 +54,57 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
         _sequence_number = payload["s"].get<int>();
     }
 
-    switch (op) {
-        case 0:
-            if (payload["t"].get<std::string>() == "READY") {
-                _reconnect_timeout = 0;
+    threadpool->execute([this, payload, op] {
+        switch (op) {
+            case 0:
+                if (payload["t"].get<std::string>() == "READY") {
+                    _reconnect_timeout = 0;
+                    _last_heartbeat_ack = time(0);
+
+                    _invalid_session = false;
+
+                    _session_id = payload["d"]["session_id"].get<std::string>();
+
+                    std::string str = set_trace(payload);
+
+                    _log.info("connected to: " + str + " ]");
+                    _log.info("session id: " + _session_id);
+                } else if (payload["t"].get<std::string>() == "RESUMED") {
+                    _reconnect_timeout = 0;
+                    _last_heartbeat_ack = time(0);
+
+                    std::string str = set_trace(payload);
+
+                    _log.info("successfully resumed session " + _session_id +
+                              " with trace " + str + " ]");
+                }
+                break;
+            case 1:
+                send_heartbeat_ack();
+                break;
+            case 7:
+                _log.info("received opcode 7: reconnecting to the gateway");
+                close();
+                break;
+            case 9:
+                _invalid_session = true;
+                break;
+            case 10:
+                _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
+                _log.debug("set heartbeat_interval: " +
+                           std::to_string(_heartbeat_interval));
+                identify();
+                break;
+            case 11:
+                _log.debug("received heartbeat ACK");
                 _last_heartbeat_ack = time(0);
+                break;
+            default:
+                break;
+        }
 
-                _invalid_session = false;
-
-                _session_id = payload["d"]["session_id"].get<std::string>();
-
-                std::string str = set_trace(payload);
-
-                _log.info("connected to: " + str + " ]");
-                _log.info("session id: " + _session_id);
-            } else if (payload["t"].get<std::string>() == "RESUMED") {
-                _reconnect_timeout = 0;
-                _last_heartbeat_ack = time(0);
-
-                std::string str = set_trace(payload);
-
-                _log.info("successfully resumed session " + _session_id +
-                          " with trace " + str + " ]");
-            }
-            break;
-        case 1:
-            send_heartbeat_ack();
-            break;
-        case 7:
-            _log.info("received opcode 7: reconnecting to the gateway");
-            close();
-            break;
-        case 9:
-            _invalid_session = true;
-            break;
-        case 10:
-            _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
-            _log.debug("set heartbeat_interval: " +
-                       std::to_string(_heartbeat_interval));
-            identify();
-            break;
-        case 11:
-            _log.debug("received heartbeat ACK");
-            _last_heartbeat_ack = time(0);
-            break;
-        default:
-            break;
-    }
-
-    _message_handler(payload);
+        _message_handler(payload);
+    });
 }
 
 std::shared_future<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
@@ -179,7 +186,8 @@ std::string DiscordCPP::MainGateway::set_trace(const json& payload) {
 }
 
 DiscordCPP::MainGateway::MainGateway(const std::string& token,
-                                     const Intents& intents, const int shard_id,
+                                     const Intents& intents,
+                                     const int shard_id,
                                      const unsigned int num_shards)
     : Gateway::Gateway(token, std::make_shared<Threadpool>(std::thread::hardware_concurrency() / num_shards)) {
     _log =
@@ -200,7 +208,9 @@ DiscordCPP::MainGateway::MainGateway(const std::string& token,
     };
 }
 
-unsigned int DiscordCPP::MainGateway::get_shard_id() { return _shard_id; }
+unsigned int DiscordCPP::MainGateway::get_shard_id() {
+    return _shard_id;
+}
 
 std::shared_future<void> DiscordCPP::MainGateway::connect(const std::string& url) {
     zs.zalloc = Z_NULL;

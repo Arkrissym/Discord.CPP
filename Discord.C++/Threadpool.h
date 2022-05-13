@@ -7,6 +7,7 @@
 #include <queue>
 #include <thread>
 #include <type_traits>
+#include <vector>
 
 #include "Logger.h"
 
@@ -26,6 +27,7 @@ class Threadpool {
 
     std::mutex state_mutex;
     bool shutdown = false;
+    std::vector<std::thread> threads;
     unsigned int thread_count = 0;
     unsigned int threadpool_id;
     Logger log;

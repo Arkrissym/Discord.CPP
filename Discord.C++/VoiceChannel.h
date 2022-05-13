@@ -29,7 +29,7 @@ class VoiceChannel : public Channel {
     DLL_EXPORT ~VoiceChannel();
 
     /// connect to this VoiceChannel
-    DLL_EXPORT VoiceClient connect();
+    DLL_EXPORT std::shared_ptr<VoiceClient> connect();
 };
 
 }  // namespace DiscordCPP

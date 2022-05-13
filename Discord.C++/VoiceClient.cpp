@@ -165,8 +165,7 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
     _channel_id = channel_id;
 
     _log = Logger("Discord.VoiceClient");
-    _log.info("connecting to endpoint " +
-              _endpoint);
+    _log.info("connecting to endpoint " + _endpoint);
 
     _main_ws = main_ws;
     _voice_ws = std::make_unique<VoiceGateway>(voice_token, session_id, guild_id, user_id, threadpool);
@@ -208,11 +207,19 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
 
 DiscordCPP::VoiceClient::~VoiceClient() {
     _log.debug("~VoiceClient");
+    _ready = false;
     disconnect().get();
     _voice_ws->close().get();
 }
 
 std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
+    if (!_ready) {
+        std::promise<void> promise;
+        std::shared_future<void> future(promise.get_future());
+        promise.set_value();
+        return future;
+    }
+
     json payload = {
         {"op", 4},  //
         {"d", {
@@ -223,9 +230,15 @@ std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
                   {"self_deaf", true}       //
               }}                            //
     };
+    std::shared_future<void> main_future = _main_ws->send(payload);
+    std::shared_future<void> voice_future = _voice_ws->close();
 
-    auto f = _main_ws->send(payload);
-    return threadpool->then(f, [this] {
+    return threadpool->execute([this, voice_future, main_future] {
+        _ready = false;
+
+        voice_future.get();
+        main_future.get();
+
         _log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
     });
 }
@@ -260,7 +273,9 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
 
         auto next_time = std::chrono::high_resolution_clock::now();
 
-        while (1) {
+        _playing = true;
+
+        while (_ready) {
             if (source->read((char*)pcm_data, FRAME_SIZE * CHANNELS * 2) !=
                 true)
                 break;
@@ -316,6 +331,8 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             next_time += std::chrono::milliseconds(FRAME_MILLIS);
             std::this_thread::sleep_until(next_time);
         }
+
+        _playing = false;
 
         opus_encoder_destroy(encoder);
         delete[] pcm_data;

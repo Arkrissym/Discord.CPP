@@ -16,7 +16,12 @@ DiscordCPP::Threadpool::~Threadpool() {
         std::lock_guard<std::mutex> lock(state_mutex);
         shutdown = true;
     }
+
     condition.notify_all();
+
+    for (unsigned int i = 0; i < threads.size(); i++) {
+        threads[i].join();
+    }
 }
 
 void DiscordCPP::Threadpool::start_thread() {
@@ -54,7 +59,7 @@ void DiscordCPP::Threadpool::start_thread() {
     Logger::register_thread(thread.get_id(), "Threadpool-" + std::to_string(threadpool_id) +
                                                  "-Thread-" + std::to_string(thread_count));
 
-    thread.detach();
+    threads.push_back(std::move(thread));
 
     thread_count++;
 }

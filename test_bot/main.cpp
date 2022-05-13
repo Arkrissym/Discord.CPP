@@ -26,10 +26,11 @@ class Client : public Discord {
         return NULL;
     }
     void play(VoiceChannel* channel, AudioSource* source) {
-        VoiceClient vc = channel->connect();
+        std::shared_ptr<VoiceClient> vc = channel->connect();
 
         try {
-            vc.play(source).get();
+            vc->play(source).get();
+            vc->disconnect().get();
         } catch (const OpusError& e) {
             log.error("Opus error: " + string(e.what()) +
                       " (code: " + to_string(e.get_error_code()) + ")");
@@ -287,7 +288,7 @@ int main() {
     intents.add(Intents::MEMBERS);
     Client client = Client(token, intents);
 
-    client.log.set_log_level(Info);
+    Logger::set_log_level(Debug);
 
     client.start();
 

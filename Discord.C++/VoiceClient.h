@@ -8,6 +8,7 @@
 #include "Logger.h"
 #include "MainGateway.h"
 #include "VoiceGateway.h"
+#include "VoiceState.h"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -51,6 +52,7 @@ class VoiceClient {
     std::string _user_id;
 
     bool _ready = false;
+    bool _playing = false;
 
     unsigned int _ssrc = 0;
     std::string _server_ip;
@@ -75,13 +77,9 @@ class VoiceClient {
     DLL_EXPORT std::shared_future<void> select_protocol();
     DLL_EXPORT std::shared_future<void> load_session_description(const json& data);
     DLL_EXPORT std::shared_future<void> speak(bool speak = true);
-    DLL_EXPORT std::shared_future<void> disconnect();
 
    public:
-    DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token,
-                           const std::string& endpoint, const std::string& session_id,
-                           const std::string& guild_id, const std::string& channel_id,
-                           const std::string& user_id);
+    DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token, const std::string& endpoint, const std::string& session_id, const std::string& guild_id, const std::string& channel_id, const std::string& user_id);
     DLL_EXPORT VoiceClient(){};
     DLL_EXPORT ~VoiceClient();
 
@@ -89,6 +87,7 @@ class VoiceClient {
         @throws	OpusError	ClientException
     */
     DLL_EXPORT std::shared_future<void> play(AudioSource* source);
+    DLL_EXPORT std::shared_future<void> disconnect();
 };
 
 }  // namespace DiscordCPP

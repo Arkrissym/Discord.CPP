@@ -6,7 +6,8 @@
 #include "Logger.h"
 #include "VoiceClient.h"
 
-DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const json& data, const std::string& token) : DiscordCPP::Channel(data, token) {
+DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const json& data, const std::string& token)
+    : DiscordCPP::Channel(data, token) {
     _client = client;
     bitrate = get_or_else<int>(data, "bitrate", 0);
     user_limit = get_or_else<int>(data, "user_limit", 0);
@@ -26,7 +27,8 @@ DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const std::string& id, c
     *this = VoiceChannel(client, api_call(url), token);
 }
 
-DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel& old) : DiscordCPP::Channel(old) {
+DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel& old)
+    : DiscordCPP::Channel(old) {
     bitrate = old.bitrate;
     user_limit = old.user_limit;
     if (old.parent != NULL)
@@ -41,7 +43,7 @@ DiscordCPP::VoiceChannel::~VoiceChannel() {
 /*	@return		VoiceClient
         @throws	ClientException
 **/
-DiscordCPP::VoiceClient DiscordCPP::VoiceChannel::connect() {
+std::shared_ptr<DiscordCPP::VoiceClient> DiscordCPP::VoiceChannel::connect() {
     if (this->type != ChannelType::GUILD_VOICE) {
         throw ClientException("channel must be a voice channel");
     }
@@ -75,12 +77,14 @@ DiscordCPP::VoiceClient DiscordCPP::VoiceChannel::connect() {
             if ((voice_state->channel_id == this->id) && (voice_state->endpoint.length() > 1)) {
                 Logger("discord.voicechannel").debug("Creating new voice client.");
 
-                return VoiceClient(current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
+                std::shared_ptr<VoiceClient> voice_client = std::make_shared<VoiceClient>(current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
+                voice_state->voice_client = voice_client;
+                return voice_client;
             }
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    return VoiceClient();
+    return std::make_shared<VoiceClient>();
 }

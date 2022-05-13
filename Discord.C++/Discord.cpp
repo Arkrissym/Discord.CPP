@@ -12,7 +12,8 @@
     @param[in]	intents		Intents used for the gateway.
     @param[in]	num_shards	(optional) number of shards that exist (default: 0 used for automatic sharding)
 */
-DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int num_shards) : DiscordObject(token), _num_shards(num_shards) {
+DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int num_shards)
+    : DiscordObject(token), _num_shards(num_shards) {
     id = "0";
     log = Logger("discord");
 
@@ -38,7 +39,8 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
     @param[in]	shard_id	(optional) the id of the shard (default: 0)
     @param[in]	num_shards	(optional) number of shards that exist (default: 1)
 */
-DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards) : DiscordObject(token), _num_shards(num_shards) {
+DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, const unsigned int shard_id, const unsigned int num_shards)
+    : DiscordObject(token), _num_shards(num_shards) {
     id = std::to_string(shard_id);
     log = Logger("discord");
 
@@ -407,6 +409,11 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
             voice_state->session_id = "";
             voice_state->endpoint = "";
             voice_state->voice_token = "";
+            if (voice_state->voice_client != nullptr) {
+                log.debug("disconnecting voice client");
+                voice_state->voice_client->disconnect();
+                voice_state->voice_client = nullptr;
+            }
         } else {
             voice_state->channel_id = data.at("channel_id").get<std::string>();
             voice_state->session_id = data.at("session_id").get<std::string>();

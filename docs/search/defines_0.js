@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['api_5furl_744',['API_URL',['../static_8h.html#a47cbcc6d148fe0c8f9fb95966026aa97',1,'static.h']]]
+  ['api_5fprefix_763',['API_PREFIX',['../static_8h.html#a98640f4e46891e23c9e12a9a9ad5bfd5',1,'static.h']]]
 ];

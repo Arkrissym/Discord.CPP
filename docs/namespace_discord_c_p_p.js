@@ -22,6 +22,7 @@ var namespace_discord_c_p_p =
     [ "SizeError", "class_discord_c_p_p_1_1_size_error.html", "class_discord_c_p_p_1_1_size_error" ],
     [ "StatusCodeException", "class_discord_c_p_p_1_1_status_code_exception.html", "class_discord_c_p_p_1_1_status_code_exception" ],
     [ "TextChannel", "class_discord_c_p_p_1_1_text_channel.html", "class_discord_c_p_p_1_1_text_channel" ],
+    [ "Threadpool", "class_discord_c_p_p_1_1_threadpool.html", "class_discord_c_p_p_1_1_threadpool" ],
     [ "udp_client", "class_discord_c_p_p_1_1udp__client.html", "class_discord_c_p_p_1_1udp__client" ],
     [ "User", "class_discord_c_p_p_1_1_user.html", "class_discord_c_p_p_1_1_user" ],
     [ "VoiceChannel", "class_discord_c_p_p_1_1_voice_channel.html", "class_discord_c_p_p_1_1_voice_channel" ],

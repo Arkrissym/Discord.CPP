@@ -1,7 +1,6 @@
 var _channel_8h =
 [
     [ "Channel", "class_discord_c_p_p_1_1_channel.html", "class_discord_c_p_p_1_1_channel" ],
-    [ "DLL_EXPORT", "_channel_8h.html#a1ca888bd091694c05472e1b91df1a97b", null ],
     [ "ChannelType", "_channel_8h.html#a95896e6e5b3dd8249958de6e128e96c2", [
       [ "GUILD_TEXT", "_channel_8h.html#a95896e6e5b3dd8249958de6e128e96c2af8694dfbbaa8fe6ef5ab78dd3af079d3", null ],
       [ "DM", "_channel_8h.html#a95896e6e5b3dd8249958de6e128e96c2a9a79e62074f1fbf1b734e128bc8c06e8", null ],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['is_5fvalid_5ffield_747',['is_valid_field',['../static_8h.html#afff986e44bd400123ef599a209c62d68',1,'static.h']]]
+  ['max_5fpacket_5fsize_767',['MAX_PACKET_SIZE',['../_voice_client_8cpp.html#a879456c3b8e2853f7044d764e9c180d4',1,'VoiceClient.cpp']]]
 ];

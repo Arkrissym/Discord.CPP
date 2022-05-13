@@ -42,6 +42,7 @@ var hierarchy =
     [ "Intents", "class_intents.html", null ],
     [ "Logger", "class_logger.html", null ],
     [ "DiscordCPP::Embed::Provider", "struct_discord_c_p_p_1_1_embed_1_1_provider.html", null ],
+    [ "DiscordCPP::Threadpool", "class_discord_c_p_p_1_1_threadpool.html", null ],
     [ "DiscordCPP::udp_client", "class_discord_c_p_p_1_1udp__client.html", null ],
     [ "DiscordCPP::Embed::Video", "struct_discord_c_p_p_1_1_embed_1_1_video.html", null ],
     [ "DiscordCPP::VoiceClient", "class_discord_c_p_p_1_1_voice_client.html", null ],

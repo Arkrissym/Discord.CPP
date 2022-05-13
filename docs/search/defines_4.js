@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['max_5fpacket_5fsize_748',['MAX_PACKET_SIZE',['../_voice_client_8cpp.html#a879456c3b8e2853f7044d764e9c180d4',1,'VoiceClient.cpp']]]
+  ['version_768',['VERSION',['../static_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf',1,'static.h']]]
 ];

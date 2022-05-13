@@ -1,7 +1,6 @@
 var _message_8h =
 [
     [ "Message", "class_discord_c_p_p_1_1_message.html", "class_discord_c_p_p_1_1_message" ],
-    [ "DLL_EXPORT", "_message_8h.html#a1ca888bd091694c05472e1b91df1a97b", null ],
     [ "MessageType", "_message_8h.html#a2cbaf996aeaaacb770fd18c17a5dfcf7", [
       [ "DEFAULT", "_message_8h.html#a2cbaf996aeaaacb770fd18c17a5dfcf7a5097662b049bd5bb21d4a3892aae07ce", null ],
       [ "RECIPIENT_ADD", "_message_8h.html#a2cbaf996aeaaacb770fd18c17a5dfcf7af678a52e9cdab631646e79d2920ff574", null ],

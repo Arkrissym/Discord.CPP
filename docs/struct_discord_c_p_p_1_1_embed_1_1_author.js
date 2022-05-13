@@ -1,7 +1,7 @@
 var struct_discord_c_p_p_1_1_embed_1_1_author =
 [
-    [ "icon_url", "struct_discord_c_p_p_1_1_embed_1_1_author.html#ad13c192cdb365eeab6392d755a6e0b4a", null ],
-    [ "name", "struct_discord_c_p_p_1_1_embed_1_1_author.html#adc2ae43a411986ba809d7e65391291d7", null ],
-    [ "proxy_icon_url", "struct_discord_c_p_p_1_1_embed_1_1_author.html#a7c274c8552cfea56ba3e06ec30baf6b2", null ],
-    [ "url", "struct_discord_c_p_p_1_1_embed_1_1_author.html#a7cef0ecd546a92e66acd0ce7aaab2858", null ]
+    [ "icon_url", "struct_discord_c_p_p_1_1_embed_1_1_author.html#a177d37d451c863896a8f61db9fea3c6a", null ],
+    [ "name", "struct_discord_c_p_p_1_1_embed_1_1_author.html#a967923c65437b40a0091555d57d91f2c", null ],
+    [ "proxy_icon_url", "struct_discord_c_p_p_1_1_embed_1_1_author.html#aa9dc3e764a3e0c399e1d19a69ebab30e", null ],
+    [ "url", "struct_discord_c_p_p_1_1_embed_1_1_author.html#a6a937575ff60a04f8b1ca9d8dad877c9", null ]
 ];

@@ -75,7 +75,7 @@ target_include_directories(test_bot PRIVATE Discord.C++)
 if(WIN32)
       target_link_libraries(test_bot discord_cpp)
 else(WIN32)
-      target_link_libraries(test_bot discord_cpp)
+      target_link_libraries(test_bot discord_cpp pthread)
 endif(WIN32)
 
 install(TARGETS test_bot DESTINATION bin)

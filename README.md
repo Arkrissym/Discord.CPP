@@ -1,16 +1,18 @@
-# Discord.CPP [![Build Status](https://travis-ci.com/Arkrissym/Discord.CPP.svg?branch=master)](https://travis-ci.com/Arkrissym/Discord.CPP)
+# Discord.CPP [![Build Status](https://github.com/arkrissym/discord.cpp/actions/workflows/build.yml/badge.svg)](https://github.com/Arkrissym/Discord.CPP/actions/workflows/build.yml) [![Code Quality](https://github.com/arkrissym/discord.cpp/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Arkrissym/Discord.CPP/actions/workflows/codeql-analysis.yml)
 Discord.CPP or Discord.C++ is a C++ library for interaction with the Discord API.
 
 ## Documentation
 Doxygen-generated documentiomenation is available [here](https://arkrissym.github.io/Discord.CPP).
 
 ## Dependencies
-- [cpprestsdk](https://github.com/Microsoft/cpprestsdk)
+- [boost-beast](https://github.com/boostorg/beast)
+- [certify](https://github.com/djarek/certify)
+- [nlohman-json](https://github.com/nlohmann/json)
 - boost-process
 - libsodium
 - libopus
 
-The communication with Discord is build around cpprestsdk. \
+The communication with Discord is build around boost-beast(using certify to handle certificates) and nlohman-json. \
 Libsodium and libopus are needed to encrypt voice data.
 
 ## Features

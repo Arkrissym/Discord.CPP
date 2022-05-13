@@ -62,7 +62,7 @@ if(VCPKG_TOOLCHAIN)
                         crypt32
                         ZLIB::ZLIB)
 else(VCPKG_TOOLCHAIN)
-      target_link_libraries(${PROJECT_NAME} sodium opus nlohmann_json::nlohmann_json ZLIB::ZLIB OpenSSL::SSL OpenSSL::Crypto)
+      target_link_libraries(${PROJECT_NAME} sodium opus Boost::system Boost::filesystem nlohmann_json::nlohmann_json ZLIB::ZLIB OpenSSL::SSL OpenSSL::Crypto)
 endif(VCPKG_TOOLCHAIN)
 
 install(TARGETS discord_cpp DESTINATION lib)
@@ -75,7 +75,7 @@ target_include_directories(test_bot PRIVATE Discord.C++)
 if(WIN32)
       target_link_libraries(test_bot discord_cpp)
 else(WIN32)
-      target_link_libraries(test_bot discord_cpp pthread ssl crypto boost_filesystem)
+      target_link_libraries(test_bot discord_cpp)
 endif(WIN32)
 
 install(TARGETS test_bot DESTINATION bin)

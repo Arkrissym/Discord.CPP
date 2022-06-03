@@ -42,8 +42,41 @@ class Client : public Discord {
     void on_ready(User user) override {
         log.info("logged in as: " + user.username);
 
-        this->update_presence(DiscordStatus::Online,
-                              Activity("test", ActivityTypes::Game));
+        auto old_commands = get_application_commands();
+        for (auto command : old_commands) {
+            command.delete_command();
+        }
+
+        ApplicationCommand ping = ApplicationCommand();
+        ping.name = "ping";
+        ping.description = "Ping the bot";
+        ping.type = ApplicationCommand::Type::CHAT_INPUT;
+        create_application_command(ping);
+
+        ApplicationCommand update = ApplicationCommand();
+        update.name = "update";
+        update.description = "Responds with a message and updates it after 5 seconds";
+        update.type = ApplicationCommand::Type::CHAT_INPUT;
+        create_application_command(update);
+
+        ApplicationCommand msg = ApplicationCommand();
+        msg.name = "msg";
+        msg.description = "Test messages";
+        msg.type = ApplicationCommand::Type::CHAT_INPUT;
+        ApplicationCommandSubcommand text = ApplicationCommandSubcommand();
+        text.name = "text";
+        text.description = "Text message";
+        text.type = ApplicationCommandOption::Type::SUB_COMMAND;
+        msg.options.push_back(text);
+        ApplicationCommandSubcommand embed = ApplicationCommandSubcommand();
+        embed.name = "embed";
+        embed.description = "Embed message";
+        embed.type = ApplicationCommandOption::Type::SUB_COMMAND;
+        msg.options.push_back(embed);
+        create_application_command(msg);
+
+        update_presence(DiscordStatus::Online,
+                        Activity("test", ActivityTypes::Game));
     }
 
     void on_user_ban(User user, Guild guild) override {
@@ -267,6 +300,23 @@ class Client : public Discord {
         }
     }
 
+    void on_interaction(Interaction interaction) override {
+        if (interaction.type != Interaction::Type::APPLICATION_COMMAND) {
+            return;
+        }
+
+        string name = interaction.data.value().name;
+        log.info("interaction: " + name);
+
+        if (name == "ping") {
+            interaction.reply("pong");
+        } else if (name == "update") {
+            interaction.reply("Original reply");
+            this_thread::sleep_for(chrono::seconds(5));
+            interaction.update_reply("Updated reply");
+        }
+    }
+
    public:
     Client(const string& token, const Intents& intents, unsigned int num_shards = 0)
         : Discord(token, intents, num_shards){};
@@ -284,11 +334,13 @@ int main() {
     token = getenv("DISCORD_TEST_TOKEN");
 #endif
 
+    Logger::register_thread(std::this_thread::get_id(), "main");
+    Logger::set_log_level(Debug);
+
     Intents intents = Intents::Default();
     intents.add(Intents::MEMBERS);
+    intents.add(Intents::MESSAGE_CONTENT);
     Client client = Client(token, intents);
-
-    Logger::set_log_level(Debug);
 
     client.start();
 

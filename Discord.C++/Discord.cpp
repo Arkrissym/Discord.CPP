@@ -22,6 +22,9 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
         tmp.at("shards").get_to<unsigned int>(_num_shards);
     }
 
+    json app = api_call("/oauth2/applications/@me", "GET");
+    app.at("id").get_to(_application_id);
+
     for (unsigned int i = 0; i < _num_shards; i++) {
         std::shared_ptr<MainGateway> _client = std::make_shared<MainGateway>(_token, intents, i, _num_shards);
 
@@ -43,6 +46,9 @@ DiscordCPP::Discord::Discord(const std::string& token, const Intents& intents, c
     : DiscordObject(token), _num_shards(num_shards) {
     id = std::to_string(shard_id);
     log = Logger("discord");
+
+    json app = api_call("/oauth2/applications/@me", "GET");
+    app.at("id").get_to(_application_id);
 
     std::shared_ptr<MainGateway> _client = std::make_shared<MainGateway>(_token, intents, shard_id, _num_shards);
     _client->set_message_handler([this](json payload) {
@@ -114,6 +120,11 @@ void DiscordCPP::Discord::on_typing_start(User, TextChannel, unsigned int) {
     log.debug("on_typing_start");
 }
 
+/// @param[in]  interaction the Interaction that was received
+void DiscordCPP::Discord::on_interaction(Interaction) {
+    log.debug("on_interaction");
+}
+
 /**	@param[in]	status		the new status (see DiscordStatus)
     @param[in]	activity	(optional) the Activity
     @param[in]	afk			(optional) wether the bot/user is afk or not
@@ -141,6 +152,45 @@ void DiscordCPP::Discord::update_presence(const std::string& status, Activity ac
     } else {
         get_shard(shard_id)->send(presence).get();
     }
+}
+
+/** @return a vector containing all global application commands
+ */
+std::vector<DiscordCPP::ApplicationCommand> DiscordCPP::Discord::get_application_commands() {
+    std::vector<ApplicationCommand> commands;
+
+    json tmp = api_call("/applications/" + _application_id + "/commands");
+    for (json command : tmp) {
+        commands.push_back(ApplicationCommand(command, _token));
+    }
+
+    return commands;
+}
+
+/** @param[in]  guild   the Guild to get the application commands for
+    @return a vector containing all application commands of the specified guild
+ */
+std::vector<DiscordCPP::ApplicationCommand> DiscordCPP::Discord::get_application_commands(const Guild& guild) {
+    std::vector<ApplicationCommand> commands;
+
+    json tmp = api_call("/applications/" + _application_id + "/guilds/" + guild.id + "/commands");
+    for (json command : tmp) {
+        commands.push_back(ApplicationCommand(command, _token));
+    }
+
+    return commands;
+}
+
+DiscordCPP::ApplicationCommand DiscordCPP::Discord::create_application_command(ApplicationCommand command) {
+    json data = command.to_json();
+
+    std::string url = "/applications/" + _application_id;
+    if (command.guild_id.has_value()) {
+        url += "/guilds/" + command.guild_id.value();
+    }
+    url += "/commands";
+
+    return ApplicationCommand(api_call(url, "POST", data, "application/json", false), _token);
 }
 
 std::shared_ptr<DiscordCPP::MainGateway> DiscordCPP::Discord::get_shard(unsigned int shard_id) {
@@ -437,6 +487,12 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
         voice_state->endpoint = "wss://" + data.at("endpoint").get<std::string>();
         voice_state->endpoint += "?v=4";
         voice_state->voice_token = data.at("token").get<std::string>();
+    } else if (event_name == "INTERACTION_CREATE") {
+        try {
+            on_interaction(Interaction(data, _token));
+        } catch (const std::exception& e) {
+            log.error("ignoring exception in on_interaction: " + std::string(e.what()));
+        }
     } else {
         log.warning("ignoring event: " + event_name);
         log.debug(data.dump());

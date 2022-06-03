@@ -8,12 +8,18 @@
 namespace DiscordCPP {
 namespace ChannelType {
 enum ChannelType {
-    GUILD_TEXT,
-    DM,
-    GUILD_VOICE,
-    GROUP_DM,
-    GUILD_CATEGORY,
-    GUILD_NEWS
+    GUILD_TEXT = 0,
+    DM = 1,
+    GUILD_VOICE = 2,
+    GROUP_DM = 3,
+    GUILD_CATEGORY = 4,
+    GUILD_NEWS = 5,
+    GUILD_NEWS_THREAD = 10,
+    GUILD_PUBLIC_THREAD = 11,
+    GUILD_PRIVATE_THREAD = 12,
+    GUILD_STAGE_VOICE = 13,
+    GUILD_DIRECTORY = 14,
+    GUILD_FORUM = 15
 };
 }
 
@@ -22,14 +28,14 @@ class Discord;
 
 class Channel : public DiscordObject {
    public:
-    ///the ChannelType of the channel
+    /// the ChannelType of the channel
     int type;
-    ///the sorting position
+    /// the sorting position
     int32_t position;
-    //vector<Overwrite *> permission_overwrites;
-    ///the channel's name
+    // vector<Overwrite *> permission_overwrites;
+    /// the channel's name
     std::string name;
-    ///the channel's icon hash
+    /// the channel's icon hash
     std::string icon;
 
     DLL_EXPORT Channel(const json& data, const std::string& token);
@@ -39,7 +45,7 @@ class Channel : public DiscordObject {
 
     DLL_EXPORT static Channel* from_json(Discord* client, const json& data, const std::string& token);
 
-    ///Delete this channel
+    /// Delete this channel
     DLL_EXPORT void delete_channel();
 
     template <class T>

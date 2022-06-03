@@ -5,7 +5,8 @@
 #include "VoiceChannel.h"
 #include "static.h"
 
-DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& token) : DiscordCPP::DiscordObject(token) {
+DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& token)
+    : DiscordCPP::DiscordObject(token) {
     data.at("id").get_to<std::string>(id);
     name = get_or_else<std::string>(data, "name", "");
     icon = get_or_else<std::string>(data, "icon", "");
@@ -37,9 +38,9 @@ DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& t
         embed_channel = new TextChannel(data.at("embed_channel_id").get<std::string>(), token);
     }
 
-    //roles
+    // roles
 
-    //emojis
+    // emojis
 
     if (has_value(data, "features")) {
         for (json feature : data.at("features")) {
@@ -55,7 +56,7 @@ DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& t
         system_channel = new TextChannel(data.at("system_channel_id").get<std::string>(), token);
     }
 
-    //voice_states
+    // voice_states
 
     if (has_value(data, "members")) {
         for (json member : data.at("members")) {
@@ -69,17 +70,18 @@ DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& t
         }
     }
 
-    //presences
+    // presences
 }
 
-DiscordCPP::Guild::Guild(Discord* client, const std::string& id, const std::string& token) : DiscordCPP::DiscordObject(token) {
+DiscordCPP::Guild::Guild(Discord* client, const std::string& id, const std::string& token)
+    : DiscordCPP::DiscordObject(token) {
     std::string url = "/guilds/" + id;
 
     *this = Guild(client, api_call(url), token);
 }
 
-DiscordCPP::Guild::Guild(const Guild& old) {
-    _token = old._token;
+DiscordCPP::Guild::Guild(const Guild& old)
+    : DiscordCPP::DiscordObject(old._token) {
     id = old.id;
     name = old.name;
     icon = old.icon;
@@ -97,8 +99,8 @@ DiscordCPP::Guild::Guild(const Guild& old) {
     verification_level = old.verification_level;
     default_message_notifications = old.default_message_notifications;
     explicit_content_filter = old.explicit_content_filter;
-    //roles
-    //emojis
+    // roles
+    // emojis
     features = old.features;
     mfa_level = old.mfa_level;
     application_id = old.application_id;
@@ -111,14 +113,14 @@ DiscordCPP::Guild::Guild(const Guild& old) {
     large = old.large;
     unavailable = old.unavailable;
     member_count = old.member_count;
-    //voice_states
+    // voice_states
     for (unsigned int i = 0; i < old.members.size(); i++) {
         members.push_back(new Member(*old.members[i]));
     }
     for (unsigned int i = 0; i < old.channels.size(); i++) {
         channels.push_back(old.channels[i]->copy(*old.channels[i]));
     }
-    //presences
+    // presences
 }
 
 DiscordCPP::Guild::~Guild() {
@@ -203,7 +205,7 @@ void DiscordCPP::Guild::delete_guild() {
 }
 
 /**	@param[in]	user	User to kick
-	@throws HTTPError
+    @throws HTTPError
 */
 void DiscordCPP::Guild::kick(const User& user) {
     std::string url = "/guilds/" + id + "/members/" + user.id;
@@ -211,9 +213,9 @@ void DiscordCPP::Guild::kick(const User& user) {
 }
 
 /**	@param[in]	user				User to ban
-	@param[in]	reason				reason, why the User should be banned
-	@param[in]	delete_message_days	(optional) number of days to delete messages from user (0-7)
-	@throws HTTPError
+    @param[in]	reason				reason, why the User should be banned
+    @param[in]	delete_message_days	(optional) number of days to delete messages from user (0-7)
+    @throws HTTPError
 */
 void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const int delete_message_days) {
     std::string url = "/guilds/" + id + "/bans/" + user.id + "?delete-message-days=" + std::to_string(delete_message_days) + "&reason=" + urlencode(reason);
@@ -221,7 +223,7 @@ void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const i
 }
 
 /**	@param[in]	user	User to kick
-	@throws HTTPError
+    @throws HTTPError
 */
 void DiscordCPP::Guild::unban(const User& user) {
     std::string url = "/guilds/" + id + "/bans/" + user.id;

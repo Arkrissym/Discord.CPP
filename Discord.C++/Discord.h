@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "Activity.h"
+#include "ApplicationCommand.h"
 #include "AudioSource.h"
 #include "Channel.h"
 #include "DMChannel.h"
@@ -13,6 +14,7 @@
 #include "Guild.h"
 #include "GuildChannel.h"
 #include "Intents.h"
+#include "Interaction.h"
 #include "Logger.h"
 #include "MainGateway.h"
 #include "Message.h"
@@ -33,6 +35,8 @@ class Discord : public DiscordObject {
     unsigned int _num_shards;
     /// the user
     User* _user;
+    /// the bot's application id
+    std::string _application_id;
     /// the guilds the user is a member
     std::vector<Guild*> _guilds;
 
@@ -63,6 +67,8 @@ class Discord : public DiscordObject {
     virtual void on_user_remove(User user, Guild guild);
     /// called when a User starts typing
     virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp);
+    /// called when an interaction was created
+    virtual void on_interaction(Interaction interaction);
 
    public:
     Logger log;
@@ -76,6 +82,13 @@ class Discord : public DiscordObject {
 
     /// updates the presence of user
     DLL_EXPORT void update_presence(const std::string& status, Activity activity = Activity(), const bool afk = false, const int shard_id = -1);
+
+    /// loads all application commands
+    DLL_EXPORT std::vector<ApplicationCommand> get_application_commands();
+    /// loads all application commands for a guild
+    DLL_EXPORT std::vector<ApplicationCommand> get_application_commands(const Guild& guild);
+    /// creates a new application command
+    DLL_EXPORT ApplicationCommand create_application_command(ApplicationCommand command);
 };
 
 }  // namespace DiscordCPP

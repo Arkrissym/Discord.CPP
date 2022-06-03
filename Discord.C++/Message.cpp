@@ -8,10 +8,11 @@
 #include "VoiceChannel.h"
 
 /**	@param[in]	data	raw JSON data
-	@param[in]	token	discord token for the API
-	@return	Message object
+    @param[in]	token	discord token for the API
+    @return	Message object
 */
-DiscordCPP::Message::Message(const json& data, const std::string& token) : DiscordCPP::DiscordObject(token) {
+DiscordCPP::Message::Message(const json& data, const std::string& token)
+    : DiscordCPP::DiscordObject(token) {
     data.at("id").get_to<std::string>(id);
 
     std::string url = "/channels/" + data.at("channel_id").get<std::string>();
@@ -34,9 +35,9 @@ DiscordCPP::Message::Message(const json& data, const std::string& token) : Disco
         }
     }
 
-    //mention_roles
+    // mention_roles
 
-    //attachements
+    // attachements
 
     if (has_value(data, "embeds")) {
         for (json embed : data.at("embeds")) {
@@ -44,22 +45,22 @@ DiscordCPP::Message::Message(const json& data, const std::string& token) : Disco
         }
     }
 
-    //reactions
+    // reactions
 
     pinned = get_or_else(data, "pinned", false);
     webhook_id = get_or_else<std::string>(data, "webhook_id", "");
     data.at("type").get_to<int>(type);
 
-    //activity
+    // activity
 
-    //application
+    // application
 }
 
 /**	@param[in]	old	Message object to copy
-	@return		copied Message object
+    @return		copied Message object
 */
-DiscordCPP::Message::Message(const Message& old) {
-    _token = old._token;
+DiscordCPP::Message::Message(const Message& old)
+    : DiscordCPP::DiscordObject(old._token) {
     id = old.id;
 
     if (old.channel != NULL) {
@@ -82,15 +83,15 @@ DiscordCPP::Message::Message(const Message& old) {
     for (unsigned int i = 0; i < old.mentions.size(); i++) {
         mentions.push_back(new User(*old.mentions[i]));
     }
-    //mention_roles
-    //attachements
-    //embeds
-    //reactions
+    // mention_roles
+    // attachements
+    // embeds
+    // reactions
     pinned = old.pinned;
     webhook_id = old.webhook_id;
     type = old.type;
-    //activity
-    //application
+    // activity
+    // application
 }
 
 DiscordCPP::Message::Message() {
@@ -110,7 +111,7 @@ DiscordCPP::Message::~Message() {
 }
 
 /**	@param[in]	content	New message-content.
-	@return		Updated message object.
+    @return		Updated message object.
 */
 DiscordCPP::Message DiscordCPP::Message::edit(const std::string& content) {
     std::string url = "/channels/" + channel->id + "/messages/" + id;
@@ -122,5 +123,5 @@ DiscordCPP::Message DiscordCPP::Message::edit(const std::string& content) {
 
 void DiscordCPP::Message::delete_msg() {
     std::string url = "/channels/" + channel->id + "/messages/" + id;
-    api_call(url, "DEL");
+    api_call(url, "DELETE");
 }

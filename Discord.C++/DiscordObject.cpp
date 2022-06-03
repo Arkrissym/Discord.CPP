@@ -56,12 +56,12 @@ void manage_cache() {
 }
 
 /**	@param[in]	url				Relative url
-	@param[in]	method			(optional) Method of the http request. Default is GET.
-	@param[in]	data			(optional) JSON data to send
-	@param[in]	content_type	(optional) the Content-Type of data
-	@param[in]	cache			(optional) wether to cache results or not (only GET requests can be cached)
-	@return		json::value		API response
-	@throws		HTTPError
+    @param[in]	method			(optional) Method of the http request. Default is GET.
+    @param[in]	data			(optional) JSON data to send
+    @param[in]	content_type	(optional) the Content-Type of data
+    @param[in]	cache			(optional) wether to cache results or not (only GET requests can be cached)
+    @return		json::value		API response
+    @throws		HTTPError
 */
 json DiscordCPP::DiscordObject::api_call(const std::string& url, const std::string& method, const json& data, const std::string& content_type, const bool cache) {
     if (method == "GET" && cache == true) {
@@ -142,8 +142,8 @@ DiscordCPP::DiscordObject::http_response DiscordCPP::DiscordObject::request_inte
     ssl::stream<tcp::socket> stream(io_context, ssl_context);
     boost::asio::connect(stream.lowest_layer(), results);
 
-    //boost::certify::set_server_hostname(stream, DISCORD_HOST);
-    //boost::certify::sni_hostname(stream, DISCORD_HOST);
+    // boost::certify::set_server_hostname(stream, DISCORD_HOST);
+    // boost::certify::sni_hostname(stream, DISCORD_HOST);
     if (!SSL_set_tlsext_host_name(stream.native_handle(), DISCORD_HOST))
         throw beast::system_error(
             beast::error_code(

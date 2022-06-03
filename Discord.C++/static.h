@@ -13,6 +13,7 @@
 
 #include <boost/asio/ssl/context.hpp>
 #include <nlohmann/json.hpp>
+#include <optional>
 
 using json = nlohmann::json;
 

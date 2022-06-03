@@ -1,0 +1,8 @@
+# Check for updates of actions dependencies
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"

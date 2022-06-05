@@ -77,5 +77,3 @@ if(WIN32)
 else(WIN32)
       target_link_libraries(test_bot discord_cpp pthread)
 endif(WIN32)
-
-install(TARGETS test_bot DESTINATION bin)

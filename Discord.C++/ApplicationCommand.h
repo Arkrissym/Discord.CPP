@@ -30,7 +30,8 @@ class ApplicationCommand : public DiscordObject {
     /// Parameters for the command, max of 25.
     std::vector<ApplicationCommandOption> options;
     // default_member_permissions
-    // dm_permission
+    /// Indicates wether the command is enabled in DMs. Defaults to true.
+    bool dm_permission = true;
     /// Autoincrementing version identifier updated during substantial record changes.
     std::string version;
 

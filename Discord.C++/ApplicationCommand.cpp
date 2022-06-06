@@ -26,6 +26,7 @@ json DiscordCPP::ApplicationCommand::to_json() {
     data["type"] = type;
     data["name"] = name;
     data["description"] = description;
+    data["dm_permission"] = dm_permission;
 
     for (auto option : options) {
         data["options"].push_back(option.to_json());

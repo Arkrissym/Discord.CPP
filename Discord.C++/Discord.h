@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <vector>
 
 #include "Activity.h"
@@ -40,13 +41,14 @@ class Discord : public DiscordObject {
     /// the guilds the user is a member
     std::vector<Guild*> _guilds;
 
-    /// array of VoiceStates
-    std::vector<VoiceState*> _voice_states;
+    /// VoiceStates by user id
+    std::map<std::string, std::vector<VoiceState*>> _voice_states;
 
     friend std::shared_ptr<VoiceClient> VoiceChannel::connect();
 
     DLL_EXPORT std::shared_ptr<MainGateway> get_shard(const unsigned int shard_id);
     DLL_EXPORT Guild* get_guild(const std::string& guild_id);
+    DLL_EXPORT VoiceState* get_voice_state(const std::string& user_id, const std::string& guild_id);
 
     DLL_EXPORT void connect();
 

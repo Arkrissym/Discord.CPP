@@ -214,6 +214,19 @@ DiscordCPP::Guild* DiscordCPP::Discord::get_guild(const std::string& guild_id) {
     return NULL;
 }
 
+DiscordCPP::VoiceState* DiscordCPP::Discord::get_voice_state(const std::string& user_id, const std::string& guild_id) {
+    VoiceState* voice_state = NULL;
+    if (_voice_states.find(user_id) != _voice_states.end()) {
+        for (auto it = _voice_states.at(user_id).begin(); it != _voice_states.at(user_id).end(); it++) {
+            if ((*it)->guild_id == guild_id) {
+                voice_state = *it;
+                break;
+            }
+        }
+    }
+    return voice_state;
+}
+
 void DiscordCPP::Discord::connect() {
     log.info("connecting to websocket: " + std::string(GATEWAY_URL));
 
@@ -435,23 +448,21 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
             log.error("ignoring exception in on_typing_start: " + std::string(e.what()));
         }
     } else if (event_name == "VOICE_STATE_UPDATE") {
-        if (_user->id != data.at("user_id").get<std::string>()) {
-            return;
-        }
+        std::string user_id = data.at("user_id").get<std::string>();
 
-        VoiceState* voice_state = NULL;
-        for (unsigned int i = 0; i < _voice_states.size(); i++) {
-            if (_voice_states[i]->guild_id == data.at("guild_id").get<std::string>()) {
-                voice_state = _voice_states[i];
-                break;
-            }
-        }
+        VoiceState* voice_state = get_voice_state(user_id, data.at("guild_id").get<std::string>());
 
         if (voice_state == NULL) {
             voice_state = new VoiceState();
             voice_state->guild_id = data.at("guild_id").get<std::string>();
 
-            _voice_states.push_back(voice_state);
+            if (_voice_states.find(user_id) != _voice_states.end()) {
+                _voice_states.at(user_id).push_back(voice_state);
+            } else {
+                std::vector<VoiceState*> voice_states;
+                voice_states.push_back(voice_state);
+                _voice_states.insert(std::pair<std::string, std::vector<VoiceState*>>(user_id, voice_states));
+            }
         }
 
         if (!(has_value(data, "channel_id"))) {
@@ -469,19 +480,19 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
             voice_state->session_id = data.at("session_id").get<std::string>();
         }
     } else if (event_name == "VOICE_SERVER_UPDATE") {
-        VoiceState* voice_state = NULL;
-        for (unsigned int i = 0; i < _voice_states.size(); i++) {
-            if (_voice_states[i]->guild_id == data.at("guild_id").get<std::string>()) {
-                voice_state = _voice_states[i];
-                break;
-            }
-        }
+        VoiceState* voice_state = get_voice_state(_user->id, data.at("guild_id").get<std::string>());
 
         if (voice_state == NULL) {
             voice_state = new VoiceState();
             voice_state->guild_id = data.at("guild_id").get<std::string>();
 
-            _voice_states.push_back(voice_state);
+            if (_voice_states.find(_user->id) != _voice_states.end()) {
+                _voice_states.at(_user->id).push_back(voice_state);
+            } else {
+                std::vector<VoiceState*> voice_states;
+                voice_states.push_back(voice_state);
+                _voice_states.insert(std::pair<std::string, std::vector<VoiceState*>>(_user->id, voice_states));
+            }
         }
 
         voice_state->endpoint = "wss://" + data.at("endpoint").get<std::string>();
@@ -495,6 +506,6 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
         }
     } else {
         log.warning("ignoring event: " + event_name);
-        log.debug(data.dump());
+        log.info(data.dump());
     }
 }

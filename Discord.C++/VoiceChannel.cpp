@@ -73,18 +73,17 @@ std::shared_ptr<DiscordCPP::VoiceClient> DiscordCPP::VoiceChannel::connect() {
     Logger("discord.voicechannel").debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
 
     while (true) {
-        for (auto voice_state : _client->_voice_states) {
-            if ((voice_state->channel_id == this->id) && (voice_state->endpoint.length() > 1)) {
-                Logger("discord.voicechannel").debug("Creating new voice client.");
+        VoiceState* voice_state = _client->get_voice_state(_client->_user->id, guild->id);
+        if ((voice_state != NULL) && (voice_state->channel_id == this->id) && (voice_state->endpoint.length() > 1)) {
+            Logger("discord.voicechannel").debug("Creating new voice client.");
 
-                std::shared_ptr<VoiceClient> voice_client = std::make_shared<VoiceClient>(current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
-                voice_state->voice_client = voice_client;
-                return voice_client;
-            }
+            std::shared_ptr<VoiceClient> voice_client = std::make_shared<VoiceClient>(current_gateway, voice_state->voice_token, voice_state->endpoint, voice_state->session_id, voice_state->guild_id, voice_state->channel_id, _client->_user->id);
+            voice_state->voice_client = voice_client;
+            return voice_client;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    return std::make_shared<VoiceClient>();
+    throw ClientException("Could not connect to voice channel.");
 }

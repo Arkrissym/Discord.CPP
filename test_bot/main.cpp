@@ -379,7 +379,7 @@ class Client : public Discord {
 };
 
 int main() {
-    /*char* token;
+    char* token;
 #ifdef _WIN32
     size_t len;
     if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {
@@ -388,7 +388,7 @@ int main() {
     }
 #else
     token = getenv("DISCORD_TEST_TOKEN");
-#endif*/
+#endif
 
     Logger::register_thread(std::this_thread::get_id(), "main");
     Logger::set_log_level(Debug);
@@ -396,7 +396,7 @@ int main() {
     Intents intents = Intents::Default();
     intents.add(Intents::MEMBERS);
     intents.add(Intents::MESSAGE_CONTENT);
-    Client client = Client("NDMxODIzMjMwNDU4Nzg5ODg4.GjTUOd.WtzagIDHI1g2V22ECeMwy9AU8wXf2JVbtHSOPk", intents);
+    Client client = Client(token, intents);
 
     client.start();
 

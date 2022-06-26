@@ -12,12 +12,35 @@ DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::
 
     name = data.at("name").get<std::string>();
     description = data.at("description").get<std::string>();
+    dm_permission = get_or_else<bool>(data, "dm_permission", true);
     version = data.at("version").get<std::string>();
 
     if (has_value(data, "options")) {
         for (json option : data.at("options")) {
             options.push_back(DiscordCPP::ApplicationCommandOption::from_json(option));
         }
+    }
+}
+
+DiscordCPP::ApplicationCommand::ApplicationCommand(const ApplicationCommand& other)
+    : DiscordCPP::DiscordObject(other) {
+    id = other.id;
+    type = other.type;
+    application_id = other.application_id;
+    guild_id = other.guild_id;
+    name = other.name;
+    description = other.description;
+    dm_permission = other.dm_permission;
+    version = other.version;
+
+    for (ApplicationCommandOption* option : other.options) {
+        options.push_back(option->copy());
+    }
+}
+
+DiscordCPP::ApplicationCommand::~ApplicationCommand() {
+    for (DiscordCPP::ApplicationCommandOption* option : options) {
+        delete option;
     }
 }
 
@@ -29,7 +52,7 @@ json DiscordCPP::ApplicationCommand::to_json() {
     data["dm_permission"] = dm_permission;
 
     for (auto option : options) {
-        data["options"].push_back(option.to_json());
+        data["options"].push_back(option->to_json());
     }
 
     return data;

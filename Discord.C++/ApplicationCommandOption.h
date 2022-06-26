@@ -31,18 +31,22 @@ class ApplicationCommandOption {
 
     DLL_EXPORT ApplicationCommandOption(){};
     DLL_EXPORT ApplicationCommandOption(const json& data);
-    DLL_EXPORT static ApplicationCommandOption from_json(const json& data);
+    DLL_EXPORT static ApplicationCommandOption* from_json(const json& data);
 
     DLL_EXPORT json to_json();
+
+    DLL_EXPORT ApplicationCommandOption* copy();
 };
 
 class ApplicationCommandSubcommand : public ApplicationCommandOption {
    public:
     /// The parameters of this subcommand.
-    std::vector<ApplicationCommandOption> options;
+    std::vector<ApplicationCommandOption*> options;
 
-    DLL_EXPORT ApplicationCommandSubcommand(){};
+    DLL_EXPORT ApplicationCommandSubcommand();
     DLL_EXPORT ApplicationCommandSubcommand(const json& data);
+    DLL_EXPORT ApplicationCommandSubcommand(const ApplicationCommandSubcommand& other);
+    DLL_EXPORT ~ApplicationCommandSubcommand();
 
     DLL_EXPORT json to_json();
 };
@@ -52,7 +56,7 @@ class ApplicationCommandChannelOption : public ApplicationCommandOption {
     /// The selectable channels will be restricted to these type.
     std::vector<ChannelType::ChannelType> channel_types;
 
-    DLL_EXPORT ApplicationCommandChannelOption(){};
+    DLL_EXPORT ApplicationCommandChannelOption();
     DLL_EXPORT ApplicationCommandChannelOption(const json& data);
 
     DLL_EXPORT json to_json();
@@ -64,7 +68,7 @@ class ApplicationCommandValueOption : public ApplicationCommandOption {
     /// If autocomplete is enabled. Only for STRING, INTEGER and NUMBER options.
     bool autocomplete;
 
-    DLL_EXPORT ApplicationCommandValueOption(){};
+    DLL_EXPORT ApplicationCommandValueOption();
     DLL_EXPORT ApplicationCommandValueOption(const json& data);
 
     DLL_EXPORT json to_json();
@@ -77,7 +81,7 @@ class ApplicationCommandIntegerOption : public ApplicationCommandValueOption {
     /// The maximum allowed value.
     int max_value;
 
-    DLL_EXPORT ApplicationCommandIntegerOption(){};
+    DLL_EXPORT ApplicationCommandIntegerOption();
     DLL_EXPORT ApplicationCommandIntegerOption(const json& data);
 
     DLL_EXPORT json to_json();
@@ -90,7 +94,7 @@ class ApplicationCommandNumberOption : public ApplicationCommandValueOption {
     /// The maximum allowed value.
     double max_value;
 
-    DLL_EXPORT ApplicationCommandNumberOption(){};
+    DLL_EXPORT ApplicationCommandNumberOption();
     DLL_EXPORT ApplicationCommandNumberOption(const json& data);
 
     DLL_EXPORT json to_json();

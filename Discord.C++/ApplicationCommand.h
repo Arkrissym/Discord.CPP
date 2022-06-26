@@ -28,7 +28,7 @@ class ApplicationCommand : public DiscordObject {
     std::string description;
     // description_localizations
     /// Parameters for the command, max of 25.
-    std::vector<ApplicationCommandOption> options;
+    std::vector<ApplicationCommandOption*> options;
     // default_member_permissions
     /// Indicates wether the command is enabled in DMs. Defaults to true.
     bool dm_permission = true;
@@ -37,6 +37,8 @@ class ApplicationCommand : public DiscordObject {
 
     DLL_EXPORT ApplicationCommand() {}
     DLL_EXPORT ApplicationCommand(const json& data, const std::string& token);
+    DLL_EXPORT ApplicationCommand(const ApplicationCommand& other);
+    DLL_EXPORT ~ApplicationCommand();
 
     DLL_EXPORT json to_json();
 

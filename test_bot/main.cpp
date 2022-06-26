@@ -63,17 +63,29 @@ class Client : public Discord {
         msg.name = "msg";
         msg.description = "Test messages";
         msg.type = ApplicationCommand::Type::CHAT_INPUT;
-        ApplicationCommandSubcommand text = ApplicationCommandSubcommand();
-        text.name = "text";
-        text.description = "Text message";
-        text.type = ApplicationCommandOption::Type::SUB_COMMAND;
+        ApplicationCommandSubcommand* text = new ApplicationCommandSubcommand();
+        text->name = "text";
+        text->description = "Text message";
+        text->type = ApplicationCommandOption::Type::SUB_COMMAND;
         msg.options.push_back(text);
-        ApplicationCommandSubcommand embed = ApplicationCommandSubcommand();
-        embed.name = "embed";
-        embed.description = "Embed message";
-        embed.type = ApplicationCommandOption::Type::SUB_COMMAND;
+        ApplicationCommandSubcommand* embed = new ApplicationCommandSubcommand();
+        embed->name = "embed";
+        embed->description = "Embed message";
+        embed->type = ApplicationCommandOption::Type::SUB_COMMAND;
         msg.options.push_back(embed);
         create_application_command(msg);
+
+        ApplicationCommand echo = ApplicationCommand();
+        echo.name = "echo";
+        echo.description = "Echo message";
+        echo.type = ApplicationCommand::Type::CHAT_INPUT;
+        ApplicationCommandValueOption* value = new ApplicationCommandValueOption();
+        value->name = "message";
+        value->description = "Message to echo";
+        value->autocomplete = false;
+        value->required = true;
+        echo.options.push_back(value);
+        create_application_command(echo);
 
         update_presence(DiscordStatus::Online,
                         Activity("test", ActivityTypes::Game));
@@ -314,6 +326,50 @@ class Client : public Discord {
             interaction.reply("Original reply");
             this_thread::sleep_for(chrono::seconds(5));
             interaction.update_reply("Updated reply");
+        } else if (name == "echo") {
+            for (InteractionDataOption* it : interaction.data.value().options) {
+                if (it->name == "message" && it->type == ApplicationCommandOption::Type::STRING) {
+                    InteractionDataStringOption* option = (InteractionDataStringOption*)(it);
+                    log.info(option->name + " " + std::to_string(option->type));
+                    interaction.reply(option->value);
+                } else {
+                    log.info(it->name + " " + std::to_string(it->type));
+                }
+            }
+        } else if (name == "msg") {
+            for (InteractionDataOption* it : interaction.data.value().options) {
+                if (it->name == "text" && it->type == ApplicationCommandOption::Type::SUB_COMMAND) {
+                    interaction.reply("Text reply");
+                } else if (it->name == "embed" && it->type == ApplicationCommandOption::Type::SUB_COMMAND) {
+                    Embed embed = Embed("Embed", "description");
+
+                    embed.set_color(0x00ff00);
+                    embed.set_author("TestBot", "https://github.com",
+                                     "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                                     "robot-1214536_960_720.png");
+                    embed.set_footer("Footer",
+                                     "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                                     "robot-1214536_960_720.png");
+                    embed.set_thumbnail(
+                        "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                        "robot-1214536_960_720.png");
+                    embed.set_image(
+                        "https://cdn.pixabay.com/photo/2016/02/22/00/25/"
+                        "robot-1214536_960_720.png");
+
+                    for (int i = 0; i < 4; i++) {
+                        embed.add_field("Field", to_string(i));
+                    }
+                    for (int i = 4; i < 7; i++) {
+                        embed.add_field("Field", to_string(i), false);
+                    }
+
+                    interaction.reply(embed);
+
+                } else {
+                    log.info(it->name + " " + std::to_string(it->type));
+                }
+            }
         }
     }
 
@@ -323,7 +379,7 @@ class Client : public Discord {
 };
 
 int main() {
-    char* token;
+    /*char* token;
 #ifdef _WIN32
     size_t len;
     if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {
@@ -332,7 +388,7 @@ int main() {
     }
 #else
     token = getenv("DISCORD_TEST_TOKEN");
-#endif
+#endif*/
 
     Logger::register_thread(std::this_thread::get_id(), "main");
     Logger::set_log_level(Debug);
@@ -340,7 +396,7 @@ int main() {
     Intents intents = Intents::Default();
     intents.add(Intents::MEMBERS);
     intents.add(Intents::MESSAGE_CONTENT);
-    Client client = Client(token, intents);
+    Client client = Client("NDMxODIzMjMwNDU4Nzg5ODg4.GjTUOd.WtzagIDHI1g2V22ECeMwy9AU8wXf2JVbtHSOPk", intents);
 
     client.start();
 

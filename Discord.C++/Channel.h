@@ -48,23 +48,11 @@ class Channel : public DiscordObject {
     /// Delete this channel
     DLL_EXPORT void delete_channel();
 
-    template <class T>
-    DLL_EXPORT Channel* copy(T obj);
+    /// @returns a copy of this channel object
+    DLL_EXPORT Channel* copy();
 
     ///@return Channelname as std::string
     DLL_EXPORT operator std::string() { return name; };
 };
-
-template <class T>
-inline Channel* Channel::copy(T obj) {
-    T* derivedptr = new T(obj);
-    Channel* baseptr = dynamic_cast<Channel*>(derivedptr);
-    if (baseptr != NULL) {
-        return baseptr;
-    }
-    // this will be reached if T is not derived from Base
-    delete derivedptr;
-    throw std::string("Invalid type given to Clone");
-}
 
 }  // namespace DiscordCPP

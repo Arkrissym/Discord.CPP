@@ -91,11 +91,11 @@ DiscordCPP::Guild::Guild(const Guild& old)
     permissions = old.permissions;
     region = old.region;
     if (old.afk_channel != NULL)
-        afk_channel = old.afk_channel->copy(*old.afk_channel);
+        afk_channel = old.afk_channel->copy();
     afk_timeout = old.afk_timeout;
     embed_enabled = old.embed_enabled;
     if (old.embed_channel != NULL)
-        embed_channel = old.embed_channel->copy(*old.embed_channel);
+        embed_channel = old.embed_channel->copy();
     verification_level = old.verification_level;
     default_message_notifications = old.default_message_notifications;
     explicit_content_filter = old.explicit_content_filter;
@@ -106,9 +106,9 @@ DiscordCPP::Guild::Guild(const Guild& old)
     application_id = old.application_id;
     widget_enabled = old.widget_enabled;
     if (old.widget_channel != NULL)
-        widget_channel = old.widget_channel->copy(*old.widget_channel);
+        widget_channel = old.widget_channel->copy();
     if (old.system_channel != NULL)
-        system_channel = old.system_channel->copy(*old.system_channel);
+        system_channel = old.system_channel->copy();
     joined_at = old.joined_at;
     large = old.large;
     unavailable = old.unavailable;
@@ -118,7 +118,7 @@ DiscordCPP::Guild::Guild(const Guild& old)
         members.push_back(new Member(*old.members[i]));
     }
     for (unsigned int i = 0; i < old.channels.size(); i++) {
-        channels.push_back(old.channels[i]->copy(*old.channels[i]));
+        channels.push_back(old.channels[i]->copy());
     }
     // presences
 }

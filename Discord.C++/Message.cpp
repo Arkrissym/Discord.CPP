@@ -65,7 +65,7 @@ DiscordCPP::Message::Message(const Message& old)
 
     if (old.channel != NULL) {
         try {
-            channel = (TextChannel*)old.channel->copy(*old.channel);
+            channel = (TextChannel*)old.channel->copy();
         } catch (std::exception& e) {
             Logger("discord.message").error("Error in channel copy: " + std::string(e.what()));
         }

@@ -33,6 +33,8 @@ DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel& old)
     user_limit = old.user_limit;
     if (old.parent != NULL)
         parent = new Channel(*old.parent);
+    if (old.guild != NULL)
+        guild = new Guild(*old.guild);
 }
 
 DiscordCPP::VoiceChannel::~VoiceChannel() {

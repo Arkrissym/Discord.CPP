@@ -29,16 +29,12 @@ void DiscordCPP::Gateway::start_heartbeating() {
 
         while (_keepalive) {
             if (_connected) {
-                if (_last_heartbeat_ack * 1000 + _heartbeat_interval * 2 <
-                    time(0) * 1000) {
-                    _log.warning(
-                        "Gateway stopped responding. Closing and restarting "
-                        "websocket...");
+                if (_last_heartbeat_ack * 1000 + _heartbeat_interval * 2 < time(0) * 1000) {
+                    _log.warning("Gateway stopped responding. Closing and restarting websocket...");
                     try {
                         _client->close(websocket::close_reason(websocket::close_code::going_away, "Server not responding"));
                     } catch (std::exception& e) {
-                        _log.error("Cannot close websocket: " +
-                                   std::string(e.what()));
+                        _log.error("Cannot close websocket: " + std::string(e.what()));
                     }
                 } else {
                     json payload = this->get_heartbeat_payload();

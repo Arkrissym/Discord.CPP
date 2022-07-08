@@ -84,7 +84,11 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
                 break;
             case 7:
                 _log.info("received opcode 7: reconnecting to the gateway");
-                close();
+                try {
+                    _client->close(boost::beast::websocket::close_reason(boost::beast::websocket::close_code::going_away, "Server requested reconnect"));
+                } catch (std::exception& e) {
+                    _log.error("Cannot close websocket: " + std::string(e.what()));
+                }
                 break;
             case 9:
                 _invalid_session = true;

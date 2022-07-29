@@ -15,10 +15,6 @@ DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const json& data, const 
     if (has_value(data, "parent_id")) {
         parent = new Channel(data.at("parent_id").get<std::string>(), token);
     }
-
-    if (has_value(data, "guild_id")) {
-        guild = new Guild(client, data.at("guild_id").get<std::string>(), token);
-    }
 }
 
 DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const std::string& id, const std::string& token) {
@@ -33,17 +29,14 @@ DiscordCPP::VoiceChannel::VoiceChannel(const VoiceChannel& old)
     user_limit = old.user_limit;
     if (old.parent != NULL)
         parent = new Channel(*old.parent);
-    if (old.guild != NULL)
-        guild = new Guild(*old.guild);
 }
 
 DiscordCPP::VoiceChannel::~VoiceChannel() {
     delete parent;
-    delete guild;
 }
 
 /*	@return		VoiceClient
-        @throws	ClientException
+    @throws     ClientException
 **/
 std::shared_ptr<DiscordCPP::VoiceClient> DiscordCPP::VoiceChannel::connect() {
     if (this->type != ChannelType::GUILD_VOICE) {

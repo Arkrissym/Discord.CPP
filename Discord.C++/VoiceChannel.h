@@ -19,8 +19,6 @@ class VoiceChannel : public Channel {
     int user_limit;
     /// the parent category channel
     Channel* parent = NULL;
-    /// the guild the channel belongs to
-    Guild* guild = NULL;
 
     DLL_EXPORT VoiceChannel(Discord* client, const json& data, const std::string& token);
     DLL_EXPORT VoiceChannel(Discord* client, const std::string& id, const std::string& token);

@@ -53,6 +53,7 @@ class VoiceClient {
 
     bool _ready = false;
     bool _playing = false;
+    bool _cancel_playing = false;
 
     unsigned int _ssrc = 0;
     std::string _server_ip;
@@ -87,6 +88,7 @@ class VoiceClient {
         @throws	OpusError	ClientException
     */
     DLL_EXPORT std::shared_future<void> play(AudioSource* source);
+    DLL_EXPORT void stop_playing();
     DLL_EXPORT std::shared_future<void> disconnect();
 };
 

@@ -505,7 +505,7 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
             log.error("ignoring exception in on_interaction: " + std::string(e.what()));
         }
     } else {
-        log.warning("ignoring event: " + event_name);
-        log.info(data.dump());
+        log.debug("ignoring event: " + event_name);
+        log.debug(data.dump());
     }
 }

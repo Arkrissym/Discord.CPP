@@ -243,6 +243,10 @@ std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
     });
 }
 
+void DiscordCPP::VoiceClient::stop_playing() {
+    _cancel_playing = true;
+}
+
 std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
     return threadpool->execute([this, source] {
         _log.debug("creating opus encoder");
@@ -274,8 +278,9 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
         auto next_time = std::chrono::high_resolution_clock::now();
 
         _playing = true;
+        _cancel_playing = false;
 
-        while (_ready) {
+        while (_ready && !_cancel_playing) {
             if (source->read((char*)pcm_data, FRAME_SIZE * CHANNELS * 2) !=
                 true)
                 break;

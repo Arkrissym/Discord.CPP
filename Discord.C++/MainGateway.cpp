@@ -158,18 +158,18 @@ void DiscordCPP::MainGateway::identify() {
     };
 
 #ifdef _WIN32
-    identify_json["d"]["properties"]["$os"] = "Windows";
+    identify_json["d"]["properties"]["os"] = "Windows";
 #elif __APPLE__
-    identify_json["d"]["properties"]["$os"] = "macOS";
+    identify_json["d"]["properties"]["os"] = "macOS";
 #elif __linux__
-    identify_json["d"]["properties"]["$os"] = "Linux";
+    identify_json["d"]["properties"]["os"] = "Linux";
 #elif __unix__
-    identify_json["d"]["properties"]["$os"] = "Unix";
+    identify_json["d"]["properties"]["os"] = "Unix";
 #elif __posix
-    identify_json["d"]["properties"]["$os"] = "POSIX";
+    identify_json["d"]["properties"]["os"] = "POSIX";
 #endif
-    identify_json["d"]["properties"]["$browser"] = "Discord.C++";
-    identify_json["d"]["properties"]["$device"] = "Discord.C++";
+    identify_json["d"]["properties"]["browser"] = "Discord.C++";
+    identify_json["d"]["properties"]["device"] = "Discord.C++";
 
     this->send(identify_json).get();
     _log.info("Identify payload has been sent");

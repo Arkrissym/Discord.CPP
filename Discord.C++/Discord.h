@@ -29,6 +29,10 @@
 namespace DiscordCPP {
 
 class Discord : public DiscordObject {
+   private:
+    /// internal processing of voice state updates
+    DLL_EXPORT void _process_voice_state_update(const json& data);
+
    protected:
     /// websocket clients
     std::vector<std::shared_ptr<MainGateway>> _gateways;

@@ -315,7 +315,7 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
                 }
             }
         }
-    } else if (event_name == "GUILD_CREATE") {
+    } else if ((event_name == "GUILD_CREATE") || (event_name == "GUILD_UPDATE")) {
         Guild* tmp_guild = new Guild(this, data, _token);
 
         for (unsigned int i = 0; i < _guilds.size(); i++) {
@@ -330,16 +330,12 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
 
         _guilds.push_back(tmp_guild);
         log.debug("data of new guild added");
-    } else if (event_name == "GUILD_UPDATE") {
-        Guild* tmp_guild = new Guild(this, data, _token);
 
-        for (unsigned int i = 0; i < _guilds.size(); i++) {
-            if (tmp_guild->id == _guilds[i]->id) {
-                Guild* old = _guilds[i];
-                _guilds[i] = tmp_guild;
-                delete old;
-                log.debug("Updated guild data");
-                return;
+        if (has_value(data, "voice_states") && data.at("voice_states").is_array()) {
+            json states = data.at("voice_states");
+            for (auto it = states.begin(); it != states.end(); it++) {
+                (*it)["guild_id"] = tmp_guild->id;
+                _process_voice_state_update(*it);
             }
         }
     } else if (event_name == "GUILD_DELETE") {
@@ -448,37 +444,7 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
             log.error("ignoring exception in on_typing_start: " + std::string(e.what()));
         }
     } else if (event_name == "VOICE_STATE_UPDATE") {
-        std::string user_id = data.at("user_id").get<std::string>();
-
-        VoiceState* voice_state = get_voice_state(user_id, data.at("guild_id").get<std::string>());
-
-        if (voice_state == NULL) {
-            voice_state = new VoiceState();
-            voice_state->guild_id = data.at("guild_id").get<std::string>();
-
-            if (_voice_states.find(user_id) != _voice_states.end()) {
-                _voice_states.at(user_id).push_back(voice_state);
-            } else {
-                std::vector<VoiceState*> voice_states;
-                voice_states.push_back(voice_state);
-                _voice_states.insert(std::pair<std::string, std::vector<VoiceState*>>(user_id, voice_states));
-            }
-        }
-
-        if (!(has_value(data, "channel_id"))) {
-            voice_state->channel_id = "";
-            voice_state->session_id = "";
-            voice_state->endpoint = "";
-            voice_state->voice_token = "";
-            if (voice_state->voice_client != nullptr) {
-                log.debug("disconnecting voice client");
-                voice_state->voice_client->disconnect();
-                voice_state->voice_client = nullptr;
-            }
-        } else {
-            voice_state->channel_id = data.at("channel_id").get<std::string>();
-            voice_state->session_id = data.at("session_id").get<std::string>();
-        }
+        _process_voice_state_update(data);
     } else if (event_name == "VOICE_SERVER_UPDATE") {
         VoiceState* voice_state = get_voice_state(_user->id, data.at("guild_id").get<std::string>());
 
@@ -507,5 +473,39 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
     } else {
         log.debug("ignoring event: " + event_name);
         log.debug(data.dump());
+    }
+}
+
+void DiscordCPP::Discord::_process_voice_state_update(const json& data) {
+    std::string user_id = data.at("user_id").get<std::string>();
+
+    VoiceState* voice_state = get_voice_state(user_id, data.at("guild_id").get<std::string>());
+
+    if (voice_state == NULL) {
+        voice_state = new VoiceState();
+        voice_state->guild_id = data.at("guild_id").get<std::string>();
+
+        if (_voice_states.find(user_id) != _voice_states.end()) {
+            _voice_states.at(user_id).push_back(voice_state);
+        } else {
+            std::vector<VoiceState*> voice_states;
+            voice_states.push_back(voice_state);
+            _voice_states.insert(std::pair<std::string, std::vector<VoiceState*>>(user_id, voice_states));
+        }
+    }
+
+    if (!(has_value(data, "channel_id"))) {
+        voice_state->channel_id = "";
+        voice_state->session_id = "";
+        voice_state->endpoint = "";
+        voice_state->voice_token = "";
+        if (voice_state->voice_client != nullptr) {
+            log.debug("disconnecting voice client");
+            voice_state->voice_client->disconnect();
+            voice_state->voice_client = nullptr;
+        }
+    } else {
+        voice_state->channel_id = data.at("channel_id").get<std::string>();
+        voice_state->session_id = data.at("session_id").get<std::string>();
     }
 }

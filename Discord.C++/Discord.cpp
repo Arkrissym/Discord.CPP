@@ -318,6 +318,13 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
     } else if ((event_name == "GUILD_CREATE") || (event_name == "GUILD_UPDATE")) {
         Guild* tmp_guild = new Guild(this, data, _token);
 
+        if (has_value(data, "voice_states")) {
+            for (json voice_state : data.at("voice_states")) {
+                voice_state["guild_id"] = tmp_guild->id;
+                _process_voice_state_update(voice_state);
+            }
+        }
+
         for (unsigned int i = 0; i < _guilds.size(); i++) {
             if (tmp_guild->id == _guilds[i]->id) {
                 Guild* old = _guilds[i];
@@ -330,14 +337,6 @@ void DiscordCPP::Discord::handle_raw_event(const std::string& event_name, const 
 
         _guilds.push_back(tmp_guild);
         log.debug("data of new guild added");
-
-        if (has_value(data, "voice_states") && data.at("voice_states").is_array()) {
-            json states = data.at("voice_states");
-            for (auto it = states.begin(); it != states.end(); it++) {
-                (*it)["guild_id"] = tmp_guild->id;
-                _process_voice_state_update(*it);
-            }
-        }
     } else if (event_name == "GUILD_DELETE") {
         std::string guild_id = data.at("guild_id").get<std::string>();
 
@@ -508,4 +507,6 @@ void DiscordCPP::Discord::_process_voice_state_update(const json& data) {
         voice_state->channel_id = data.at("channel_id").get<std::string>();
         voice_state->session_id = data.at("session_id").get<std::string>();
     }
+
+    log.debug("Updated voice state for user " + user_id);
 }

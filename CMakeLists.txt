@@ -17,12 +17,12 @@ endif()
 
 FetchContent_Declare(boost_beast
                  GIT_REPOSITORY https://github.com/boostorg/beast
-                 GIT_TAG        boost-1.77.0
+                 GIT_TAG        boost-1.80.0
 )
 
 FetchContent_Declare(nlohmann_json
   GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-  GIT_TAG v3.10.4
+  GIT_TAG v3.11.2
 )
 
 FetchContent_MakeAvailable(boost_beast nlohmann_json)

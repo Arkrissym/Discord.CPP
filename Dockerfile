@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim as build
+FROM debian:stable-slim as build
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
@@ -22,7 +22,7 @@ RUN mkdir build && \
 	cmake --build . --target discord_cpp -j$(nproc --all) && \
 	cmake --build . --target test_bot -j$(nproc --all)
 
-FROM debian:bullseye-slim
+FROM debian:stable-slim
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \

@@ -2,7 +2,7 @@
 Discord.CPP or Discord.C++ is a C++ library for interaction with the Discord API.
 
 ## Documentation
-Doxygen-generated documentiomenation is available [here](https://arkrissym.github.io/Discord.CPP).
+Doxygen-generated documentation is available [here](https://arkrissym.github.io/Discord.CPP).
 
 ## Dependencies
 - [boost-beast](https://github.com/boostorg/beast)

@@ -77,14 +77,7 @@ class Client : public Discord {
 
         ApplicationCommand echo = ApplicationCommand();
         echo.name = "echo";
-        echo.description = "Echo message";
-        echo.type = ApplicationCommand::Type::CHAT_INPUT;
-        ApplicationCommandValueOption* value = new ApplicationCommandValueOption();
-        value->name = "message";
-        value->description = "Message to echo";
-        value->autocomplete = false;
-        value->required = true;
-        echo.options.push_back(value);
+        echo.type = ApplicationCommand::Type::MESSAGE;
         create_application_command(echo);
 
         update_presence(DiscordStatus::Online,
@@ -327,14 +320,10 @@ class Client : public Discord {
             this_thread::sleep_for(chrono::seconds(5));
             interaction.update_reply("Updated reply");
         } else if (name == "echo") {
-            for (InteractionDataOption* it : interaction.data.value().options) {
-                if (it->name == "message" && it->type == ApplicationCommandOption::Type::STRING) {
-                    InteractionDataStringOption* option = (InteractionDataStringOption*)(it);
-                    log.info(option->name + " " + std::to_string(option->type));
-                    interaction.reply(option->value);
-                } else {
-                    log.info(it->name + " " + std::to_string(it->type));
-                }
+            auto data = interaction.data.value();
+            if (data.resolved.has_value() && data.target_id.has_value()) {
+                Message message = data.resolved.value().messages.at(data.target_id.value());
+                interaction.reply(message.content);
             }
         } else if (name == "msg") {
             for (InteractionDataOption* it : interaction.data.value().options) {

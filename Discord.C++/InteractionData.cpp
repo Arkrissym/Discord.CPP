@@ -5,7 +5,9 @@ DiscordCPP::InteractionData::InteractionData(const json& data, const std::string
     data.at("id").get_to<std::string>(id);
     data.at("name").get_to<std::string>(name);
     type = static_cast<ApplicationCommand::Type>(data.at("type").get<int>());
-    // resolved
+    if (has_value(data, "resolved")) {
+        resolved = InteractionResolvedData(data.at("resolved"), token);
+    }
     if (has_value(data, "options")) {
         for (json option : data.at("options")) {
             options.push_back(InteractionDataOption::from_json(option));
@@ -13,9 +15,9 @@ DiscordCPP::InteractionData::InteractionData(const json& data, const std::string
     }
     guild_id = get_optional<std::string>(data, "guild_id");
     custom_id = get_optional<std::string>(data, "custom_id");
+    target_id = get_optional<std::string>(data, "target_id");
     // component_type
     // values
-    target_id = get_optional<std::string>(data, "target_id");
     // components
 }
 
@@ -24,7 +26,7 @@ DiscordCPP::InteractionData::InteractionData(const InteractionData& other)
     id = other.id;
     name = other.name;
     type = other.type;
-    // resolved
+    resolved = other.resolved;
     for (unsigned int i = 0; i < other.options.size(); i++) {
         options.push_back(other.options[i]->copy());
     }

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['recipient_5fadd_757',['RECIPIENT_ADD',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7af678a52e9cdab631646e79d2920ff574',1,'DiscordCPP::MessageType']]],
-  ['recipient_5fremove_758',['RECIPIENT_REMOVE',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7a08221f6abdf96414f01dde2488e91e4a',1,'DiscordCPP::MessageType']]]
+  ['only_5fmentions_968',['ONLY_MENTIONS',['../namespace_discord_c_p_p_1_1_default_message_notification_level.html#a37b8b25ee33335283a508e781be2a840a6d3f96c6f9e23d130fe228e513ff8cf9',1,'DiscordCPP::DefaultMessageNotificationLevel']]]
 ];

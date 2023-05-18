@@ -2,6 +2,19 @@ var dir_bc90692f03e111e5ad06ece758d3dee2 =
 [
     [ "Activity.cpp", "_activity_8cpp.html", null ],
     [ "Activity.h", "_activity_8h.html", "_activity_8h" ],
+    [ "ApplicationCommand.cpp", "_application_command_8cpp.html", null ],
+    [ "ApplicationCommand.h", "_application_command_8h.html", [
+      [ "ApplicationCommand", "class_discord_c_p_p_1_1_application_command.html", "class_discord_c_p_p_1_1_application_command" ]
+    ] ],
+    [ "ApplicationCommandOption.cpp", "_application_command_option_8cpp.html", null ],
+    [ "ApplicationCommandOption.h", "_application_command_option_8h.html", [
+      [ "ApplicationCommandOption", "class_discord_c_p_p_1_1_application_command_option.html", "class_discord_c_p_p_1_1_application_command_option" ],
+      [ "ApplicationCommandSubcommand", "class_discord_c_p_p_1_1_application_command_subcommand.html", "class_discord_c_p_p_1_1_application_command_subcommand" ],
+      [ "ApplicationCommandChannelOption", "class_discord_c_p_p_1_1_application_command_channel_option.html", "class_discord_c_p_p_1_1_application_command_channel_option" ],
+      [ "ApplicationCommandValueOption", "class_discord_c_p_p_1_1_application_command_value_option.html", "class_discord_c_p_p_1_1_application_command_value_option" ],
+      [ "ApplicationCommandIntegerOption", "class_discord_c_p_p_1_1_application_command_integer_option.html", "class_discord_c_p_p_1_1_application_command_integer_option" ],
+      [ "ApplicationCommandNumberOption", "class_discord_c_p_p_1_1_application_command_number_option.html", "class_discord_c_p_p_1_1_application_command_number_option" ]
+    ] ],
     [ "AudioSource.h", "_audio_source_8h.html", "_audio_source_8h" ],
     [ "Channel.cpp", "_channel_8cpp.html", null ],
     [ "Channel.h", "_channel_8h.html", "_channel_8h" ],
@@ -46,6 +59,26 @@ var dir_bc90692f03e111e5ad06ece758d3dee2 =
     [ "Intents.cpp", "_intents_8cpp.html", null ],
     [ "Intents.h", "_intents_8h.html", [
       [ "Intents", "class_intents.html", "class_intents" ]
+    ] ],
+    [ "Interaction.cpp", "_interaction_8cpp.html", null ],
+    [ "Interaction.h", "_interaction_8h.html", [
+      [ "Interaction", "class_discord_c_p_p_1_1_interaction.html", "class_discord_c_p_p_1_1_interaction" ]
+    ] ],
+    [ "InteractionData.cpp", "_interaction_data_8cpp.html", null ],
+    [ "InteractionData.h", "_interaction_data_8h.html", [
+      [ "InteractionData", "class_discord_c_p_p_1_1_interaction_data.html", "class_discord_c_p_p_1_1_interaction_data" ]
+    ] ],
+    [ "InteractionDataOption.cpp", "_interaction_data_option_8cpp.html", null ],
+    [ "InteractionDataOption.h", "_interaction_data_option_8h.html", [
+      [ "InteractionDataOption", "class_discord_c_p_p_1_1_interaction_data_option.html", "class_discord_c_p_p_1_1_interaction_data_option" ],
+      [ "InteractionDataStringOption", "class_discord_c_p_p_1_1_interaction_data_string_option.html", "class_discord_c_p_p_1_1_interaction_data_string_option" ],
+      [ "InteractionDataIntegerOption", "class_discord_c_p_p_1_1_interaction_data_integer_option.html", "class_discord_c_p_p_1_1_interaction_data_integer_option" ],
+      [ "InteractionDataNumberOption", "class_discord_c_p_p_1_1_interaction_data_number_option.html", "class_discord_c_p_p_1_1_interaction_data_number_option" ],
+      [ "InteractionDataSubcommandOption", "class_discord_c_p_p_1_1_interaction_data_subcommand_option.html", "class_discord_c_p_p_1_1_interaction_data_subcommand_option" ]
+    ] ],
+    [ "InteractionResolvedData.cpp", "_interaction_resolved_data_8cpp.html", null ],
+    [ "InteractionResolvedData.h", "_interaction_resolved_data_8h.html", [
+      [ "InteractionResolvedData", "class_discord_c_p_p_1_1_interaction_resolved_data.html", "class_discord_c_p_p_1_1_interaction_resolved_data" ]
     ] ],
     [ "Logger.cpp", "_logger_8cpp.html", null ],
     [ "Logger.h", "_logger_8h.html", "_logger_8h" ],

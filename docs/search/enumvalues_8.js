@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['medium_750',['MEDIUM',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4a19624218056a732a9da1dd66c56acf68',1,'DiscordCPP::VerificationLevel']]],
-  ['members_5fwithout_5froles_751',['MEMBERS_WITHOUT_ROLES',['../namespace_discord_c_p_p_1_1_explicit_content_filter_level.html#aa3826261bb36372611c15559b881f712a84e5245367b8814f2396a4f7113277a0',1,'DiscordCPP::ExplicitContentFilterLevel']]]
+  ['listening_954',['Listening',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018ad02775cbf6865e16ea3a5206648f37c4',1,'DiscordCPP::ActivityTypes']]],
+  ['low_955',['LOW',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4ad41c4f1bc036680f94e5691658d4b6c1',1,'DiscordCPP::VerificationLevel']]]
 ];

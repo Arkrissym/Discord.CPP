@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['debug_733',['Debug',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdcac909e86054cb6ad83c22bfc2b3e6e5b8',1,'Logger.h']]],
-  ['default_734',['DEFAULT',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7a5097662b049bd5bb21d4a3892aae07ce',1,'DiscordCPP::MessageType']]],
-  ['disabled_735',['DISABLED',['../namespace_discord_c_p_p_1_1_explicit_content_filter_level.html#aa3826261bb36372611c15559b881f712aa763932b0b9e16eadee7a6cae6d88a76',1,'DiscordCPP::ExplicitContentFilterLevel']]],
-  ['dm_736',['DM',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2a9a79e62074f1fbf1b734e128bc8c06e8',1,'DiscordCPP::ChannelType']]]
+  ['call_926',['CALL',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7ad8509bffc3aed22c641db644dd088108',1,'DiscordCPP::MessageType']]],
+  ['channel_927',['CHANNEL',['../class_discord_c_p_p_1_1_application_command_option.html#af6fd44821c9877544eba6155bb7a2e1aad75d704e72c09b887599fced5ad7edf1',1,'DiscordCPP::ApplicationCommandOption']]],
+  ['channel_5ficon_5fchange_928',['CHANNEL_ICON_CHANGE',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7a2c6d4b4873b3ffb791284a4bc156cd0f',1,'DiscordCPP::MessageType']]],
+  ['channel_5fname_5fchange_929',['CHANNEL_NAME_CHANGE',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7ad3fe5078c49dbe1cd0dca9170d295b9a',1,'DiscordCPP::MessageType']]],
+  ['channel_5fpinned_5fmessage_930',['CHANNEL_PINNED_MESSAGE',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7a60e2e0aa1299b463cf5fb57be3163385',1,'DiscordCPP::MessageType']]],
+  ['chat_5finput_931',['CHAT_INPUT',['../class_discord_c_p_p_1_1_application_command.html#a64f7b574dc6fb66ba0cc9a35d7ea52dca8db097cf651290cb6dad626b2982695c',1,'DiscordCPP::ApplicationCommand']]]
 ];

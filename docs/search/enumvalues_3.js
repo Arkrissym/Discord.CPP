@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['elevated_737',['ELEVATED',['../namespace_discord_c_p_p_1_1_m_f_a_level.html#af2e68d7f818558e80e74879712909d42adad0cf623a0f6ebb44dd968e1ebea0ac',1,'DiscordCPP::MFALevel']]],
-  ['error_738',['Error',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdca4dfd42ec49d09d8c6555c218301cc30f',1,'Logger.h']]]
+  ['debug_932',['Debug',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdcac909e86054cb6ad83c22bfc2b3e6e5b8',1,'Logger.h']]],
+  ['default_933',['DEFAULT',['../namespace_discord_c_p_p_1_1_message_type.html#a2cbaf996aeaaacb770fd18c17a5dfcf7a5097662b049bd5bb21d4a3892aae07ce',1,'DiscordCPP::MessageType']]],
+  ['disabled_934',['DISABLED',['../namespace_discord_c_p_p_1_1_explicit_content_filter_level.html#aa3826261bb36372611c15559b881f712aa763932b0b9e16eadee7a6cae6d88a76',1,'DiscordCPP::ExplicitContentFilterLevel']]],
+  ['dm_935',['DM',['../namespace_discord_c_p_p_1_1_channel_type.html#a95896e6e5b3dd8249958de6e128e96c2a9a79e62074f1fbf1b734e128bc8c06e8',1,'DiscordCPP::ChannelType']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['info_747',['Info',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdca1cd805eaf0bb58a90fe7e7e4cf6a3cdc',1,'Logger.h']]]
+  ['high_951',['HIGH',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4acab10a6922732b0f3925470eeca0cc0b',1,'DiscordCPP::VerificationLevel']]]
 ];

@@ -1,5 +1,13 @@
 var searchData=
 [
-  ['identify_512',['identify',['../class_discord_c_p_p_1_1_gateway.html#a5920ce1fb075a1a9acf2838a19ffdf12',1,'DiscordCPP::Gateway']]],
-  ['info_513',['info',['../class_logger.html#ab4c4d86279176eb0ede726bc5b4d5ddb',1,'Logger']]]
+  ['identify_660',['identify',['../class_discord_c_p_p_1_1_gateway.html#a5920ce1fb075a1a9acf2838a19ffdf12',1,'DiscordCPP::Gateway']]],
+  ['info_661',['info',['../class_logger.html#ab4c4d86279176eb0ede726bc5b4d5ddb',1,'Logger']]],
+  ['interaction_662',['Interaction',['../class_discord_c_p_p_1_1_interaction.html#aeb350b905d5ae166138e920073549494',1,'DiscordCPP::Interaction']]],
+  ['interactiondata_663',['InteractionData',['../class_discord_c_p_p_1_1_interaction_data.html#a6cdcb237f72b579237ad3377fe5b6ced',1,'DiscordCPP::InteractionData::InteractionData(const json &amp;data, const std::string &amp;token)'],['../class_discord_c_p_p_1_1_interaction_data.html#a7a77f3680958152a5d3ec0f4b1260adb',1,'DiscordCPP::InteractionData::InteractionData(const InteractionData &amp;other)']]],
+  ['interactiondataintegeroption_664',['InteractionDataIntegerOption',['../class_discord_c_p_p_1_1_interaction_data_integer_option.html#a3ef7265cb9eea4268e44e2702dc9ad22',1,'DiscordCPP::InteractionDataIntegerOption']]],
+  ['interactiondatanumberoption_665',['InteractionDataNumberOption',['../class_discord_c_p_p_1_1_interaction_data_number_option.html#a217e8d62905a77bd0dbfcf9e0aff0ed7',1,'DiscordCPP::InteractionDataNumberOption']]],
+  ['interactiondataoption_666',['InteractionDataOption',['../class_discord_c_p_p_1_1_interaction_data_option.html#a06d875ae9ac63befd12a0a51f6546a52',1,'DiscordCPP::InteractionDataOption']]],
+  ['interactiondatastringoption_667',['InteractionDataStringOption',['../class_discord_c_p_p_1_1_interaction_data_string_option.html#a7dbc2f6b2f17cc863404631609dc39c7',1,'DiscordCPP::InteractionDataStringOption']]],
+  ['interactiondatasubcommandoption_668',['InteractionDataSubcommandOption',['../class_discord_c_p_p_1_1_interaction_data_subcommand_option.html#ae23c7df493174aa49763dbf9cb87a3ee',1,'DiscordCPP::InteractionDataSubcommandOption::InteractionDataSubcommandOption(const json &amp;data)'],['../class_discord_c_p_p_1_1_interaction_data_subcommand_option.html#a575b82243247d8473ab9429b5acc69e0',1,'DiscordCPP::InteractionDataSubcommandOption::InteractionDataSubcommandOption(const InteractionDataSubcommandOption &amp;other)']]],
+  ['interactionresolveddata_669',['InteractionResolvedData',['../class_discord_c_p_p_1_1_interaction_resolved_data.html#a7ef46af4228286206101c3a7bddd1428',1,'DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json &amp;data, const std::string &amp;token)'],['../class_discord_c_p_p_1_1_interaction_resolved_data.html#a6678d7b2a09c0b626b222606dd934bbe',1,'DiscordCPP::InteractionResolvedData::InteractionResolvedData(const InteractionResolvedData &amp;other)']]]
 ];

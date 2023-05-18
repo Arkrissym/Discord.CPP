@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['streaming_759',['Streaming',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018a95e54bd873a2eb313f12b8f21eb01422',1,'DiscordCPP::ActivityTypes']]]
+  ['ping_969',['PING',['../class_discord_c_p_p_1_1_interaction.html#a82b042a34ce2b0c06df37d811c2a4f83a3f254a29db364a105877fdedb97c8b20',1,'DiscordCPP::Interaction']]]
 ];

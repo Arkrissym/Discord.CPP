@@ -17,7 +17,7 @@ endif()
 
 FetchContent_Declare(boost_beast
                  GIT_REPOSITORY https://github.com/boostorg/beast
-                 GIT_TAG        boost-1.80.0
+                 GIT_TAG        boost-1.82.0
 )
 
 FetchContent_Declare(nlohmann_json

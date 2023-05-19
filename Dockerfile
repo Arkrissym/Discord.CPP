@@ -1,16 +1,15 @@
-FROM debian:stable-slim as build
+FROM alpine as build
 
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential \
+RUN apk add \
+	g++ \
 	make \
 	cmake \
 	git \
-	zlib1g-dev \
-	libopus-dev \
+	zlib-dev \
+	opus-dev \
 	libsodium-dev \
-	libboost1.74-dev \
-	libboost-filesystem1.74-dev \
-	libssl-dev
+	boost1.82-dev \
+	openssl-dev
 
 COPY . /app
 
@@ -22,25 +21,23 @@ RUN mkdir build && \
 	cmake --build . --target discord_cpp -j$(nproc --all) && \
 	cmake --build . --target test_bot -j$(nproc --all)
 
-FROM debian:stable-slim
+FROM alpine
 
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-	zlib1g \
-	libopus0 \
-	libsodium23 \
-	libboost1.74 \
-	libboost-filesystem1.74 \
-	libssl1.1 \
+RUN apk add \
+	zlib \
+	opus \
+	libsodium \
+	boost1.82 \
+	boost1.82-filesystem \
+	openssl \
 	ffmpeg \
-	python3-pip
-RUN apt-get clean
+	py3-pip
 
 RUN pip install youtube_dl
 RUN pip cache purge
 
 COPY --from=build /app/build/libdiscord_cpp.so /usr/local/lib
-RUN ldconfig
+RUN ldconfig /usr/local/lib
 
 RUN mkdir /app
 COPY --from=build /app/build/test_bot /app

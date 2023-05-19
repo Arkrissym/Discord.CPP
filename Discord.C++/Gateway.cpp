@@ -63,18 +63,18 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
     }
 
     threadpool->execute([this] {
-        _log.info("trying to reconnect in " +
-                  std::to_string((double)_reconnect_timeout / 1000) + "s");
+        _log.info("trying to reconnect in " + std::to_string((double)_reconnect_timeout / 1000) + "s");
         std::this_thread::sleep_for(std::chrono::milliseconds(_reconnect_timeout));
 
         if (_reconnect_timeout == 0) {
             _reconnect_timeout = 1000;
         } else if (_reconnect_timeout < 90000) {  // cap timeout to about 15 min
             _reconnect_timeout = (unsigned int)(_reconnect_timeout * 1.5);
+            _resume_url = _url;
         }
 
         try {
-            connect(_url).get();
+            connect(_resume_url).get();
             _log.info("reconnected");
             _reconnect_timeout = 0;
         } catch (const beast::system_error& e) {
@@ -113,9 +113,11 @@ void DiscordCPP::Gateway::set_message_handler(
 }
 
 std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
-    auto connect_future = threadpool->execute([this, url]() {
+    if (_url.empty()) {
         _url = url;
-        std::string tmp_url = _url;
+    }
+    auto connect_future = threadpool->execute([this, url]() {
+        std::string tmp_url = url;
 
         // cut protocol
         auto index = tmp_url.find("://");
@@ -139,7 +141,7 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
         }
 
         _log.debug("host: " + host + "\t\tquery: " + query);
-        _log.info("connecting to websocket: " + _url);
+        _log.info("connecting to websocket: " + url);
 
         tcp::resolver resolver{io_context};
         auto results = resolver.resolve(host, "443");

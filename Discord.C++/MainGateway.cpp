@@ -65,6 +65,8 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
 
                     _session_id = payload["d"]["session_id"].get<std::string>();
 
+                    _resume_url = payload["d"]["resume_gateway_url"].get<std::string>();
+
                     std::string str = set_trace(payload);
 
                     _log.info("connected to: " + str + " ]");

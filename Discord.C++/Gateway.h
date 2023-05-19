@@ -24,6 +24,8 @@ class Gateway {
     std::unique_ptr<boost::beast::websocket::stream<boost::beast::ssl_stream<boost::asio::ip::tcp::socket>>> _client;
     /// the url of the gateway
     std::string _url;
+    /// the url used for reconnecting
+    std::string _resume_url;
     /// token to identify with the gateway
     std::string _token;
     /// heartbeat interval in milliseconds
@@ -46,16 +48,14 @@ class Gateway {
     DLL_EXPORT void start_heartbeating();
     DLL_EXPORT virtual json get_heartbeat_payload() = 0;
     DLL_EXPORT virtual void identify() = 0;
-    DLL_EXPORT virtual void on_websocket_incoming_message(
-        const std::string& message) = 0;
+    DLL_EXPORT virtual void on_websocket_incoming_message(const std::string& message) = 0;
     DLL_EXPORT void on_websocket_disconnnect();
 
    public:
     DLL_EXPORT Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool);
     DLL_EXPORT virtual ~Gateway();
 
-    DLL_EXPORT void set_message_handler(
-        const std::function<void(json payload)>& handler);
+    DLL_EXPORT void set_message_handler(const std::function<void(json payload)>& handler);
 
     DLL_EXPORT virtual std::shared_future<void> connect(const std::string& url);
     DLL_EXPORT std::shared_future<void> send(const json& message);

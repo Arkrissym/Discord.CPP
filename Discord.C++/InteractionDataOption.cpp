@@ -13,6 +13,8 @@ DiscordCPP::InteractionDataOption* DiscordCPP::InteractionDataOption::from_json(
             return (InteractionDataOption*)new InteractionDataIntegerOption(data);
         case ApplicationCommandOption::Type::NUMBER:
             return (InteractionDataOption*)new InteractionDataNumberOption(data);
+        case ApplicationCommandOption::Type::BOOLEAN:
+            return (InteractionDataOption*)new InteractionDataBooleanOption(data);
         case ApplicationCommandOption::Type::SUB_COMMAND:
         case ApplicationCommandOption::Type::SUB_COMMAND_GROUP:
             return (InteractionDataOption*)new InteractionDataSubcommandOption(data);
@@ -29,6 +31,8 @@ DiscordCPP::InteractionDataOption* DiscordCPP::InteractionDataOption::copy() {
             return (InteractionDataOption*)new InteractionDataIntegerOption(*(InteractionDataIntegerOption*)this);
         case ApplicationCommandOption::Type::NUMBER:
             return (InteractionDataOption*)new InteractionDataNumberOption(*(InteractionDataNumberOption*)this);
+        case ApplicationCommandOption::Type::BOOLEAN:
+            return (InteractionDataOption*)new InteractionDataBooleanOption(*(InteractionDataBooleanOption*)this);
         case ApplicationCommandOption::Type::SUB_COMMAND:
         case ApplicationCommandOption::Type::SUB_COMMAND_GROUP:
             return (InteractionDataOption*)new InteractionDataSubcommandOption(*(InteractionDataSubcommandOption*)this);
@@ -50,6 +54,11 @@ DiscordCPP::InteractionDataIntegerOption::InteractionDataIntegerOption(const jso
 DiscordCPP::InteractionDataNumberOption::InteractionDataNumberOption(const json& data)
     : InteractionDataOption(data) {
     data.at("value").get_to<double>(value);
+}
+
+DiscordCPP::InteractionDataBooleanOption::InteractionDataBooleanOption(const json& data)
+    : InteractionDataOption(data) {
+    data.at("value").get_to<bool>(value);
 }
 
 DiscordCPP::InteractionDataSubcommandOption::InteractionDataSubcommandOption(const json& data)

@@ -43,6 +43,14 @@ class InteractionDataNumberOption : public InteractionDataOption {
     DLL_EXPORT InteractionDataNumberOption(const json& data);
 };
 
+class InteractionDataBooleanOption : public InteractionDataOption {
+   public:
+    /// Value of the option.
+    bool value;
+
+    DLL_EXPORT InteractionDataBooleanOption(const json& data);
+};
+
 class InteractionDataSubcommandOption : public InteractionDataOption {
    public:
     /// array of InteractionDataOption

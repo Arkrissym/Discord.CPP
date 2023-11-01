@@ -1,8 +1,7 @@
 #include "ApplicationCommand.h"
 
 DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::string& token)
-    : DiscordCPP::DiscordObject(token) {
-    id = data.at("id").get<std::string>();
+    : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
     type = static_cast<DiscordCPP::ApplicationCommand::Type>(get_or_else<int>(data, "type", 1));
     application_id = data.at("application_id").get<std::string>();
 
@@ -24,7 +23,6 @@ DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::
 
 DiscordCPP::ApplicationCommand::ApplicationCommand(const ApplicationCommand& other)
     : DiscordCPP::DiscordObject(other) {
-    id = other.id;
     type = other.type;
     application_id = other.application_id;
     guild_id = other.guild_id;
@@ -63,7 +61,7 @@ void DiscordCPP::ApplicationCommand::delete_command() {
     if (guild_id.has_value()) {
         url += "/guilds/" + guild_id.value();
     }
-    url += "/commands/" + id;
+    url += "/commands/" + get_id();
 
     api_call(url, "DELETE");
 }

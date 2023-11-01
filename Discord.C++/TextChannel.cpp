@@ -14,18 +14,8 @@ DiscordCPP::TextChannel::TextChannel(const json& data, const std::string& token)
 }
 
 DiscordCPP::TextChannel::TextChannel(const std::string& id, const std::string& token) {
-    _token = token;
     std::string url = "/channels/" + id;
     *this = TextChannel(api_call(url), token);
-}
-
-DiscordCPP::TextChannel::TextChannel(const TextChannel& old)
-    : DiscordCPP::Channel(old) {
-    topic = old.topic;
-    nsfw = old.nsfw;
-    last_message_id = old.last_message_id;
-    last_pin_timestamp = old.last_pin_timestamp;
-    rate_limit_per_user = old.rate_limit_per_user;
 }
 
 /**	@param[in]	content	The string message to send.
@@ -33,23 +23,23 @@ DiscordCPP::TextChannel::TextChannel(const TextChannel& old)
     @return	The message that was sent.
 */
 DiscordCPP::Message DiscordCPP::TextChannel::send(const std::string& content, const bool tts) {
-    std::string url = "/channels/" + id + "/messages";
+    std::string url = "/channels/" + get_id() + "/messages";
 
     json data = {{"content", content}, {"tts", tts}};
 
-    return Message(api_call(url, "POST", data, "application/json"), _token);
+    return Message(api_call(url, "POST", data, "application/json"), get_token());
 }
 
 /**	@param[in]	embed	The Embed to send.
     @return	The message that was sent.
 */
 DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
-    std::string url = "/channels/" + id + "/messages";
+    std::string url = "/channels/" + get_id() + "/messages";
 
     json data;
     data["embeds"].push_back(embed.to_json());
 
-    return Message(api_call(url, "POST", data, "application/json"), _token);
+    return Message(api_call(url, "POST", data, "application/json"), get_token());
 }
 
 /**	@param[in]	limit	Max number of messages to retrieve (1-100)
@@ -61,7 +51,7 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
 std::vector<std::shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::history(const int limit, const std::string& before, const std::string& after, const std::string& around) {
     std::vector<std::shared_ptr<Message>> ret;
 
-    std::string url = "/channels/" + id + "/messages" + "?limit=" + std::to_string(limit);
+    std::string url = "/channels/" + get_id() + "/messages" + "?limit=" + std::to_string(limit);
 
     if (before.length() > 0)
         url += "&before=" + before;
@@ -72,8 +62,8 @@ std::vector<std::shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::histo
 
     json msgs = api_call(url, "GET", json(), "", false);
 
-    for (json msg : msgs) {
-        ret.push_back(std::make_shared<Message>(Message(msg, _token)));
+    for (const json& msg : msgs) {
+        ret.push_back(std::make_shared<Message>(Message(msg, get_id())));
     }
 
     return ret;
@@ -88,11 +78,11 @@ void DiscordCPP::TextChannel::delete_messages(const std::vector<std::shared_ptr<
     else if (messages.size() > 100)
         throw SizeError("Cannot delete more than 100 messages");
 
-    std::string url = "/channels/" + id + "/messages/bulk-delete";
+    std::string url = "/channels/" + get_id() + "/messages/bulk-delete";
 
     json data = {{"messages", json::array()}};
-    for (unsigned int i = 0; i < messages.size(); i++) {
-        data["messages"].emplace_back(messages[i]->id);
+    for (const auto& message : messages) {
+        data["messages"].emplace_back(message->get_id());
     }
 
     api_call(url, "POST", data, "application/json");

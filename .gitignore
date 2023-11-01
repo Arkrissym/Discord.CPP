@@ -273,3 +273,4 @@ __pycache__/
 # Custom
 /test_bot/test_bot
 docker-compose.yml
+.cache/

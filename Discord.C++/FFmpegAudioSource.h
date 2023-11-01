@@ -15,7 +15,7 @@ namespace boost::process {
 class child;
 template <class CharT, class Traits>
 class basic_ipstream;
-typedef basic_ipstream<char, std::char_traits<char>> ipstream;
+using ipstream = basic_ipstream<char, std::char_traits<char>>;
 }  // namespace boost::process
 #endif
 
@@ -32,11 +32,11 @@ class FFmpegAudioSource : public AudioSource {
         @param[in]	options                 [Optional] Options to place after input.
         @return         FFmpegAudioSource       playable AudioSource
     */
-    DLL_EXPORT FFmpegAudioSource(const std::string& input,
-                                 const std::string& before_options = "",
-                                 const std::string& options = "");
-    DLL_EXPORT ~FFmpegAudioSource();
+    DLL_EXPORT explicit FFmpegAudioSource(const std::string& input,
+                                          const std::string& before_options = "",
+                                          const std::string& options = "");
+    DLL_EXPORT ~FFmpegAudioSource() override;
 
-    DLL_EXPORT bool read(char* pcm_data, const int length);
+    DLL_EXPORT bool read(char* pcm_data, const int length) override;
 };
 }  // namespace DiscordCPP

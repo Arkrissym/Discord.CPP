@@ -35,7 +35,7 @@ class MainGateway : public Gateway {
 
    public:
     DLL_EXPORT MainGateway(const std::string& token, const Intents& intents, const int shard_id = 0, const unsigned int num_shards = 1);
-    DLL_EXPORT ~MainGateway(){};
+    DLL_EXPORT ~MainGateway() override = default;
 
     DLL_EXPORT unsigned int get_shard_id();
     DLL_EXPORT std::shared_future<void> connect(const std::string& url) override;

@@ -1,21 +1,13 @@
 #include "Exceptions.h"
 
-DiscordCPP::DiscordException::DiscordException(const std::string& what) {
-    _what = what;
-}
-
-DiscordCPP::DiscordException::~DiscordException() {
+DiscordCPP::DiscordException::DiscordException(const std::string& what) : _what(what) {
 }
 
 const char* DiscordCPP::DiscordException::what() const noexcept {
     return _what.c_str();
 }
 
-DiscordCPP::StatusCodeException::StatusCodeException(const std::string& what, int error_code) : DiscordException(what) {
-    _error_code = error_code;
-}
-
-DiscordCPP::StatusCodeException::~StatusCodeException() {
+DiscordCPP::StatusCodeException::StatusCodeException(const std::string& what, int error_code) : DiscordException(what), _error_code(error_code) {
 }
 
 ///@return	error code of this exception

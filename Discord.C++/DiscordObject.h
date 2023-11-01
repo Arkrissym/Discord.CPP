@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <map>
+#include <string>
 
 #include "static.h"
 
@@ -15,20 +16,28 @@ class DiscordObject {
     };
     http_response request_internal(const std::string& url, const std::string& method = "GET", const std::string& data = "", const std::string& content_type = "");
 
-   protected:
-    ///token to authentificate with the discord api
+    /// token to authentificate with the discord api
     std::string _token;
 
-    ///helper function to communicate with the http api
+    /// the id of the object
+    std::string id;
+
+   protected:
+    [[nodiscard]] std::string get_token() const { return _token; }
+    /// helper function to communicate with the http api
     json api_call(const std::string& url, const std::string& method = "GET", const json& data = json(), const std::string& content_type = "", const bool cache = true);
 
    public:
-    ///the id of the object
-    std::string id;  //snowflake
-
-    DLL_EXPORT DiscordObject(){};
+    DLL_EXPORT DiscordObject() = default;
     ///	@param[in]	token	Discord token
-    DLL_EXPORT DiscordObject(const std::string& token);
+    DLL_EXPORT explicit DiscordObject(const std::string& token);
+    ///	@param[in]	token	Discord token
+    DLL_EXPORT explicit DiscordObject(const std::string& token, const std::string& id);
+    /// @param[in]	old	the Channel to copy
+    DLL_EXPORT DiscordObject(const DiscordObject& old) = default;
+
+    /// @return the id of the object
+    DLL_EXPORT [[nodiscard]] std::string get_id() const { return id; }
 };
 
 }  // namespace DiscordCPP

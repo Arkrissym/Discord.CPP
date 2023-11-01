@@ -1,8 +1,10 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+
+#include "Logger.h"
 #ifndef _WIN32
-#include <stdlib.h>
+#include <cstdlib>
 #endif
 #include <boost/process.hpp>
 
@@ -15,10 +17,11 @@ class Client : public Discord {
    private:
     Channel* findChannel(const string& name, const string& guild_id) {
         for (unsigned int i = 0; i < _guilds.size(); i++) {
-            if (guild_id == _guilds[i]->id) {
-                for (unsigned int j = 0; j < _guilds[i]->channels.size(); j++) {
-                    if (_guilds[i]->channels[j]->name.compare(name) == 0) {
-                        return _guilds[i]->channels[j];
+            if (guild_id == _guilds[i]->get_id()) {
+                auto channels = _guilds[i]->get_channels();
+                for (unsigned int j = 0; j < channels.size(); j++) {
+                    if (channels[j]->get_name().compare(name) == 0) {
+                        return channels[j];
                     }
                 }
             }
@@ -40,7 +43,7 @@ class Client : public Discord {
     }
 
     void on_ready(User user) override {
-        log.info("logged in as: " + user.username);
+        log.info("logged in as: " + user.get_username());
 
         auto old_commands = get_application_commands();
         for (auto command : old_commands) {
@@ -48,40 +51,39 @@ class Client : public Discord {
         }
 
         ApplicationCommand ping = ApplicationCommand();
-        ping.name = "ping";
-        ping.description = "Ping the bot";
-        ping.type = ApplicationCommand::Type::CHAT_INPUT;
+        ping.set_name("ping");
+        ping.set_description("Ping the bot");
+        ping.set_type(ApplicationCommand::Type::CHAT_INPUT);
         create_application_command(ping);
 
         ApplicationCommand update = ApplicationCommand();
-        update.name = "update";
-        update.description = "Responds with a message and updates it after 5 seconds";
-        update.type = ApplicationCommand::Type::CHAT_INPUT;
+        update.set_name("update");
+        update.set_description("Responds with a message and updates it after 5 seconds");
+        update.set_type(ApplicationCommand::Type::CHAT_INPUT);
         create_application_command(update);
 
         ApplicationCommand msg = ApplicationCommand();
-        msg.name = "msg";
-        msg.description = "Test messages";
-        msg.type = ApplicationCommand::Type::CHAT_INPUT;
+        msg.set_name("msg");
+        msg.set_description("Test messages");
+        msg.set_type(ApplicationCommand::Type::CHAT_INPUT);
         ApplicationCommandSubcommand* text = new ApplicationCommandSubcommand();
         text->name = "text";
         text->description = "Text message";
         text->type = ApplicationCommandOption::Type::SUB_COMMAND;
-        msg.options.push_back(text);
+        msg.add_option(text);
         ApplicationCommandSubcommand* embed = new ApplicationCommandSubcommand();
         embed->name = "embed";
         embed->description = "Embed message";
         embed->type = ApplicationCommandOption::Type::SUB_COMMAND;
-        msg.options.push_back(embed);
+        msg.add_option(embed);
         create_application_command(msg);
 
         ApplicationCommand echo = ApplicationCommand();
-        echo.name = "echo";
-        echo.type = ApplicationCommand::Type::MESSAGE;
+        echo.set_name("echo");
+        echo.set_type(ApplicationCommand::Type::MESSAGE);
         create_application_command(echo);
 
-        update_presence(DiscordStatus::Online,
-                        Activity("test", ActivityTypes::Game));
+        update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game));
     }
 
     void on_user_ban(User user, Guild guild) override {
@@ -103,37 +105,36 @@ class Client : public Discord {
     }
 
     void on_typing_start(User user, TextChannel channel, unsigned int) override {
-        log.info(user.username + " started typing in " + channel.name);
+        log.info(user.get_username() + " started typing in " + channel.get_name());
     }
 
     void on_message(Message message) override {
-        log.info(message.author->username + " sent \"" + message.content +
-                 "\" in channel: " + message.channel->name +
-                 " (id: " + message.channel->id +
-                 ", type: " + to_string(message.channel->type) + ").");
+        log.info(message.get_author().get_username() + " sent \"" + message.get_content() +
+                 "\" in channel: " + message.get_channel().get_name() +
+                 " (id: " + message.get_channel_id() +
+                 ", type: " + to_string(message.get_channel().get_type()) + ").");
 
-        if (message.content.compare("?hello") == 0) {
-            Message msg = message.channel->send("Hello World!");
-            log.info("message sent (id: " + msg.channel->id + ")");
-        } else if (message.content == "?guild") {
-            if (message.channel->type == ChannelType::GUILD_TEXT) {
-                message.channel->send(*((GuildChannel*)message.channel)->guild);
+        if (message.get_content().compare("?hello") == 0) {
+            Message msg = message.reply("Hello World!");
+            log.info("message sent (id: " + msg.get_id() + ")");
+        } else if (message.get_content() == "?guild") {
+            if (message.get_guild().has_value()) {
+                message.reply(message.get_guild().value().get_name());
             } else {
-                message.channel->send("This is not a guild channel.");
+                message.reply("This is not a guild channel.");
             }
-        } else if (message.content == "?msgedit") {
-            Message msg = message.channel->send("New message");
+        } else if (message.get_content() == "?msgedit") {
+            Message msg = message.get_channel().send("New message");
             this_thread::sleep_for(chrono::seconds(1));
             msg.edit("Edited message");
-        } else if (message.content == "?msgdel") {
-            Message msg =
-                message.channel->send("Message will be deleted in 5 seconds.");
+        } else if (message.get_content() == "?msgdel") {
+            Message msg = message.get_channel().send("Message will be deleted in 5 seconds.");
             this_thread::sleep_for(chrono::seconds(5));
             msg.delete_msg();
             message.delete_msg();
-        } else if (message.content == "?chdel") {
-            message.channel->delete_channel();
-        } else if (message.content == "?embed") {
+        } else if (message.get_content() == "?chdel") {
+            message.get_channel().delete_channel();
+        } else if (message.get_content() == "?embed") {
             Embed embed = Embed("Embed", "description");
 
             embed.set_color(0x00ff00);
@@ -157,45 +158,40 @@ class Client : public Discord {
                 embed.add_field("Field", to_string(i), false);
             }
 
-            message.channel->send(embed);
-        } else if (message.content == "?dm") {
-            message.author->send("This is a direct text message.");
-            message.author->send(Embed("Embed", "text"));
-        } else if (message.content.compare(0, 7, "?clear ") == 0) {
-            string tmp = message.content.substr(7);
-            vector<shared_ptr<Message>> messages =
-                message.channel->history(atoi(tmp.c_str()) + 1);
+            message.reply(embed);
+        } else if (message.get_content() == "?dm") {
+            message.get_author().send("This is a direct text message.");
+            message.get_author().send(Embed("Embed", "text"));
+        } else if (message.get_content().compare(0, 7, "?clear ") == 0) {
+            string tmp = message.get_content().substr(7);
+            vector<shared_ptr<Message>> messages = message.get_channel().history(atoi(tmp.c_str()) + 1);
 
             log.info("num messages: " + to_string(messages.size()));
-            message.channel->delete_messages(messages);
-        } else if (message.content.compare(0, 9, "?playwav ") == 0) {
-            if (message.channel->type != ChannelType::GUILD_TEXT) {
+            message.get_channel().delete_messages(messages);
+        } else if (message.get_content().compare(0, 9, "?playwav ") == 0) {
+            if (!message.get_guild_id().has_value()) {
                 return;
             }
 
             FileAudioSource* source = new FileAudioSource("test.wav");
-            string channel_name = message.content.substr(9);
+            string channel_name = message.get_content().substr(9);
 
-            play((VoiceChannel*)findChannel(
-                     channel_name, ((GuildChannel*)message.channel)->guild->id),
-                 source);
+            play((VoiceChannel*)findChannel(channel_name, message.get_guild_id().value()), source);
 
             delete source;
-        } else if (message.content.compare(0, 12, "?playffmpeg ") == 0) {
-            if (message.channel->type != ChannelType::GUILD_TEXT) {
+        } else if (message.get_content().compare(0, 12, "?playffmpeg ") == 0) {
+            if (!message.get_guild_id().has_value()) {
                 return;
             }
 
             FFmpegAudioSource* source = new FFmpegAudioSource("test.mp3");
-            string channel_name = message.content.substr(12);
+            string channel_name = message.get_content().substr(12);
 
-            play((VoiceChannel*)findChannel(
-                     channel_name, ((GuildChannel*)message.channel)->guild->id),
-                 source);
+            play((VoiceChannel*)findChannel(channel_name, message.get_guild_id().value()), source);
 
             delete source;
-        } else if (message.content.compare(0, 6, "?play ") == 0) {
-            stringstream argumentstream(message.content.substr(6));
+        } else if (message.get_content().compare(0, 6, "?play ") == 0) {
+            stringstream argumentstream(message.get_content().substr(6));
             string channel_name;
             string link;
             getline(argumentstream, link, ' ');
@@ -218,99 +214,96 @@ class Client : public Discord {
                 "loudnorm=i=-23.0:lra=7.0:tp=-2.0:offset=0.0:measured_i=-9.11:"
                 "measured_lra=3.5:measured_tp=-0.03:measured_thresh=-19.18:"
                 "linear=true[norm0]");
-            play((VoiceChannel*)findChannel(
-                     channel_name, ((GuildChannel*)message.channel)->guild->id),
-                 source);
+            play((VoiceChannel*)findChannel(channel_name, message.get_guild_id().value()), source);
 
             delete source;
-        } else if (message.content == "?leave_guild") {
-            if (message.channel->type == ChannelType::GUILD_TEXT) {
-                ((GuildChannel*)message.channel)->guild->leave();
+        } else if (message.get_content() == "?leave_guild") {
+            if (message.get_guild().has_value()) {
+                message.get_guild().value().leave();
             } else {
-                message.channel->send("This is not a guild channel.");
+                message.reply("This is not a guild channel.");
             }
-        } else if (message.content == "?delete_guild") {
-            if (message.channel->type == ChannelType::GUILD_TEXT) {
-                ((GuildChannel*)message.channel)->guild->delete_guild();
+        } else if (message.get_content() == "?delete_guild") {
+            if (message.get_guild().has_value()) {
+                message.get_guild().value().delete_guild();
             } else {
-                message.channel->send("This is not a guild channel.");
+                message.reply("This is not a guild channel.");
             }
-        } else if (message.content.compare(0, 6, "?kick ") == 0) {
-            if (message.channel->type == ChannelType::GUILD_TEXT) {
+        } else if (message.get_content().compare(0, 6, "?kick ") == 0) {
+            if (message.get_guild_id().has_value()) {
                 Guild* guild = NULL;
 
                 for (unsigned int i = 0; i < _guilds.size(); i++) {
-                    if (((GuildChannel*)message.channel)->guild->id ==
-                        _guilds[i]->id) {
+                    if (message.get_guild_id().value() ==
+                        _guilds[i]->get_id()) {
                         guild = _guilds[i];
                         break;
                     }
                 }
 
-                string user_name = message.content.substr(6);
-                Member* user = NULL;
-
-                for (unsigned int i = 0; i < guild->members.size(); i++) {
-                    log.debug(string(*guild->members[i]));
-                    if (string(*guild->members[i]) == user_name) {
-                        user = guild->members[i];
+                string user_name = message.get_content().substr(6);
+                std::optional<Member> user;
+                auto members = guild->get_members();
+                for (auto& member : members) {
+                    log.debug(string(member));
+                    if (string(member) == user_name) {
+                        user = member;
                         break;
                     }
                 }
 
-                if (user == NULL) {
-                    message.channel->send("User " + user_name + " not found.");
+                if (!user.has_value()) {
+                    message.reply("User " + user_name + " not found.");
                 } else {
                     guild->kick(*user);
                 }
             } else {
-                message.channel->send("This is not a guild channel.");
+                message.reply("This is not a guild channel.");
             }
-        } else if (message.content.compare(0, 5, "?ban ") == 0) {
-            if (message.channel->type == ChannelType::GUILD_TEXT) {
+        } else if (message.get_content().compare(0, 5, "?ban ") == 0) {
+            if (message.get_guild().has_value()) {
                 Guild* guild = NULL;
 
                 for (unsigned int i = 0; i < _guilds.size(); i++) {
-                    if (((GuildChannel*)message.channel)->guild->id ==
-                        _guilds[i]->id) {
+                    if (message.get_guild().value().get_id() ==
+                        _guilds[i]->get_id()) {
                         guild = _guilds[i];
                         break;
                     }
                 }
 
-                string user_name = message.content.substr(5);
-                Member* user_ptr = NULL;
+                string user_name = message.get_content().substr(5);
+                std::optional<Member> user;
+                auto members = guild->get_members();
 
-                for (unsigned int i = 0; i < guild->members.size(); i++) {
-                    if (string(*guild->members[i]) == user_name) {
-                        user_ptr = guild->members[i];
+                for (unsigned int i = 0; i < members.size(); i++) {
+                    if (string(members[i]) == user_name) {
+                        user = members[i];
                         break;
                     }
                 }
 
-                if (user_ptr == NULL) {
-                    message.channel->send("User " + user_name + " not found.");
+                if (!user.has_value()) {
+                    message.reply("User " + user_name + " not found.");
                 } else {
-                    User user = User(*user_ptr);
-
-                    guild->ban(user, "testing the library", 1);
+                    guild->ban(user.value(), "testing the library", 1);
 
                     this_thread::sleep_for(chrono::seconds(10));
 
-                    guild->unban(user);
+                    guild->unban(user.value());
                 }
             } else {
-                message.channel->send("This is not a guild channel.");
+                message.reply("This is not a guild channel.");
             }
         }
     }
 
     void on_interaction(Interaction interaction) override {
-        if (interaction.type != Interaction::Type::APPLICATION_COMMAND) {
+        if (interaction.get_type() != Interaction::Type::APPLICATION_COMMAND) {
             return;
         }
 
-        string name = interaction.data.value().name;
+        string name = interaction.get_data().value().get_name();
         log.info("interaction: " + name);
 
         if (name == "ping") {
@@ -320,13 +313,13 @@ class Client : public Discord {
             this_thread::sleep_for(chrono::seconds(5));
             interaction.update_reply("Updated reply");
         } else if (name == "echo") {
-            auto data = interaction.data.value();
-            if (data.resolved.has_value() && data.target_id.has_value()) {
-                Message message = data.resolved.value().messages.at(data.target_id.value());
-                interaction.reply(message.content);
+            auto data = interaction.get_data().value();
+            if (data.get_resolved_data().has_value() && data.get_target_id().has_value()) {
+                Message message = data.get_resolved_data().value().get_messages().at(data.get_target_id().value());
+                interaction.reply(message.get_content());
             }
         } else if (name == "msg") {
-            for (InteractionDataOption* it : interaction.data.value().options) {
+            for (InteractionDataOption* it : interaction.get_data().value().get_options()) {
                 if (it->name == "text" && it->type == ApplicationCommandOption::Type::SUB_COMMAND) {
                     interaction.reply("Text reply");
                 } else if (it->name == "embed" && it->type == ApplicationCommandOption::Type::SUB_COMMAND) {
@@ -389,7 +382,7 @@ int main() {
 
     client.start();
 
-    while (1) {
+    while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(5));
     }
 

@@ -1,13 +1,14 @@
 #pragma once
 
 #include <map>
+
 #include "Channel.h"
 #include "Member.h"
 #include "Message.h"
 
 namespace DiscordCPP {
 class InteractionResolvedData {
-   public:
+   private:
     /// Map of user ids and user objects.
     std::map<std::string, User> users;
 
@@ -24,9 +25,22 @@ class InteractionResolvedData {
 
     // attachments
 
+   public:
     DLL_EXPORT InteractionResolvedData(const json& data, const std::string& token);
     DLL_EXPORT InteractionResolvedData(const InteractionResolvedData& other);
     DLL_EXPORT ~InteractionResolvedData();
+
+    /// @return Map of user ids and user objects.
+    DLL_EXPORT std::map<std::string, User> get_users() { return users; }
+
+    /// @return Map of user ids and member objects.
+    DLL_EXPORT std::map<std::string, Member> get_members() { return members; }
+
+    /// @return Map of channel ids and channel objects.
+    DLL_EXPORT std::map<std::string, Channel*> get_channels() { return channels; }
+
+    /// @return Map of message ids and message objects.
+    DLL_EXPORT std::map<std::string, Message> get_messages() { return messages; }
 };
 
 }  // namespace DiscordCPP

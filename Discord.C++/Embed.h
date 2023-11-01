@@ -7,12 +7,12 @@
 namespace DiscordCPP {
 
 class Embed {
-   protected:
+   private:
     std::string _title;
     std::string _description;
     std::string _type;
     std::string _url;
-    std::string _timestamp;  //ISO8601
+    std::string _timestamp;  // ISO8601
     int _color;
     struct Footer {
         std::string text;
@@ -48,8 +48,8 @@ class Embed {
     std::vector<Field> _fields;
 
    public:
-    DLL_EXPORT Embed(const std::string& title = "", const std::string& description = "");
-    DLL_EXPORT Embed(const json& data);
+    DLL_EXPORT explicit Embed(const std::string& title = "", const std::string& description = "");
+    DLL_EXPORT explicit Embed(const json& data);
 
     DLL_EXPORT void set_color(int color);
     DLL_EXPORT void add_field(const std::string& name, const std::string& value, const bool Inline = true);

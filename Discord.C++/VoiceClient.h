@@ -81,7 +81,7 @@ class VoiceClient {
 
    public:
     DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token, const std::string& endpoint, const std::string& session_id, const std::string& guild_id, const std::string& channel_id, const std::string& user_id);
-    DLL_EXPORT VoiceClient(){};
+    DLL_EXPORT VoiceClient() = default;
     DLL_EXPORT ~VoiceClient();
 
     /** play an AudioSource

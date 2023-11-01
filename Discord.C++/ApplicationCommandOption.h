@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+
 #include "Channel.h"
 #include "static.h"
 
@@ -29,7 +30,7 @@ class ApplicationCommandOption {
     /// If the parameter is required. Default is false.
     bool required = false;
 
-    DLL_EXPORT ApplicationCommandOption(){};
+    DLL_EXPORT ApplicationCommandOption() = default;
     DLL_EXPORT ApplicationCommandOption(const json& data);
     DLL_EXPORT static ApplicationCommandOption* from_json(const json& data);
 

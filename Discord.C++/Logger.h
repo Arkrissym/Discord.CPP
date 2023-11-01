@@ -21,7 +21,7 @@ class Threadpool;
 }
 
 class Logger {
-   protected:
+   private:
     std::string _name;
 
    public:
@@ -30,8 +30,8 @@ class Logger {
 
     DLL_EXPORT static void set_log_level(const Loglevel& level);
 
-    DLL_EXPORT Logger(){};
-    DLL_EXPORT Logger(const std::string&);
+    DLL_EXPORT Logger() = default;
+    DLL_EXPORT explicit Logger(const std::string&);
 
     DLL_EXPORT void print(const Loglevel level, const std::string& message);
 

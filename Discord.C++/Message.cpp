@@ -1,7 +1,9 @@
 #include "Message.h"
 
 #include "DMChannel.h"
+#include "DiscordObject.h"
 #include "Embed.h"
+#include "Guild.h"
 #include "GuildChannel.h"
 #include "Logger.h"
 #include "User.h"
@@ -12,16 +14,9 @@
     @return	Message object
 */
 DiscordCPP::Message::Message(const json& data, const std::string& token)
-    : DiscordCPP::DiscordObject(token) {
-    data.at("id").get_to<std::string>(id);
-
-    std::string url = "/channels/" + data.at("channel_id").get<std::string>();
-    json channel_data = api_call(url);
-    channel = (TextChannel*)Channel::from_json(NULL, channel_data, token);
-
-    if (has_value(data, "author")) {
-        author = new User(data.at("author"), token);
-    }
+    : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
+    data.at("channel_id").get_to<std::string>(channel_id);
+    author = User(data.at("author"), token);
 
     data.at("content").get_to<std::string>(content);
     data.at("timestamp").get_to<std::string>(timestamp);
@@ -31,7 +26,7 @@ DiscordCPP::Message::Message(const json& data, const std::string& token)
 
     if (has_value(data, "mentions")) {
         for (json mention : data.at("mentions")) {
-            mentions.push_back(new User(mention, token));
+            mentions.emplace_back(mention, token);
         }
     }
 
@@ -41,7 +36,7 @@ DiscordCPP::Message::Message(const json& data, const std::string& token)
 
     if (has_value(data, "embeds")) {
         for (json embed : data.at("embeds")) {
-            embeds.push_back(new Embed(embed));
+            embeds.push_back(Embed(embed));
         }
     }
 
@@ -60,32 +55,26 @@ DiscordCPP::Message::Message(const json& data, const std::string& token)
     @return		copied Message object
 */
 DiscordCPP::Message::Message(const Message& old)
-    : DiscordCPP::DiscordObject(old._token) {
-    id = old.id;
-
-    if (old.channel != NULL) {
-        try {
-            channel = (TextChannel*)old.channel->copy();
-        } catch (std::exception& e) {
-            Logger("discord.message").error("Error in channel copy: " + std::string(e.what()));
-        }
-    } else {
-        channel = NULL;
+    : DiscordCPP::DiscordObject(old) {
+    channel_id = old.channel_id;
+    if (old.channel != nullptr) {
+        channel = (TextChannel*)old.channel->copy();
+    }
+    guild_id = old.guild_id;
+    if (guild != nullptr) {
+        guild = new Guild(*old.guild);
     }
 
-    if (old.author != NULL)
-        author = new User(*old.author);
+    author = old.author;
     content = old.content;
     timestamp = old.timestamp;
     edited_timestamp = old.edited_timestamp;
     tts = old.tts;
     mention_everyone = old.mention_everyone;
-    for (unsigned int i = 0; i < old.mentions.size(); i++) {
-        mentions.push_back(new User(*old.mentions[i]));
-    }
+    mentions = old.mentions;
     // mention_roles
     // attachements
-    // embeds
+    embeds = old.embeds;
     // reactions
     pinned = old.pinned;
     webhook_id = old.webhook_id;
@@ -94,19 +83,12 @@ DiscordCPP::Message::Message(const Message& old)
     // application
 }
 
-DiscordCPP::Message::Message() {
-}
-
 DiscordCPP::Message::~Message() {
-    if (channel != NULL)
+    if (channel != nullptr) {
         delete channel;
-    if (author != NULL)
-        delete author;
-    for (unsigned int i = 0; i < mentions.size(); i++) {
-        delete mentions[i];
     }
-    for (unsigned int i = 0; i < embeds.size(); i++) {
-        delete embeds[i];
+    if (guild != nullptr) {
+        delete guild;
     }
 }
 
@@ -114,14 +96,53 @@ DiscordCPP::Message::~Message() {
     @return		Updated message object.
 */
 DiscordCPP::Message DiscordCPP::Message::edit(const std::string& content) {
-    std::string url = "/channels/" + channel->id + "/messages/" + id;
+    std::string url = "/channels/" + channel->get_id() + "/messages/" + get_id();
 
     json data = {{"content", content}};
 
-    return Message(api_call(url, "PATCH", data, "application/json"), _token);
+    return Message(api_call(url, "PATCH", data, "application/json"), get_token());
 }
 
 void DiscordCPP::Message::delete_msg() {
-    std::string url = "/channels/" + channel->id + "/messages/" + id;
+    std::string url = "/channels/" + channel->get_id() + "/messages/" + get_id();
     api_call(url, "DELETE");
+}
+
+/**	@param[in]	content	The string message to send.
+    @param[in]	tts		(optional) Wether to send as tts-message or not. Default is false.
+    @return	The message that was sent.
+*/
+DiscordCPP::Message DiscordCPP::Message::reply(const std::string& content, const bool tts) {
+    std::string url = "/channels/" + channel_id + "/messages";
+
+    json data = {{"content", content}, {"tts", tts}, {"message_reference", {"message_id", get_id()}}};
+
+    return Message(api_call(url, "POST", data, "application/json"), get_token());
+}
+
+/**	@param[in]	embed	The Embed to send.
+    @return	The message that was sent.
+*/
+DiscordCPP::Message DiscordCPP::Message::reply(DiscordCPP::Embed embed) {
+    std::string url = "/channels/" + channel_id + "/messages";
+
+    json data;
+    data["message_reference"]["message_id"] = get_id();
+    data["embeds"].push_back(embed.to_json());
+
+    return Message(api_call(url, "POST", data, "application/json"), get_token());
+}
+
+DiscordCPP::TextChannel DiscordCPP::Message::get_channel() {
+    if (channel == nullptr) {
+        channel = new TextChannel(channel_id, get_token());
+    }
+    return *channel;
+}
+
+std::optional<DiscordCPP::Guild> DiscordCPP::Message::get_guild() {
+    if (guild_id.has_value() && guild == nullptr) {
+        guild = new Guild(nullptr, guild_id.value(), get_token());
+    }
+    return (guild != nullptr) ? *guild : std::make_optional<DiscordCPP::Guild>();
 }

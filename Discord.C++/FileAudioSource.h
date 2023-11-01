@@ -16,12 +16,12 @@ class FileAudioSource : public AudioSource {
 
    public:
     /** @param[in]  filename        the name of the file to use as AudioSource
-		    @return     FileAudioSource playable AudioSource
+                    @return     FileAudioSource playable AudioSource
     */
-    DLL_EXPORT FileAudioSource(const std::string& filename);
-    DLL_EXPORT ~FileAudioSource();
+    DLL_EXPORT explicit FileAudioSource(const std::string& filename);
+    DLL_EXPORT ~FileAudioSource() override;
 
-    DLL_EXPORT bool read(char* pcm_data, const int length);
+    DLL_EXPORT bool read(char* pcm_data, const int length) override;
 };
 
 }  // namespace DiscordCPP

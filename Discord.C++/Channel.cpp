@@ -7,8 +7,7 @@
     @param[in]	token	discord token
 */
 DiscordCPP::Channel::Channel(const json& data, const std::string& token)
-    : DiscordCPP::DiscordObject(token) {
-    data["id"].get_to<std::string>(id);
+    : DiscordCPP::DiscordObject(token, data["id"].get<std::string>()) {
     data["type"].get_to<int>(type);
     position = get_or_else<int>(data, "position", 0);
     // permission_overwrites
@@ -24,18 +23,6 @@ DiscordCPP::Channel::Channel(const std::string& id, const std::string& token)
     std::string url = "/channels/" + id;
 
     *this = Channel(api_call(url), token);
-}
-
-/*	@param[in]	old	the Channel to copy
- */
-DiscordCPP::Channel::Channel(const Channel& old)
-    : DiscordCPP::DiscordObject(old) {
-    id = old.id;
-    type = old.type;
-    position = old.position;
-    // permission_overwrites
-    name = old.name;
-    icon = old.icon;
 }
 
 DiscordCPP::Channel* DiscordCPP::Channel::from_json(Discord* client, const json& data, const std::string& token) {
@@ -54,7 +41,7 @@ DiscordCPP::Channel* DiscordCPP::Channel::from_json(Discord* client, const json&
 }
 
 void DiscordCPP::Channel::delete_channel() {
-    std::string url = "/channels/" + id;
+    std::string url = "/channels/" + get_id();
 
     api_call(url, "DEL");
 }

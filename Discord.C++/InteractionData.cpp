@@ -1,12 +1,11 @@
 #include "InteractionData.h"
 
 DiscordCPP::InteractionData::InteractionData(const json& data, const std::string& token)
-    : DiscordCPP::DiscordObject(token) {
-    data.at("id").get_to<std::string>(id);
+    : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
     data.at("name").get_to<std::string>(name);
     type = static_cast<ApplicationCommand::Type>(data.at("type").get<int>());
     if (has_value(data, "resolved")) {
-        resolved = InteractionResolvedData(data.at("resolved"), token);
+        resolved_data = InteractionResolvedData(data.at("resolved"), token);
     }
     if (has_value(data, "options")) {
         for (json option : data.at("options")) {
@@ -23,10 +22,9 @@ DiscordCPP::InteractionData::InteractionData(const json& data, const std::string
 
 DiscordCPP::InteractionData::InteractionData(const InteractionData& other)
     : DiscordCPP::DiscordObject(other) {
-    id = other.id;
     name = other.name;
     type = other.type;
-    resolved = other.resolved;
+    resolved_data = other.resolved_data;
     for (unsigned int i = 0; i < other.options.size(); i++) {
         options.push_back(other.options[i]->copy());
     }

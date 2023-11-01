@@ -31,19 +31,17 @@ DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json& data, c
     // attachments
 }
 
-DiscordCPP::InteractionResolvedData::InteractionResolvedData(const InteractionResolvedData& other) {
-    users = other.users;
-    members = other.members;
+DiscordCPP::InteractionResolvedData::InteractionResolvedData(const InteractionResolvedData& other) : users(other.users), members(other.members), messages(other.messages) {
     // roles
-    for (auto it = other.channels.begin(); it != other.channels.end(); it++) {
-        channels.insert(std::make_pair(it->first, it->second->copy()));
+    for (auto [channel_id, channel] : other.channels) {
+        channels.insert(std::make_pair(channel_id, channel->copy()));
     }
-    messages = other.messages;
+
     // attachments
 }
 
 DiscordCPP::InteractionResolvedData::~InteractionResolvedData() {
-    for (auto it = channels.begin(); it != channels.end(); it++) {
-        delete it->second;
+    for (auto& channel : channels) {
+        delete channel.second;
     }
 }

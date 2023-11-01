@@ -1,32 +1,33 @@
 #include "Interaction.h"
+
 #include "Embed.h"
 
 DiscordCPP::Interaction::Interaction(const json& data, const std::string& token)
-    : DiscordCPP::DiscordObject(token) {
-    data.at("id").get_to<std::string>(id);
+    : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()),
+      type(static_cast<Type>(data.at("type").get<int>())) {
     data.at("application_id").get_to<std::string>(application_id);
-    type = static_cast<Type>(data.at("type").get<int>());
+
     if (has_value(data, "data")) {
-        this->data = std::make_optional<InteractionData>(data.at("data"), token);
+        this->data.emplace(data.at("data"), token);
     }
     guild_id = get_optional<std::string>(data, "guild_id");
     channel_id = get_optional<std::string>(data, "channel_id");
     if (has_value(data, "member")) {
-        member = std::make_optional<Member>(data.at("member"), token);
+        member.emplace(data.at("member"), token);
     }
     if (has_value(data, "user")) {
-        user = std::make_optional<User>(data.at("user"), token);
+        user.emplace(data.at("user"), token);
     }
     data.at("token").get_to<std::string>(this->token);
     if (has_value(data, "message")) {
-        message = std::make_optional<Message>(data.at("message"), token);
+        message.emplace(data.at("message"), token);
     }
     locale = get_optional<std::string>(data, "locale");
     guild_locale = get_optional<std::string>(data, "guild_locale");
 }
 
 void DiscordCPP::Interaction::reply(const std::string& content, const bool tts) {
-    std::string url = "/interactions/" + id + "/" + token + "/callback";
+    std::string url = "/interactions/" + get_id() + "/" + token + "/callback";
 
     json data = {
         {"type", 4},
@@ -44,7 +45,7 @@ void DiscordCPP::Interaction::reply(const std::string& content, const bool tts) 
 }
 
 void DiscordCPP::Interaction::reply(Embed embed) {
-    std::string url = "/interactions/" + id + "/" + token + "/callback";
+    std::string url = "/interactions/" + get_id() + "/" + token + "/callback";
 
     json data = {{"type", 4}};
 

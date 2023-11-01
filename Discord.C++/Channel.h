@@ -27,7 +27,7 @@ class User;
 class Discord;
 
 class Channel : public DiscordObject {
-   public:
+   private:
     /// the ChannelType of the channel
     int type;
     /// the sorting position
@@ -38,10 +38,11 @@ class Channel : public DiscordObject {
     /// the channel's icon hash
     std::string icon;
 
+   public:
     DLL_EXPORT Channel(const json& data, const std::string& token);
     DLL_EXPORT Channel(const std::string& id, const std::string& token);
-    DLL_EXPORT Channel(const Channel& old);
-    DLL_EXPORT Channel(){};
+    DLL_EXPORT Channel(const Channel& old) = default;
+    DLL_EXPORT Channel() = default;
 
     DLL_EXPORT static Channel* from_json(Discord* client, const json& data, const std::string& token);
 
@@ -51,8 +52,17 @@ class Channel : public DiscordObject {
     /// @returns a copy of this channel object
     DLL_EXPORT Channel* copy();
 
-    ///@return Channelname as std::string
-    DLL_EXPORT operator std::string() { return name; };
+    /// @return Channelname as std::string
+    DLL_EXPORT explicit operator std::string() { return name; };
+
+    /// @return the ChannelType of the channel
+    DLL_EXPORT int get_type() { return type; }
+    /// @return the sorting position
+    DLL_EXPORT int32_t get_position() { return position; }
+    /// @return the channel's name
+    DLL_EXPORT std::string get_name() { return name; }
+    /// @return channel's icon hash
+    DLL_EXPORT std::string get_icon() { return icon; }
 };
 
 }  // namespace DiscordCPP

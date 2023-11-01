@@ -9,13 +9,13 @@
 namespace DiscordCPP {
 class AudioSource {
    public:
-    DLL_EXPORT AudioSource(){};
-    DLL_EXPORT virtual ~AudioSource(){};
+    DLL_EXPORT AudioSource() = default;
+    DLL_EXPORT virtual ~AudioSource() = default;
 
     /**	@param[in]	pcm_data	an array to save the raw audio data
-			@param[in]	length		length of pcm_data
-			@return 	bool		wether the opreation was succesfull or not
-		*/
+                        @param[in]	length		length of pcm_data
+                        @return 	bool		wether the opreation was succesfull or not
+                */
     DLL_EXPORT virtual bool read(char* pcm_data, const int length) = 0;
 };
 

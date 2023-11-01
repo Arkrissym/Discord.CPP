@@ -2,10 +2,9 @@
 
 #include "Exceptions.h"
 #include "Logger.h"
+#include "static.h"
 
-DiscordCPP::Embed::Embed(const std::string& title, const std::string& description) {
-    _title = title;
-    _description = description;
+DiscordCPP::Embed::Embed(const std::string& title, const std::string& description) : _title(title), _description(description) {
 }
 
 DiscordCPP::Embed::Embed(const json& data) {
@@ -17,7 +16,7 @@ DiscordCPP::Embed::Embed(const json& data) {
     _color = get_or_else<int>(data, "color", -1);
 
     if (has_value(data, "footer")) {
-        json footer = data.at("footer");
+        const json& footer = data.at("footer");
 
         _footer.text = get_or_else<std::string>(footer, "text", "");
         _footer.icon_url = get_or_else<std::string>(footer, "icon_url", "");
@@ -25,7 +24,7 @@ DiscordCPP::Embed::Embed(const json& data) {
     }
 
     if (has_value(data, "image")) {
-        json image = data.at("image");
+        const json& image = data.at("image");
 
         _image.width = get_or_else<int>(image, "width", 0);
         _image.height = get_or_else<int>(image, "height", 0);
@@ -34,7 +33,7 @@ DiscordCPP::Embed::Embed(const json& data) {
     }
 
     if (has_value(data, "video")) {
-        json video = data.at("video");
+        const json& video = data.at("video");
 
         _video.width = get_or_else<int>(video, "width", 0);
         _video.height = get_or_else<int>(video, "height", 0);
@@ -42,7 +41,7 @@ DiscordCPP::Embed::Embed(const json& data) {
     }
 
     if (has_value(data, "thumbnail")) {
-        json thumbnail = data.at("thumbnail");
+        const json& thumbnail = data.at("thumbnail");
 
         _thumbnail.width = get_or_else<int>(thumbnail, "width", 0);
         _thumbnail.height = get_or_else<int>(thumbnail, "height", 0);
@@ -51,7 +50,7 @@ DiscordCPP::Embed::Embed(const json& data) {
     }
 
     if (has_value(data, "author")) {
-        json author = data.at("author");
+        const json& author = data.at("author");
 
         _author.name = get_or_else<std::string>(author, "name", "");
         _author.url = get_or_else<std::string>(author, "url", "");
@@ -60,7 +59,7 @@ DiscordCPP::Embed::Embed(const json& data) {
     }
 
     if (has_value(data, "provider")) {
-        json provider = data.at("provider");
+        const json& provider = data.at("provider");
 
         _provider.name = get_or_else<std::string>(provider, "name", "");
         _provider.url = get_or_else<std::string>(provider, "url", "");
@@ -83,10 +82,10 @@ void DiscordCPP::Embed::set_color(int color) {
 }
 
 /**	add a field to the Embed
-	@param[in]	name	the name of the field
-	@param[in]	value	the value of the field
-	@param[in]	Inline	(optional) wether the field shall be displayed inline or not(default is true)
-	@throws	SizeError
+        @param[in]	name	the name of the field
+        @param[in]	value	the value of the field
+        @param[in]	Inline	(optional) wether the field shall be displayed inline or not(default is true)
+        @throws	SizeError
 */
 void DiscordCPP::Embed::add_field(const std::string& name, const std::string& value, bool Inline) {
     if (_fields.size() >= 25) {
@@ -120,8 +119,8 @@ void DiscordCPP::Embed::set_thumbnail(const std::string& url) {
 }
 
 /**	generates json from Embed
-	@return	json::value
-	@throws	SizeError
+        @return	json::value
+        @throws	SizeError
 */
 json DiscordCPP::Embed::to_json() {
     json ret;
@@ -134,12 +133,11 @@ json DiscordCPP::Embed::to_json() {
     if (_color >= 0)
         ret["color"] = _color;
 
-    for (unsigned int i = 0; i < _fields.size(); i++) {
-        json f;
-        f["name"] = _fields[i].name;
-        f["value"] = _fields[i].value;
-        f["inline"] = _fields[i].is_inline;
-        ret["fields"].emplace_back(f);
+    for (auto& _field : _fields) {
+        ret["fields"].emplace_back((json){
+            {"name", _field.name},
+            {"value", _field.value},
+            {"inline", _field.is_inline}});
     }
 
     if (_author.name.length() > 0) {

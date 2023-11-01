@@ -4,8 +4,7 @@
 #include "Embed.h"
 #include "Message.h"
 
-DiscordCPP::User::User(const json& data, const std::string& token) : DiscordCPP::DiscordObject(token) {
-    data.at("id").get_to<std::string>(id);
+DiscordCPP::User::User(const json& data, const std::string& token) : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
     data.at("username").get_to<std::string>(username);
     data.at("discriminator").get_to<std::string>(discriminator);
     avatar = get_or_else<std::string>(data, "avatar", "");
@@ -25,11 +24,11 @@ DiscordCPP::User::User(const std::string& id, const std::string& token) : Discor
 }
 
 /** @return DMChannel
-*/
+ */
 DiscordCPP::DMChannel DiscordCPP::User::get_dmchannel() {
-    json data = {{"recipient_id", id}};
+    json data = {{"recipient_id", get_id()}};
 
-    return DMChannel(api_call("/users/@me/channels", "POST", data), _token);
+    return DMChannel(api_call("/users/@me/channels", "POST", data), get_token());
 }
 
 /**	@param[in]	content	The string message to send.
@@ -44,5 +43,5 @@ DiscordCPP::Message DiscordCPP::User::send(const std::string& content, const boo
 @return	The message that was sent.
 */
 DiscordCPP::Message DiscordCPP::User::send(const DiscordCPP::Embed& embed) {
-    return Message(get_dmchannel().send(embed));
+    return get_dmchannel().send(embed);
 }

@@ -15,7 +15,7 @@ class DiscordException : public std::exception {
 
    public:
     DLL_EXPORT DiscordException(const std::string& what);
-    DLL_EXPORT virtual ~DiscordException();
+    DLL_EXPORT virtual ~DiscordException() = default;
 
     DLL_EXPORT const char* what() const noexcept;
 };
@@ -26,7 +26,7 @@ class StatusCodeException : public DiscordException {
 
    public:
     DLL_EXPORT StatusCodeException(const std::string& what, int error_code);
-    DLL_EXPORT virtual ~StatusCodeException();
+    DLL_EXPORT virtual ~StatusCodeException() = default;
     DLL_EXPORT int get_error_code() const;
 };
 

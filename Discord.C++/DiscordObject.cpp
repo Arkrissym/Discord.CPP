@@ -22,13 +22,15 @@ static bool cache_manager_active = false;
 
 void manage_cache();
 
-DiscordCPP::DiscordObject::DiscordObject(const std::string& token) {
-    _token = token;
-
+DiscordCPP::DiscordObject::DiscordObject(const std::string& token) : _token(token) {
     if (cache_manager_active == false) {
         cache_manager_active = true;
         manage_cache();
     }
+}
+
+DiscordCPP::DiscordObject::DiscordObject(const std::string& token, const std::string& id) : DiscordObject(token) {
+    this->id = id;
 }
 
 void manage_cache() {

@@ -43,7 +43,7 @@ class Threadpool {
      *
      *  @param[in]  size    (optional) The number of threads the threadpool should contain. Defaults to 4.
      */
-    DLL_EXPORT Threadpool(const unsigned int size = 4);
+    DLL_EXPORT explicit Threadpool(const unsigned int size = 4);
     Threadpool(const Threadpool&) = delete;
     DLL_EXPORT ~Threadpool();
 

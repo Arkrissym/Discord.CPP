@@ -1,13 +1,15 @@
 #include "Guild.h"
 
+#include <string>
+
 #include "DMChannel.h"
 #include "TextChannel.h"
 #include "VoiceChannel.h"
 #include "static.h"
 
 DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& token)
-    : DiscordCPP::DiscordObject(token) {
-    data.at("id").get_to<std::string>(id);
+    : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()),
+      client(client) {
     name = get_or_else<std::string>(data, "name", "");
     icon = get_or_else<std::string>(data, "icon", "");
     splash = get_or_else<std::string>(data, "splash", "");
@@ -26,41 +28,28 @@ DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& t
     unavailable = get_or_else<bool>(data, "unavailable", false);
     member_count = get_or_else<int>(data, "member_count", 0);
 
-    if (has_value(data, "owner_id")) {
-        owner = new User(data.at("owner_id").get<std::string>(), token);
-    }
-
-    if (has_value(data, "afk_channel_id")) {
-        afk_channel = new VoiceChannel(client, data.at("afk_channel_id").get<std::string>(), token);
-    }
-
-    if (has_value(data, "embed_channel_id")) {
-        embed_channel = new TextChannel(data.at("embed_channel_id").get<std::string>(), token);
-    }
+    owner_id = get_optional<std::string>(data, "owner_id");
+    afk_channel_id = get_optional<std::string>(data, "afk_channel_id");
+    embed_channel_id = get_optional<std::string>(data, "embed_channel_id");
 
     // roles
 
     // emojis
 
     if (has_value(data, "features")) {
-        for (json feature : data.at("features")) {
+        for (const json& feature : data.at("features")) {
             features.push_back(feature.get<std::string>());
         }
     }
 
-    if (has_value(data, "widget_channel_id")) {
-        widget_channel = new Channel(data.at("widget_channel_id").get<std::string>(), token);
-    }
-
-    if (has_value(data, "system_channel_id")) {
-        system_channel = new TextChannel(data.at("system_channel_id").get<std::string>(), token);
-    }
+    widget_channel_id = get_optional<std::string>(data, "widget_channel_id");
+    system_channel_id = get_optional<std::string>(data, "system_channel_id");
 
     // voice_states
 
     if (has_value(data, "members")) {
         for (json member : data.at("members")) {
-            members.push_back(new Member(member, token));
+            members.push_back(Member(member, token));
         }
     }
 
@@ -81,21 +70,17 @@ DiscordCPP::Guild::Guild(Discord* client, const std::string& id, const std::stri
 }
 
 DiscordCPP::Guild::Guild(const Guild& old)
-    : DiscordCPP::DiscordObject(old._token) {
-    id = old.id;
+    : DiscordCPP::DiscordObject(old) {
     name = old.name;
     icon = old.icon;
     splash = old.splash;
-    if (old.owner != NULL)
-        owner = new User(*old.owner);
+    owner = old.owner;
     permissions = old.permissions;
     region = old.region;
-    if (old.afk_channel != NULL)
-        afk_channel = old.afk_channel->copy();
+    afk_channel = old.afk_channel;
     afk_timeout = old.afk_timeout;
     embed_enabled = old.embed_enabled;
-    if (old.embed_channel != NULL)
-        embed_channel = old.embed_channel->copy();
+    embed_channel = old.embed_channel;
     verification_level = old.verification_level;
     default_message_notifications = old.default_message_notifications;
     explicit_content_filter = old.explicit_content_filter;
@@ -105,40 +90,23 @@ DiscordCPP::Guild::Guild(const Guild& old)
     mfa_level = old.mfa_level;
     application_id = old.application_id;
     widget_enabled = old.widget_enabled;
-    if (old.widget_channel != NULL)
-        widget_channel = old.widget_channel->copy();
-    if (old.system_channel != NULL)
-        system_channel = old.system_channel->copy();
+    widget_channel = old.widget_channel;
+    system_channel = old.system_channel;
     joined_at = old.joined_at;
     large = old.large;
     unavailable = old.unavailable;
     member_count = old.member_count;
     // voice_states
-    for (unsigned int i = 0; i < old.members.size(); i++) {
-        members.push_back(new Member(*old.members[i]));
-    }
-    for (unsigned int i = 0; i < old.channels.size(); i++) {
-        channels.push_back(old.channels[i]->copy());
+    members = old.members;
+    for (auto channel : old.channels) {
+        channels.push_back(channel->copy());
     }
     // presences
 }
 
 DiscordCPP::Guild::~Guild() {
-    if (owner != NULL)
-        delete owner;
-    if (afk_channel != NULL)
-        delete afk_channel;
-    if (embed_channel != NULL)
-        delete embed_channel;
-    if (widget_channel != NULL)
-        delete widget_channel;
-    if (system_channel != NULL)
-        delete system_channel;
-    for (unsigned int i = 0; i < members.size(); i++) {
-        delete members[i];
-    }
-    for (unsigned int i = 0; i < channels.size(); i++) {
-        delete channels[i];
+    for (auto& channel : channels) {
+        delete channel;
     }
 }
 
@@ -148,7 +116,7 @@ void DiscordCPP::Guild::_add_channel(Channel* channel) {
 
 void DiscordCPP::Guild::_update_channel(Channel* channel) {
     for (size_t i = 0; i < channels.size(); i++) {
-        if (channels[i]->id == channel->id) {
+        if (channels[i]->get_id() == channel->get_id()) {
             delete channels[i];
             channels.erase(channels.begin() + i);
             channels.push_back(channel);
@@ -159,7 +127,7 @@ void DiscordCPP::Guild::_update_channel(Channel* channel) {
 
 void DiscordCPP::Guild::_remove_channel(const std::string& channel_id) {
     for (size_t i = 0; i < channels.size(); i++) {
-        if (channels[i]->id == channel_id) {
+        if (channels[i]->get_id() == channel_id) {
             delete channels[i];
             channels.erase(channels.begin() + i);
             break;
@@ -167,15 +135,14 @@ void DiscordCPP::Guild::_remove_channel(const std::string& channel_id) {
     }
 }
 
-void DiscordCPP::Guild::_add_member(Member* member) {
+void DiscordCPP::Guild::_add_member(Member member) {
     members.push_back(member);
     member_count += 1;
 }
 
-void DiscordCPP::Guild::_update_member(Member* member) {
+void DiscordCPP::Guild::_update_member(Member member) {
     for (size_t i = 0; i < members.size(); i++) {
-        if (members[i]->id == member->id) {
-            delete members[i];
+        if (members[i].get_id() == member.get_id()) {
             members.erase(members.begin() + i);
             members.push_back(member);
         }
@@ -184,8 +151,7 @@ void DiscordCPP::Guild::_update_member(Member* member) {
 
 void DiscordCPP::Guild::_remove_member(const std::string& member_id) {
     for (size_t i = 0; i < members.size(); i++) {
-        if (members[i]->id == member_id) {
-            delete members[i];
+        if (members[i].get_id() == member_id) {
             members.erase(members.begin() + i);
             member_count -= 1;
         }
@@ -194,13 +160,13 @@ void DiscordCPP::Guild::_remove_member(const std::string& member_id) {
 
 ///@throws HTTPError
 void DiscordCPP::Guild::leave() {
-    std::string url = "/guilds/@me/guilds/" + id;
+    std::string url = "/guilds/@me/guilds/" + get_id();
     api_call(url, "DEL");
 }
 
 ///@throws HTTPError
 void DiscordCPP::Guild::delete_guild() {
-    std::string url = "/guilds/" + id;
+    std::string url = "/guilds/" + get_id();
     api_call(url, "DEL");
 }
 
@@ -208,7 +174,7 @@ void DiscordCPP::Guild::delete_guild() {
     @throws HTTPError
 */
 void DiscordCPP::Guild::kick(const User& user) {
-    std::string url = "/guilds/" + id + "/members/" + user.id;
+    std::string url = "/guilds/" + get_id() + "/members/" + user.get_id();
     api_call(url, "DEL");
 }
 
@@ -218,7 +184,7 @@ void DiscordCPP::Guild::kick(const User& user) {
     @throws HTTPError
 */
 void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const int delete_message_days) {
-    std::string url = "/guilds/" + id + "/bans/" + user.id + "?delete-message-days=" + std::to_string(delete_message_days) + "&reason=" + urlencode(reason);
+    std::string url = "/guilds/" + get_id() + "/bans/" + user.get_id() + "?delete-message-days=" + std::to_string(delete_message_days) + "&reason=" + urlencode(reason);
     api_call(url, "PUT");
 }
 
@@ -226,6 +192,41 @@ void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const i
     @throws HTTPError
 */
 void DiscordCPP::Guild::unban(const User& user) {
-    std::string url = "/guilds/" + id + "/bans/" + user.id;
+    std::string url = "/guilds/" + get_id() + "/bans/" + user.get_id();
     api_call(url, "DEL");
+}
+
+std::optional<DiscordCPP::User> DiscordCPP::Guild::get_owner() {
+    if (!owner.has_value() && owner_id.has_value()) {
+        owner.emplace(owner_id.value(), get_token());
+    }
+    return owner;
+}
+
+std::optional<DiscordCPP::VoiceChannel> DiscordCPP::Guild::get_afk_channel() {
+    if (!afk_channel.has_value() && afk_channel_id.has_value()) {
+        afk_channel.emplace(client, afk_channel_id.value(), get_token());
+    }
+    return afk_channel;
+}
+
+std::optional<DiscordCPP::GuildChannel> DiscordCPP::Guild::get_embed_channel() {
+    if (!embed_channel.has_value() && embed_channel_id.has_value()) {
+        embed_channel.emplace(embed_channel_id.value(), get_token());
+    }
+    return embed_channel;
+}
+
+std::optional<DiscordCPP::GuildChannel> DiscordCPP::Guild::get_widget_channel() {
+    if (!widget_channel.has_value() && widget_channel_id.has_value()) {
+        widget_channel.emplace(widget_channel_id.value(), get_token());
+    }
+    return widget_channel;
+}
+
+std::optional<DiscordCPP::GuildChannel> DiscordCPP::Guild::get_system_channel() {
+    if (!system_channel.has_value() && system_channel_id.has_value()) {
+        system_channel.emplace(system_channel_id.value(), get_token());
+    }
+    return system_channel;
 }

@@ -10,12 +10,12 @@ class VoiceClient;
 
 class VoiceChannel : public Channel {
    private:
-    Discord* _client;
+    Discord* _client = nullptr;
 
     /// the channel's bitrate
-    int bitrate;
+    int bitrate = 0;
     /// the channel's user-limit
-    int user_limit;
+    int user_limit = 0;
     /// the parent category channel
     std::optional<std::string> parent_id;
     std::optional<Channel> parent;

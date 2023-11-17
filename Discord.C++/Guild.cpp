@@ -66,7 +66,7 @@ DiscordCPP::Guild::Guild(Discord* client, const std::string& id, const std::stri
     : DiscordCPP::DiscordObject(token) {
     std::string url = "/guilds/" + id;
 
-    *this = Guild(client, api_call(url), token);
+    *this = Guild(client, api_call("/guilds/" + id), token);
 }
 
 DiscordCPP::Guild::Guild(const Guild& old)

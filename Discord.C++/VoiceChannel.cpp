@@ -15,7 +15,8 @@ DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const json& data, const 
     parent_id = get_optional<std::string>(data, "parent_id");
 }
 
-DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const std::string& id, const std::string& token) {
+DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const std::string& id, const std::string& token)
+    : DiscordCPP::Channel(token) {
     std::string url = "/channels/" + id;
     *this = VoiceChannel(client, api_call(url), token);
 }
@@ -24,7 +25,7 @@ DiscordCPP::VoiceChannel::VoiceChannel(Discord* client, const std::string& id, c
     @throws     ClientException
 **/
 std::shared_ptr<DiscordCPP::VoiceClient> DiscordCPP::VoiceChannel::connect() {
-    if (this->get_type() != ChannelType::GUILD_VOICE) {
+    if (this->get_type() != Channel::Type::GUILD_VOICE) {
         throw ClientException("channel must be a voice channel");
     }
 

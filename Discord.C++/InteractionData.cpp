@@ -1,5 +1,7 @@
 #include "InteractionData.h"
 
+#include "Logger.h"
+
 DiscordCPP::InteractionData::InteractionData(const json& data, const std::string& token)
     : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
     data.at("name").get_to<std::string>(name);
@@ -8,7 +10,7 @@ DiscordCPP::InteractionData::InteractionData(const json& data, const std::string
         resolved_data = InteractionResolvedData(data.at("resolved"), token);
     }
     if (has_value(data, "options")) {
-        for (json option : data.at("options")) {
+        for (const json& option : data.at("options")) {
             options.push_back(InteractionDataOption::from_json(option));
         }
     }
@@ -25,8 +27,8 @@ DiscordCPP::InteractionData::InteractionData(const InteractionData& other)
     name = other.name;
     type = other.type;
     resolved_data = other.resolved_data;
-    for (unsigned int i = 0; i < other.options.size(); i++) {
-        options.push_back(other.options[i]->copy());
+    for (auto option : other.options) {
+        options.push_back(option->copy());
     }
     guild_id = other.guild_id;
     custom_id = other.custom_id;
@@ -37,7 +39,7 @@ DiscordCPP::InteractionData::InteractionData(const InteractionData& other)
 }
 
 DiscordCPP::InteractionData::~InteractionData() {
-    for (unsigned int i = 0; i < options.size(); i++) {
-        delete options[i];
+    for (auto& option : options) {
+        delete option;
     }
 }

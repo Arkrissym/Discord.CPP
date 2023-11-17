@@ -9,7 +9,8 @@ DiscordCPP::GuildChannel::GuildChannel(const json& data, const std::string& toke
     parent_id = get_optional<std::string>(data, "parent_id");
 }
 
-DiscordCPP::GuildChannel::GuildChannel(const std::string& id, const std::string& token) {
+DiscordCPP::GuildChannel::GuildChannel(const std::string& id, const std::string& token)
+    : DiscordCPP::TextChannel(token) {
     std::string url = "/channels/" + id;
     *this = GuildChannel(api_call(url), token);
 }

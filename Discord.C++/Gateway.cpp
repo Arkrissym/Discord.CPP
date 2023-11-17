@@ -1,9 +1,9 @@
 #include "Gateway.h"
 
-#include <time.h>
-
 #include <boost/asio/connect.hpp>
 #include <chrono>
+#include <cstddef>
+#include <ctime>
 #include <exception>
 
 #include "Exceptions.h"
@@ -25,11 +25,11 @@ void DiscordCPP::Gateway::start_heartbeating() {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 
-        _last_heartbeat_ack = time(0);
+        _last_heartbeat_ack = time(nullptr);
 
         while (_keepalive) {
             if (_connected) {
-                if (_last_heartbeat_ack * 1000 + _heartbeat_interval * 2 < time(0) * 1000) {
+                if (_last_heartbeat_ack * 1000 + static_cast<time_t>(_heartbeat_interval * 2) < time(nullptr) * 1000) {
                     _log.warning("Gateway stopped responding. Closing and restarting websocket...");
                     try {
                         _client->close(websocket::close_reason(websocket::close_code::going_away, "Server not responding"));
@@ -84,19 +84,16 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
     });
 }
 
-DiscordCPP::Gateway::Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool)
-    : threadpool(threadpool), io_context(), ssl_context{ssl::context::tlsv12_client} {
+DiscordCPP::Gateway::Gateway(std::string token, const std::shared_ptr<Threadpool>& threadpool)
+    : threadpool(threadpool),
+      io_context(),
+      ssl_context{ssl::context::tlsv12_client},
+      _token(std::move(token)),
+      _heartbeat_interval(0),
+      _keepalive(true),
+      _reconnect_timeout(0),
+      _connected(false) {
     _log = Logger("Discord.Gateway");
-
-    _token = token;
-
-    _heartbeat_interval = 0;
-
-    _reconnect_timeout = 0;
-
-    _keepalive = true;
-
-    _connected = false;
 
     ssl_context.set_verify_mode(ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);
     load_ssl_certificates(ssl_context);
@@ -125,8 +122,8 @@ std::shared_future<void> DiscordCPP::Gateway::connect(const std::string& url) {
             tmp_url = tmp_url.substr(index + 3, std::string::npos);
         }
 
-        auto port_index = tmp_url.find(":");
-        auto query_index = tmp_url.find("?");
+        auto port_index = tmp_url.find(':');
+        auto query_index = tmp_url.find('?');
 
         std::string host;
         if (port_index != std::string::npos) {

@@ -15,7 +15,7 @@ class VoiceGateway : public Gateway {
     DLL_EXPORT void on_websocket_incoming_message(const std::string& message) override;
 
    public:
-    DLL_EXPORT VoiceGateway(const std::string& token, const std::string& session_id, const std::string& guild_id, const std::string& user_id, const std::shared_ptr<Threadpool>& threadpool);
+    DLL_EXPORT VoiceGateway(const std::string& token, std::string session_id, std::string guild_id, std::string user_id, const std::shared_ptr<Threadpool>& threadpool);
     DLL_EXPORT ~VoiceGateway() override = default;
 };
 

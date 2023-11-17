@@ -1,6 +1,8 @@
 #include "static.h"
 
+#if defined(_WIN32) || defined(__APPLE__)
 #include <boost/certify/https_verification.hpp>
+#endif
 #include <string>
 #include <vector>
 
@@ -33,7 +35,7 @@ std::string urlencode(std::string s) {
         }
     }
 
-    return std::string(v.cbegin(), v.cend());
+    return {v.cbegin(), v.cend()};
 }
 
 void load_ssl_certificates(boost::asio::ssl::context& ssl_context) {

@@ -1,13 +1,11 @@
 #include "Activity.h"
 
-DiscordCPP::Activity::Activity() {
-    type = ActivityTypes::NoActivity;
-}
+#include <utility>
 
-DiscordCPP::Activity::Activity(const std::string& name, const int type, const std::string& url) {
-    this->name = name;
-    this->type = type;
-    this->url = url;
+DiscordCPP::Activity::Activity(std::string name, Type type, std::string url)
+    : name(std::move(name)),
+      type(type),
+      url(std::move(url)) {
 }
 
 json DiscordCPP::Activity::to_json() {
@@ -15,7 +13,7 @@ json DiscordCPP::Activity::to_json() {
         {"name", name},
         {"type", type}};
 
-    if (type == ActivityTypes::Streaming)
+    if (type == Streaming)
         json["url"] = url;
 
     return json;

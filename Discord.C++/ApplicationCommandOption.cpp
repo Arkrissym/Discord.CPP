@@ -62,7 +62,7 @@ DiscordCPP::ApplicationCommandSubcommand::ApplicationCommandSubcommand() {
 DiscordCPP::ApplicationCommandSubcommand::ApplicationCommandSubcommand(const json& data)
     : ApplicationCommandOption(data) {
     if (has_value(data, "options")) {
-        for (json option : data.at("options")) {
+        for (const json& option : data.at("options")) {
             options.push_back(ApplicationCommandOption::from_json(option));
         }
     }
@@ -95,8 +95,8 @@ DiscordCPP::ApplicationCommandChannelOption::ApplicationCommandChannelOption() {
 
 DiscordCPP::ApplicationCommandChannelOption::ApplicationCommandChannelOption(const json& data)
     : ApplicationCommandOption(data) {
-    for (json channel_type : data.at("channel_types")) {
-        channel_types.push_back(static_cast<ChannelType::ChannelType>(channel_type.get<int>()));
+    for (const json& channel_type : data.at("channel_types")) {
+        channel_types.push_back(static_cast<Channel::Type>(channel_type.get<int>()));
     }
 }
 

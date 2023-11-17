@@ -6,6 +6,7 @@
 #include <boost/asio/ssl/stream.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
+#include <utility>
 
 #include "Exceptions.h"
 #include "Logger.h"
@@ -22,27 +23,29 @@ static bool cache_manager_active = false;
 
 void manage_cache();
 
-DiscordCPP::DiscordObject::DiscordObject(const std::string& token) : _token(token) {
+DiscordCPP::DiscordObject::DiscordObject(std::string token)
+    : _token(std::move(token)) {
     if (cache_manager_active == false) {
         cache_manager_active = true;
         manage_cache();
     }
 }
 
-DiscordCPP::DiscordObject::DiscordObject(const std::string& token, const std::string& id) : DiscordObject(token) {
-    this->id = id;
+DiscordCPP::DiscordObject::DiscordObject(std::string token, std::string id)
+    : _token(std::move(token)),
+      id(std::move(id)) {
 }
 
 void manage_cache() {
     std::thread([] {
         Logger::register_thread(std::this_thread::get_id(), "Cache-Thread");
         Logger log = Logger("discord.object.manage_cache");
-        while (1) {
+        while (true) {
             auto it = _cache.begin();
             while (it != _cache.end()) {
                 std::shared_ptr<json> ptr = *it;
 
-                if ((time(0) - ptr->at("time").get<int>()) > 60) {
+                if ((time(nullptr) - ptr->at("time").get<int>()) > 60) {
                     it->reset();
                     it = _cache.erase(it);
 
@@ -67,18 +70,18 @@ void manage_cache() {
 */
 json DiscordCPP::DiscordObject::api_call(const std::string& url, const std::string& method, const json& data, const std::string& content_type, const bool cache) {
     if (method == "GET" && cache == true) {
-        for (unsigned int i = 0; i < _cache.size(); i++) {
-            if (_cache[i]->at("url").get<std::string>() == url) {
+        for (auto& i : _cache) {
+            if (i->at("url").get<std::string>() == url) {
                 Logger("discord.object.api_call").debug("using cached result for: " + url);
-                return json(_cache[i]->at("data"));
+                return json(i->at("data"));
             }
         }
     }
 
     json ret;
-    unsigned short code;
+    unsigned short code = 429;
 
-    do {
+    while (code == 429) {
         http_response response;
         try {
             response = request_internal(API_PREFIX + url, method, data.size() > 0 ? data.dump() : "", content_type);
@@ -98,14 +101,14 @@ json DiscordCPP::DiscordObject::api_call(const std::string& url, const std::stri
 
             std::this_thread::sleep_for(std::chrono::seconds(atoi(response.headers.at("Retry-After").c_str())));
         }
-    } while (code == 429);
+    }
 
     switch (code) {
         case 200:
             if (method == "GET") {
                 json tmp = json();
                 tmp["url"] = url;
-                tmp["time"] = time(0);
+                tmp["time"] = time(nullptr);
                 tmp["data"] = ret;
 
                 _cache.push_back(std::make_shared<json>(tmp));
@@ -144,8 +147,6 @@ DiscordCPP::DiscordObject::http_response DiscordCPP::DiscordObject::request_inte
     ssl::stream<tcp::socket> stream(io_context, ssl_context);
     boost::asio::connect(stream.lowest_layer(), results);
 
-    // boost::certify::set_server_hostname(stream, DISCORD_HOST);
-    // boost::certify::sni_hostname(stream, DISCORD_HOST);
     if (!SSL_set_tlsext_host_name(stream.native_handle(), DISCORD_HOST))
         throw beast::system_error(
             beast::error_code(
@@ -185,8 +186,8 @@ DiscordCPP::DiscordObject::http_response DiscordCPP::DiscordObject::request_inte
     }
 
     std::map<std::string, std::string> response_headers;
-    for (auto it = response.base().begin(); it != response.base().end(); it++) {
-        response_headers.emplace(it->name_string(), it->value());
+    for (const auto& it : response.base()) {
+        response_headers.emplace(it.name_string(), it.value());
     }
 
     return http_response{response.result_int(), response_headers, response.body()};

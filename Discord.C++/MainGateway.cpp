@@ -11,7 +11,7 @@ std::string DiscordCPP::MainGateway::decompress_message(
     zs.avail_in = (uInt)message.length();
     zs.total_out = 0;
 
-    int ret;
+    int ret = Z_OK;
     char buf[8192];
     std::string out;
 
@@ -27,10 +27,8 @@ std::string DiscordCPP::MainGateway::decompress_message(
     } while (ret == Z_OK && zs.avail_in > 0);
 
     if (ret != Z_OK) {
-        _log.error("Failed to decompress message (length: " +
-                   std::to_string(message.length()) + "): " + message);
-        throw ClientException("Failed to decompress message: code " +
-                              std::to_string(ret) + ": " + zs.msg);
+        _log.error("Failed to decompress message (length: " + std::to_string(message.length()) + "): " + message);
+        throw ClientException("Failed to decompress message: code " + std::to_string(ret) + ": " + zs.msg);
     }
 
     return out;
@@ -59,7 +57,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
             case 0:
                 if (payload["t"].get<std::string>() == "READY") {
                     _reconnect_timeout = 0;
-                    _last_heartbeat_ack = time(0);
+                    _last_heartbeat_ack = time(nullptr);
 
                     _invalid_session = false;
 
@@ -73,7 +71,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
                     _log.info("session id: " + _session_id);
                 } else if (payload["t"].get<std::string>() == "RESUMED") {
                     _reconnect_timeout = 0;
-                    _last_heartbeat_ack = time(0);
+                    _last_heartbeat_ack = time(nullptr);
 
                     std::string str = set_trace(payload);
 
@@ -103,7 +101,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
                 break;
             case 11:
                 _log.debug("received heartbeat ACK");
-                _last_heartbeat_ack = time(0);
+                _last_heartbeat_ack = time(nullptr);
                 break;
             default:
                 break;
@@ -184,32 +182,27 @@ std::string DiscordCPP::MainGateway::set_trace(const json& payload) {
         std::string t = (*it).get<std::string>();
         _trace.push_back(t);
         if (it == tmp.begin())
-            str = str + t;
+            str += t;
         else
-            str = str + ", " + t;
+            str += ", " + t;
     }
     return str;
 }
 
-DiscordCPP::MainGateway::MainGateway(const std::string& token,
-                                     const Intents& intents,
+DiscordCPP::MainGateway::MainGateway(std::string token,
+                                     Intents intents,
                                      const int shard_id,
                                      const unsigned int num_shards)
-    : Gateway::Gateway(token, std::make_shared<Threadpool>(std::thread::hardware_concurrency() / num_shards)) {
-    _log =
-        Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) +
-               ", " + std::to_string(num_shards) + "])");
+    : Gateway::Gateway(std::move(token),
+                       std::make_shared<Threadpool>(std::thread::hardware_concurrency() / num_shards)),
+      _invalid_session(false),
+      _sequence_number(0),
+      _shard_id(shard_id),
+      _num_shards(num_shards),
+      _intents(intents) {
+    _log = Logger("Discord.MainGateway (shard id: [" + std::to_string(shard_id) + ", " + std::to_string(num_shards) + "])");
 
-    _invalid_session = false;
-
-    _shard_id = shard_id;
-    _num_shards = num_shards;
-
-    _sequence_number = 0;
-
-    _intents = intents;
-
-    _message_handler = [this](json) {
+    _message_handler = [this](const json&) {
         _log.info("dummy message handler called");
     };
 }

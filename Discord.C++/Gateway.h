@@ -35,7 +35,7 @@ class Gateway {
     /// sometimes it is better a few seconds before reconnecting...
     unsigned int _reconnect_timeout;
     /// timestamp of last heartbeat ack
-    time_t _last_heartbeat_ack;
+    time_t _last_heartbeat_ack = 0;
     /// heartbeat task
     std::thread _heartbeat_task;
     /// indicator if Gateway is connected
@@ -52,7 +52,7 @@ class Gateway {
     DLL_EXPORT void on_websocket_disconnnect();
 
    public:
-    DLL_EXPORT Gateway(const std::string& token, const std::shared_ptr<Threadpool>& threadpool);
+    DLL_EXPORT Gateway(std::string token, const std::shared_ptr<Threadpool>& threadpool);
     DLL_EXPORT virtual ~Gateway();
 
     DLL_EXPORT void set_message_handler(const std::function<void(json payload)>& handler);

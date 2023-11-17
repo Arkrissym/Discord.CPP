@@ -1,5 +1,7 @@
 #include "TextChannel.h"
 
+#include "Channel.h"
+#include "DiscordObject.h"
 #include "Embed.h"
 #include "Exceptions.h"
 #include "Message.h"
@@ -13,9 +15,14 @@ DiscordCPP::TextChannel::TextChannel(const json& data, const std::string& token)
     rate_limit_per_user = get_or_else<int>(data, "rate_limit_per_user", 0);
 }
 
-DiscordCPP::TextChannel::TextChannel(const std::string& id, const std::string& token) {
+DiscordCPP::TextChannel::TextChannel(const std::string& id, const std::string& token)
+    : DiscordCPP::Channel(token) {
     std::string url = "/channels/" + id;
     *this = TextChannel(api_call(url), token);
+}
+
+DiscordCPP::TextChannel::TextChannel(const std::string& token)
+    : DiscordCPP::Channel(token) {
 }
 
 /**	@param[in]	content	The string message to send.
@@ -27,7 +34,7 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(const std::string& content, co
 
     json data = {{"content", content}, {"tts", tts}};
 
-    return Message(api_call(url, "POST", data, "application/json"), get_token());
+    return {api_call(url, "POST", data, "application/json"), get_token()};
 }
 
 /**	@param[in]	embed	The Embed to send.
@@ -39,7 +46,7 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
     json data;
     data["embeds"].push_back(embed.to_json());
 
-    return Message(api_call(url, "POST", data, "application/json"), get_token());
+    return {api_call(url, "POST", data, "application/json"), get_token()};
 }
 
 /**	@param[in]	limit	Max number of messages to retrieve (1-100)
@@ -73,10 +80,11 @@ std::vector<std::shared_ptr<DiscordCPP::Message>> DiscordCPP::TextChannel::histo
     @throws	SizeError
 */
 void DiscordCPP::TextChannel::delete_messages(const std::vector<std::shared_ptr<Message>>& messages) {
-    if (messages.size() < 2)
+    if (messages.size() < 2) {
         throw SizeError("Cannot delete less than 2 messages: use Message::delete_msg() instead");
-    else if (messages.size() > 100)
+    } else if (messages.size() > 100) {
         throw SizeError("Cannot delete more than 100 messages");
+    }
 
     std::string url = "/channels/" + get_id() + "/messages/bulk-delete";
 

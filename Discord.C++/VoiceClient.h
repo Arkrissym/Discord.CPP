@@ -28,7 +28,7 @@ class udp_client {
     std::unique_ptr<udp::socket> _socket;
     // udp::socket *_recv_socket;
     udp::endpoint _remote;
-    boost::array<char, 128> _recv_buffer;
+    boost::array<char, 128> _recv_buffer{};
 
     // void wait_for_receive();
     // void handle_receive(boost::system::error_code &error, size_t
@@ -80,7 +80,7 @@ class VoiceClient {
     DLL_EXPORT std::shared_future<void> speak(bool speak = true);
 
    public:
-    DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token, const std::string& endpoint, const std::string& session_id, const std::string& guild_id, const std::string& channel_id, const std::string& user_id);
+    DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token, const std::string& endpoint, const std::string& session_id, std::string guild_id, std::string channel_id, const std::string& user_id);
     DLL_EXPORT VoiceClient() = default;
     DLL_EXPORT ~VoiceClient();
 

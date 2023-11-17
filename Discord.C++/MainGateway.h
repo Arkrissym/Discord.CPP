@@ -9,7 +9,7 @@ namespace DiscordCPP {
 class MainGateway : public Gateway {
    private:
     /// zlib control struct
-    z_stream zs;
+    z_stream zs{};
     /// array of servers connected to
     std::vector<std::string> _trace;
     /// session id
@@ -34,7 +34,7 @@ class MainGateway : public Gateway {
     DLL_EXPORT std::string set_trace(const json& payload);
 
    public:
-    DLL_EXPORT MainGateway(const std::string& token, const Intents& intents, const int shard_id = 0, const unsigned int num_shards = 1);
+    DLL_EXPORT MainGateway(std::string token, Intents intents, const int shard_id = 0, const unsigned int num_shards = 1);
     DLL_EXPORT ~MainGateway() override = default;
 
     DLL_EXPORT unsigned int get_shard_id();

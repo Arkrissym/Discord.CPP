@@ -1,7 +1,9 @@
 #include "VoiceGateway.h"
 
+#include <utility>
+
 json DiscordCPP::VoiceGateway::get_heartbeat_payload() {
-    return {{"op", 3}, {"d", std::to_string(time(NULL))}};
+    return {{"op", 3}, {"d", std::to_string(time(nullptr))}};
 }
 
 void DiscordCPP::VoiceGateway::identify() {
@@ -42,13 +44,13 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
         switch (op) {
             case 2:
                 _reconnect_timeout = 0;
-                _last_heartbeat_ack = time(0);
+                _last_heartbeat_ack = time(nullptr);
                 _resume = true;
                 _log.info("connected to: " + _url);
                 break;
             case 6:
                 _log.debug("received heartbeat ack");
-                _last_heartbeat_ack = time(0);
+                _last_heartbeat_ack = time(nullptr);
                 break;
             case 8:
                 _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
@@ -56,7 +58,7 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
                 break;
             case 9:
                 _reconnect_timeout = 0;
-                _last_heartbeat_ack = time(0);
+                _last_heartbeat_ack = time(nullptr);
                 _resume = true;
                 _log.info("successfully resumed session for guild with id: " +
                           _guild_id);
@@ -68,10 +70,13 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
 }
 
 DiscordCPP::VoiceGateway::VoiceGateway(const std::string& token,
-                                       const std::string& session_id,
-                                       const std::string& guild_id,
-                                       const std::string& user_id,
+                                       std::string session_id,
+                                       std::string guild_id,
+                                       std::string user_id,
                                        const std::shared_ptr<Threadpool>& threadpool)
-    : Gateway(token, threadpool), _session_id(session_id), _guild_id(guild_id), _user_id(user_id) {
-    _log = Logger("Discord.VoiceGateway (guild id: " + guild_id + ")");
+    : Gateway(token, threadpool),
+      _session_id(std::move(session_id)),
+      _guild_id(std::move(guild_id)),
+      _user_id(std::move(user_id)) {
+    _log = Logger("Discord.VoiceGateway (guild id: " + _guild_id + ")");
 }

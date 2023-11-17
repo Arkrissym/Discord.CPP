@@ -1,14 +1,15 @@
 #include "VoiceClient.h"
 
-#include <errno.h>
 #include <opus/opus.h>
 #include <sodium.h>
-#include <stdio.h>
-#include <time.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <chrono>
+#include <cstdio>
+#include <ctime>
 #include <queue>
+#include <utility>
 
 #include "Exceptions.h"
 #include "Logger.h"
@@ -20,7 +21,7 @@ const unsigned short CHANNELS = 2;
 const unsigned short FRAME_SIZE = (SAMPLE_RATE / 1000) * FRAME_MILLIS;
 const unsigned int BITRATE = 131072;
 
-#define MAX_PACKET_SIZE FRAME_SIZE * 8
+#define MAX_PACKET_SIZE (FRAME_SIZE * 8)
 
 using namespace boost::asio::ip;
 
@@ -61,7 +62,7 @@ std::string DiscordCPP::udp_client::receive() {
         _log.error("Cannot receive message: " + std::string(e.what()));
     }
 
-    return std::string(_recv_buffer.begin(), _recv_buffer.begin() + len);
+    return {_recv_buffer.begin(), _recv_buffer.begin() + len};
 }
 
 std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
@@ -129,7 +130,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::select_protocol() {
 std::shared_future<void> DiscordCPP::VoiceClient::load_session_description(const json& data) {
     return threadpool->execute([this, data] {
         _mode = data["mode"].get<std::string>();
-        for (json k : data["secret_key"]) {
+        for (const json& k : data["secret_key"]) {
             _secret_key.push_back(k.get<unsigned char>());
         }
     });
@@ -157,18 +158,18 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
                                      const std::string& voice_token,
                                      const std::string& endpoint,
                                      const std::string& session_id,
-                                     const std::string& guild_id,
-                                     const std::string& channel_id,
-                                     const std::string& user_id) {
+                                     std::string guild_id,
+                                     std::string channel_id,
+                                     const std::string& user_id)
+    : _guild_id(std::move(guild_id)),
+      _channel_id(std::move(channel_id)),
+      _main_ws(std::move(main_ws)) {
     threadpool = std::make_shared<Threadpool>(4);
-    _guild_id = guild_id;
-    _channel_id = channel_id;
 
     _log = Logger("Discord.VoiceClient");
     _log.info("connecting to endpoint " + _endpoint);
 
-    _main_ws = main_ws;
-    _voice_ws = std::make_unique<VoiceGateway>(voice_token, session_id, guild_id, user_id, threadpool);
+    _voice_ws = std::make_unique<VoiceGateway>(voice_token, session_id, _guild_id, user_id, threadpool);
 
     _voice_ws->set_message_handler([this](json data) {
         std::shared_future<void> f;
@@ -250,7 +251,7 @@ void DiscordCPP::VoiceClient::stop_playing() {
 std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
     return threadpool->execute([this, source] {
         _log.debug("creating opus encoder");
-        int error;
+        int error = 0;
         OpusEncoder* encoder = opus_encoder_create(
             SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_AUDIO, &error);
         if (error < 0) {
@@ -268,9 +269,9 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             throw ClientException("libsodium initialisation failed");
         }
 
-        int num_opus_bytes;
+        int num_opus_bytes = 0;
         unsigned char* pcm_data = new unsigned char[FRAME_SIZE * CHANNELS * 2];
-        opus_int16* in_data;
+        opus_int16* in_data = nullptr;
         std::vector<unsigned char> opus_data(MAX_PACKET_SIZE);
 
         _log.debug("starting loop");
@@ -290,9 +291,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
             num_opus_bytes = opus_encode(encoder, in_data, FRAME_SIZE,
                                          opus_data.data(), MAX_PACKET_SIZE);
             if (num_opus_bytes <= 0) {
-                throw OpusError("failed to encode frame: " +
-                                    std::string(opus_strerror(num_opus_bytes)),
-                                num_opus_bytes);
+                throw OpusError("failed to encode frame: " + std::string(opus_strerror(num_opus_bytes)), num_opus_bytes);
             }
 
             opus_data.resize(num_opus_bytes);

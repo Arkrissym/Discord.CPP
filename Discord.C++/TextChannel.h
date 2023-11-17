@@ -2,6 +2,7 @@
 #include <utility>
 
 #include "Channel.h"
+#include "static.h"
 
 namespace DiscordCPP {
 
@@ -13,7 +14,7 @@ class TextChannel : public Channel {
     /// the topic of the channel
     std::string topic;
     /// true if nsfw is enabled
-    bool nsfw;
+    bool nsfw = false;
     /// the id of the last message
     std::string last_message_id;
     /// when the last message was pinned
@@ -24,6 +25,7 @@ class TextChannel : public Channel {
    public:
     DLL_EXPORT TextChannel(const json& data, const std::string& token);
     DLL_EXPORT TextChannel(const std::string& id, const std::string& token);
+    DLL_EXPORT explicit TextChannel(const std::string& token);
     DLL_EXPORT TextChannel() = default;
 
     /// Send a Message to this channel.
@@ -48,8 +50,8 @@ class TextChannel : public Channel {
     /// @return Amount of seconds a User has to wait before sending another message(0-120).
     DLL_EXPORT int get_rate_limit_per_user() { return rate_limit_per_user; }
 
-    DLL_EXPORT void _set_last_message_id(std::string message_id) { last_message_id = message_id; }
-    DLL_EXPORT void _set_last_pin_timestamp(std::string timestamp) { last_pin_timestamp = timestamp; }
+    DLL_EXPORT void _set_last_message_id(std::string message_id) { last_message_id = std::move(message_id); }
+    DLL_EXPORT void _set_last_pin_timestamp(std::string timestamp) { last_pin_timestamp = std::move(timestamp); }
 };
 
 }  // namespace DiscordCPP

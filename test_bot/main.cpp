@@ -2,7 +2,6 @@
 #include <iostream>
 #include <thread>
 
-#include "Logger.h"
 #ifndef _WIN32
 #include <cstdlib>
 #endif
@@ -16,17 +15,17 @@ using namespace std;
 class Client : public Discord {
    private:
     Channel* findChannel(const string& name, const string& guild_id) {
-        for (unsigned int i = 0; i < _guilds.size(); i++) {
-            if (guild_id == _guilds[i]->get_id()) {
-                auto channels = _guilds[i]->get_channels();
-                for (unsigned int j = 0; j < channels.size(); j++) {
-                    if (channels[j]->get_name().compare(name) == 0) {
-                        return channels[j];
+        for (auto& _guild : _guilds) {
+            if (guild_id == _guild->get_id()) {
+                auto channels = _guild->get_channels();
+                for (auto& channel : channels) {
+                    if (channel->get_name().compare(name) == 0) {
+                        return channel;
                     }
                 }
             }
         }
-        return NULL;
+        return nullptr;
     }
     void play(VoiceChannel* channel, AudioSource* source) {
         std::shared_ptr<VoiceClient> vc = channel->connect();
@@ -83,7 +82,7 @@ class Client : public Discord {
         echo.set_type(ApplicationCommand::Type::MESSAGE);
         create_application_command(echo);
 
-        update_presence(DiscordStatus::Online, Activity("test", ActivityTypes::Game));
+        update_presence(DiscordStatus::Online, Activity("test", Activity::Type::Game));
     }
 
     void on_user_ban(User user, Guild guild) override {
@@ -191,6 +190,10 @@ class Client : public Discord {
 
             delete source;
         } else if (message.get_content().compare(0, 6, "?play ") == 0) {
+            if (!message.get_guild_id().has_value()) {
+                return;
+            }
+
             stringstream argumentstream(message.get_content().substr(6));
             string channel_name;
             string link;
@@ -319,10 +322,13 @@ class Client : public Discord {
                 interaction.reply(message.get_content());
             }
         } else if (name == "msg") {
-            for (InteractionDataOption* it : interaction.get_data().value().get_options()) {
-                if (it->name == "text" && it->type == ApplicationCommandOption::Type::SUB_COMMAND) {
+            auto options = interaction.get_data().value().get_options();
+            for (auto& option : options) {
+                log.debug(option->name);
+                log.debug(std::to_string(option->type));
+                if (option->name == "text" && option->type == ApplicationCommandOption::Type::SUB_COMMAND) {
                     interaction.reply("Text reply");
-                } else if (it->name == "embed" && it->type == ApplicationCommandOption::Type::SUB_COMMAND) {
+                } else if (option->name == "embed" && option->type == ApplicationCommandOption::Type::SUB_COMMAND) {
                     Embed embed = Embed("Embed", "description");
 
                     embed.set_color(0x00ff00);
@@ -349,7 +355,7 @@ class Client : public Discord {
                     interaction.reply(embed);
 
                 } else {
-                    log.info(it->name + " " + std::to_string(it->type));
+                    log.info(option->name + " " + std::to_string(option->type));
                 }
             }
         }
@@ -361,7 +367,7 @@ class Client : public Discord {
 };
 
 int main() {
-    char* token;
+    char* token = nullptr;
 #ifdef _WIN32
     size_t len;
     if (_dupenv_s(&token, &len, "DISCORD_TEST_TOKEN")) {

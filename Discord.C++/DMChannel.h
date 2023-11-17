@@ -7,8 +7,8 @@ class DMChannel : public TextChannel {
    private:
     /// the recipients if the channel is DM
     std::vector<User> recipients;
-    /// the owner of this DM channel
-    std::string owner_id;
+    /// the owner of this DM channel, only for group dm channels
+    std::optional<std::string> owner_id;
     User* owner = nullptr;
     /// the application id of the group DM creator if it was bot-created
     std::string application_id;
@@ -20,7 +20,7 @@ class DMChannel : public TextChannel {
     /// the recipients if the channel is DM
     DLL_EXPORT std::vector<User> get_recipients() { return recipients; }
     /// the owner of this DM channel
-    DLL_EXPORT User get_owner();
+    DLL_EXPORT std::optional<User> get_owner();
     /// the application id of the group DM creator if it was bot-created
     DLL_EXPORT std::string get_application_id() { return application_id; }
 };

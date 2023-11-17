@@ -4,7 +4,9 @@
 #include "Logger.h"
 #include "static.h"
 
-DiscordCPP::Embed::Embed(const std::string& title, const std::string& description) : _title(title), _description(description) {
+DiscordCPP::Embed::Embed(std::string title, std::string description)
+    : _title(std::move(title)),
+      _description(std::move(description)) {
 }
 
 DiscordCPP::Embed::Embed(const json& data) {

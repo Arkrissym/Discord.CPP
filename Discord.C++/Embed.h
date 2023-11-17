@@ -13,7 +13,7 @@ class Embed {
     std::string _type;
     std::string _url;
     std::string _timestamp;  // ISO8601
-    int _color;
+    int _color = 0;
     struct Footer {
         std::string text;
         std::string icon_url;
@@ -48,7 +48,7 @@ class Embed {
     std::vector<Field> _fields;
 
    public:
-    DLL_EXPORT explicit Embed(const std::string& title = "", const std::string& description = "");
+    DLL_EXPORT explicit Embed(std::string title = "", std::string description = "");
     DLL_EXPORT explicit Embed(const json& data);
 
     DLL_EXPORT void set_color(int color);

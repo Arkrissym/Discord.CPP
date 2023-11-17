@@ -12,7 +12,7 @@ class DMChannel;
 
 class User : public DiscordObject {
    public:
-    enum PremiumTypes {
+    enum PremiumType {
         None,
         NitroClassic,
         Nitro
@@ -38,7 +38,7 @@ class User : public DiscordObject {
     /// the flags on a user's account
     int flags = 0;
     /// the type of Nitro subscription on a user's account
-    int premium_type = PremiumTypes::None;
+    PremiumType premium_type = PremiumType::None;
 
    public:
     DLL_EXPORT User() = default;
@@ -75,7 +75,6 @@ class User : public DiscordObject {
     /// the flags on a user's account
     DLL_EXPORT int get_flags() { return flags; }
     ///@return the type of Nitro subscription on a user's account
-    DLL_EXPORT PremiumTypes get_premium_type() { return PremiumTypes(premium_type); }
+    DLL_EXPORT PremiumType get_premium_type() { return premium_type; }
 };
-
 }  // namespace DiscordCPP

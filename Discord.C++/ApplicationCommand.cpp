@@ -2,7 +2,7 @@
 
 DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::string& token)
     : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
-    type = static_cast<DiscordCPP::ApplicationCommand::Type>(get_or_else<int>(data, "type", 1));
+    type = static_cast<DiscordCPP::ApplicationCommand::Type>(get_or_else<int>(data, "type", CHAT_INPUT));
     application_id = data.at("application_id").get<std::string>();
 
     if (has_value(data, "guild_id")) {
@@ -15,22 +15,21 @@ DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::
     version = data.at("version").get<std::string>();
 
     if (has_value(data, "options")) {
-        for (json option : data.at("options")) {
+        for (const json& option : data.at("options")) {
             options.push_back(DiscordCPP::ApplicationCommandOption::from_json(option));
         }
     }
 }
 
 DiscordCPP::ApplicationCommand::ApplicationCommand(const ApplicationCommand& other)
-    : DiscordCPP::DiscordObject(other) {
-    type = other.type;
-    application_id = other.application_id;
-    guild_id = other.guild_id;
-    name = other.name;
-    description = other.description;
-    dm_permission = other.dm_permission;
-    version = other.version;
-
+    : DiscordCPP::DiscordObject(other),
+      type(other.type),
+      application_id(other.application_id),
+      guild_id(other.guild_id),
+      name(other.name),
+      description(other.description),
+      dm_permission(other.dm_permission),
+      version(other.version) {
     for (ApplicationCommandOption* option : other.options) {
         options.push_back(option->copy());
     }

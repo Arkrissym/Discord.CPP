@@ -31,7 +31,7 @@ class ApplicationCommandOption {
     bool required = false;
 
     DLL_EXPORT ApplicationCommandOption() = default;
-    DLL_EXPORT ApplicationCommandOption(const json& data);
+    DLL_EXPORT explicit ApplicationCommandOption(const json& data);
     DLL_EXPORT static ApplicationCommandOption* from_json(const json& data);
 
     DLL_EXPORT json to_json();
@@ -45,7 +45,7 @@ class ApplicationCommandSubcommand : public ApplicationCommandOption {
     std::vector<ApplicationCommandOption*> options;
 
     DLL_EXPORT ApplicationCommandSubcommand();
-    DLL_EXPORT ApplicationCommandSubcommand(const json& data);
+    DLL_EXPORT explicit ApplicationCommandSubcommand(const json& data);
     DLL_EXPORT ApplicationCommandSubcommand(const ApplicationCommandSubcommand& other);
     DLL_EXPORT ~ApplicationCommandSubcommand();
 
@@ -55,10 +55,10 @@ class ApplicationCommandSubcommand : public ApplicationCommandOption {
 class ApplicationCommandChannelOption : public ApplicationCommandOption {
    public:
     /// The selectable channels will be restricted to these type.
-    std::vector<ChannelType::ChannelType> channel_types;
+    std::vector<Channel::Type> channel_types;
 
     DLL_EXPORT ApplicationCommandChannelOption();
-    DLL_EXPORT ApplicationCommandChannelOption(const json& data);
+    DLL_EXPORT explicit ApplicationCommandChannelOption(const json& data);
 
     DLL_EXPORT json to_json();
 };
@@ -67,10 +67,10 @@ class ApplicationCommandValueOption : public ApplicationCommandOption {
    public:
     // choices
     /// If autocomplete is enabled. Only for STRING, INTEGER and NUMBER options.
-    bool autocomplete;
+    bool autocomplete = false;
 
     DLL_EXPORT ApplicationCommandValueOption();
-    DLL_EXPORT ApplicationCommandValueOption(const json& data);
+    DLL_EXPORT explicit ApplicationCommandValueOption(const json& data);
 
     DLL_EXPORT json to_json();
 };
@@ -78,12 +78,12 @@ class ApplicationCommandValueOption : public ApplicationCommandOption {
 class ApplicationCommandIntegerOption : public ApplicationCommandValueOption {
    public:
     /// The minumum allowed value.
-    int min_value;
+    int min_value = 0;
     /// The maximum allowed value.
-    int max_value;
+    int max_value = 0;
 
     DLL_EXPORT ApplicationCommandIntegerOption();
-    DLL_EXPORT ApplicationCommandIntegerOption(const json& data);
+    DLL_EXPORT explicit ApplicationCommandIntegerOption(const json& data);
 
     DLL_EXPORT json to_json();
 };
@@ -91,12 +91,12 @@ class ApplicationCommandIntegerOption : public ApplicationCommandValueOption {
 class ApplicationCommandNumberOption : public ApplicationCommandValueOption {
    public:
     /// The minumum allowed value.
-    double min_value;
+    double min_value = 0;
     /// The maximum allowed value.
-    double max_value;
+    double max_value = 0;
 
     DLL_EXPORT ApplicationCommandNumberOption();
-    DLL_EXPORT ApplicationCommandNumberOption(const json& data);
+    DLL_EXPORT explicit ApplicationCommandNumberOption(const json& data);
 
     DLL_EXPORT json to_json();
 };

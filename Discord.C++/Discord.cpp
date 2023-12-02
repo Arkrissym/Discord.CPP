@@ -4,6 +4,8 @@
 #include <ctime>
 #include <iostream>
 
+#include "ChannelHelper.h"
+#include "GuildChannel.h"
 #include "static.h"
 
 /**	Creates a Discord instance with one or more shards
@@ -281,14 +283,14 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
     } else if (event_name == "CHANNEL_CREATE") {
         if (has_value(data, "guild_id")) {
             std::string guild_id = data.at("guild_id").get<std::string>();
-            Channel *channel = Channel::from_json(this, data, get_token());
+            ChannelVariant channel = ChannelHelper::channel_from_json(this, data, get_token());
 
             get_guild(guild_id)->_add_channel(channel);
         }
     } else if (event_name == "CHANNEL_UPDATE") {
         if (has_value(data, "guild_id")) {
             std::string guild_id = data.at("guild_id").get<std::string>();
-            Channel *channel = Channel::from_json(this, data, get_token());
+            ChannelVariant channel = ChannelHelper::channel_from_json(this, data, get_token());
 
             get_guild(guild_id)->_update_channel(channel);
         }
@@ -303,13 +305,12 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
         if (has_value(data, "channel_id") &&
             has_value(data, "last_pin_timestamp")) {
             std::string channel_id = data.at("channel_id").get<std::string>();
-            std::string last_pin =
-                data.at("last_pin_timestamp").get<std::string>();
+            std::string last_pin = data.at("last_pin_timestamp").get<std::string>();
 
             for (auto &_guild : _guilds) {
                 for (auto &channel : _guild->channels) {
-                    if (channel->get_id() == channel_id) {
-                        ((TextChannel *)channel)->_set_last_pin_timestamp(last_pin);
+                    if (ChannelHelper::get_channel_id(channel) == channel_id) {
+                        std::get<GuildChannel>(channel)._set_last_pin_timestamp(last_pin);
                         return;
                     }
                 }
@@ -416,8 +417,8 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
             for (auto &_guild : _guilds) {
                 if (_guild->get_id() == guild_id) {
                     for (auto &channel : _guild->channels) {
-                        if (channel->get_id() == channel_id) {
-                            ((TextChannel *)channel)->_set_last_message_id(msg_id);
+                        if (ChannelHelper::get_channel_id(channel) == channel_id) {
+                            std::get<GuildChannel>(channel)._set_last_message_id(msg_id);
                             break;
                         }
                     }

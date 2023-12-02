@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+#include "ChannelHelper.h"
 #include "Discord.h"
 #include "Exceptions.h"
 #include "Guild.h"
@@ -33,7 +34,7 @@ std::shared_ptr<DiscordCPP::VoiceClient> DiscordCPP::VoiceChannel::connect() {
     for (auto& _guild : _client->_guilds) {
         auto channels = _guild->get_channels();
         for (auto& channel : channels) {
-            if (channel->get_id() == get_id())
+            if (ChannelHelper::get_channel_id(channel) == get_id())
                 guild = _guild;
         }
     }

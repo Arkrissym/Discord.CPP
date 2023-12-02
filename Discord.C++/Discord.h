@@ -6,6 +6,7 @@
 #include "ApplicationCommand.h"
 #include "AudioSource.h"
 #include "Channel.h"
+#include "ChannelHelper.h"
 #include "DMChannel.h"
 #include "DiscordObject.h"
 #include "Embed.h"

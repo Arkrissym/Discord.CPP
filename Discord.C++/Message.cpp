@@ -9,6 +9,7 @@
 #include "Guild.h"
 #include "GuildChannel.h"
 #include "Logger.h"
+#include "TextChannel.h"
 #include "User.h"
 #include "VoiceChannel.h"
 #include "static.h"
@@ -81,7 +82,7 @@ DiscordCPP::Message::Message(const Message& old)
     // application
 
     if (old.channel != nullptr) {
-        channel = (TextChannel*)old.channel->copy();
+        channel = new TextChannel(*old.channel);
     }
     if (guild != nullptr) {
         guild = new Guild(*old.guild);

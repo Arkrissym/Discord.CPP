@@ -3,17 +3,12 @@
 #include <string>
 
 #include "Channel.h"
+#include "ChannelHelper.h"
 #include "DiscordObject.h"
 #include "GuildChannel.h"
 #include "Member.h"
 #include "User.h"
 #include "VoiceChannel.h"
-
-#ifdef _WIN32
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
 
 namespace DiscordCPP {
 
@@ -84,8 +79,8 @@ class Guild : public DiscordObject {
     int default_message_notifications = 0;
     /// ExplicitContentFilterLevel
     int explicit_content_filter = 0;
-    // vector<Role *> roles;
-    // vector<Emoji *> emojis;
+    // vector<Role> roles;
+    // vector<Emoji> emojis;
     /// enabled guild features
     std::vector<std::string> features;
     /// MFALevel
@@ -113,11 +108,11 @@ class Guild : public DiscordObject {
     /// users in the guild
     std::vector<Member> members;
     /// channels of the guild
-    std::vector<Channel*> channels;
-    // vector<Presence *> presences;
+    std::vector<ChannelVariant> channels;
+    // vector<Presence> presences;
 
-    DLL_EXPORT void _add_channel(Channel* channel);
-    DLL_EXPORT void _update_channel(Channel* channel);
+    DLL_EXPORT void _add_channel(ChannelVariant channel);
+    DLL_EXPORT void _update_channel(ChannelVariant channel);
     DLL_EXPORT void _remove_channel(const std::string& channel_id);
     DLL_EXPORT void _add_member(Member member);
     DLL_EXPORT void _update_member(Member member);
@@ -128,11 +123,9 @@ class Guild : public DiscordObject {
    public:
     DLL_EXPORT Guild(Discord* client, const json& data, const std::string& token);
     DLL_EXPORT Guild(Discord* client, const std::string& id, const std::string& token);
-    DLL_EXPORT Guild(const Guild& old);
     DLL_EXPORT Guild() = default;
-    DLL_EXPORT ~Guild();
 
-    ///@return Guildname as std::string
+    ///@return Guild name as std::string
     DLL_EXPORT explicit operator std::string() { return name; };
 
     /// leave this guild
@@ -208,7 +201,7 @@ class Guild : public DiscordObject {
     /// @return users in the guild
     DLL_EXPORT std::vector<Member> get_members() { return members; }
     /// @return channels of the guild
-    DLL_EXPORT std::vector<Channel*> get_channels() { return channels; }
+    DLL_EXPORT std::vector<ChannelVariant> get_channels() { return channels; }
 };
 
 }  // namespace DiscordCPP

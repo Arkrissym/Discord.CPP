@@ -18,7 +18,7 @@ class InteractionData : public DiscordObject {
     /// The resolved users, roles, channels, messages and/or attachments.
     std::optional<InteractionResolvedData> resolved_data;
     /// The parameters and values from the user.
-    std::vector<InteractionDataOption*> options;
+    std::vector<InteractionDataOptionVariant> options;
     /// The id of the guild the command is registered to.
     std::optional<std::string> guild_id;
     /// Id the of user or message targeted by a user or message command.
@@ -31,8 +31,6 @@ class InteractionData : public DiscordObject {
 
    public:
     DLL_EXPORT InteractionData(const json& data, const std::string& token);
-    DLL_EXPORT InteractionData(const InteractionData& other);
-    DLL_EXPORT ~InteractionData();
 
     /// @return name of the invoked command.
     DLL_EXPORT std::string get_name() { return name; }
@@ -41,7 +39,7 @@ class InteractionData : public DiscordObject {
     /// @return The resolved users, roles, channels, messages and/or attachments.
     DLL_EXPORT std::optional<InteractionResolvedData> get_resolved_data() { return resolved_data; }
     /// @return The parameters and values from the user.
-    DLL_EXPORT std::vector<InteractionDataOption*> get_options() { return options; }
+    DLL_EXPORT std::vector<InteractionDataOptionVariant> get_options() { return options; }
     /// @return The id of the guild the command is registered to.
     DLL_EXPORT std::optional<std::string> get_guild_id() { return guild_id; }
     /// @return Id the of user or message targeted by a user or message command.

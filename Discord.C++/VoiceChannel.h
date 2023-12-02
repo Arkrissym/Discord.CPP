@@ -4,7 +4,6 @@
 
 namespace DiscordCPP {
 
-class Guild;
 class Discord;
 class VoiceClient;
 

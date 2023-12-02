@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "ChannelHelper.h"
 #include "DMChannel.h"
 #include "TextChannel.h"
 #include "VoiceChannel.h"
@@ -55,7 +56,7 @@ DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& t
 
     if (has_value(data, "channels")) {
         for (json channel : data.at("channels")) {
-            channels.push_back(Channel::from_json(client, channel, token));
+            channels.push_back(ChannelHelper::channel_from_json(client, channel, token));
         }
     }
 
@@ -69,55 +70,14 @@ DiscordCPP::Guild::Guild(Discord* client, const std::string& id, const std::stri
     *this = Guild(client, api_call("/guilds/" + id), token);
 }
 
-DiscordCPP::Guild::Guild(const Guild& old)
-    : DiscordCPP::DiscordObject(old) {
-    name = old.name;
-    icon = old.icon;
-    splash = old.splash;
-    owner = old.owner;
-    permissions = old.permissions;
-    region = old.region;
-    afk_channel = old.afk_channel;
-    afk_timeout = old.afk_timeout;
-    embed_enabled = old.embed_enabled;
-    embed_channel = old.embed_channel;
-    verification_level = old.verification_level;
-    default_message_notifications = old.default_message_notifications;
-    explicit_content_filter = old.explicit_content_filter;
-    // roles
-    // emojis
-    features = old.features;
-    mfa_level = old.mfa_level;
-    application_id = old.application_id;
-    widget_enabled = old.widget_enabled;
-    widget_channel = old.widget_channel;
-    system_channel = old.system_channel;
-    joined_at = old.joined_at;
-    large = old.large;
-    unavailable = old.unavailable;
-    member_count = old.member_count;
-    // voice_states
-    members = old.members;
-    for (auto channel : old.channels) {
-        channels.push_back(channel->copy());
-    }
-    // presences
-}
-
-DiscordCPP::Guild::~Guild() {
-    for (auto& channel : channels) {
-        delete channel;
-    }
-}
-
-void DiscordCPP::Guild::_add_channel(Channel* channel) {
+void DiscordCPP::Guild::_add_channel(ChannelVariant channel) {
     channels.push_back(channel);
 }
 
-void DiscordCPP::Guild::_update_channel(Channel* channel) {
+void DiscordCPP::Guild::_update_channel(ChannelVariant channel) {
+    std::string channel_id = ChannelHelper::get_channel_id(channel);
     for (size_t i = 0; i < channels.size(); i++) {
-        if (channels[i]->get_id() == channel->get_id()) {
-            delete channels[i];
+        if (ChannelHelper::get_channel_id(channels[i]) == channel_id) {
             channels.erase(channels.begin() + i);
             channels.push_back(channel);
             break;
@@ -127,8 +87,7 @@ void DiscordCPP::Guild::_update_channel(Channel* channel) {
 
 void DiscordCPP::Guild::_remove_channel(const std::string& channel_id) {
     for (size_t i = 0; i < channels.size(); i++) {
-        if (channels[i]->get_id() == channel_id) {
-            delete channels[i];
+        if (ChannelHelper::get_channel_id(channels[i]) == channel_id) {
             channels.erase(channels.begin() + i);
             break;
         }

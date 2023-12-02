@@ -1,5 +1,7 @@
 #include "Channel.h"
 
+#include <variant>
+
 #include "Discord.h"
 #include "static.h"
 
@@ -31,38 +33,8 @@ DiscordCPP::Channel::Channel(const std::string& token)
     : DiscordCPP::DiscordObject(token) {
 }
 
-DiscordCPP::Channel* DiscordCPP::Channel::from_json(Discord* client, const json& data, const std::string& token) {
-    switch (data.at("type").get<int>()) {
-        case Type::GUILD_TEXT:
-        case Type::GUILD_NEWS:
-            return (Channel*)new GuildChannel(data, token);
-        case Type::GUILD_VOICE:
-            return (Channel*)new VoiceChannel(client, data, token);
-        case Type::DM:
-        case Type::GROUP_DM:
-            return new DMChannel(data, token);
-        default:
-            return new Channel(data, token);
-    }
-}
-
 void DiscordCPP::Channel::delete_channel() {
     std::string url = "/channels/" + get_id();
 
     api_call(url, "DELETE");
-}
-
-DiscordCPP::Channel* DiscordCPP::Channel::copy() {
-    switch (type) {
-        case Type::GUILD_TEXT:
-        case Type::GUILD_NEWS:
-            return (Channel*)new GuildChannel(*(GuildChannel*)this);
-        case Type::GUILD_VOICE:
-            return (Channel*)new VoiceChannel(*(VoiceChannel*)this);
-        case Type::DM:
-        case Type::GROUP_DM:
-            return new DMChannel(*(DMChannel*)this);
-        default:
-            return new Channel(*this);
-    }
 }

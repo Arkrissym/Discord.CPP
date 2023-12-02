@@ -17,7 +17,7 @@ DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json& data, c
 
     if (has_value(data, "channels")) {
         for (auto [key, value] : data["channels"].items()) {
-            channels.insert(std::make_pair(key, Channel::from_json(nullptr, value, token)));
+            channels.insert(std::make_pair(key, ChannelHelper::channel_from_json(nullptr, value, token)));
         }
     }
 
@@ -29,19 +29,4 @@ DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json& data, c
     }
 
     // attachments
-}
-
-DiscordCPP::InteractionResolvedData::InteractionResolvedData(const InteractionResolvedData& other) : users(other.users), members(other.members), messages(other.messages) {
-    // roles
-    for (auto [channel_id, channel] : other.channels) {
-        channels.insert(std::make_pair(channel_id, channel->copy()));
-    }
-
-    // attachments
-}
-
-DiscordCPP::InteractionResolvedData::~InteractionResolvedData() {
-    for (auto& channel : channels) {
-        delete channel.second;
-    }
 }

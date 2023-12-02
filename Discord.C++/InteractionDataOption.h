@@ -1,9 +1,26 @@
 #pragma once
+#include <variant>
 #include <vector>
+
 #include "ApplicationCommandOption.h"
+#include "Threadpool.h"
 #include "static.h"
 
 namespace DiscordCPP {
+
+class InteractionDataOption;
+class InteractionDataStringOption;
+class InteractionDataIntegerOption;
+class InteractionDataNumberOption;
+class InteractionDataBooleanOption;
+class InteractionDataSubcommandOption;
+
+using InteractionDataOptionVariant = std::variant<InteractionDataStringOption,
+                                                  InteractionDataIntegerOption,
+                                                  InteractionDataNumberOption,
+                                                  InteractionDataBooleanOption,
+                                                  InteractionDataSubcommandOption,
+                                                  InteractionDataOption>;
 
 class InteractionDataOption {
    public:
@@ -12,11 +29,7 @@ class InteractionDataOption {
     /// Type of the option.
     ApplicationCommandOption::Type type;
 
-    DLL_EXPORT InteractionDataOption(const json& data);
-    DLL_EXPORT virtual ~InteractionDataOption(){};
-    DLL_EXPORT static InteractionDataOption* from_json(const json& data);
-
-    DLL_EXPORT InteractionDataOption* copy();
+    DLL_EXPORT explicit InteractionDataOption(const json& data);
 };
 
 class InteractionDataStringOption : public InteractionDataOption {
@@ -24,7 +37,7 @@ class InteractionDataStringOption : public InteractionDataOption {
     /// Value of the option.
     std::string value;
 
-    DLL_EXPORT InteractionDataStringOption(const json& data);
+    DLL_EXPORT explicit InteractionDataStringOption(const json& data);
 };
 
 class InteractionDataIntegerOption : public InteractionDataOption {
@@ -32,7 +45,7 @@ class InteractionDataIntegerOption : public InteractionDataOption {
     /// Value of the option.
     int value;
 
-    DLL_EXPORT InteractionDataIntegerOption(const json& data);
+    DLL_EXPORT explicit InteractionDataIntegerOption(const json& data);
 };
 
 class InteractionDataNumberOption : public InteractionDataOption {
@@ -40,7 +53,7 @@ class InteractionDataNumberOption : public InteractionDataOption {
     /// Value of the option.
     double value;
 
-    DLL_EXPORT InteractionDataNumberOption(const json& data);
+    DLL_EXPORT explicit InteractionDataNumberOption(const json& data);
 };
 
 class InteractionDataBooleanOption : public InteractionDataOption {
@@ -48,17 +61,22 @@ class InteractionDataBooleanOption : public InteractionDataOption {
     /// Value of the option.
     bool value;
 
-    DLL_EXPORT InteractionDataBooleanOption(const json& data);
+    DLL_EXPORT explicit InteractionDataBooleanOption(const json& data);
 };
 
 class InteractionDataSubcommandOption : public InteractionDataOption {
    public:
     /// array of InteractionDataOption
-    std::vector<InteractionDataOption*> options;
+    std::vector<InteractionDataOptionVariant> options;
 
-    DLL_EXPORT InteractionDataSubcommandOption(const json& data);
-    DLL_EXPORT InteractionDataSubcommandOption(const InteractionDataSubcommandOption& other);
-    DLL_EXPORT ~InteractionDataSubcommandOption();
+    DLL_EXPORT explicit InteractionDataSubcommandOption(const json& data);
+};
+
+class InteractionDataOptionHelper {
+   public:
+    DLL_EXPORT static InteractionDataOptionVariant interaction_data_option_from_json(const json& data);
+    DLL_EXPORT static std::string get_interaction_data_option_name(const InteractionDataOptionVariant& variant);
+    DLL_EXPORT static ApplicationCommandOption::Type get_interaction_data_option_type(const InteractionDataOptionVariant& variant);
 };
 
 }  // namespace DiscordCPP

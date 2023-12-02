@@ -16,6 +16,7 @@ class DMChannel : public TextChannel {
    public:
     DLL_EXPORT DMChannel(const json& data, const std::string& token);
     DLL_EXPORT DMChannel(const std::string& id, const std::string& token);
+    DLL_EXPORT DMChannel() = default;
 
     /// the recipients if the channel is DM
     DLL_EXPORT std::vector<User> get_recipients() { return recipients; }

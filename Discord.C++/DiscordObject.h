@@ -33,8 +33,6 @@ class DiscordObject {
     DLL_EXPORT explicit DiscordObject(std::string token);
     ///	@param[in]	token	Discord token
     DLL_EXPORT explicit DiscordObject(std::string token, std::string id);
-    /// @param[in]	old	the Channel to copy
-    DLL_EXPORT DiscordObject(const DiscordObject& old) = default;
 
     /// @return the id of the object
     DLL_EXPORT [[nodiscard]] std::string get_id() const { return id; }

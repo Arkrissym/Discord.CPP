@@ -43,16 +43,10 @@ class Channel : public DiscordObject {
     DLL_EXPORT Channel(const json& data, const std::string& token);
     DLL_EXPORT Channel(const std::string& id, const std::string& token);
     DLL_EXPORT explicit Channel(const std::string& token);
-    DLL_EXPORT Channel(const Channel&) = default;
     DLL_EXPORT Channel() = default;
-
-    DLL_EXPORT static Channel* from_json(Discord* client, const json& data, const std::string& token);
 
     /// Delete this channel
     DLL_EXPORT void delete_channel();
-
-    /// @returns a copy of this channel object
-    DLL_EXPORT Channel* copy();
 
     /// @return Channelname as std::string
     DLL_EXPORT explicit operator std::string() { return name; };

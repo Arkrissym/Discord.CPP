@@ -3,6 +3,7 @@
 #include <map>
 
 #include "Channel.h"
+#include "ChannelHelper.h"
 #include "Member.h"
 #include "Message.h"
 
@@ -18,7 +19,7 @@ class InteractionResolvedData {
     // roles
 
     /// Map of channel ids and channel objects.
-    std::map<std::string, Channel*> channels;
+    std::map<std::string, ChannelVariant> channels;
 
     /// Map of message ids and message objects.
     std::map<std::string, Message> messages;
@@ -27,8 +28,6 @@ class InteractionResolvedData {
 
    public:
     DLL_EXPORT InteractionResolvedData(const json& data, const std::string& token);
-    DLL_EXPORT InteractionResolvedData(const InteractionResolvedData& other);
-    DLL_EXPORT ~InteractionResolvedData();
 
     /// @return Map of user ids and user objects.
     DLL_EXPORT std::map<std::string, User> get_users() { return users; }
@@ -37,7 +36,7 @@ class InteractionResolvedData {
     DLL_EXPORT std::map<std::string, Member> get_members() { return members; }
 
     /// @return Map of channel ids and channel objects.
-    DLL_EXPORT std::map<std::string, Channel*> get_channels() { return channels; }
+    DLL_EXPORT std::map<std::string, ChannelVariant> get_channels() { return channels; }
 
     /// @return Map of message ids and message objects.
     DLL_EXPORT std::map<std::string, Message> get_messages() { return messages; }

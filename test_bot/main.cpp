@@ -14,21 +14,21 @@ using namespace std;
 
 class Client : public Discord {
    private:
-    Channel* findChannel(const string& name, const string& guild_id) {
+    ChannelVariant findChannel(const string& name, const string& guild_id) {
         for (auto& _guild : _guilds) {
             if (guild_id == _guild->get_id()) {
                 auto channels = _guild->get_channels();
                 for (auto& channel : channels) {
-                    if (channel->get_name().compare(name) == 0) {
+                    if (std::visit([](auto& c) { return c.get_name(); }, channel).compare(name) == 0) {
                         return channel;
                     }
                 }
             }
         }
-        return nullptr;
+        return {};
     }
-    void play(VoiceChannel* channel, AudioSource* source) {
-        std::shared_ptr<VoiceClient> vc = channel->connect();
+    void play(ChannelVariant channel, AudioSource* source) {
+        std::shared_ptr<VoiceClient> vc = std::get<VoiceChannel>(channel).connect();
 
         try {
             vc->play(source).get();
@@ -175,7 +175,7 @@ class Client : public Discord {
             FileAudioSource* source = new FileAudioSource("test.wav");
             string channel_name = message.get_content().substr(9);
 
-            play((VoiceChannel*)findChannel(channel_name, message.get_guild_id().value()), source);
+            play(findChannel(channel_name, message.get_guild_id().value()), source);
 
             delete source;
         } else if (message.get_content().compare(0, 12, "?playffmpeg ") == 0) {
@@ -186,7 +186,7 @@ class Client : public Discord {
             FFmpegAudioSource* source = new FFmpegAudioSource("test.mp3");
             string channel_name = message.get_content().substr(12);
 
-            play((VoiceChannel*)findChannel(channel_name, message.get_guild_id().value()), source);
+            play(findChannel(channel_name, message.get_guild_id().value()), source);
 
             delete source;
         } else if (message.get_content().compare(0, 6, "?play ") == 0) {
@@ -217,7 +217,7 @@ class Client : public Discord {
                 "loudnorm=i=-23.0:lra=7.0:tp=-2.0:offset=0.0:measured_i=-9.11:"
                 "measured_lra=3.5:measured_tp=-0.03:measured_thresh=-19.18:"
                 "linear=true[norm0]");
-            play((VoiceChannel*)findChannel(channel_name, message.get_guild_id().value()), source);
+            play(findChannel(channel_name, message.get_guild_id().value()), source);
 
             delete source;
         } else if (message.get_content() == "?leave_guild") {
@@ -265,12 +265,11 @@ class Client : public Discord {
             }
         } else if (message.get_content().compare(0, 5, "?ban ") == 0) {
             if (message.get_guild().has_value()) {
-                Guild* guild = NULL;
+                Guild* guild = nullptr;
 
-                for (unsigned int i = 0; i < _guilds.size(); i++) {
-                    if (message.get_guild().value().get_id() ==
-                        _guilds[i]->get_id()) {
-                        guild = _guilds[i];
+                for (auto& _guild : _guilds) {
+                    if (message.get_guild().value().get_id() == _guild->get_id()) {
+                        guild = _guild;
                         break;
                     }
                 }
@@ -279,9 +278,9 @@ class Client : public Discord {
                 std::optional<Member> user;
                 auto members = guild->get_members();
 
-                for (unsigned int i = 0; i < members.size(); i++) {
-                    if (string(members[i]) == user_name) {
-                        user = members[i];
+                for (auto& member : members) {
+                    if (string(member) == user_name) {
+                        user = member;
                         break;
                     }
                 }
@@ -324,11 +323,11 @@ class Client : public Discord {
         } else if (name == "msg") {
             auto options = interaction.get_data().value().get_options();
             for (auto& option : options) {
-                log.debug(option->name);
-                log.debug(std::to_string(option->type));
-                if (option->name == "text" && option->type == ApplicationCommandOption::Type::SUB_COMMAND) {
+                log.debug(InteractionDataOptionHelper::get_interaction_data_option_name(option));
+                log.debug(std::to_string(InteractionDataOptionHelper::get_interaction_data_option_type(option)));
+                if (InteractionDataOptionHelper::get_interaction_data_option_name(option) == "text" && InteractionDataOptionHelper::get_interaction_data_option_type(option) == ApplicationCommandOption::Type::SUB_COMMAND) {
                     interaction.reply("Text reply");
-                } else if (option->name == "embed" && option->type == ApplicationCommandOption::Type::SUB_COMMAND) {
+                } else if (InteractionDataOptionHelper::get_interaction_data_option_name(option) == "embed" && InteractionDataOptionHelper::get_interaction_data_option_type(option) == ApplicationCommandOption::Type::SUB_COMMAND) {
                     Embed embed = Embed("Embed", "description");
 
                     embed.set_color(0x00ff00);
@@ -355,7 +354,7 @@ class Client : public Discord {
                     interaction.reply(embed);
 
                 } else {
-                    log.info(option->name + " " + std::to_string(option->type));
+                    log.info(InteractionDataOptionHelper::get_interaction_data_option_name(option) + " " + std::to_string(InteractionDataOptionHelper::get_interaction_data_option_type(option)));
                 }
             }
         }

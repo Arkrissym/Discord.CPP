@@ -34,7 +34,7 @@ class ApplicationCommand : public DiscordObject {
     std::string description;
     // description_localizations
     /// Parameters for the command, max of 25.
-    std::vector<ApplicationCommandOption*> options;
+    std::vector<ApplicationCommandOptionVariant> options;
     // default_member_permissions
     /// Indicates wether the command is enabled in DMs. Defaults to true.
     bool dm_permission = true;
@@ -44,8 +44,6 @@ class ApplicationCommand : public DiscordObject {
    public:
     DLL_EXPORT ApplicationCommand() = default;
     DLL_EXPORT ApplicationCommand(const json& data, const std::string& token);
-    DLL_EXPORT ApplicationCommand(const ApplicationCommand& other);
-    DLL_EXPORT ~ApplicationCommand();
 
     DLL_EXPORT json to_json();
 
@@ -63,7 +61,7 @@ class ApplicationCommand : public DiscordObject {
     /// @return The command type.
     DLL_EXPORT Type get_type() { return type; }
     /// @return Parameters for the command, max of 25.
-    DLL_EXPORT std::vector<ApplicationCommandOption*> get_options() { return options; }
+    DLL_EXPORT std::vector<ApplicationCommandOptionVariant> get_options() { return options; }
     /// @return Indicates wether the command is enabled in DMs. Defaults to true.
     DLL_EXPORT bool has_dm_permission() { return dm_permission; }
     /// @return Autoincrementing version identifier updated during substantial record changes.
@@ -78,7 +76,7 @@ class ApplicationCommand : public DiscordObject {
     /// Set the command type.
     DLL_EXPORT void set_type(Type type) { this->type = type; }
     /// Add parameters for the command, max of 25.
-    DLL_EXPORT void add_option(ApplicationCommandOption* option) { options.push_back(option); }
+    DLL_EXPORT void add_option(ApplicationCommandOptionVariant option) { options.push_back(option); }
     /// Set indicator wether the command is enabled in DMs.
     DLL_EXPORT void set_dm_permission(bool dm_permission) { this->dm_permission = dm_permission; }
 };

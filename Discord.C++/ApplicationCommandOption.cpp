@@ -1,23 +1,6 @@
 #include "ApplicationCommandOption.h"
 
-DiscordCPP::ApplicationCommandOption* DiscordCPP::ApplicationCommandOption::from_json(const json& data) {
-    Type type = static_cast<Type>(get_or_else<int>(data, "type", 1));
-    switch (type) {
-        case SUB_COMMAND:
-        case SUB_COMMAND_GROUP:
-            return new ApplicationCommandSubcommand(data);
-        case STRING:
-            return new ApplicationCommandValueOption(data);
-        case INTEGER:
-            return new ApplicationCommandIntegerOption(data);
-        case NUMBER:
-            return new ApplicationCommandNumberOption(data);
-        case CHANNEL:
-            return new ApplicationCommandChannelOption(data);
-        default:
-            return new ApplicationCommandOption(data);
-    }
-}
+#include <variant>
 
 DiscordCPP::ApplicationCommandOption::ApplicationCommandOption(const json& data) {
     data.at("name").get_to<std::string>(name);
@@ -37,60 +20,33 @@ json DiscordCPP::ApplicationCommandOption::to_json() {
     return data;
 }
 
-DiscordCPP::ApplicationCommandOption* DiscordCPP::ApplicationCommandOption::copy() {
-    switch (type) {
-        case SUB_COMMAND:
-        case SUB_COMMAND_GROUP:
-            return new ApplicationCommandSubcommand(*(ApplicationCommandSubcommand*)this);
-        case STRING:
-            return new ApplicationCommandValueOption(*(ApplicationCommandValueOption*)this);
-        case INTEGER:
-            return new ApplicationCommandIntegerOption(*(ApplicationCommandIntegerOption*)this);
-        case NUMBER:
-            return new ApplicationCommandNumberOption(*(ApplicationCommandNumberOption*)this);
-        case CHANNEL:
-            return new ApplicationCommandChannelOption(*(ApplicationCommandChannelOption*)this);
-        default:
-            return new ApplicationCommandOption(*this);
-    }
-}
-
 DiscordCPP::ApplicationCommandSubcommand::ApplicationCommandSubcommand() {
-    type = SUB_COMMAND;
+    set_type(SUB_COMMAND);
 }
 
 DiscordCPP::ApplicationCommandSubcommand::ApplicationCommandSubcommand(const json& data)
     : ApplicationCommandOption(data) {
     if (has_value(data, "options")) {
         for (const json& option : data.at("options")) {
-            options.push_back(ApplicationCommandOption::from_json(option));
+            options.push_back(ApplicationCommandOptionHelper::application_command_option_from_json(option));
         }
-    }
-}
-
-DiscordCPP::ApplicationCommandSubcommand::ApplicationCommandSubcommand(const ApplicationCommandSubcommand& other)
-    : ApplicationCommandOption(other) {
-    for (ApplicationCommandOption* option : other.options) {
-        options.push_back(option->copy());
-    }
-}
-
-DiscordCPP::ApplicationCommandSubcommand::~ApplicationCommandSubcommand() {
-    for (ApplicationCommandOption* option : options) {
-        delete option;
     }
 }
 
 json DiscordCPP::ApplicationCommandSubcommand::to_json() {
     json data = ApplicationCommandOption::to_json();
-    for (auto option : options) {
-        data["options"].push_back(option->to_json());
+    for (auto& option : options) {
+        data["options"].push_back(std::visit([](auto v) { return v.to_json(); }, option));
     }
     return data;
 }
 
+void DiscordCPP::ApplicationCommandSubcommand::add_option(const ApplicationCommandOptionVariant& option) {
+    options.push_back(option);
+}
+
 DiscordCPP::ApplicationCommandChannelOption::ApplicationCommandChannelOption() {
-    type = CHANNEL;
+    set_type(CHANNEL);
 }
 
 DiscordCPP::ApplicationCommandChannelOption::ApplicationCommandChannelOption(const json& data)
@@ -109,7 +65,7 @@ json DiscordCPP::ApplicationCommandChannelOption::to_json() {
 }
 
 DiscordCPP::ApplicationCommandValueOption::ApplicationCommandValueOption() {
-    type = STRING;
+    set_type(STRING);
 }
 
 DiscordCPP::ApplicationCommandValueOption::ApplicationCommandValueOption(const json& data)
@@ -124,7 +80,7 @@ json DiscordCPP::ApplicationCommandValueOption::to_json() {
 }
 
 DiscordCPP::ApplicationCommandIntegerOption::ApplicationCommandIntegerOption() {
-    type = INTEGER;
+    set_type(INTEGER);
 }
 
 DiscordCPP::ApplicationCommandIntegerOption::ApplicationCommandIntegerOption(const json& data)
@@ -141,7 +97,7 @@ json DiscordCPP::ApplicationCommandIntegerOption::to_json() {
 }
 
 DiscordCPP::ApplicationCommandNumberOption::ApplicationCommandNumberOption() {
-    type = NUMBER;
+    set_type(NUMBER);
 }
 
 DiscordCPP::ApplicationCommandNumberOption::ApplicationCommandNumberOption(const json& data)
@@ -155,4 +111,23 @@ json DiscordCPP::ApplicationCommandNumberOption::to_json() {
     data["min_value"] = min_value;
     data["max_value"] = max_value;
     return data;
+}
+
+DiscordCPP::ApplicationCommandOptionVariant DiscordCPP::ApplicationCommandOptionHelper::application_command_option_from_json(const json& data) {
+    ApplicationCommandOption::Type type = static_cast<ApplicationCommandOption::Type>(get_or_else<int>(data, "type", 1));
+    switch (type) {
+        case ApplicationCommandOption::Type::SUB_COMMAND:
+        case ApplicationCommandOption::Type::SUB_COMMAND_GROUP:
+            return ApplicationCommandSubcommand(data);
+        case ApplicationCommandOption::Type::STRING:
+            return ApplicationCommandValueOption(data);
+        case ApplicationCommandOption::Type::INTEGER:
+            return ApplicationCommandIntegerOption(data);
+        case ApplicationCommandOption::Type::NUMBER:
+            return ApplicationCommandNumberOption(data);
+        case ApplicationCommandOption::Type::CHANNEL:
+            return ApplicationCommandChannelOption(data);
+        default:
+            return ApplicationCommandOption(data);
+    }
 }

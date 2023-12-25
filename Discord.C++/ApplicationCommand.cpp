@@ -1,5 +1,7 @@
 #include "ApplicationCommand.h"
 
+#include <variant>
+
 DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::string& token)
     : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
     type = static_cast<DiscordCPP::ApplicationCommand::Type>(get_or_else<int>(data, "type", CHAT_INPUT));
@@ -16,28 +18,8 @@ DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::
 
     if (has_value(data, "options")) {
         for (const json& option : data.at("options")) {
-            options.push_back(DiscordCPP::ApplicationCommandOption::from_json(option));
+            options.push_back(DiscordCPP::ApplicationCommandOptionHelper::application_command_option_from_json(option));
         }
-    }
-}
-
-DiscordCPP::ApplicationCommand::ApplicationCommand(const ApplicationCommand& other)
-    : DiscordCPP::DiscordObject(other),
-      type(other.type),
-      application_id(other.application_id),
-      guild_id(other.guild_id),
-      name(other.name),
-      description(other.description),
-      dm_permission(other.dm_permission),
-      version(other.version) {
-    for (ApplicationCommandOption* option : other.options) {
-        options.push_back(option->copy());
-    }
-}
-
-DiscordCPP::ApplicationCommand::~ApplicationCommand() {
-    for (DiscordCPP::ApplicationCommandOption* option : options) {
-        delete option;
     }
 }
 
@@ -48,8 +30,8 @@ json DiscordCPP::ApplicationCommand::to_json() {
     data["description"] = description;
     data["dm_permission"] = dm_permission;
 
-    for (auto option : options) {
-        data["options"].push_back(option->to_json());
+    for (auto& option : options) {
+        data["options"].push_back(std::visit([](auto v) { return v.to_json(); }, option));
     }
 
     return data;

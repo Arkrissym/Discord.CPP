@@ -65,15 +65,15 @@ class Client : public Discord {
         msg.set_name("msg");
         msg.set_description("Test messages");
         msg.set_type(ApplicationCommand::Type::CHAT_INPUT);
-        ApplicationCommandSubcommand* text = new ApplicationCommandSubcommand();
-        text->name = "text";
-        text->description = "Text message";
-        text->type = ApplicationCommandOption::Type::SUB_COMMAND;
+        ApplicationCommandSubcommand text;
+        text.set_name("text");
+        text.set_description("Text message");
+        text.set_type(ApplicationCommandOption::Type::SUB_COMMAND);
         msg.add_option(text);
-        ApplicationCommandSubcommand* embed = new ApplicationCommandSubcommand();
-        embed->name = "embed";
-        embed->description = "Embed message";
-        embed->type = ApplicationCommandOption::Type::SUB_COMMAND;
+        ApplicationCommandSubcommand embed;
+        embed.set_name("embed");
+        embed.set_description("Embed message");
+        embed.set_type(ApplicationCommandOption::Type::SUB_COMMAND);
         msg.add_option(embed);
         create_application_command(msg);
 

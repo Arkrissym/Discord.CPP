@@ -2,6 +2,10 @@
 #include <iostream>
 #include <thread>
 
+#include "ApplicationCommand.h"
+#include "ApplicationCommandOption.h"
+#include "InteractionData.h"
+
 #ifndef _WIN32
 #include <cstdlib>
 #endif
@@ -81,6 +85,18 @@ class Client : public Discord {
         echo.set_name("echo");
         echo.set_type(ApplicationCommand::Type::MESSAGE);
         create_application_command(echo);
+
+        ApplicationCommand say = ApplicationCommand();
+        say.set_name("say");
+        say.set_description("Reply with given message");
+        say.set_type(ApplicationCommand::Type::CHAT_INPUT);
+        ApplicationCommandValueOption m;
+        m.set_name("message");
+        m.set_description("Message to reply");
+        m.set_required(true);
+        m.set_type(ApplicationCommandOption::Type::STRING);
+        say.add_option(m);
+        create_application_command(say);
 
         update_presence(DiscordStatus::Online, Activity("test", Activity::Type::Game));
     }
@@ -320,6 +336,9 @@ class Client : public Discord {
                 Message message = data.get_resolved_data().value().get_messages().at(data.get_target_id().value());
                 interaction.reply(message.get_content());
             }
+        } else if (name == "say") {
+            std::string m = std::get<InteractionDataStringOption>(interaction.get_data().value().get_options().at(0)).value;
+            interaction.reply(m);
         } else if (name == "msg") {
             auto options = interaction.get_data().value().get_options();
             for (auto& option : options) {

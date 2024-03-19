@@ -23,8 +23,8 @@ class Future<void> {
     std::function<void(std::shared_future<void>)> continuation = [](std::shared_future<void>) {};
 
    public:
-    DLL_EXPORT Future<void>() : promise(std::make_shared<std::promise<void>>()),
-                                future(promise->get_future()) {
+    DLL_EXPORT Future() : promise(std::make_shared<std::promise<void>>()),
+                          future(promise->get_future()) {
     }
 
     DLL_EXPORT void set() {
@@ -59,8 +59,8 @@ class Future {
     std::function<void(std::shared_future<Value>)> continuation = [](std::shared_future<Value>) {};
 
    public:
-    DLL_EXPORT Future<Value>() : promise(std::make_shared<std::promise<Value>>()),
-                                 future(promise->get_future()) {
+    DLL_EXPORT Future() : promise(std::make_shared<std::promise<Value>>()),
+                          future(promise->get_future()) {
     }
 
     DLL_EXPORT void set(Value value) {

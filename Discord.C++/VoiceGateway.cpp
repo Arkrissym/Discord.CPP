@@ -33,8 +33,7 @@ void DiscordCPP::VoiceGateway::identify() {
     }
 }
 
-void DiscordCPP::VoiceGateway::on_websocket_incoming_message(
-    const std::string& message) {
+void DiscordCPP::VoiceGateway::on_websocket_incoming_message(const std::string& message) {
     threadpool->execute([this, message] {
         _log.debug("Received message: " + message);
 

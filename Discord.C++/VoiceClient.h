@@ -74,10 +74,10 @@ class VoiceClient {
 
     Logger _log;
 
-    DLL_EXPORT std::shared_future<void> connect_voice_udp();
-    DLL_EXPORT std::shared_future<void> select_protocol();
-    DLL_EXPORT std::shared_future<void> load_session_description(const json& data);
-    DLL_EXPORT std::shared_future<void> speak(bool speak = true);
+    DLL_EXPORT SharedFuture<void> connect_voice_udp();
+    DLL_EXPORT SharedFuture<void> select_protocol();
+    DLL_EXPORT SharedFuture<void> load_session_description(const json& data);
+    DLL_EXPORT SharedFuture<void> speak(bool speak = true);
 
    public:
     DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token, const std::string& endpoint, const std::string& session_id, std::string guild_id, std::string channel_id, const std::string& user_id);
@@ -87,9 +87,9 @@ class VoiceClient {
     /** play an AudioSource
         @throws	OpusError	ClientException
     */
-    DLL_EXPORT std::shared_future<void> play(AudioSource* source);
+    DLL_EXPORT SharedFuture<void> play(AudioSource* source);
     DLL_EXPORT void stop_playing();
-    DLL_EXPORT std::shared_future<void> disconnect();
+    DLL_EXPORT SharedFuture<void> disconnect();
 };
 
 }  // namespace DiscordCPP

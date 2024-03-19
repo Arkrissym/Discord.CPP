@@ -21,26 +21,25 @@ set(BOOST_ENABLE_CMAKE ON)
 
 FetchContent_Declare(Boost
       GIT_REPOSITORY https://github.com/boostorg/boost.git
-      GIT_TAG        boost-1.83.0
+      GIT_TAG        boost-1.84.0
       GIT_SHALLOW    TRUE
       GIT_PROGRESS   TRUE
 )
 
 FetchContent_Declare(boost_beast
       GIT_REPOSITORY https://github.com/boostorg/beast
-      GIT_TAG        boost-1.83.0
+      GIT_TAG        boost-1.84.0
       GIT_SHALLOW    TRUE
       GIT_PROGRESS   TRUE
 )
 
 FetchContent_Declare(nlohmann_json
-  GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-  GIT_TAG v3.11.2
+  URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
 )
 
 FetchContent_Declare(zlib
     GIT_REPOSITORY https://github.com/madler/zlib.git
-    GIT_TAG v1.3
+    GIT_TAG v1.3.1
 )
 
 FetchContent_Declare(sodium

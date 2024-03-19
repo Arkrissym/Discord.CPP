@@ -8,6 +8,7 @@
 #include <chrono>
 #include <cstdio>
 #include <ctime>
+#include <memory>
 #include <queue>
 #include <utility>
 
@@ -65,7 +66,7 @@ std::string DiscordCPP::udp_client::receive() {
     return {_recv_buffer.begin(), _recv_buffer.begin() + len};
 }
 
-std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
+DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::connect_voice_udp() {
     return threadpool->execute([this] {
         _udp = std::make_unique<udp_client>(_server_ip, _server_port);
 
@@ -107,7 +108,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::connect_voice_udp() {
     });
 }
 
-std::shared_future<void> DiscordCPP::VoiceClient::select_protocol() {
+DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::select_protocol() {
     return threadpool->execute([this] {
         json payload = {
             {"op", 1},
@@ -127,7 +128,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::select_protocol() {
     });
 }
 
-std::shared_future<void> DiscordCPP::VoiceClient::load_session_description(const json& data) {
+DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::load_session_description(const json& data) {
     return threadpool->execute([this, data] {
         _mode = data["mode"].get<std::string>();
         for (const json& k : data["secret_key"]) {
@@ -136,7 +137,7 @@ std::shared_future<void> DiscordCPP::VoiceClient::load_session_description(const
     });
 }
 
-std::shared_future<void> DiscordCPP::VoiceClient::speak(bool speak) {
+DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::speak(bool speak) {
     return threadpool->execute([this, speak] {
         json payload = {
             {"op", 5},
@@ -172,23 +173,22 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
     _voice_ws = std::make_unique<VoiceGateway>(voice_token, session_id, _guild_id, user_id, threadpool);
 
     _voice_ws->set_message_handler([this](json data) {
-        std::shared_future<void> f;
         switch (data["op"].get<int>()) {
             case 2:
                 _ssrc = data["d"]["ssrc"].get<int>();
                 _server_ip = data["d"]["ip"].get<std::string>();
                 _server_port = data["d"]["port"].get<int>();
-                f = connect_voice_udp();
-                threadpool->then(f, [this]() { select_protocol(); });
+                connect_voice_udp()
+                    .then([this]() { select_protocol(); });
                 break;
             case 4:
-                f = load_session_description(data["d"]);
-                threadpool->then(f, [this]() {
-                    _log.debug("mode: " + _mode);
-                    _log.info("handshake complete. voice connection ready.");
-                    _ready = true;
-                    speak();
-                });
+                load_session_description(data["d"])
+                    .then([this]() {
+                        _log.debug("mode: " + _mode);
+                        _log.info("handshake complete. voice connection ready.");
+                        _ready = true;
+                        speak();
+                    });
                 break;
             case 6:
             case 8:
@@ -213,11 +213,10 @@ DiscordCPP::VoiceClient::~VoiceClient() {
     _voice_ws->close().get();
 }
 
-std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
+DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::disconnect() {
     if (!_ready) {
-        std::promise<void> promise;
-        std::shared_future<void> future(promise.get_future());
-        promise.set_value();
+        DiscordCPP::SharedFuture<void> future;
+        future.set();
         return future;
     }
 
@@ -231,14 +230,14 @@ std::shared_future<void> DiscordCPP::VoiceClient::disconnect() {
                   {"self_deaf", true}       //
               }}                            //
     };
-    std::shared_future<void> main_future = _main_ws->send(payload);
-    std::shared_future<void> voice_future = _voice_ws->close();
+    std::shared_ptr<DiscordCPP::Future<void>> main_future = _main_ws->send(payload).get_future();
+    std::shared_ptr<DiscordCPP::Future<void>> voice_future = _voice_ws->close().get_future();
 
     return threadpool->execute([this, voice_future, main_future] {
         _ready = false;
 
-        voice_future.get();
-        main_future.get();
+        voice_future->get();
+        main_future->get();
 
         _log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
     });
@@ -248,7 +247,7 @@ void DiscordCPP::VoiceClient::stop_playing() {
     _cancel_playing = true;
 }
 
-std::shared_future<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
+DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
     return threadpool->execute([this, source] {
         _log.debug("creating opus encoder");
         int error = 0;

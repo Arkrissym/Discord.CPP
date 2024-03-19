@@ -111,9 +111,9 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(
     });
 }
 
-std::shared_future<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
+DiscordCPP::SharedFuture<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
     auto f = this->send({{"op", 11}});
-    return threadpool->then(f, [this] {
+    return f.then([this] {
         _log.debug("Heartbeat ACK message has been sent");
     });
 }
@@ -211,7 +211,7 @@ unsigned int DiscordCPP::MainGateway::get_shard_id() {
     return _shard_id;
 }
 
-std::shared_future<void> DiscordCPP::MainGateway::connect(const std::string& url) {
+DiscordCPP::SharedFuture<void> DiscordCPP::MainGateway::connect(const std::string& url) {
     zs.zalloc = Z_NULL;
     zs.zfree = Z_NULL;
     zs.opaque = Z_NULL;

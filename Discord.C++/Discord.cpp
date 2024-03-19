@@ -2,7 +2,6 @@
 
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 
 #include "ChannelHelper.h"
 #include "GuildChannel.h"

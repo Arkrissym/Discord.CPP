@@ -2,13 +2,14 @@
 
 #include <condition_variable>
 #include <functional>
-#include <future>
+#include <memory>
 #include <mutex>
 #include <queue>
 #include <thread>
 #include <type_traits>
 #include <vector>
 
+#include "Future.h"
 #include "Logger.h"
 
 #ifdef _WIN32
@@ -54,17 +55,17 @@ class Threadpool {
      * @return shared future that will contain the result produced by task.
      */
     template <typename F, typename R = std::invoke_result_t<std::decay_t<F>>, typename = std::enable_if_t<!std::is_void_v<R>>>
-    DLL_EXPORT std::shared_future<R> execute(F&& task) {
-        std::shared_ptr<std::promise<R>> promise(new std::promise<R>);
-        std::shared_future<R> future(promise->get_future());
+    DLL_EXPORT SharedFuture<R> execute(F&& task) {
+        SharedFuture<R> future;
+        auto fp = future.get_future();
 
         auto t = std::make_shared<typename std::remove_reference<F>::type>(std::forward<F>(task));
 
-        queue_task([promise, t]() {
+        queue_task([fp, t]() {
             try {
-                promise->set_value((*t)());
+                fp->set((*t)());
             } catch (...) {
-                promise->set_exception(std::current_exception());
+                fp->set_exception(std::current_exception());
             }
         });
 
@@ -78,57 +79,22 @@ class Threadpool {
      * @return shared future that will contain the result produced by task.
      */
     template <typename F, typename = std::enable_if_t<std::is_void_v<std::invoke_result_t<std::decay_t<F>>>>>
-    DLL_EXPORT std::shared_future<void> execute(F&& task) {
-        std::shared_ptr<std::promise<void>> promise(new std::promise<void>);
-        std::shared_future<void> future(promise->get_future());
+    DLL_EXPORT SharedFuture<void> execute(F&& task) {
+        SharedFuture<void> future;
+        auto fp = future.get_future();
 
         auto t = std::make_shared<typename std::remove_reference<F>::type>(std::forward<F>(task));
 
-        queue_task([promise, t]() {
+        queue_task([fp, t]() {
             try {
                 (*t)();
-                promise->set_value();
+                fp->set();
             } catch (...) {
-                promise->set_exception(std::current_exception());
+                fp->set_exception(std::current_exception());
             }
         });
 
         return future;
-    }
-
-    /**
-     * Executes a function on the Threadpool after future has been resolved.
-     *
-     * @param[in]   future  shared future that will be awaited first.
-     * @param[in]   task    function to be executed. The result of future is passed to task.
-     * @return shared future that will contain the result produced by task.
-     */
-    template <typename F, typename T, typename R = std::invoke_result_t<std::decay_t<T>, std::decay_t<F>>>
-    DLL_EXPORT std::shared_future<R> then(std::shared_future<F>& future, T&& task) {
-        auto f = std::make_shared<std::shared_future<F>>(std::move(future));
-        auto t = std::make_shared<typename std::remove_reference<T>::type>(std::forward<T>(task));
-
-        return execute([f, t]() {
-            return (*t)(f->get());
-        });
-    }
-
-    /**
-     * Executes a function on the Threadpool after future has been resolved.
-     *
-     * @param[in]   future  shared future that will be awaited first.
-     * @param[in]   task    function to be executed.
-     * @return shared future that will contain the result produced by task.
-     */
-    template <typename T, typename R = std::invoke_result_t<std::decay_t<T>>>
-    DLL_EXPORT std::shared_future<R> then(std::shared_future<void>& future, T&& task) {
-        auto f = std::make_shared<std::shared_future<void>>(std::move(future));
-        auto t = std::make_shared<typename std::remove_reference<T>::type>(std::forward<T>(task));
-
-        return execute([f, t]() {
-            f->get();
-            return (*t)();
-        });
     }
 };
 

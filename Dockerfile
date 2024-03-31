@@ -1,6 +1,6 @@
 FROM alpine as build
 
-RUN apk add \
+RUN apk add --no-cache \
 	g++ \
 	make \
 	cmake \
@@ -23,7 +23,7 @@ RUN mkdir build && \
 
 FROM alpine
 
-RUN apk add \
+RUN apk add --no-cache \
 	zlib \
 	opus \
 	libsodium \
@@ -33,7 +33,7 @@ RUN apk add \
 	ffmpeg \
 	py3-pip
 
-RUN pip install youtube_dl
+RUN pip install --no-cache-dir youtube_dl
 RUN pip cache purge
 
 COPY --from=build /app/build/libdiscord_cpp.so /usr/local/lib

@@ -74,10 +74,10 @@ class VoiceClient {
 
     Logger _log;
 
-    DLL_EXPORT SharedFuture<void> connect_voice_udp();
-    DLL_EXPORT SharedFuture<void> select_protocol();
-    DLL_EXPORT SharedFuture<void> load_session_description(const json& data);
-    DLL_EXPORT SharedFuture<void> speak(bool speak = true);
+    DLL_EXPORT void connect_voice_udp();
+    DLL_EXPORT void select_protocol();
+    DLL_EXPORT void load_session_description(const json& data);
+    DLL_EXPORT void speak(bool speak = true);
 
    public:
     DLL_EXPORT VoiceClient(std::shared_ptr<MainGateway> main_ws, const std::string& voice_token, const std::string& endpoint, const std::string& session_id, std::string guild_id, std::string channel_id, const std::string& user_id);

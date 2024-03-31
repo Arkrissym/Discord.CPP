@@ -66,93 +66,85 @@ std::string DiscordCPP::udp_client::receive() {
     return {_recv_buffer.begin(), _recv_buffer.begin() + len};
 }
 
-DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::connect_voice_udp() {
-    return threadpool->execute([this] {
-        _udp = std::make_unique<udp_client>(_server_ip, _server_port);
+void DiscordCPP::VoiceClient::connect_voice_udp() {
+    _udp = std::make_unique<udp_client>(_server_ip, _server_port);
 
-        _log.info("performing IP Discovery");
+    _log.info("performing IP Discovery");
 
-        std::string msg;
-        msg.resize(74, '\0');
-        // Type: 0x1 for request, 0x2 for response
-        msg[0] = 0x1 >> 8;
-        msg[1] = 0x1;
-        // Message length excluding Type and Length fields (always 70)
-        msg[2] = 70 >> 8;
-        msg[3] = 70;
-        // SSRC
-        msg[4] = _ssrc >> 24;
-        msg[5] = _ssrc >> 16;
-        msg[6] = _ssrc >> 8;
-        msg[7] = _ssrc;
+    std::string msg;
+    msg.resize(74, '\0');
+    // Type: 0x1 for request, 0x2 for response
+    msg[0] = 0x1 >> 8;
+    msg[1] = 0x1;
+    // Message length excluding Type and Length fields (always 70)
+    msg[2] = 70 >> 8;
+    msg[3] = 70;
+    // SSRC
+    msg[4] = _ssrc >> 24;
+    msg[5] = _ssrc >> 16;
+    msg[6] = _ssrc >> 8;
+    msg[7] = _ssrc;
 
-        _udp->send(msg);
+    _udp->send(msg);
 
-        std::string recv_msg = _udp->receive();
+    std::string recv_msg = _udp->receive();
 
-        std::string my_ip = recv_msg.substr(8, 20);
-        for (unsigned int i = 0; i < my_ip.size(); i++) {
-            if (my_ip[i] == 0) {
-                my_ip.resize(i, '\0');
-                break;
-            }
+    std::string my_ip = recv_msg.substr(8, 20);
+    for (unsigned int i = 0; i < my_ip.size(); i++) {
+        if (my_ip[i] == 0) {
+            my_ip.resize(i, '\0');
+            break;
         }
+    }
 
-        unsigned short my_port = (recv_msg[72] << 8) | (recv_msg[73]);
-        my_port = (my_port >> 8) | (my_port << 8);
+    unsigned short my_port = (recv_msg[72] << 8) | (recv_msg[73]);
+    my_port = (my_port >> 8) | (my_port << 8);
 
-        _my_ip = my_ip;
-        _my_port = my_port;
+    _my_ip = my_ip;
+    _my_port = my_port;
 
-        _log.info("found own IP and port: " + my_ip + ":" + std::to_string(my_port));
-    });
+    _log.info("found own IP and port: " + my_ip + ":" + std::to_string(my_port));
 }
 
-DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::select_protocol() {
-    return threadpool->execute([this] {
-        json payload = {
-            {"op", 1},
-            {"d", {
-                      {"protocol", "udp"},  //
-                      {"data", {
-                                   //
-                                   {"address", _my_ip},           //
-                                   {"port", _my_port},            //
-                                   {"mode", "xsalsa20_poly1305"}  //
-                               }}                                 //
-                  }}                                              //
-        };
+void DiscordCPP::VoiceClient::select_protocol() {
+    json payload = {
+        {"op", 1},
+        {"d", {
+                  {"protocol", "udp"},  //
+                  {"data", {
+                               //
+                               {"address", _my_ip},           //
+                               {"port", _my_port},            //
+                               {"mode", "xsalsa20_poly1305"}  //
+                           }}                                 //
+              }}                                              //
+    };
 
-        _voice_ws->send(payload).get();
-        _log.debug("Opcode 1 Select Protocol Payload has been sent");
-    });
+    _voice_ws->send(payload).get();
+    _log.debug("Opcode 1 Select Protocol Payload has been sent");
 }
 
-DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::load_session_description(const json& data) {
-    return threadpool->execute([this, data] {
-        _mode = data["mode"].get<std::string>();
-        for (const json& k : data["secret_key"]) {
-            _secret_key.push_back(k.get<unsigned char>());
-        }
-    });
+void DiscordCPP::VoiceClient::load_session_description(const json& data) {
+    _mode = data["mode"].get<std::string>();
+    for (const json& k : data["secret_key"]) {
+        _secret_key.push_back(k.get<unsigned char>());
+    }
 }
 
-DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::speak(bool speak) {
-    return threadpool->execute([this, speak] {
-        json payload = {
-            {"op", 5},
-            {
-                "d", {
-                         {"speaking", speak},  //
-                         {"delay", 0},         //
-                         {"ssrc", _ssrc}       //
-                     }                         //
-            }                                  //
-        };
+void DiscordCPP::VoiceClient::speak(bool speak) {
+    json payload = {
+        {"op", 5},
+        {
+            "d", {
+                     {"speaking", speak},  //
+                     {"delay", 0},         //
+                     {"ssrc", _ssrc}       //
+                 }                         //
+        }                                  //
+    };
 
-        _voice_ws->send(payload).get();
-        _log.debug("Opcode 5 Speaking Payload has been sent");
-    });
+    _voice_ws->send(payload).get();
+    _log.debug("Opcode 5 Speaking Payload has been sent");
 }
 
 DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
@@ -178,20 +170,20 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
                 _ssrc = data["d"]["ssrc"].get<int>();
                 _server_ip = data["d"]["ip"].get<std::string>();
                 _server_port = data["d"]["port"].get<int>();
-                connect_voice_udp()
-                    .then([this]() { select_protocol(); });
+                connect_voice_udp();
+                select_protocol();
                 break;
             case 4:
-                load_session_description(data["d"])
-                    .then([this]() {
-                        _log.debug("mode: " + _mode);
-                        _log.info("handshake complete. voice connection ready.");
-                        _ready = true;
-                        speak();
-                    });
+                load_session_description(data["d"]);
+
+                _log.debug("mode: " + _mode);
+                _log.info("handshake complete. voice connection ready.");
+                _ready = true;
+                speak();
                 break;
             case 6:
             case 8:
+            case 9:
                 break;
             default:
                 _log.debug(data.dump());

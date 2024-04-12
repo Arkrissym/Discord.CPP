@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['activitytypes_910',['ActivityTypes',['../namespace_discord_c_p_p_1_1_activity_types.html#adc248b1d35ad005b247295bca10fe018',1,'DiscordCPP::ActivityTypes']]]
+  ['defaultmessagenotificationlevel_0',['DefaultMessageNotificationLevel',['../namespace_discord_c_p_p_1_1_default_message_notification_level.html#a37b8b25ee33335283a508e781be2a840',1,'DiscordCPP::DefaultMessageNotificationLevel']]]
 ];

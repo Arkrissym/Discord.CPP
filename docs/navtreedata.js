@@ -30,6 +30,7 @@ var NAVTREE =
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ],
         [ "Enumerations", "namespacemembers_enum.html", null ],
         [ "Enumerator", "namespacemembers_eval.html", null ]
       ] ]
@@ -44,7 +45,7 @@ var NAVTREE =
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -65,9 +66,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_activity_8cpp.html",
-"class_discord_c_p_p_1_1_channel.html#abcdb6d1d0fc5294aaefca48f906d278c",
-"class_discord_c_p_p_1_1_message.html#a9f4c8e841c510c06237a4870092822c2",
-"static_8h_source.html"
+"class_discord_c_p_p_1_1_application_command_number_option.html#abc28cce7b7d7ea7e4d40ac8500704545",
+"class_discord_c_p_p_1_1_embed.html#a9b749d634cc802008485744d6c06eddd",
+"class_discord_c_p_p_1_1_interaction_data.html#a7324e23d351a60269ec445b2de106878",
+"class_discord_c_p_p_1_1_user.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sizeerror_515',['SizeError',['../class_discord_c_p_p_1_1_size_error.html',1,'DiscordCPP']]],
-  ['statuscodeexception_516',['StatusCodeException',['../class_discord_c_p_p_1_1_status_code_exception.html',1,'DiscordCPP']]]
+  ['textchannel_0',['TextChannel',['../class_discord_c_p_p_1_1_text_channel.html',1,'DiscordCPP']]],
+  ['threadpool_1',['Threadpool',['../class_discord_c_p_p_1_1_threadpool.html',1,'DiscordCPP']]]
 ];

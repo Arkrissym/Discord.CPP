@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['explicitcontentfilterlevel_913',['ExplicitContentFilterLevel',['../namespace_discord_c_p_p_1_1_explicit_content_filter_level.html#aa3826261bb36372611c15559b881f712',1,'DiscordCPP::ExplicitContentFilterLevel']]]
+  ['mfalevel_0',['MFALevel',['../namespace_discord_c_p_p_1_1_m_f_a_level.html#af2e68d7f818558e80e74879712909d42',1,'DiscordCPP::MFALevel']]]
 ];

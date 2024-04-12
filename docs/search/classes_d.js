@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['textchannel_517',['TextChannel',['../class_discord_c_p_p_1_1_text_channel.html',1,'DiscordCPP']]],
-  ['threadpool_518',['Threadpool',['../class_discord_c_p_p_1_1_threadpool.html',1,'DiscordCPP']]]
+  ['udp_5fclient_0',['udp_client',['../class_discord_c_p_p_1_1udp__client.html',1,'DiscordCPP']]],
+  ['user_1',['User',['../class_discord_c_p_p_1_1_user.html',1,'DiscordCPP']]]
 ];

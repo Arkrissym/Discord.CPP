@@ -9,11 +9,12 @@ var hierarchy =
         [ "DiscordCPP::ApplicationCommandNumberOption", "class_discord_c_p_p_1_1_application_command_number_option.html", null ]
       ] ]
     ] ],
+    [ "DiscordCPP::ApplicationCommandOptionHelper", "class_discord_c_p_p_1_1_application_command_option_helper.html", null ],
     [ "DiscordCPP::AudioSource", "class_discord_c_p_p_1_1_audio_source.html", [
       [ "DiscordCPP::FFmpegAudioSource", "class_discord_c_p_p_1_1_f_fmpeg_audio_source.html", null ],
       [ "DiscordCPP::FileAudioSource", "class_discord_c_p_p_1_1_file_audio_source.html", null ]
     ] ],
-    [ "DiscordCPP::Embed::Author", "struct_discord_c_p_p_1_1_embed_1_1_author.html", null ],
+    [ "DiscordCPP::ChannelHelper", "class_discord_c_p_p_1_1_channel_helper.html", null ],
     [ "DiscordCPP::DiscordObject", "class_discord_c_p_p_1_1_discord_object.html", [
       [ "DiscordCPP::ApplicationCommand", "class_discord_c_p_p_1_1_application_command.html", null ],
       [ "DiscordCPP::Channel", "class_discord_c_p_p_1_1_channel.html", [
@@ -43,26 +44,27 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "DiscordCPP::Embed::Field", "struct_discord_c_p_p_1_1_embed_1_1_field.html", null ],
-    [ "DiscordCPP::Embed::Footer", "struct_discord_c_p_p_1_1_embed_1_1_footer.html", null ],
+    [ "DiscordCPP::Future< Value >", "class_discord_c_p_p_1_1_future.html", null ],
+    [ "DiscordCPP::Future< void >", "class_discord_c_p_p_1_1_future_3_01void_01_4.html", null ],
     [ "DiscordCPP::Gateway", "class_discord_c_p_p_1_1_gateway.html", [
       [ "DiscordCPP::MainGateway", "class_discord_c_p_p_1_1_main_gateway.html", null ],
       [ "DiscordCPP::VoiceGateway", "class_discord_c_p_p_1_1_voice_gateway.html", null ]
     ] ],
-    [ "DiscordCPP::Embed::Image", "struct_discord_c_p_p_1_1_embed_1_1_image.html", null ],
     [ "Intents", "class_intents.html", null ],
     [ "DiscordCPP::InteractionDataOption", "class_discord_c_p_p_1_1_interaction_data_option.html", [
+      [ "DiscordCPP::InteractionDataBooleanOption", "class_discord_c_p_p_1_1_interaction_data_boolean_option.html", null ],
       [ "DiscordCPP::InteractionDataIntegerOption", "class_discord_c_p_p_1_1_interaction_data_integer_option.html", null ],
       [ "DiscordCPP::InteractionDataNumberOption", "class_discord_c_p_p_1_1_interaction_data_number_option.html", null ],
       [ "DiscordCPP::InteractionDataStringOption", "class_discord_c_p_p_1_1_interaction_data_string_option.html", null ],
       [ "DiscordCPP::InteractionDataSubcommandOption", "class_discord_c_p_p_1_1_interaction_data_subcommand_option.html", null ]
     ] ],
+    [ "DiscordCPP::InteractionDataOptionHelper", "class_discord_c_p_p_1_1_interaction_data_option_helper.html", null ],
     [ "DiscordCPP::InteractionResolvedData", "class_discord_c_p_p_1_1_interaction_resolved_data.html", null ],
     [ "Logger", "class_logger.html", null ],
-    [ "DiscordCPP::Embed::Provider", "struct_discord_c_p_p_1_1_embed_1_1_provider.html", null ],
+    [ "DiscordCPP::SharedFuture< Value >", "class_discord_c_p_p_1_1_shared_future.html", null ],
+    [ "DiscordCPP::SharedFuture< void >", "class_discord_c_p_p_1_1_shared_future_3_01void_01_4.html", null ],
     [ "DiscordCPP::Threadpool", "class_discord_c_p_p_1_1_threadpool.html", null ],
     [ "DiscordCPP::udp_client", "class_discord_c_p_p_1_1udp__client.html", null ],
-    [ "DiscordCPP::Embed::Video", "struct_discord_c_p_p_1_1_embed_1_1_video.html", null ],
     [ "DiscordCPP::VoiceClient", "class_discord_c_p_p_1_1_voice_client.html", null ],
     [ "DiscordCPP::VoiceState", "class_discord_c_p_p_1_1_voice_state.html", null ]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tcp_909',['tcp',['../_discord_object_8cpp.html#a60a92ea513bd2f25705cdd673983c5a8',1,'tcp():&#160;DiscordObject.cpp'],['../_gateway_8cpp.html#a60a92ea513bd2f25705cdd673983c5a8',1,'tcp():&#160;Gateway.cpp']]]
+  ['channelvariant_0',['ChannelVariant',['../namespace_discord_c_p_p.html#a74e9eb55b5f18a40713018d7452d9508',1,'DiscordCPP']]]
 ];

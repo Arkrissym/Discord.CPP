@@ -22,7 +22,7 @@ var class_discord_c_p_p_1_1_discord =
     [ "on_websocket_incoming_message", "class_discord_c_p_p_1_1_discord.html#a6f903cff28a6e090ea0e6c680d364866", null ],
     [ "start", "class_discord_c_p_p_1_1_discord.html#a751c1cf8a823b453819875d641808231", null ],
     [ "update_presence", "class_discord_c_p_p_1_1_discord.html#a1a8e0e61c9b9eb45a549deaffddbe519", null ],
-    [ "VoiceChannel::connect", "class_discord_c_p_p_1_1_discord.html#a08ded4f8f5c66e2469be83797a32d476", null ],
+    [ "VoiceChannel::connect", "class_discord_c_p_p_1_1_discord.html#abdd1c81f2a653c18be466126c3f7913a", null ],
     [ "_application_id", "class_discord_c_p_p_1_1_discord.html#a0ab4695b465b4928bf430c8cd7c0bcd6", null ],
     [ "_gateways", "class_discord_c_p_p_1_1_discord.html#a9684d084ce62581322e33c0201f820c6", null ],
     [ "_guilds", "class_discord_c_p_p_1_1_discord.html#a488d971ca0f57d9f534da52f8e9f641c", null ],

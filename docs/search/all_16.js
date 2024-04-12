@@ -1,11 +1,8 @@
 var searchData=
 [
-  ['warning_443',['warning',['../class_logger.html#a5164af2f632902fa3c477d5c0cb463f7',1,'Logger']]],
-  ['warning_444',['Warning',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdca48f2bb70fceb692a2dedd8cea496c44b',1,'Logger.h']]],
-  ['webhook_5fid_445',['webhook_id',['../class_discord_c_p_p_1_1_message.html#ababd33d86a7624ba27c64b4779247ed4',1,'DiscordCPP::Message']]],
-  ['webhooks_446',['WEBHOOKS',['../class_intents.html#a3fc95c5d24dd5f99218711a485bf52e0',1,'Intents']]],
-  ['what_447',['what',['../class_discord_c_p_p_1_1_discord_exception.html#a1b55f622e10da40c7f1da273ee52f2aa',1,'DiscordCPP::DiscordException']]],
-  ['widget_5fchannel_448',['widget_channel',['../class_discord_c_p_p_1_1_guild.html#a8e743c8d2f6d7c9925b2c74b7bf42e03',1,'DiscordCPP::Guild']]],
-  ['widget_5fenabled_449',['widget_enabled',['../class_discord_c_p_p_1_1_guild.html#a64729c8024077e823479009b76363dc2',1,'DiscordCPP::Guild']]],
-  ['width_450',['width',['../struct_discord_c_p_p_1_1_embed_1_1_image.html#ac3b0a2a84b572ea4b0cc08084fb4f996',1,'DiscordCPP::Embed::Image::width()'],['../struct_discord_c_p_p_1_1_embed_1_1_video.html#aad31ccbfcd10719b9fef2a9db50124f0',1,'DiscordCPP::Embed::Video::width()']]]
+  ['wait_0',['wait',['../class_discord_c_p_p_1_1_future_3_01void_01_4.html#ab15c5a796f2b1946f038811df946adfb',1,'DiscordCPP::Future&lt; void &gt;::wait()'],['../class_discord_c_p_p_1_1_future.html#abacaa36578fece9dbd920f1006614aa7',1,'DiscordCPP::Future::wait()'],['../class_discord_c_p_p_1_1_shared_future_3_01void_01_4.html#a3b57b6b9314cfbcba6d772858dc3fe7e',1,'DiscordCPP::SharedFuture&lt; void &gt;::wait()'],['../class_discord_c_p_p_1_1_shared_future.html#aad5f8ac468328174066fa9c4c4564b46',1,'DiscordCPP::SharedFuture::wait()']]],
+  ['warning_1',['warning',['../class_logger.html#a5164af2f632902fa3c477d5c0cb463f7',1,'Logger']]],
+  ['warning_2',['Warning',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdca48f2bb70fceb692a2dedd8cea496c44b',1,'Logger.h']]],
+  ['webhooks_3',['WEBHOOKS',['../class_intents.html#a3fc95c5d24dd5f99218711a485bf52e0',1,'Intents']]],
+  ['what_4',['what',['../class_discord_c_p_p_1_1_discord_exception.html#aa8f48f933ab93218980f776261fcdfd0',1,'DiscordCPP::DiscordException']]]
 ];

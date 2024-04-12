@@ -1,13 +1,11 @@
 var class_discord_c_p_p_1_1_interaction_data =
 [
     [ "InteractionData", "class_discord_c_p_p_1_1_interaction_data.html#a6cdcb237f72b579237ad3377fe5b6ced", null ],
-    [ "InteractionData", "class_discord_c_p_p_1_1_interaction_data.html#a7a77f3680958152a5d3ec0f4b1260adb", null ],
-    [ "~InteractionData", "class_discord_c_p_p_1_1_interaction_data.html#a7e153df4ff2467a6bb6fa62e51fe69d6", null ],
-    [ "custom_id", "class_discord_c_p_p_1_1_interaction_data.html#a24bcee7a84ce971a77f735ac63bcceda", null ],
-    [ "guild_id", "class_discord_c_p_p_1_1_interaction_data.html#a594a128ac6ddea798fabaaa1336dfba4", null ],
-    [ "name", "class_discord_c_p_p_1_1_interaction_data.html#ad20effda8884489a30983f28de6f0d31", null ],
-    [ "options", "class_discord_c_p_p_1_1_interaction_data.html#aca6ed7cd172ca6f2b7981453a237cb6c", null ],
-    [ "resolved", "class_discord_c_p_p_1_1_interaction_data.html#a3539cf072ed17ad621f4f1fa2e274c84", null ],
-    [ "target_id", "class_discord_c_p_p_1_1_interaction_data.html#aa8e8e7c6cd691cc0df95c838347f4fab", null ],
-    [ "type", "class_discord_c_p_p_1_1_interaction_data.html#ab0aa84d6208e0dd00e4f70eb3f6251f5", null ]
+    [ "get_custom_id", "class_discord_c_p_p_1_1_interaction_data.html#a762f532c9beabe54d3ea3b44e80e2b27", null ],
+    [ "get_guild_id", "class_discord_c_p_p_1_1_interaction_data.html#af733dbd5a4e92dc420fff3af06c69f78", null ],
+    [ "get_name", "class_discord_c_p_p_1_1_interaction_data.html#a7dbafbf8e9c67379b180a8a365cb20a0", null ],
+    [ "get_options", "class_discord_c_p_p_1_1_interaction_data.html#ab82c1af13c8856b792749aeeece5c497", null ],
+    [ "get_resolved_data", "class_discord_c_p_p_1_1_interaction_data.html#ac2fa54e40a28f1e0bebe16422f55dbbc", null ],
+    [ "get_target_id", "class_discord_c_p_p_1_1_interaction_data.html#a7324e23d351a60269ec445b2de106878", null ],
+    [ "get_type", "class_discord_c_p_p_1_1_interaction_data.html#a854ea4527074e08192be11cc5ff52b5a", null ]
 ];

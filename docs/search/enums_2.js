@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['defaultmessagenotificationlevel_912',['DefaultMessageNotificationLevel',['../namespace_discord_c_p_p_1_1_default_message_notification_level.html#a37b8b25ee33335283a508e781be2a840',1,'DiscordCPP::DefaultMessageNotificationLevel']]]
+  ['loglevel_0',['Loglevel',['../_logger_8h.html#a335e62b5ad94dbed2c651d4c5fc71cdc',1,'Logger.h']]]
 ];

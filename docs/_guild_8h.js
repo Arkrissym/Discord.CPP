@@ -1,7 +1,6 @@
 var _guild_8h =
 [
-    [ "Guild", "class_discord_c_p_p_1_1_guild.html", "class_discord_c_p_p_1_1_guild" ],
-    [ "DLL_EXPORT", "_guild_8h.html#a1ca888bd091694c05472e1b91df1a97b", null ],
+    [ "DiscordCPP::Guild", "class_discord_c_p_p_1_1_guild.html", "class_discord_c_p_p_1_1_guild" ],
     [ "DefaultMessageNotificationLevel", "_guild_8h.html#a37b8b25ee33335283a508e781be2a840", [
       [ "ALL_MESSAGES", "_guild_8h.html#a37b8b25ee33335283a508e781be2a840adc609c7b69a58fcd09004072a1546228", null ],
       [ "ONLY_MENTIONS", "_guild_8h.html#a37b8b25ee33335283a508e781be2a840a6d3f96c6f9e23d130fe228e513ff8cf9", null ]

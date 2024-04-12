@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['guild_820',['guild',['../class_discord_c_p_p_1_1_guild_channel.html#aeae1fc3b57a9a7d62dd247a519445f6e',1,'DiscordCPP::GuildChannel']]],
-  ['guild_5fid_821',['guild_id',['../class_discord_c_p_p_1_1_application_command.html#a09eded5442338516aee9eea964c65344',1,'DiscordCPP::ApplicationCommand::guild_id()'],['../class_discord_c_p_p_1_1_interaction.html#a0d4e6c0c2f47a0a7c8a17f5bb73cc582',1,'DiscordCPP::Interaction::guild_id()'],['../class_discord_c_p_p_1_1_interaction_data.html#a594a128ac6ddea798fabaaa1336dfba4',1,'DiscordCPP::InteractionData::guild_id()'],['../class_discord_c_p_p_1_1_voice_state.html#abbbdcf8223acb2747293469a61eaf219',1,'DiscordCPP::VoiceState::guild_id()']]],
-  ['guild_5flocale_822',['guild_locale',['../class_discord_c_p_p_1_1_interaction.html#a28d0303f2d5b82b74389b7d91a818af8',1,'DiscordCPP::Interaction']]],
-  ['guild_5fscheduled_5fevents_823',['GUILD_SCHEDULED_EVENTS',['../class_intents.html#a56a2e8cb1c6350494432fdadae331cde',1,'Intents']]],
-  ['guilds_824',['GUILDS',['../class_intents.html#a63f4c452e0291ee7168bbb6f8b8f7c09',1,'Intents']]]
+  ['idle_0',['Idle',['../namespace_discord_c_p_p_1_1_discord_status.html#aefc8c0a5bec3a903dd2ccde55aac715e',1,'DiscordCPP::DiscordStatus']]],
+  ['integrations_1',['INTEGRATIONS',['../class_intents.html#ad99064813280124d5934700c2666b879',1,'Intents']]],
+  ['invisible_2',['Invisible',['../namespace_discord_c_p_p_1_1_discord_status.html#a7b5997cdd4f317c08c24f66ff69dd294',1,'DiscordCPP::DiscordStatus']]],
+  ['invites_3',['INVITES',['../class_intents.html#a56af704d1751fb6dfd43d44aadb01930',1,'Intents']]],
+  ['io_5fcontext_4',['io_context',['../class_discord_c_p_p_1_1_gateway.html#aaf951056807728c011dcd4621ec2fe11',1,'DiscordCPP::Gateway']]]
 ];

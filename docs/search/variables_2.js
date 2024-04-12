@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['bans_787',['BANS',['../class_intents.html#a932ede1e8c818a413ad87c8db0f56117',1,'Intents']]],
-  ['bitrate_788',['bitrate',['../class_discord_c_p_p_1_1_voice_channel.html#a55077465c613558ab219f3768b983683',1,'DiscordCPP::VoiceChannel']]],
-  ['bitrate_789',['BITRATE',['../_voice_client_8cpp.html#ac3d8f97f855bfa4b27c6581983e10a1a',1,'VoiceClient.cpp']]],
-  ['bot_790',['bot',['../class_discord_c_p_p_1_1_user.html#a7a385a9b8f1db5e02fea2c39ebdc7be5',1,'DiscordCPP::User']]]
+  ['channel_5fid_0',['channel_id',['../class_discord_c_p_p_1_1_voice_state.html#aebbae3527c5a80db489a662cc7b11cb7',1,'DiscordCPP::VoiceState']]],
+  ['channels_1',['CHANNELS',['../_voice_client_8cpp.html#a82b97da9f75746ca00165bb1d5ce0aab',1,'VoiceClient.cpp']]]
 ];

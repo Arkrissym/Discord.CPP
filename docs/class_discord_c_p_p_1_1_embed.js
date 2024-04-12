@@ -1,12 +1,6 @@
 var class_discord_c_p_p_1_1_embed =
 [
-    [ "Author", "struct_discord_c_p_p_1_1_embed_1_1_author.html", "struct_discord_c_p_p_1_1_embed_1_1_author" ],
-    [ "Field", "struct_discord_c_p_p_1_1_embed_1_1_field.html", "struct_discord_c_p_p_1_1_embed_1_1_field" ],
-    [ "Footer", "struct_discord_c_p_p_1_1_embed_1_1_footer.html", "struct_discord_c_p_p_1_1_embed_1_1_footer" ],
-    [ "Image", "struct_discord_c_p_p_1_1_embed_1_1_image.html", "struct_discord_c_p_p_1_1_embed_1_1_image" ],
-    [ "Provider", "struct_discord_c_p_p_1_1_embed_1_1_provider.html", "struct_discord_c_p_p_1_1_embed_1_1_provider" ],
-    [ "Video", "struct_discord_c_p_p_1_1_embed_1_1_video.html", "struct_discord_c_p_p_1_1_embed_1_1_video" ],
-    [ "Embed", "class_discord_c_p_p_1_1_embed.html#a58478ec295f3e34802740cf38866dd43", null ],
+    [ "Embed", "class_discord_c_p_p_1_1_embed.html#ae692b21f63c00a714c2b6796898e9755", null ],
     [ "Embed", "class_discord_c_p_p_1_1_embed.html#a2a6c7045de0ffe686151d12562eb2b31", null ],
     [ "add_field", "class_discord_c_p_p_1_1_embed.html#a18b490d01a0dd5161b6072d1cc4e6b09", null ],
     [ "set_author", "class_discord_c_p_p_1_1_embed.html#acdc9f206039074f2f84f369b937503b1", null ],
@@ -14,18 +8,5 @@ var class_discord_c_p_p_1_1_embed =
     [ "set_footer", "class_discord_c_p_p_1_1_embed.html#a5f6c87c38d6d84567f29664b67cbfe45", null ],
     [ "set_image", "class_discord_c_p_p_1_1_embed.html#adca025afa4575490371310b1f7bffc9c", null ],
     [ "set_thumbnail", "class_discord_c_p_p_1_1_embed.html#a9b749d634cc802008485744d6c06eddd", null ],
-    [ "to_json", "class_discord_c_p_p_1_1_embed.html#a488b142ac8b50439f6da68f884407d3d", null ],
-    [ "_author", "class_discord_c_p_p_1_1_embed.html#ab98a7bda47cca8120d0da3c6fd32ffcd", null ],
-    [ "_color", "class_discord_c_p_p_1_1_embed.html#ab2ead45b38abac9a386988bd485056a9", null ],
-    [ "_description", "class_discord_c_p_p_1_1_embed.html#a1e7974c13d140c4a3e12040938d253af", null ],
-    [ "_fields", "class_discord_c_p_p_1_1_embed.html#a026dc373cb92ebed3c37bd90b0d504bd", null ],
-    [ "_footer", "class_discord_c_p_p_1_1_embed.html#a1f090fda940260034665db41f5f7c4c8", null ],
-    [ "_image", "class_discord_c_p_p_1_1_embed.html#a2b2ad99cb18cd7651a5f6f1af77f80ab", null ],
-    [ "_provider", "class_discord_c_p_p_1_1_embed.html#aecd9aa29b158649d2611f7791f315ba0", null ],
-    [ "_thumbnail", "class_discord_c_p_p_1_1_embed.html#a196cbfd7c04ecef9a453c2a90d6e9e1e", null ],
-    [ "_timestamp", "class_discord_c_p_p_1_1_embed.html#a5d537d7c38ff89d0c3bbf0aadea1fdd0", null ],
-    [ "_title", "class_discord_c_p_p_1_1_embed.html#a9ec496dcd2a04966a1d6bf679823255d", null ],
-    [ "_type", "class_discord_c_p_p_1_1_embed.html#ad1885d2a297bcd5087ba21e597c55f0f", null ],
-    [ "_url", "class_discord_c_p_p_1_1_embed.html#a0653cf657fa24b6bbf5c42e812e02542", null ],
-    [ "_video", "class_discord_c_p_p_1_1_embed.html#a5c759f6b6903a8959769d02261830fbc", null ]
+    [ "to_json", "class_discord_c_p_p_1_1_embed.html#a488b142ac8b50439f6da68f884407d3d", null ]
 ];

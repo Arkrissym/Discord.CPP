@@ -1,13 +1,10 @@
 #pragma once
-#include <cmath>
 #include <optional>
 #include <utility>
 #include <vector>
 
 #include "ApplicationCommandOption.h"
-#include "Channel.h"
 #include "DiscordObject.h"
-#include "Guild.h"
 #include "static.h"
 
 namespace DiscordCPP {

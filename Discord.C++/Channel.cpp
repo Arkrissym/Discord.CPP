@@ -1,8 +1,5 @@
 #include "Channel.h"
 
-#include <variant>
-
-#include "Discord.h"
 #include "static.h"
 
 /**	@param[in]	data	JSON data

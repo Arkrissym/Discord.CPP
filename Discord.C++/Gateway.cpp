@@ -1,6 +1,7 @@
 #include "Gateway.h"
 
 #include <boost/asio/connect.hpp>
+#include <boost/beast/websocket/error.hpp>
 #include <chrono>
 #include <cstddef>
 #include <ctime>
@@ -176,9 +177,10 @@ DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::connect(const std::string& u
                     beast::flat_buffer buffer;
                     beast::error_code error_code;
                     size_t bytes = _client->read(buffer, error_code);
+
                     _log.debug("Received " + std::to_string(bytes) + " bytes");
 
-                    if (error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated || bytes <= 0) {
+                    if (error_code == boost::beast::websocket::error::closed || error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated || bytes <= 0) {
                         on_websocket_disconnnect();
 
                         break;
@@ -227,7 +229,6 @@ DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::send(const json& message) {
 
 DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::close() {
     _keepalive = false;
-    _connected = false;
 
     return threadpool->execute([this]() {
         try {

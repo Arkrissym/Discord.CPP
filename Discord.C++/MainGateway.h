@@ -16,8 +16,6 @@ class MainGateway : public Gateway {
     std::string _session_id;
     /// indicator if we have a invalid session
     bool _invalid_session;
-    /// current sequence number
-    unsigned int _sequence_number;
     /// shard id
     unsigned int _shard_id;
     /// total number of shards

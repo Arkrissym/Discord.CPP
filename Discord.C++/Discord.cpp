@@ -129,7 +129,7 @@ void DiscordCPP::Discord::update_presence(const std::string &status, Activity ac
              {"since", {}},       //
              {"status", status},  //
              {"afk", afk}         //
-         }}                       //
+         }}  //
     };
 
     if (activity.get_type() == Activity::NoActivity)
@@ -467,8 +467,7 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
             }
         }
 
-        voice_state->endpoint = "wss://" + data.at("endpoint").get<std::string>();
-        voice_state->endpoint += "?v=4";
+        voice_state->endpoint = "wss://" + data.at("endpoint").get<std::string>() + VOICE_GATEWAY_QUERY;
         voice_state->voice_token = data.at("token").get<std::string>();
     } else if (event_name == "INTERACTION_CREATE") {
         try {

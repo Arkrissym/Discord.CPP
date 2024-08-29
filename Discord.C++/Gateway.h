@@ -40,6 +40,8 @@ class Gateway {
     std::thread _heartbeat_task;
     /// indicator if Gateway is connected
     bool _connected;
+    /// current sequence number
+    unsigned int _sequence_number;
     /// logging instance
     Logger _log;
     /// the message handler set by using set_message_handler

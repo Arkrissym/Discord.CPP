@@ -93,7 +93,8 @@ DiscordCPP::Gateway::Gateway(std::string token, const std::shared_ptr<Threadpool
       _heartbeat_interval(0),
       _keepalive(true),
       _reconnect_timeout(0),
-      _connected(false) {
+      _connected(false),
+      _sequence_number(0) {
     _log = Logger("Discord.Gateway");
 
     ssl_context.set_verify_mode(ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);

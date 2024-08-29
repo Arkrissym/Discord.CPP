@@ -116,8 +116,8 @@ void DiscordCPP::VoiceClient::select_protocol() {
                                {"address", _my_ip},           //
                                {"port", _my_port},            //
                                {"mode", "xsalsa20_poly1305"}  //
-                           }}                                 //
-              }}                                              //
+                           }}  //
+              }}  //
     };
 
     _voice_ws->send(payload).get();
@@ -139,8 +139,8 @@ void DiscordCPP::VoiceClient::speak(bool speak) {
                      {"speaking", speak},  //
                      {"delay", 0},         //
                      {"ssrc", _ssrc}       //
-                 }                         //
-        }                                  //
+                 }  //
+        }  //
     };
 
     _voice_ws->send(payload).get();
@@ -154,15 +154,19 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
                                      std::string guild_id,
                                      std::string channel_id,
                                      const std::string& user_id)
-    : _guild_id(std::move(guild_id)),
+    : _voice_token(voice_token),
+      _endpoint(endpoint),
+      _session_id(session_id),
+      _guild_id(std::move(guild_id)),
       _channel_id(std::move(channel_id)),
+      _user_id(user_id),
       _main_ws(std::move(main_ws)) {
     threadpool = std::make_shared<Threadpool>(4);
 
     _log = Logger("Discord.VoiceClient");
     _log.info("connecting to endpoint " + _endpoint);
 
-    _voice_ws = std::make_unique<VoiceGateway>(voice_token, session_id, _guild_id, user_id, threadpool);
+    _voice_ws = std::make_unique<VoiceGateway>(_voice_token, _session_id, _guild_id, _user_id, threadpool);
 
     _voice_ws->set_message_handler([this](json data) {
         switch (data["op"].get<int>()) {
@@ -191,7 +195,7 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
         }
     });
 
-    _voice_ws->connect(endpoint);
+    _voice_ws->connect(_endpoint);
 
     while (_ready == false) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -220,7 +224,7 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::disconnect() {
                   {"channel_id", nullptr},  //
                   {"self_mute", true},      //
                   {"self_deaf", true}       //
-              }}                            //
+              }}  //
     };
     std::shared_ptr<DiscordCPP::Future<void>> main_future = _main_ws->send(payload).get_future();
     std::shared_ptr<DiscordCPP::Future<void>> voice_future = _voice_ws->close().get_future();

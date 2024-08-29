@@ -3,18 +3,26 @@
 #include <utility>
 
 json DiscordCPP::VoiceGateway::get_heartbeat_payload() {
-    return {{"op", 3}, {"d", std::to_string(time(nullptr))}};
+    return {
+        {"op", 3},  //
+        {"d", {
+                  //
+                  {"t", std::to_string(time(nullptr))},                                               //
+                  {"seq_ack", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}  //
+              }}  //
+    };
 }
 
 void DiscordCPP::VoiceGateway::identify() {
     json out_payload = {
         {
             "d", {
-                     {"server_id", _guild_id},     //
-                     {"session_id", _session_id},  //
-                     {"token", _token}             //
-                 }                                 //
-        }                                          //
+                     {"server_id", _guild_id},                                                           //
+                     {"session_id", _session_id},                                                        //
+                     {"token", _token},                                                                  //
+                     {"seq_ack", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}  //
+                 }  //
+        }  //
     };
 
     if (_resume == true) {
@@ -39,6 +47,10 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(const std::string& 
 
         json payload = json::parse(message);
         int op = payload["op"].get<int>();
+
+        if ((payload.count("seq") > 0) && payload["seq"].is_number_integer()) {
+            _sequence_number = payload["seq"].get<int>();
+        }
 
         switch (op) {
             case 2:

@@ -153,8 +153,8 @@ void DiscordCPP::MainGateway::identify() {
                      {"intents", _intents.getIntents()},   //
                      {"shard", {_shard_id, _num_shards}},  //
                      {"large_threshold", 250}              //
-                 }                                         //
-        }                                                  //
+                 }  //
+        }  //
     };
 
 #ifdef _WIN32
@@ -196,7 +196,6 @@ DiscordCPP::MainGateway::MainGateway(std::string token,
     : Gateway::Gateway(std::move(token),
                        std::make_shared<Threadpool>(std::thread::hardware_concurrency() / num_shards)),
       _invalid_session(false),
-      _sequence_number(0),
       _shard_id(shard_id),
       _num_shards(num_shards),
       _intents(intents) {

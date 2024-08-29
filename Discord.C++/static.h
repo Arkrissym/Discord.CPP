@@ -4,6 +4,7 @@
 #define GATEWAY_URL "wss://gateway.discord.gg?v=10&encoding=json&compress=zlib-stream"
 #define API_PREFIX "/api/v10"
 #define DISCORD_HOST "discord.com"
+#define VOICE_GATEWAY_QUERY "?v=8"
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)

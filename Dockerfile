@@ -31,10 +31,8 @@ RUN apk add --no-cache \
 	boost1.82-filesystem \
 	openssl \
 	ffmpeg \
-	py3-pip
+	yt-dlp
 
-RUN pip install --no-cache-dir youtube_dl
-RUN pip cache purge
 
 COPY --from=build /app/build/libdiscord_cpp.so /usr/local/lib
 RUN ldconfig /usr/local/lib

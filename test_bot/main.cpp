@@ -217,7 +217,7 @@ class Client : public Discord {
             getline(argumentstream, channel_name);
 
             boost::filesystem::path p =
-                boost::process::search_path("youtube-dl");
+                boost::process::search_path("yt-dlp");
             boost::process::ipstream input;
             boost::process::system(p, "-g", "-x", "--no-playlist", link,
                                    boost::process::std_out > input,

@@ -2,8 +2,6 @@
 
 #include <opus/opus.h>
 #include <sodium.h>
-#include <sodium/crypto_aead_aegis256.h>
-#include <sodium/crypto_secretbox.h>
 
 #include <cerrno>
 #include <chrono>
@@ -70,7 +68,7 @@ std::string DiscordCPP::udp_client::receive() {
 void DiscordCPP::VoiceClient::connect_voice_udp() {
     _udp = std::make_unique<udp_client>(_server_ip, _server_port);
 
-    _log.info("performing IP Discovery");
+    _log.debug("performing IP Discovery");
 
     std::string msg;
     msg.resize(74, '\0');
@@ -104,19 +102,24 @@ void DiscordCPP::VoiceClient::connect_voice_udp() {
     _my_ip = my_ip;
     _my_port = my_port;
 
-    _log.info("found own IP and port: " + my_ip + ":" + std::to_string(my_port));
+    _log.debug("found own IP and port: " + my_ip + ":" + std::to_string(my_port));
 }
 
 void DiscordCPP::VoiceClient::select_protocol() {
+    _log.debug("initialising libsodium");
+    if (sodium_init() == -1) {
+        throw ClientException("libsodium initialisation failed");
+    }
+
     json payload = {
         {"op", 1},
         {"d", {
                   {"protocol", "udp"},  //
                   {"data", {
                                //
-                               {"address", _my_ip},                 //
-                               {"port", _my_port},                  //
-                               {"mode", "aead_aes256_gcm_rtpsize"}  //
+                               {"address", _my_ip},                                                                                                   //
+                               {"port", _my_port},                                                                                                    //
+                               {"mode", (crypto_aead_aes256gcm_is_available() == 0) ? "aead_xchacha20_poly1305_rtpsize" : "aead_aes256_gcm_rtpsize"}  //
                            }}  //
               }}  //
     };
@@ -181,7 +184,7 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
             case 4:
                 load_session_description(data["d"]);
 
-                _log.debug("mode: " + _mode);
+                _log.info("mode: " + _mode);
                 _log.info("handshake complete. voice connection ready.");
                 _ready = true;
                 speak();
@@ -260,15 +263,6 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
         opus_encoder_ctl(encoder, OPUS_SET_INBAND_FEC(1));
         opus_encoder_ctl(encoder, OPUS_SET_PACKET_LOSS_PERC(15));
 
-        _log.debug("initialising libsodium");
-        if (sodium_init() == -1) {
-            throw ClientException("libsodium initialisation failed");
-        }
-        if (crypto_aead_aes256gcm_is_available() == 0) {
-            throw ClientException("libsodium cannot use aead_aes256gcm");
-        }
-        // TODO: implement fallback aead_xchacha20_poly1305_rtpsize
-
         int num_opus_bytes = 0;
         unsigned char* pcm_data = new unsigned char[FRAME_SIZE * CHANNELS * 2];
         opus_int16* in_data = nullptr;
@@ -281,6 +275,17 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
         _playing = true;
         _cancel_playing = false;
         uint32_t nonce_inc = 0;
+
+        unsigned int nonce_bytes;
+        unsigned int a_bytes;
+
+        if (crypto_aead_aes256gcm_is_available() == 0) {
+            nonce_bytes = crypto_aead_xchacha20poly1305_ietf_NPUBBYTES;
+            a_bytes = crypto_aead_xchacha20poly1305_ietf_ABYTES;
+        } else {
+            nonce_bytes = crypto_aead_aes256gcm_NPUBBYTES;
+            a_bytes = crypto_aead_aes256gcm_ABYTES;
+        }
 
         while (_ready && !_cancel_playing) {
             if (source->read((char*)pcm_data, FRAME_SIZE * CHANNELS * 2) !=
@@ -298,7 +303,7 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
             opus_data.resize(num_opus_bytes);
 
             std::string packet;
-            packet.resize(12 + 4 + opus_data.size() + crypto_aead_aes256gcm_ABYTES, '\0');
+            packet.resize(12 + 4 + opus_data.size() + a_bytes, '\0');
 
             packet[0] = 0x80;  // Type
             packet[1] = 0x78;  // Version
@@ -320,7 +325,7 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
             _timestamp += SAMPLE_RATE / 1000 * FRAME_MILLIS;
 
             std::string nonce;
-            nonce.resize(crypto_aead_aes256gcm_NPUBBYTES, '\0');
+            nonce.resize(nonce_bytes, '\0');
 
             nonce[0] = nonce_inc >> 24;
             nonce[1] = nonce_inc >> 16;
@@ -329,10 +334,17 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
 
             nonce_inc++;
 
-            crypto_aead_aes256gcm_encrypt((unsigned char*)packet.data() + 12, nullptr,
-                                          opus_data.data(), opus_data.size(),
-                                          (unsigned char*)packet.data(), 12,
-                                          nullptr, (unsigned char*)nonce.data(), _secret_key.data());
+            if (crypto_aead_aes256gcm_is_available() == 0) {
+                crypto_aead_xchacha20poly1305_ietf_encrypt((unsigned char*)packet.data() + 12, nullptr,
+                                                           opus_data.data(), opus_data.size(),
+                                                           (unsigned char*)packet.data(), 12,
+                                                           nullptr, (unsigned char*)nonce.data(), _secret_key.data());
+            } else {
+                crypto_aead_aes256gcm_encrypt((unsigned char*)packet.data() + 12, nullptr,
+                                              opus_data.data(), opus_data.size(),
+                                              (unsigned char*)packet.data(), 12,
+                                              nullptr, (unsigned char*)nonce.data(), _secret_key.data());
+            }
 
             packet[packet.size() - 4] = nonce[0];
             packet[packet.size() - 3] = nonce[1];

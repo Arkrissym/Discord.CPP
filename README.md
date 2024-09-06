@@ -98,8 +98,8 @@ However below is an overview of features based on Discord's [library comparision
 |Event     |handled? |
 |----------|---------|
 |Receive|Yes|
-|Delete|No|
-|Update|No|
+|Delete|Yes|
+|Update|Yes|
 
 #### Role Events
 |Event     |handled? |
@@ -135,5 +135,5 @@ However below is an overview of features based on Discord's [library comparision
 |----------|---------|
 |Receive|No|
 |Send|Yes|
-|Multi-Server|Yes(not tested yet)|
-|State Update|Partial(only the bot user)|
+|Multi-Server|Yes|
+|State Update|Yes|

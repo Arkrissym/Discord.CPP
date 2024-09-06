@@ -62,22 +62,61 @@ class Discord : public DiscordObject {
     DLL_EXPORT void on_websocket_incoming_message(const json& payload);
     DLL_EXPORT void handle_raw_event(const std::string& event_name, const json& data);
 
-    /// called when successfully logged in
-    virtual void on_ready(User user);
-    /// called when a Message was received
-    virtual void on_message(Message message);
-    /// called when a Member was banned
-    virtual void on_user_ban(User user, Guild guild);
-    /// called when a Member was unbanned
-    virtual void on_user_unban(User user, Guild guild);
-    /// called when a User joins a Guild
-    virtual void on_user_join(Member member, Guild guild);
-    /// called when a User is removed from a Guild (leave/kick/ban)
-    virtual void on_user_remove(User user, Guild guild);
-    /// called when a User starts typing
-    virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp);
-    /// called when an interaction was created
-    virtual void on_interaction(Interaction interaction);
+    /** called when successfully logged in
+        @param[in]	user	the User
+    */
+    virtual void on_ready(User user) {}
+
+    /** called when a Message was received
+        @param[in]	message	the Message that was received
+    */
+    virtual void on_message(Message message) {}
+
+    /** called when a Message was updated
+        @param[in]	message	the Message that was updated
+    */
+    virtual void on_message_update(Message message) {}
+
+    /** called when a Message was deleted
+        @param[in]	message	the Message that has been deleted
+    */
+    virtual void on_message_delete(Message message) {}
+
+    /** called when a Member was banned
+        @param[in]	user	the User who has been banned
+        @param[in]	guild	the Guild the User has been banned from
+    */
+    virtual void on_user_ban(User user, Guild guild) {}
+
+    /** called when a Member was unbanned
+        @param[in]	user	the User who has been unbanned
+        @param[in]	guild	the Guild the User has been unbanned from
+    */
+    virtual void on_user_unban(User user, Guild guild) {}
+
+    /**	called when a User joins a Guild
+        @param[in]	member	the User who has joined
+        @param[in]	guild	the Guild the User has joined
+    */
+    virtual void on_user_join(Member member, Guild guild) {}
+
+    /** called when a User is removed from a Guild (leave/kick/ban)
+        @param[in]	user	the User who has been removed
+        @param[in]	guild	the Guild the User has been removed from
+    */
+    virtual void on_user_remove(User user, Guild guild) {}
+
+    /** called when a User starts typing
+        @param[in]	user		the User that started typing
+        @param[in]	channel		the TextChannel where the USer started typing
+        @param[in]	timestamp	(unix time) when the User started typing
+    */
+    virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp) {}
+
+    /** called when an interaction was created
+        @param[in]  interaction the Interaction that was received
+    */
+    virtual void on_interaction(Interaction interaction) {}
 
    public:
     Logger log;

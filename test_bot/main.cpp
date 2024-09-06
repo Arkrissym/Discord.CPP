@@ -316,6 +316,20 @@ class Client : public Discord {
         }
     }
 
+    void on_message_update(Message message) override {
+        log.info(message.get_author().get_username() + " updated \"" + message.get_content() +
+                 "\" in channel: " + message.get_channel().get_name() +
+                 " (id: " + message.get_channel_id() +
+                 ", type: " + to_string(message.get_channel().get_type()) + ").");
+    }
+
+    void on_message_delete(Message message) override {
+        log.info(message.get_author().get_username() + " deleted \"" + message.get_content() +
+                 "\" in channel: " + message.get_channel().get_name() +
+                 " (id: " + message.get_channel_id() +
+                 ", type: " + to_string(message.get_channel().get_type()) + ").");
+    }
+
     void on_interaction(Interaction interaction) override {
         if (interaction.get_type() != Interaction::Type::APPLICATION_COMMAND) {
             return;
@@ -381,7 +395,7 @@ class Client : public Discord {
 
    public:
     Client(const string& token, const Intents& intents, unsigned int num_shards = 0)
-        : Discord(token, intents, num_shards){};
+        : Discord(token, intents, num_shards) {};
 };
 
 int main() {

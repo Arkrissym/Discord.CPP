@@ -3,15 +3,12 @@
 #include <optional>
 #include <string>
 
-#include "DMChannel.h"
 #include "DiscordObject.h"
 #include "Embed.h"
 #include "Guild.h"
 #include "GuildChannel.h"
-#include "Logger.h"
 #include "TextChannel.h"
 #include "User.h"
-#include "VoiceChannel.h"
 #include "static.h"
 
 /**	@param[in]	data	raw JSON data

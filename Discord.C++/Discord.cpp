@@ -69,53 +69,6 @@ void DiscordCPP::Discord::start() {
     connect();
 }
 
-///	@param[in]	user	the User
-void DiscordCPP::Discord::on_ready(User) { log.debug("on_ready"); }
-
-///	@param[in]	message	the Message that was received
-void DiscordCPP::Discord::on_message(Message) { log.debug("on_message"); }
-
-/**	@param[in]	user	the User who has been banned
-    @param[in]	guild	the Guild the User has been banned from
-*/
-void DiscordCPP::Discord::on_user_ban(User, Guild) {
-    log.debug("on_member_ban");
-}
-
-/**	@param[in]	user	the User who has been unbanned
-    @param[in]	guild	the Guild the User has been unbanned from
-*/
-void DiscordCPP::Discord::on_user_unban(User, Guild) {
-    log.debug("on_member_unban");
-}
-
-/**	@param[in]	member	the User who has joined
-    @param[in]	guild	the Guild the User has joined
-*/
-void DiscordCPP::Discord::on_user_join(Member, Guild) {
-    log.debug("on_member_join");
-}
-
-/**	@param[in]	user	the User who has been removed
-    @param[in]	guild	the Guild the User has been removed from
-*/
-void DiscordCPP::Discord::on_user_remove(User, Guild) {
-    log.debug("on_member_remove");
-}
-
-/**	@param[in]	user		the User that started typing
-    @param[in]	channel		the TextChannel where the USer started typing
-    @param[in]	timestamp	(unix time) when the User started typing
-*/
-void DiscordCPP::Discord::on_typing_start(User, TextChannel, unsigned int) {
-    log.debug("on_typing_start");
-}
-
-/// @param[in]  interaction the Interaction that was received
-void DiscordCPP::Discord::on_interaction(Interaction) {
-    log.debug("on_interaction");
-}
-
 /**	@param[in]	status		the new status (see DiscordStatus)
     @param[in]	activity	(optional) the Activity
     @param[in]	afk			(optional) wether the bot/user is afk or not
@@ -173,8 +126,7 @@ std::vector<DiscordCPP::ApplicationCommand> DiscordCPP::Discord::get_application
     return commands;
 }
 
-DiscordCPP::ApplicationCommand DiscordCPP::Discord::create_application_command(
-    ApplicationCommand command) {
+DiscordCPP::ApplicationCommand DiscordCPP::Discord::create_application_command(ApplicationCommand command) {
     json data = command.to_json();
 
     std::string url = "/applications/" + _application_id;
@@ -186,8 +138,7 @@ DiscordCPP::ApplicationCommand DiscordCPP::Discord::create_application_command(
     return {api_call(url, "POST", data, "application/json", false), get_token()};
 }
 
-std::shared_ptr<DiscordCPP::MainGateway> DiscordCPP::Discord::get_shard(
-    unsigned int shard_id) {
+std::shared_ptr<DiscordCPP::MainGateway> DiscordCPP::Discord::get_shard(unsigned int shard_id) {
     for (auto &_gateway : _gateways) {
         if (_gateway->get_shard_id() == shard_id) {
             return _gateway;
@@ -209,8 +160,7 @@ DiscordCPP::Guild *DiscordCPP::Discord::get_guild(const std::string &guild_id) {
     return nullptr;
 }
 
-DiscordCPP::VoiceState *DiscordCPP::Discord::get_voice_state(
-    const std::string &user_id, const std::string &guild_id) {
+DiscordCPP::VoiceState *DiscordCPP::Discord::get_voice_state(const std::string &user_id, const std::string &guild_id) {
     VoiceState *voice_state = nullptr;
     if (_voice_states.find(user_id) != _voice_states.end()) {
         for (auto it : _voice_states.at(user_id)) {
@@ -432,6 +382,33 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
         } catch (const std::exception &e) {
             log.error("ignoring exception in on_message: " + std::string(e.what()));
         }
+    } else if (event_name == "MESSAGE_UPDATE") {
+        try {
+            on_message_update(Message(data, get_token()));
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_message_update: " + std::string(e.what()));
+        }
+    } else if (event_name == "MESSAGE_DELETE") {
+        try {
+            on_message_delete(Message(data, get_token()));
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_message_delete: " + std::string(e.what()));
+        }
+    } else if (event_name == "MESSAGE_DELETE_BULK") {
+        std::string guild_id = data.at("guild_id").get<std::string>();
+        std::string channel_id = data.at("channel_id").get<std::string>();
+        json msg_ids = data.at("ids");
+
+        for (json msg_id : msg_ids) {
+            try {
+                on_message_delete(Message({{"id", msg_id.get<std::string>()},
+                                           {"channel_id", channel_id},
+                                           {"guild_id", guild_id}},
+                                          get_token()));
+            } catch (const std::exception &e) {
+                log.error("ignoring exception in on_message_delete: " + std::string(e.what()));
+            }
+        }
     } else if (event_name == "TYPING_START") {
         std::string channel_id = data.at("channel_id").get<std::string>();
         User user;
@@ -485,8 +462,7 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
 void DiscordCPP::Discord::_process_voice_state_update(const json &data) {
     std::string user_id = data.at("user_id").get<std::string>();
 
-    VoiceState *voice_state =
-        get_voice_state(user_id, data.at("guild_id").get<std::string>());
+    VoiceState *voice_state = get_voice_state(user_id, data.at("guild_id").get<std::string>());
 
     if (voice_state == nullptr) {
         voice_state = new VoiceState();

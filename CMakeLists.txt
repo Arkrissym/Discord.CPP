@@ -72,7 +72,7 @@ target_include_directories( ${PROJECT_NAME} PRIVATE Discord.C++ )
 if(MSVC)
       set( CMAKE_CXX_FLAGS " /MP /O2 /GL /GS /W3 /sdl /Gd /EHa " )
 else(MSVC)
-      set( CMAKE_CXX_FLAGS " -Wall -Wextra -Ofast " )
+      set( CMAKE_CXX_FLAGS " -Wall -Wextra -Wno-nan-infinity-disabled -Ofast " )
 endif(MSVC)
 
 find_package(OpenSSL REQUIRED)

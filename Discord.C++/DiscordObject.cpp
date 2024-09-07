@@ -23,7 +23,7 @@ static bool cache_manager_active = false;
 
 void manage_cache();
 
-DiscordCPP::DiscordObject::DiscordObject(std::string token)
+DiscordCPP::BaseDiscordObject::BaseDiscordObject(std::string token)
     : _token(std::move(token)) {
     if (cache_manager_active == false) {
         cache_manager_active = true;
@@ -31,9 +31,13 @@ DiscordCPP::DiscordObject::DiscordObject(std::string token)
     }
 }
 
+DiscordCPP::DiscordObject::DiscordObject(std::string token)
+    : DiscordCPP::BaseDiscordObject::BaseDiscordObject(token) {
+}
+
 DiscordCPP::DiscordObject::DiscordObject(std::string token, std::string id)
-    : _token(std::move(token)),
-      id(std::move(id)) {
+    : DiscordCPP::BaseDiscordObject::BaseDiscordObject(token) {
+    this->id = std::move(id);
 }
 
 void manage_cache() {
@@ -68,7 +72,7 @@ void manage_cache() {
     @return		json::value		API response
     @throws		HTTPError
 */
-json DiscordCPP::DiscordObject::api_call(const std::string& url, const std::string& method, const json& data, const std::string& content_type, const bool cache) {
+json DiscordCPP::BaseDiscordObject::api_call(const std::string& url, const std::string& method, const json& data, const std::string& content_type, const bool cache) {
     if (method == "GET" && cache == true) {
         for (auto& i : _cache) {
             if (i->at("url").get<std::string>() == url) {
@@ -133,7 +137,7 @@ json DiscordCPP::DiscordObject::api_call(const std::string& url, const std::stri
     return ret;
 }
 
-DiscordCPP::DiscordObject::http_response DiscordCPP::DiscordObject::request_internal(const std::string& target, const std::string& method, const std::string& data, const std::string& content_type) {
+DiscordCPP::BaseDiscordObject::http_response DiscordCPP::BaseDiscordObject::request_internal(const std::string& target, const std::string& method, const std::string& data, const std::string& content_type) {
     Logger("discord.object.request_internal").debug("sending message " + data + " via " + method + " to https://" + DISCORD_HOST + target);
 
     ssl::context ssl_context(ssl::context::tlsv13);

@@ -10,6 +10,7 @@
 #include "DMChannel.h"
 #include "DiscordObject.h"
 #include "Embed.h"
+#include "Emoji.h"
 #include "Exceptions.h"
 #include "FFmpegAudioSource.h"
 #include "FileAudioSource.h"
@@ -22,6 +23,7 @@
 #include "Logger.h"
 #include "MainGateway.h"
 #include "Message.h"
+#include "Reaction.h"
 #include "Threadpool.h"
 #include "User.h"
 #include "VoiceChannel.h"
@@ -81,6 +83,16 @@ class Discord : public DiscordObject {
         @param[in]	message	the Message that has been deleted
     */
     virtual void on_message_delete(Message message) {}
+
+    /** called when a Reaction was added to Message
+        @param[in]	reaction the reaction that has been created
+    */
+    virtual void on_message_reaction(Reaction reaction) {}
+
+    /** called when a Reaction was remove from a Message
+        @param[in]	reaction the reaction that has been deleted
+    */
+    virtual void on_message_reaction_delete(Reaction reaction) {}
 
     /** called when a Member was banned
         @param[in]	user	the User who has been banned

@@ -212,8 +212,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(const json &payload) {
     }
 }
 
-void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
-                                           const json &data) {
+void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const json &data) {
     // https://discordapp.com/developers/docs/topics/gateway#commands-and-events-gateway-events
     if (event_name == "READY") {
         _user = new User(data.at("user"), get_token());
@@ -408,6 +407,18 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name,
             } catch (const std::exception &e) {
                 log.error("ignoring exception in on_message_delete: " + std::string(e.what()));
             }
+        }
+    } else if (event_name == "MESSAGE_REACTION_ADD") {
+        try {
+            on_message_reaction(Reaction(data, get_token()));
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_message_reaction: " + std::string(e.what()));
+        }
+    } else if (event_name == "MESSAGE_REACTION_REMOVE") {
+        try {
+            on_message_reaction_delete(Reaction(data, get_token()));
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_message_reaction_remove: " + std::string(e.what()));
         }
     } else if (event_name == "TYPING_START") {
         std::string channel_id = data.at("channel_id").get<std::string>();

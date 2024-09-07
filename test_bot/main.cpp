@@ -330,6 +330,8 @@ class Client : public Discord {
                  ", type: " + to_string(message.get_channel().get_type()) + ").");
     }
 
+    // TODO: reaction add/delete
+
     void on_interaction(Interaction interaction) override {
         if (interaction.get_type() != Interaction::Type::APPLICATION_COMMAND) {
             return;

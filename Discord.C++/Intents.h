@@ -6,10 +6,15 @@ class Intents {
     unsigned int intents = 0;
 
    public:
-    /**	Creates an Intents object with all non-privileged intents the library can handle.
+    /**	Creates an Intents object with all non-privileged intents the library uses for internal purposes.
      *	@return Intents intents used when connecting to the gateway.
      */
     DLL_EXPORT static Intents Default();
+
+    /**	Creates an Intents object with all non-privileged intents the library can handle.
+     *	@return Intents intents used when connecting to the gateway.
+     */
+    DLL_EXPORT static Intents All();
 
     /// Enable an intent.
     DLL_EXPORT void add(unsigned int intent);
@@ -38,7 +43,7 @@ class Intents {
     static const unsigned int BANS = 1 << 2;
 
     /**	Intent for Guild Emoji relevant events.
-     *	This affects nothing as emojis are not yet implemented.
+     *	This affects nothing as emojis are not fully implemented.
      */
     static const unsigned int EMOJIS = 1 << 3;
 
@@ -70,11 +75,15 @@ class Intents {
     /**	Intent for Guild Message events.
      *	This affects the following events:
      *		- on_message
+     *		- on_message_update
+     *		- on_message_delete
      */
     static const unsigned int MESSAGES = 1 << 9;
 
     /**	Intent for Guild Reaction relevant events.
-     *	This affects nothing as reactions are not yet implemented.
+     *	This affects the following events:
+     *		- on_message_reaction
+     *		- on_message_reaction_delete
      */
     static const unsigned int REACTIONS = 1 << 10;
 
@@ -87,11 +96,15 @@ class Intents {
     /**	Intent for Direct Message relevant events.
      *	This affects the following events:
      *		- on_message
+     *		- on_message_update
+     *		- on_message_delete
      */
     static const unsigned int DIRECT_MESSAGES = 1 << 12;
 
     /**	Intent for Direct Message Reaction relevant events.
-     *	This affects nothing as reactions are not yet implemented.
+     *	This affects the following events:
+     *		- on_message_reaction
+     *		- on_message_reaction_delete
      */
     static const unsigned int DIRECT_REACTIONS = 1 << 13;
 
@@ -105,6 +118,8 @@ class Intents {
      *  This is also a privileged intent!
      *	This affects the following events:
      *		- on_message
+     *		- on_message_update
+     *		- on_message_delete
      */
     static const unsigned int MESSAGE_CONTENT = 1 << 15;
 

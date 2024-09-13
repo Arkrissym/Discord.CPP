@@ -1,7 +1,7 @@
 #include "Emoji.h"
 
 DiscordCPP::Emoji::Emoji(const json& data, const std::string& token)
-    : DiscordObject(token, data.at("id").get<std::string>()) {
+    : DiscordObject(token, get_or_else<std::string>(data, "id", "")) {
     name = get_optional<std::string>(data, "name");
 
     if (has_value(data, "roles")) {
@@ -17,4 +17,12 @@ DiscordCPP::Emoji::Emoji(const json& data, const std::string& token)
     managed = get_or_else<bool>(data, "managed", false);
     animated = get_or_else<bool>(data, "animated", false);
     available = get_or_else<bool>(data, "available", true);
+}
+
+std::optional<std::string> DiscordCPP::Emoji::get_id() {
+    if (DiscordCPP::DiscordObject::get_id() == "") {
+        return {};
+    }
+
+    return DiscordCPP::DiscordObject::get_id();
 }

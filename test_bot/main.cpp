@@ -1,6 +1,6 @@
 #include <chrono>
-#include <iostream>
 #include <thread>
+#include <vector>
 
 #include "ApplicationCommand.h"
 #include "ApplicationCommandOption.h"
@@ -124,7 +124,7 @@ class Client : public Discord {
     }
 
     void on_message(Message message) override {
-        log.info(message.get_author().get_username() + " sent \"" + message.get_content() +
+        log.info(message.get_author().value().get_username() + " sent \"" + message.get_content() +
                  "\" in channel: " + message.get_channel().get_name() +
                  " (id: " + message.get_channel_id() +
                  ", type: " + to_string(message.get_channel().get_type()) + ").");
@@ -175,8 +175,8 @@ class Client : public Discord {
 
             message.reply(embed);
         } else if (message.get_content() == "?dm") {
-            message.get_author().send("This is a direct text message.");
-            message.get_author().send(Embed("Embed", "text"));
+            message.get_author().value().send("This is a direct text message.");
+            message.get_author().value().send(Embed("Embed", "text"));
         } else if (message.get_content().compare(0, 7, "?clear ") == 0) {
             string tmp = message.get_content().substr(7);
             vector<shared_ptr<Message>> messages = message.get_channel().history(atoi(tmp.c_str()) + 1);
@@ -317,20 +317,52 @@ class Client : public Discord {
     }
 
     void on_message_update(Message message) override {
-        log.info(message.get_author().get_username() + " updated \"" + message.get_content() +
+        log.info(message.get_author().value().get_username() + " updated \"" + message.get_content() +
                  "\" in channel: " + message.get_channel().get_name() +
                  " (id: " + message.get_channel_id() +
                  ", type: " + to_string(message.get_channel().get_type()) + ").");
     }
 
     void on_message_delete(Message message) override {
-        log.info(message.get_author().get_username() + " deleted \"" + message.get_content() +
-                 "\" in channel: " + message.get_channel().get_name() +
+        log.info("message " + message.get_id() +
+                 " deleted in channel: " + message.get_channel().get_name() +
                  " (id: " + message.get_channel_id() +
                  ", type: " + to_string(message.get_channel().get_type()) + ").");
     }
 
-    // TODO: reaction add/delete
+    void on_message_delete_bulk(std::vector<Message> messages) override {
+        std::string ids;
+        for (Message message : messages) {
+            if (ids.length() > 0) {
+                ids.append(", ");
+            }
+            ids.append(message.get_id());
+        }
+
+        log.info("messages deleted: " + ids +
+                 " in channel: " + messages.front().get_channel().get_name());
+    }
+
+    void on_message_reaction(Reaction reaction) override {
+        log.info(reaction.get_user().get_username() +
+                 " reacted with " + reaction.get_emoji().get_name().value_or("") +
+                 " (id: " + reaction.get_emoji().get_id().value_or("none") +
+                 ") in channel " + reaction.get_channel().get_name() +
+                 " (id: " + reaction.get_channel_id() + ")");
+    }
+
+    void on_message_reaction_delete(Reaction reaction) override {
+        log.info(reaction.get_user().get_username() +
+                 " deleted reaction " + reaction.get_emoji().get_name().value_or("") +
+                 " (id: " + reaction.get_emoji().get_id().value_or("none") +
+                 ") in channel " + reaction.get_channel().get_name() +
+                 " (id: " + reaction.get_channel_id() + ")");
+    }
+
+    void on_message_reaction_delete_all(Message message) override {
+        log.info("All reactions have been removed from message " + message.get_id() +
+                 " in channel: " + message.get_channel_id());
+    }
 
     void on_interaction(Interaction interaction) override {
         if (interaction.get_type() != Interaction::Type::APPLICATION_COMMAND) {
@@ -415,7 +447,7 @@ int main() {
     Logger::register_thread(std::this_thread::get_id(), "main");
     Logger::set_log_level(Debug);
 
-    Intents intents = Intents::Default();
+    Intents intents = Intents::All();
     intents.add(Intents::MEMBERS);
     intents.add(Intents::MESSAGE_CONTENT);
     Client client = Client(token, intents);

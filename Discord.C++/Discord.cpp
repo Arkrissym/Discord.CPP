@@ -3,10 +3,6 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "ChannelHelper.h"
-#include "GuildChannel.h"
-#include "static.h"
-
 /**	Creates a Discord instance with one or more shards
     @param[in]	token		Bot token for authentication
     @param[in]	intents		Intents used for the gateway.
@@ -394,19 +390,22 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const 
             log.error("ignoring exception in on_message_delete: " + std::string(e.what()));
         }
     } else if (event_name == "MESSAGE_DELETE_BULK") {
-        std::string guild_id = data.at("guild_id").get<std::string>();
+        json guild_id = data.at("guild_id");
         std::string channel_id = data.at("channel_id").get<std::string>();
         json msg_ids = data.at("ids");
 
+        std::vector<Message> messages;
         for (json msg_id : msg_ids) {
-            try {
-                on_message_delete(Message({{"id", msg_id.get<std::string>()},
-                                           {"channel_id", channel_id},
-                                           {"guild_id", guild_id}},
-                                          get_token()));
-            } catch (const std::exception &e) {
-                log.error("ignoring exception in on_message_delete: " + std::string(e.what()));
-            }
+            messages.push_back(Message({{"id", msg_id.get<std::string>()},
+                                        {"channel_id", channel_id},
+                                        {"guild_id", guild_id}},
+                                       get_token()));
+        }
+
+        try {
+            on_message_delete_bulk(messages);
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_message_delete_bulk: " + std::string(e.what()));
         }
     } else if (event_name == "MESSAGE_REACTION_ADD") {
         try {
@@ -418,7 +417,16 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const 
         try {
             on_message_reaction_delete(Reaction(data, get_token()));
         } catch (const std::exception &e) {
-            log.error("ignoring exception in on_message_reaction_remove: " + std::string(e.what()));
+            log.error("ignoring exception in on_message_reaction_delete: " + std::string(e.what()));
+        }
+    } else if (event_name == "MESSAGE_REACTION_REMOVE_ALL") {
+        try {
+            on_message_reaction_delete_all(Message({{"id", data.at("message_id")},
+                                                    {"channel_id", data.at("channel_id")},
+                                                    {"guild_id", data.at("guild_id")}},
+                                                   get_token()));
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_message_reaction_delete_all: " + std::string(e.what()));
         }
     } else if (event_name == "TYPING_START") {
         std::string channel_id = data.at("channel_id").get<std::string>();

@@ -24,6 +24,7 @@
 #include "MainGateway.h"
 #include "Message.h"
 #include "Reaction.h"
+#include "TextChannel.h"
 #include "Threadpool.h"
 #include "User.h"
 #include "VoiceChannel.h"
@@ -67,68 +68,78 @@ class Discord : public DiscordObject {
     /** called when successfully logged in
         @param[in]	user	the User
     */
-    virtual void on_ready(User user) {}
+    virtual void on_ready(User) {}
 
     /** called when a Message was received
         @param[in]	message	the Message that was received
     */
-    virtual void on_message(Message message) {}
+    virtual void on_message(Message) {}
 
     /** called when a Message was updated
         @param[in]	message	the Message that was updated
     */
-    virtual void on_message_update(Message message) {}
+    virtual void on_message_update(Message) {}
 
     /** called when a Message was deleted
         @param[in]	message	the Message that has been deleted
     */
-    virtual void on_message_delete(Message message) {}
+    virtual void on_message_delete(Message) {}
+
+    /** called when a Message was deleted
+        @param[in]	messages	the Messages that have been deleted
+    */
+    virtual void on_message_delete_bulk(std::vector<Message>) {}
 
     /** called when a Reaction was added to Message
         @param[in]	reaction the reaction that has been created
     */
-    virtual void on_message_reaction(Reaction reaction) {}
+    virtual void on_message_reaction(Reaction) {}
 
     /** called when a Reaction was remove from a Message
         @param[in]	reaction the reaction that has been deleted
     */
-    virtual void on_message_reaction_delete(Reaction reaction) {}
+    virtual void on_message_reaction_delete(Reaction) {}
+
+    /** called when all Reaction were removed from a Message
+        @param[in]	message	the message where all reactions have been removed
+    */
+    virtual void on_message_reaction_delete_all(Message) {}
 
     /** called when a Member was banned
         @param[in]	user	the User who has been banned
         @param[in]	guild	the Guild the User has been banned from
     */
-    virtual void on_user_ban(User user, Guild guild) {}
+    virtual void on_user_ban(User, Guild) {}
 
     /** called when a Member was unbanned
         @param[in]	user	the User who has been unbanned
         @param[in]	guild	the Guild the User has been unbanned from
     */
-    virtual void on_user_unban(User user, Guild guild) {}
+    virtual void on_user_unban(User, Guild) {}
 
     /**	called when a User joins a Guild
         @param[in]	member	the User who has joined
         @param[in]	guild	the Guild the User has joined
     */
-    virtual void on_user_join(Member member, Guild guild) {}
+    virtual void on_user_join(Member, Guild) {}
 
     /** called when a User is removed from a Guild (leave/kick/ban)
         @param[in]	user	the User who has been removed
         @param[in]	guild	the Guild the User has been removed from
     */
-    virtual void on_user_remove(User user, Guild guild) {}
+    virtual void on_user_remove(User, Guild) {}
 
     /** called when a User starts typing
         @param[in]	user		the User that started typing
         @param[in]	channel		the TextChannel where the USer started typing
         @param[in]	timestamp	(unix time) when the User started typing
     */
-    virtual void on_typing_start(User user, TextChannel channel, unsigned int timestamp) {}
+    virtual void on_typing_start(User, TextChannel, unsigned int) {}
 
     /** called when an interaction was created
         @param[in]  interaction the Interaction that was received
     */
-    virtual void on_interaction(Interaction interaction) {}
+    virtual void on_interaction(Interaction) {}
 
    public:
     Logger log;

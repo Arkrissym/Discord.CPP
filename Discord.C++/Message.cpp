@@ -1,8 +1,5 @@
 #include "Message.h"
 
-#include <optional>
-#include <string>
-
 #include "DiscordObject.h"
 #include "Embed.h"
 #include "Guild.h"
@@ -16,13 +13,16 @@
     @return	Message object
 */
 DiscordCPP::Message::Message(const json& data, const std::string& token)
-    : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()),
-      author{data.at("author"), token} {
+    : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()) {
+    if (has_value(data, "author")) {
+        author = User(data.at("author"), token);
+    }
+
     data.at("channel_id").get_to<std::string>(channel_id);
     guild_id = get_optional<std::string>(data, "guild_id");
 
-    data.at("content").get_to<std::string>(content);
-    data.at("timestamp").get_to<std::string>(timestamp);
+    content = get_or_else<std::string>(data, "content", "");
+    timestamp = get_or_else<std::string>(data, "timestamp", "");
     edited_timestamp = get_or_else<std::string>(data, "edited_timestamp", "");
     tts = get_or_else(data, "tts", false);
     mention_everyone = get_or_else(data, "mention_everyone", false);
@@ -43,11 +43,15 @@ DiscordCPP::Message::Message(const json& data, const std::string& token)
         }
     }
 
-    // reactions
+    if (has_value(data, "reactions")) {
+        for (json reaction : data.at("reactions")) {
+            reactions.emplace_back(reaction, get_token());
+        }
+    }
 
     pinned = get_or_else(data, "pinned", false);
     webhook_id = get_or_else<std::string>(data, "webhook_id", "");
-    type = static_cast<Type>(data.at("type").get<int>());
+    type = static_cast<Type>(get_or_else(data, "type", 0));
 
     // activity
 
@@ -69,12 +73,12 @@ DiscordCPP::Message::Message(const Message& old)
       mention_everyone(old.mention_everyone),
       mentions(old.mentions),
       embeds(old.embeds),
+      reactions(old.reactions),
       pinned(old.pinned),
       webhook_id(old.webhook_id),
       type(old.type) {
     // mention_roles
     // attachements
-    // reactions
     // activity
     // application
 

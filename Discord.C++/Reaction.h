@@ -57,34 +57,34 @@ class Reaction : public BaseDiscordObject {
     DLL_EXPORT Reaction(const json& data, const std::string& token);
 
     /// @return id of the user
-    std::string get_user_id() { return user_id; }
+    DLL_EXPORT std::string get_user_id() { return user_id; }
     /// @return the user who sent the reaction
-    User get_user();
+    DLL_EXPORT User get_user();
     /// @return id of the channel
-    std::string get_channel_id() { return channel_id; }
+    DLL_EXPORT std::string get_channel_id() { return channel_id; }
     /// @return the channel of the message
-    TextChannel get_channel();
+    DLL_EXPORT TextChannel get_channel();
     /// @return id of the message
-    std::string get_message_id() { return message_id; }
+    DLL_EXPORT std::string get_message_id() { return message_id; }
     /// @return the message of this reaction
-    Message get_message();
+    DLL_EXPORT Message get_message();
     /// @return id of the guild
-    std::optional<std::string> get_guild_id() { return guild_id; }
+    DLL_EXPORT std::optional<std::string> get_guild_id() { return guild_id; }
     /// @return the guild of the channel
-    std::optional<Guild> get_guild();
+    DLL_EXPORT std::optional<Guild> get_guild();
     /// @return the guild member who reacted
-    std::optional<Member> get_member() { return member; }
+    DLL_EXPORT std::optional<Member> get_member() { return member; }
     /// @return emoji used to react
-    Emoji get_emoji() { return emoji; }
+    DLL_EXPORT Emoji get_emoji() { return emoji; }
     /// @return id of the message author
-    std::optional<std::string> get_message_author_id() { return message_author_id; }
+    DLL_EXPORT std::optional<std::string> get_message_author_id() { return message_author_id; }
     /// @return the message author
-    std::optional<User> get_message_author();
+    DLL_EXPORT std::optional<User> get_message_author();
     /// @return true if this is a super reaction
-    bool is_burst() { return burst; }
+    DLL_EXPORT bool is_burst() { return burst; }
     /// @return colors used for super reaction im #rrggbb format
-    std::vector<std::string> get_burst_colors() { return burst_colors; }
+    DLL_EXPORT std::vector<std::string> get_burst_colors() { return burst_colors; }
     /// @return the type of the reaction
-    Type get_type() { return type; }
+    DLL_EXPORT Type get_type() { return type; }
 };
 }  // namespace DiscordCPP

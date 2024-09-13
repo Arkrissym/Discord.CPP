@@ -29,6 +29,8 @@ class Emoji : public DiscordObject {
     DLL_EXPORT Emoji() = default;
     DLL_EXPORT Emoji(const json& data, const std::string& token);
 
+    /// @return emoji id
+    std::optional<std::string> get_id();
     /// @return emoji name
     std::optional<std::string> get_name() { return name; }
     /// @return roles allowed to use this emoji

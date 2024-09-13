@@ -3,11 +3,18 @@
 Intents Intents::Default() {
     Intents intents = Intents();
     intents.add(GUILDS);
-    intents.add(BANS);
     intents.add(VOICE_STATES);
+    return intents;
+}
+
+Intents Intents::All() {
+    Intents intents = Intents::Default();
+    intents.add(BANS);
     intents.add(MESSAGES);
+    intents.add(REACTIONS);
     intents.add(TYPING);
     intents.add(DIRECT_MESSAGES);
+    intents.add(DIRECT_REACTIONS);
     intents.add(DIRECT_TYPING);
     return intents;
 }

@@ -101,9 +101,10 @@ json DiscordCPP::BaseDiscordObject::api_call(const std::string& url, const std::
         code = response.status_code;
 
         if (code == 429) {
-            Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + response.headers.at("Retry-After"));
+            float retry_after = get_or_else<float>(ret, "retry_after", 1.0f);
+            Logger("discord.object.api_call").debug("Rate limit exceeded. Retry after: " + std::to_string(retry_after) + " seconds");
 
-            std::this_thread::sleep_for(std::chrono::seconds(atoi(response.headers.at("Retry-After").c_str())));
+            std::this_thread::sleep_for(std::chrono::milliseconds((int)(retry_after * 1000.0f)));
         }
     }
 

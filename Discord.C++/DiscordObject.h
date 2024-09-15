@@ -1,9 +1,8 @@
 #pragma once
-#include <iostream>
+
 #include <map>
 #include <string>
 
-#include "Exceptions.h"
 #include "static.h"
 
 namespace DiscordCPP {

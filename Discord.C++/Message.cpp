@@ -140,6 +140,40 @@ DiscordCPP::Message DiscordCPP::Message::reply(DiscordCPP::Embed embed) {
     return {api_call(url, "POST", data, "application/json"), get_token()};
 }
 
+DiscordCPP::Message DiscordCPP::Message::crosspost(DiscordCPP::TextChannel channel) {
+    std::string url = "/channels/" + channel.get_id() + "/messages/" + get_id() + "/crosspost";
+    return {api_call(url, "POST"), get_token()};
+}
+
+void DiscordCPP::Message::add_reaction(DiscordCPP::Emoji emoji) {
+    std::string url = "/channels/" + channel_id + "/messages/" + get_id() +
+                      "/reactions/" + emoji.url_encode() + "/@me";
+    api_call(url, "PUT");
+}
+
+void DiscordCPP::Message::remove_reaction(DiscordCPP::Emoji emoji) {
+    std::string url = "/channels/" + channel_id + "/messages/" + get_id() +
+                      "/reactions/" + emoji.url_encode() + "/@me";
+    api_call(url, "DELETE");
+}
+
+void DiscordCPP::Message::remove_user_reaction(DiscordCPP::Emoji emoji, DiscordCPP::User user) {
+    std::string url = "/channels/" + channel_id + "/messages/" + get_id() +
+                      "/reactions/" + emoji.url_encode() + "/" + user.get_id();
+    api_call(url, "DELETE");
+}
+
+void DiscordCPP::Message::remove_all_reactions() {
+    std::string url = "/channels/" + channel_id + "/messages/" + get_id() + "/reactions";
+    api_call(url, "DELETE");
+}
+
+void DiscordCPP::Message::remove_all_reactions(DiscordCPP::Emoji emoji) {
+    std::string url = "/channels/" + channel_id + "/messages/" + get_id() +
+                      "/reactions/" + emoji.url_encode();
+    api_call(url, "DELETE");
+}
+
 DiscordCPP::TextChannel DiscordCPP::Message::get_channel() {
     if (channel == nullptr) {
         channel = new TextChannel(channel_id, get_token());

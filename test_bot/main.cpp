@@ -98,6 +98,11 @@ class Client : public Discord {
         say.add_option(m);
         create_application_command(say);
 
+        ApplicationCommand react = ApplicationCommand();
+        react.set_name("react");
+        react.set_type(ApplicationCommand::Type::MESSAGE);
+        create_application_command(react);
+
         update_presence(DiscordStatus::Online, Activity("test", Activity::Type::Game));
     }
 
@@ -423,6 +428,34 @@ class Client : public Discord {
                 } else {
                     log.info(InteractionDataOptionHelper::get_interaction_data_option_name(option) + " " + std::to_string(InteractionDataOptionHelper::get_interaction_data_option_type(option)));
                 }
+            }
+        } else if (name == "react") {
+            auto data = interaction.get_data().value();
+            if (data.get_resolved_data().has_value() && data.get_target_id().has_value()) {
+                Message message = data.get_resolved_data().value().get_messages().at(data.get_target_id().value());
+                interaction.reply(":100:");
+
+                Emoji thumbs_up = Emoji::by_name("👍");
+                Emoji thumbs_down = Emoji::by_name("👎");
+                Emoji e100 = Emoji::by_name("💯");
+
+                message.add_reaction(thumbs_up);
+                this_thread::sleep_for(chrono::seconds(1));
+                message.add_reaction(thumbs_down);
+                this_thread::sleep_for(chrono::seconds(1));
+                message.add_reaction(e100);
+                this_thread::sleep_for(chrono::seconds(1));
+
+                message.remove_reaction(thumbs_down);
+                this_thread::sleep_for(chrono::seconds(1));
+                message.remove_user_reaction(thumbs_up, *_user);
+                this_thread::sleep_for(chrono::seconds(1));
+                message.remove_all_reactions(e100);
+                this_thread::sleep_for(chrono::seconds(1));
+
+                message.add_reaction(e100);
+                this_thread::sleep_for(chrono::seconds(1));
+                message.remove_all_reactions();
             }
         }
     }

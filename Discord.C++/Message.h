@@ -1,7 +1,10 @@
 #pragma once
 
+#include <vector>
+
 #include "DiscordObject.h"
 #include "Embed.h"
+#include "Emoji.h"
 #include "MessageReaction.h"
 #include "User.h"
 
@@ -75,7 +78,18 @@ class Message : public DiscordObject {
     DLL_EXPORT Message reply(const std::string& content, const bool tts = false);
     /// Send an Embed as reply to this message.
     DLL_EXPORT Message reply(Embed embed);
-    // TODO: add_reaction
+    /// Crosspost this message to another channel
+    DLL_EXPORT Message crosspost(TextChannel channel);
+    /// Add a reaction
+    DLL_EXPORT void add_reaction(Emoji emoji);
+    /// Remove own reaction
+    DLL_EXPORT void remove_reaction(Emoji emoji);
+    /// Remove another user's reaction
+    DLL_EXPORT void remove_user_reaction(Emoji emoji, User user);
+    /// Remove all reactions
+    DLL_EXPORT void remove_all_reactions();
+    /// Remove all reactions by emoji
+    DLL_EXPORT void remove_all_reactions(Emoji emoji);
 
     /// @return The id of the Channel the message was sent in
     DLL_EXPORT std::string get_channel_id() { return channel_id; }

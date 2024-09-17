@@ -3,8 +3,8 @@
 #include <string>
 
 #include "ChannelHelper.h"
-#include "DMChannel.h"
-#include "TextChannel.h"
+#include "Emoji.h"
+#include "Role.h"
 #include "VoiceChannel.h"
 #include "static.h"
 
@@ -33,9 +33,17 @@ DiscordCPP::Guild::Guild(Discord* client, const json& data, const std::string& t
     afk_channel_id = get_optional<std::string>(data, "afk_channel_id");
     embed_channel_id = get_optional<std::string>(data, "embed_channel_id");
 
-    // roles
+    if (has_value(data, "roles")) {
+        for (const json& role : data.at("roles")) {
+            roles.push_back(Role(role, get_id(), token));
+        }
+    }
 
-    // emojis
+    if (has_value(data, "emojis")) {
+        for (const json& emoji : data.at("emojis")) {
+            emojis.push_back(Emoji(emoji, get_token()));
+        }
+    }
 
     if (has_value(data, "features")) {
         for (const json& feature : data.at("features")) {

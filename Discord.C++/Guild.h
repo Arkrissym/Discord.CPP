@@ -5,8 +5,10 @@
 #include "Channel.h"
 #include "ChannelHelper.h"
 #include "DiscordObject.h"
+#include "Emoji.h"
 #include "GuildChannel.h"
 #include "Member.h"
+#include "Role.h"
 #include "User.h"
 #include "VoiceChannel.h"
 
@@ -79,8 +81,10 @@ class Guild : public DiscordObject {
     int default_message_notifications = 0;
     /// ExplicitContentFilterLevel
     int explicit_content_filter = 0;
-    // vector<Role> roles;
-    // vector<Emoji> emojis;
+    /// roles in the guild
+    std::vector<Role> roles;
+    /// custom guild emojis
+    std::vector<Emoji> emojis;
     /// enabled guild features
     std::vector<std::string> features;
     /// MFALevel
@@ -117,6 +121,7 @@ class Guild : public DiscordObject {
     DLL_EXPORT void _add_member(Member member);
     DLL_EXPORT void _update_member(Member member);
     DLL_EXPORT void _remove_member(const std::string& member_id);
+    // TODO: update emojis and roles
 
     friend Discord;
 
@@ -172,6 +177,10 @@ class Guild : public DiscordObject {
     DLL_EXPORT int get_default_message_notifications() { return default_message_notifications; }
     /// @return ExplicitContentFilterLevel
     DLL_EXPORT int get_explicit_content_filter() { return explicit_content_filter; }
+    /// @return roles in the guild
+    DLL_EXPORT std::vector<Role> get_roles() { return roles; }
+    /// @return custom guild emojis
+    DLL_EXPORT std::vector<Emoji> get_emojis() { return emojis; }
     /// @return enabled guild features
     DLL_EXPORT std::vector<std::string> get_features() { return features; }
     /// @return MFALevel

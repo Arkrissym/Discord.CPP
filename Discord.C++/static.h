@@ -42,3 +42,11 @@ DLL_EXPORT std::optional<T> get_optional(const json& j, const std::string& key) 
     else
         return std::make_optional<T>(j.at(key).get<T>());
 }
+
+class MutexHolder {
+   public:
+    std::mutex mutex;
+    MutexHolder() : mutex() {}
+    MutexHolder(const MutexHolder&) : mutex() {}
+    MutexHolder operator=(const MutexHolder&) { return MutexHolder(); }
+};

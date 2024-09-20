@@ -1,6 +1,7 @@
 #include "Guild.h"
 
 #include <string>
+#include <vector>
 
 #include "ChannelHelper.h"
 #include "Emoji.h"
@@ -79,10 +80,12 @@ DiscordCPP::Guild::Guild(Discord* client, const std::string& id, const std::stri
 }
 
 void DiscordCPP::Guild::_add_channel(ChannelVariant channel) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
     channels.push_back(channel);
 }
 
 void DiscordCPP::Guild::_update_channel(ChannelVariant channel) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
     std::string channel_id = ChannelHelper::get_channel_id(channel);
     for (size_t i = 0; i < channels.size(); i++) {
         if (ChannelHelper::get_channel_id(channels[i]) == channel_id) {
@@ -94,6 +97,7 @@ void DiscordCPP::Guild::_update_channel(ChannelVariant channel) {
 }
 
 void DiscordCPP::Guild::_remove_channel(const std::string& channel_id) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
     for (size_t i = 0; i < channels.size(); i++) {
         if (ChannelHelper::get_channel_id(channels[i]) == channel_id) {
             channels.erase(channels.begin() + i);
@@ -103,11 +107,13 @@ void DiscordCPP::Guild::_remove_channel(const std::string& channel_id) {
 }
 
 void DiscordCPP::Guild::_add_member(Member member) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
     members.push_back(member);
     member_count += 1;
 }
 
 void DiscordCPP::Guild::_update_member(Member member) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
     for (size_t i = 0; i < members.size(); i++) {
         if (members[i].get_id() == member.get_id()) {
             members.erase(members.begin() + i);
@@ -117,10 +123,40 @@ void DiscordCPP::Guild::_update_member(Member member) {
 }
 
 void DiscordCPP::Guild::_remove_member(const std::string& member_id) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
     for (size_t i = 0; i < members.size(); i++) {
         if (members[i].get_id() == member_id) {
             members.erase(members.begin() + i);
             member_count -= 1;
+        }
+    }
+}
+
+void DiscordCPP::Guild::_update_emojis(std::vector<Emoji> emojis) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
+    this->emojis = emojis;
+}
+
+void DiscordCPP::Guild::_add_role(Role role) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
+    roles.push_back(role);
+}
+
+void DiscordCPP::Guild::_update_role(Role role) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
+    for (size_t i = 0; i < roles.size(); i++) {
+        if (roles[i].get_id() == role.get_id()) {
+            roles.erase(roles.begin() + i);
+            roles.push_back(role);
+        }
+    }
+}
+
+void DiscordCPP::Guild::_remove_role(const std::string& role_id) {
+    std::lock_guard<std::mutex> lock(mutex_holder.mutex);
+    for (size_t i = 0; i < roles.size(); i++) {
+        if (roles[i].get_id() == role_id) {
+            roles.erase(roles.begin() + i);
         }
     }
 }

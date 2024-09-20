@@ -209,7 +209,7 @@ void DiscordCPP::Discord::on_websocket_incoming_message(const json &payload) {
 }
 
 void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const json &data) {
-    // https://discordapp.com/developers/docs/topics/gateway#commands-and-events-gateway-events
+    // https://discord.com/developers/docs/topics/gateway-events#receive-events
     if (event_name == "READY") {
         _user = new User(data.at("user"), get_token());
 
@@ -352,6 +352,24 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const 
                           std::string(e.what()));
             }
         }
+    } else if (event_name == "GUILD_EMOJIS_UPDATE") {
+        Guild *guild = get_guild(data.at("guild_id").get<std::string>());
+        std::vector<Emoji> emojis;
+
+        for (const json &emoji : data.at("emojis")) {
+            emojis.push_back(Emoji(emoji, get_token()));
+        }
+
+        guild->_update_emojis(emojis);
+    } else if (event_name == "GUILD_ROLE_CREATE") {
+        Guild *guild = get_guild(data.at("guild_id").get<std::string>());
+        guild->_add_role(Role(data.at("role"), guild->get_id(), get_token()));
+    } else if (event_name == "GUILD_ROLE_UPDATE") {
+        Guild *guild = get_guild(data.at("guild_id").get<std::string>());
+        guild->_update_role(Role(data.at("role"), guild->get_id(), get_token()));
+    } else if (event_name == "GUILD_ROLE_DELETE") {
+        Guild *guild = get_guild(data.at("guild_id").get<std::string>());
+        guild->_remove_role(data.at("role_id").get<std::string>());
     } else if (event_name == "MESSAGE_CREATE") {
         if (has_value(data, ("guild_id"))) {
             std::string guild_id = data.at("guild_id").get<std::string>();

@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "Channel.h"
 #include "ChannelHelper.h"
@@ -51,6 +52,7 @@ class Discord;
 class Guild : public DiscordObject {
    private:
     Discord* client = nullptr;
+    MutexHolder mutex_holder;
 
     /// the guild's name
     std::string name;
@@ -121,7 +123,10 @@ class Guild : public DiscordObject {
     DLL_EXPORT void _add_member(Member member);
     DLL_EXPORT void _update_member(Member member);
     DLL_EXPORT void _remove_member(const std::string& member_id);
-    // TODO: update emojis and roles
+    DLL_EXPORT void _update_emojis(std::vector<Emoji> emojis);
+    DLL_EXPORT void _add_role(Role role);
+    DLL_EXPORT void _update_role(Role role);
+    DLL_EXPORT void _remove_role(const std::string& role_id);
 
     friend Discord;
 

@@ -10,6 +10,7 @@ Intents Intents::Default() {
 Intents Intents::All() {
     Intents intents = Intents::Default();
     intents.add(BANS);
+    intents.add(EMOJIS);
     intents.add(MESSAGES);
     intents.add(REACTIONS);
     intents.add(TYPING);

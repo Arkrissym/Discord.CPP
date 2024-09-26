@@ -2,10 +2,6 @@
 #include <thread>
 #include <vector>
 
-#include "ApplicationCommand.h"
-#include "ApplicationCommandOption.h"
-#include "InteractionData.h"
-
 #ifndef _WIN32
 #include <cstdlib>
 #endif

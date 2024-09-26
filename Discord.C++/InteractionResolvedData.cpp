@@ -1,6 +1,8 @@
 #include "InteractionResolvedData.h"
 
-DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json& data, const std::string& token) {
+#include "Role.h"
+
+DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json& data, const std::string& guild_id, const std::string& token) {
     if (has_value(data, "users")) {
         for (auto [key, value] : data["users"].items()) {
             users.insert(std::make_pair(key, User(value, token)));
@@ -13,7 +15,11 @@ DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json& data, c
         }
     }
 
-    // roles
+    if (has_value(data, "roles")) {
+        for (auto [key, value] : data["roles"].items()) {
+            roles.insert(std::make_pair(key, Role(value, guild_id, token)));
+        }
+    }
 
     if (has_value(data, "channels")) {
         for (auto [key, value] : data["channels"].items()) {

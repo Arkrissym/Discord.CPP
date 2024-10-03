@@ -40,73 +40,74 @@ json DiscordCPP::MainGateway::get_heartbeat_payload() {
         {"d", ((_sequence_number == 0) ? "null" : std::to_string(_sequence_number))}};
 }
 
-void DiscordCPP::MainGateway::on_websocket_incoming_message(
-    const std::string& message) {
+void DiscordCPP::MainGateway::on_websocket_incoming_message(const std::string& message) {
     std::string decompressed_message = decompress_message(message);
-    _log.debug("Received message: " + decompressed_message);
+    threadpool->execute([this, decompressed_message]() {
+        _log.debug("Received message: " + decompressed_message);
 
-    json payload = json::parse(decompressed_message);
-    int op = payload["op"].get<int>();
+        json payload = json::parse(decompressed_message);
+        int op = payload["op"].get<int>();
 
-    if ((payload.count("s") > 0) && payload["s"].is_number_integer()) {
-        _sequence_number = payload["s"].get<int>();
-    }
+        if ((payload.count("s") > 0) && payload["s"].is_number_integer()) {
+            _sequence_number = payload["s"].get<int>();
+        }
 
-    switch (op) {
-        case 0:
-            if (payload["t"].get<std::string>() == "READY") {
-                _reconnect_timeout = 0;
+        switch (op) {
+            case 0:
+                if (payload["t"].get<std::string>() == "READY") {
+                    _reconnect_timeout = 0;
+                    _last_heartbeat_ack = time(nullptr);
+
+                    _invalid_session = false;
+
+                    _session_id = payload["d"]["session_id"].get<std::string>();
+
+                    _resume_url = payload["d"]["resume_gateway_url"].get<std::string>() + "?v=10&encoding=json&compress=zlib-stream";
+
+                    std::string str = set_trace(payload);
+
+                    _log.info("connected to: " + str + " ]");
+                    _log.info("session id: " + _session_id);
+                } else if (payload["t"].get<std::string>() == "RESUMED") {
+                    _reconnect_timeout = 0;
+                    _last_heartbeat_ack = time(nullptr);
+
+                    std::string str = set_trace(payload);
+
+                    _log.info("successfully resumed session " + _session_id +
+                              " with trace " + str + " ]");
+                }
+                break;
+            case 1:
+                send_heartbeat_ack();
+                break;
+            case 7:
+                _log.info("received opcode 7: reconnecting to the gateway");
+                try {
+                    _client->close(boost::beast::websocket::close_reason(boost::beast::websocket::close_code::going_away, "Server requested reconnect"));
+                } catch (std::exception& e) {
+                    _log.error("Cannot close websocket: " + std::string(e.what()));
+                }
+                break;
+            case 9:
+                _invalid_session = true;
+                break;
+            case 10:
+                _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
+                _log.debug("set heartbeat_interval: " +
+                           std::to_string(_heartbeat_interval));
+                identify();
+                break;
+            case 11:
+                _log.debug("received heartbeat ACK");
                 _last_heartbeat_ack = time(nullptr);
+                break;
+            default:
+                break;
+        }
 
-                _invalid_session = false;
-
-                _session_id = payload["d"]["session_id"].get<std::string>();
-
-                _resume_url = payload["d"]["resume_gateway_url"].get<std::string>() + "?v=10&encoding=json&compress=zlib-stream";
-
-                std::string str = set_trace(payload);
-
-                _log.info("connected to: " + str + " ]");
-                _log.info("session id: " + _session_id);
-            } else if (payload["t"].get<std::string>() == "RESUMED") {
-                _reconnect_timeout = 0;
-                _last_heartbeat_ack = time(nullptr);
-
-                std::string str = set_trace(payload);
-
-                _log.info("successfully resumed session " + _session_id +
-                          " with trace " + str + " ]");
-            }
-            break;
-        case 1:
-            send_heartbeat_ack();
-            break;
-        case 7:
-            _log.info("received opcode 7: reconnecting to the gateway");
-            try {
-                _client->close(boost::beast::websocket::close_reason(boost::beast::websocket::close_code::going_away, "Server requested reconnect"));
-            } catch (std::exception& e) {
-                _log.error("Cannot close websocket: " + std::string(e.what()));
-            }
-            break;
-        case 9:
-            _invalid_session = true;
-            break;
-        case 10:
-            _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
-            _log.debug("set heartbeat_interval: " +
-                       std::to_string(_heartbeat_interval));
-            identify();
-            break;
-        case 11:
-            _log.debug("received heartbeat ACK");
-            _last_heartbeat_ack = time(nullptr);
-            break;
-        default:
-            break;
-    }
-
-    _message_handler(payload);
+        _message_handler(payload);
+    });
 }
 
 DiscordCPP::SharedFuture<void> DiscordCPP::MainGateway::send_heartbeat_ack() {

@@ -103,13 +103,11 @@ void DiscordCPP::Gateway::on_read(boost::system::error_code error_code, std::siz
         message_stream << beast::make_printable(buffer.data());
         std::string message = message_stream.str();
 
-        threadpool->execute([this, message]() {
-            try {
-                on_websocket_incoming_message(message);
-            } catch (const std::exception& e) {
-                _log.error("Error while handling incoming message: " + std::string(e.what()));
-            }
-        });
+        try {
+            on_websocket_incoming_message(message);
+        } catch (const std::exception& e) {
+            _log.error("Error while handling incoming message: " + std::string(e.what()));
+        }
     }
 
     buffer.clear();

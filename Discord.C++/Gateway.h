@@ -20,6 +20,8 @@ class Gateway {
     boost::asio::io_context io_context;
     /// ssl context used by the websocket client
     boost::asio::ssl::context ssl_context;
+    /// buffer for websocket connection
+    boost::beast::flat_buffer buffer;
     /// websocket client
     std::unique_ptr<boost::beast::websocket::stream<boost::beast::ssl_stream<boost::asio::ip::tcp::socket>>> _client;
     /// the url of the gateway
@@ -50,6 +52,7 @@ class Gateway {
     DLL_EXPORT void start_heartbeating();
     DLL_EXPORT virtual json get_heartbeat_payload() = 0;
     DLL_EXPORT virtual void identify() = 0;
+    DLL_EXPORT void on_read(boost::system::error_code error_code, std::size_t bytes);
     DLL_EXPORT virtual void on_websocket_incoming_message(const std::string& message) = 0;
     DLL_EXPORT void on_websocket_disconnnect();
 
@@ -59,7 +62,7 @@ class Gateway {
 
     DLL_EXPORT void set_message_handler(const std::function<void(json payload)>& handler);
 
-    DLL_EXPORT virtual SharedFuture<void> connect(const std::string& url);
+    DLL_EXPORT virtual void connect(const std::string& url);
     DLL_EXPORT SharedFuture<void> send(const json& message);
     DLL_EXPORT SharedFuture<void> close();
 };

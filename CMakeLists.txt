@@ -12,9 +12,6 @@ Set(FETCHCONTENT_QUIET FALSE)
 
 FetchContent_Declare(certify GIT_REPOSITORY https://github.com/djarek/certify)
 FetchContent_GetProperties(certify)
-if(NOT certify_POPULATED)
-  FetchContent_Populate(certify)
-endif()
 
 set(BOOST_INCLUDE_LIBRARIES thread filesystem system process asio endian logic static_string)
 set(BOOST_ENABLE_CMAKE ON)
@@ -44,7 +41,7 @@ FetchContent_Declare(zlib
 
 FetchContent_Declare(sodium
     GIT_REPOSITORY https://github.com/jedisct1/libsodium.git
-    GIT_TAG 1.0.19
+    GIT_TAG 1.0.20-RELEASE
 )
 
 

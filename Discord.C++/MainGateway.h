@@ -36,7 +36,7 @@ class MainGateway : public Gateway {
     DLL_EXPORT ~MainGateway() override = default;
 
     DLL_EXPORT unsigned int get_shard_id();
-    DLL_EXPORT SharedFuture<void> connect(const std::string& url) override;
+    DLL_EXPORT void connect(const std::string& url) override;
 };
 
 }  // namespace DiscordCPP

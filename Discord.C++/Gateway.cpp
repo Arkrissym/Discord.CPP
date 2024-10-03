@@ -33,7 +33,8 @@ void DiscordCPP::Gateway::start_heartbeating() {
                 if (_last_heartbeat_ack * 1000 + static_cast<time_t>(_heartbeat_interval * 2) < time(nullptr) * 1000) {
                     _log.warning("Gateway stopped responding. Closing and restarting websocket...");
                     try {
-                        _client->close(websocket::close_reason(websocket::close_code::going_away, "Server not responding"));
+                        get_lowest_layer(*_client).close();
+                        //_client->close(websocket::close_reason(websocket::close_code::going_away, "Server not responding"));
                     } catch (std::exception& e) {
                         _log.error("Cannot close websocket: " + std::string(e.what()));
                     }
@@ -75,13 +76,45 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
         }
 
         try {
-            connect(_resume_url).get();
+            io_context.restart();
+            connect(_resume_url);
             _log.info("reconnected");
             _reconnect_timeout = 0;
+            _last_heartbeat_ack = time(nullptr);
         } catch (const beast::system_error& e) {
             _log.error("Failed to reconnect: " + std::string(e.what()));
             on_websocket_disconnnect();
         }
+    });
+}
+
+void DiscordCPP::Gateway::on_read(boost::system::error_code error_code, std::size_t bytes) {
+    _log.debug("Received " + std::to_string(bytes) + " bytes");
+
+    if (error_code == boost::beast::websocket::error::closed || error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated || bytes <= 0) {
+        on_websocket_disconnnect();
+        return;
+    }
+
+    if (error_code) {
+        _log.error("Error while reading message: " + error_code.message());
+    } else {
+        std::stringstream message_stream;
+        message_stream << beast::make_printable(buffer.data());
+        std::string message = message_stream.str();
+
+        threadpool->execute([this, message]() {
+            try {
+                on_websocket_incoming_message(message);
+            } catch (const std::exception& e) {
+                _log.error("Error while handling incoming message: " + std::string(e.what()));
+            }
+        });
+    }
+
+    buffer.clear();
+    _client->async_read(buffer, [this](boost::system::error_code ec, std::size_t b) {
+        on_read(ec, b);
     });
 }
 
@@ -111,99 +144,74 @@ void DiscordCPP::Gateway::set_message_handler(
     _message_handler = handler;
 }
 
-DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::connect(const std::string& url) {
+void DiscordCPP::Gateway::connect(const std::string& url) {
     if (_url.empty()) {
         _url = url;
     }
-    return threadpool
-        ->execute([this, url]() {
-            std::string tmp_url = url;
 
-            // cut protocol
-            auto index = tmp_url.find("://");
-            if (index != std::string::npos) {
-                tmp_url = tmp_url.substr(index + 3, std::string::npos);
-            }
+    std::string tmp_url = url;
 
-            auto port_index = tmp_url.find(':');
-            auto query_index = tmp_url.find('?');
+    // cut protocol
+    auto index = tmp_url.find("://");
+    if (index != std::string::npos) {
+        tmp_url = tmp_url.substr(index + 3, std::string::npos);
+    }
 
-            std::string host;
-            if (port_index != std::string::npos) {
-                host = tmp_url.substr(0, port_index);
-            } else {
-                host = tmp_url.substr(0, query_index);
-            }
+    auto port_index = tmp_url.find(':');
+    auto query_index = tmp_url.find('?');
 
-            std::string query = "/";
-            if (query_index != std::string::npos) {
-                query = "/" + tmp_url.substr(query_index, std::string::npos);
-            }
+    std::string host;
+    if (port_index != std::string::npos) {
+        host = tmp_url.substr(0, port_index);
+    } else {
+        host = tmp_url.substr(0, query_index);
+    }
 
-            _log.debug("host: " + host + "\t\tquery: " + query);
-            _log.info("connecting to websocket: " + url);
+    std::string query = "/";
+    if (query_index != std::string::npos) {
+        query = "/" + tmp_url.substr(query_index, std::string::npos);
+    }
 
-            tcp::resolver resolver{io_context};
-            auto results = resolver.resolve(host, "443");
+    _log.debug("host: " + host + "\tquery: " + query);
+    _log.info("connecting to websocket: " + url);
 
-            _client = std::make_unique<websocket::stream<beast::ssl_stream<tcp::socket>>>(io_context, ssl_context);
+    tcp::resolver resolver{io_context};
+    auto results = resolver.resolve(host, "443");
 
-            auto endpoint = net::connect(get_lowest_layer(*_client), results);
+    _client = std::make_unique<websocket::stream<beast::ssl_stream<tcp::socket>>>(io_context, ssl_context);
 
-            if (!SSL_set_tlsext_host_name(_client->next_layer().native_handle(), host.c_str()))
-                throw beast::system_error(
-                    beast::error_code(
-                        static_cast<int>(::ERR_get_error()),
-                        net::error::get_ssl_category()),
-                    "Failed to set SNI Hostname");
+    auto endpoint = net::connect(get_lowest_layer(*_client), results);
 
-            _client->set_option(websocket::stream_base::decorator([](websocket::request_type& req) {
-                req.set(http::field::user_agent, "Discord.C++ DiscordBot");
-            }));
+    if (!SSL_set_tlsext_host_name(_client->next_layer().native_handle(), host.c_str()))
+        throw beast::system_error(
+            beast::error_code(
+                static_cast<int>(::ERR_get_error()),
+                net::error::get_ssl_category()),
+            "Failed to set SNI Hostname");
 
-            _client->next_layer().handshake(ssl::stream_base::client);
-            _client->handshake(host + std::string(":") + std::to_string(endpoint.port()), query);
+    _client->set_option(websocket::stream_base::decorator([](websocket::request_type& req) {
+        req.set(http::field::user_agent, "Discord.C++ DiscordBot");
+    }));
 
-            if (_heartbeat_task.get_id() == std::thread::id()) {
-                start_heartbeating();
-            }
+    _client->next_layer().handshake(ssl::stream_base::client);
+    _client->handshake(host + std::string(":") + std::to_string(endpoint.port()), query);
 
-            _log.info("Successfully connected to endpoint: " + endpoint.address().to_string() + ":" + std::to_string(endpoint.port()));
-            _connected = true;
-        })
-        .then([this]() {
-            threadpool->execute([this]() {
-                _log.debug("Starting message reveiving loop.");
-                while (_connected) {
-                    beast::flat_buffer buffer;
-                    beast::error_code error_code;
-                    size_t bytes = _client->read(buffer, error_code);
+    if (_heartbeat_task.get_id() == std::thread::id()) {
+        start_heartbeating();
+    }
 
-                    _log.debug("Received " + std::to_string(bytes) + " bytes");
+    _log.info("Successfully connected to endpoint: " + endpoint.address().to_string() + ":" + std::to_string(endpoint.port()));
+    _connected = true;
 
-                    if (error_code == boost::beast::websocket::error::closed || error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated || bytes <= 0) {
-                        on_websocket_disconnnect();
+    _client->async_read(buffer, [this](boost::system::error_code error_code, std::size_t bytes) {
+        on_read(error_code, bytes);
+    });
 
-                        break;
-                    }
-
-                    if (error_code) {
-                        _log.error("Error while reading message: " + error_code.message());
-                        continue;
-                    }
-
-                    std::stringstream message_stream;
-                    message_stream << beast::make_printable(buffer.data());
-                    std::string message = message_stream.str();
-
-                    try {
-                        on_websocket_incoming_message(message);
-                    } catch (const std::exception& e) {
-                        _log.error("Error while handling incoming message: " + std::string(e.what()));
-                    }
-                }
-            });
-        });
+    threadpool->execute([this]() {
+        _log.debug("Start io_context");
+        io_context.run();
+        _log.debug("Stop io_context");
+    });
 }
 
 ///@throws	ClientException
@@ -233,7 +241,6 @@ DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::close() {
 
     return threadpool->execute([this]() {
         try {
-            //_client->close(websocket::close_code::normal);
             get_lowest_layer(*_client).close();
         } catch (const std::exception& e) {
             _log.error("Error while closing websocket: " + std::string(e.what()));

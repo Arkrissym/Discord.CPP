@@ -89,7 +89,7 @@ class VoiceClient {
     */
     DLL_EXPORT SharedFuture<void> play(AudioSource* source);
     DLL_EXPORT void stop_playing();
-    DLL_EXPORT SharedFuture<void> disconnect();
+    DLL_EXPORT void disconnect();
 };
 
 }  // namespace DiscordCPP

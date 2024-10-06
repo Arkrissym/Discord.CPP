@@ -64,7 +64,7 @@ class Gateway {
 
     DLL_EXPORT virtual void connect(const std::string& url);
     DLL_EXPORT SharedFuture<void> send(const json& message);
-    DLL_EXPORT SharedFuture<void> close();
+    DLL_EXPORT void close();
 };
 
 }  // namespace DiscordCPP

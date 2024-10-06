@@ -51,7 +51,7 @@ DiscordCPP::Discord::Discord(const std::string &token, const Intents &intents, c
 
 DiscordCPP::Discord::~Discord() {
     for (auto &_gateway : _gateways) {
-        _gateway->close().get();
+        _gateway->close();
     }
 
     delete _user;

@@ -32,7 +32,7 @@ class Client : public Discord {
 
         try {
             vc->play(source).get();
-            vc->disconnect().get();
+            vc->disconnect();
         } catch (const OpusError& e) {
             log.error("Opus error: " + string(e.what()) +
                       " (code: " + to_string(e.get_error_code()) + ")");

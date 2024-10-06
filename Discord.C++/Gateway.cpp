@@ -34,7 +34,6 @@ void DiscordCPP::Gateway::start_heartbeating() {
                     _log.warning("Gateway stopped responding. Closing and restarting websocket...");
                     try {
                         get_lowest_layer(*_client).close();
-                        //_client->close(websocket::close_reason(websocket::close_code::going_away, "Server not responding"));
                     } catch (std::exception& e) {
                         _log.error("Cannot close websocket: " + std::string(e.what()));
                     }
@@ -57,12 +56,11 @@ void DiscordCPP::Gateway::start_heartbeating() {
 }
 
 void DiscordCPP::Gateway::on_websocket_disconnnect() {
-    _log.info("Websocket connection closed");
-
     _connected = false;
     if (_keepalive == false) {
         return;
     }
+    _log.info("Websocket connection closed");
 
     threadpool->execute([this] {
         _log.info("trying to reconnect in " + std::to_string((double)_reconnect_timeout / 1000) + "s");
@@ -234,14 +232,12 @@ DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::send(const json& message) {
     });
 }
 
-DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::close() {
+void DiscordCPP::Gateway::close() {
     _keepalive = false;
 
-    return threadpool->execute([this]() {
-        try {
-            get_lowest_layer(*_client).close();
-        } catch (const std::exception& e) {
-            _log.error("Error while closing websocket: " + std::string(e.what()));
-        }
-    });
+    try {
+        get_lowest_layer(*_client).close();
+    } catch (const std::exception& e) {
+        _log.error("Error while closing websocket: " + std::string(e.what()));
+    }
 }

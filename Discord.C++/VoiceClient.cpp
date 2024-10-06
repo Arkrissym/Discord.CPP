@@ -209,16 +209,16 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
 DiscordCPP::VoiceClient::~VoiceClient() {
     _log.debug("~VoiceClient");
     _ready = false;
-    disconnect().get();
-    _voice_ws->close().get();
+    disconnect();
+    _voice_ws->close();
 }
 
-DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::disconnect() {
+void DiscordCPP::VoiceClient::disconnect() {
     if (!_ready) {
-        DiscordCPP::SharedFuture<void> future;
-        future.set();
-        return future;
+        return;
     }
+
+    _ready = false;
 
     json payload = {
         {"op", 4},  //
@@ -230,15 +230,9 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::disconnect() {
                   {"self_deaf", true}       //
               }}  //
     };
-    std::shared_ptr<DiscordCPP::Future<void>> main_future = _main_ws->send(payload).get_future();
-    std::shared_ptr<DiscordCPP::Future<void>> voice_future = _voice_ws->close().get_future();
 
-    return threadpool->execute([this, voice_future, main_future] {
-        _ready = false;
-
-        voice_future->get();
-        main_future->get();
-
+    _voice_ws->close();
+    _main_ws->send(payload).then([this]() {
         _log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
     });
 }

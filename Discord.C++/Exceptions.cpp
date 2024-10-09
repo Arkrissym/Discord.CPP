@@ -24,6 +24,14 @@ DiscordCPP::ClientException::ClientException(std::string what)
     : DiscordException(std::move(what)) {
 }
 
+DiscordCPP::DisconnectException::DisconnectException(std::string what)
+    : DiscordException(std::move(what)) {
+}
+
+DiscordCPP::CanceledException::CanceledException(std::string what)
+    : DiscordException(std::move(what)) {
+}
+
 DiscordCPP::SizeError::SizeError(std::string what)
     : DiscordException(std::move(what)) {
 }

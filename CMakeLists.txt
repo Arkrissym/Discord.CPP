@@ -15,6 +15,7 @@ FetchContent_GetProperties(certify)
 
 set(BOOST_INCLUDE_LIBRARIES thread filesystem system process asio endian logic static_string)
 set(BOOST_ENABLE_CMAKE ON)
+add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
 
 FetchContent_Declare(Boost
       GIT_REPOSITORY https://github.com/boostorg/boost.git

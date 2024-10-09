@@ -85,7 +85,9 @@ class VoiceClient {
     DLL_EXPORT ~VoiceClient();
 
     /** play an AudioSource
-        @throws	OpusError	ClientException
+        @throws	OpusError			if the opus encode could not be initialized
+        @throws DisconnectException	if the client is disconnected from the voice channel
+        @throws CanceledException	if stop_playing() has been called
     */
     DLL_EXPORT SharedFuture<void> play(AudioSource* source);
     DLL_EXPORT void stop_playing();

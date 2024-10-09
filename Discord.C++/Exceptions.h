@@ -1,6 +1,6 @@
 #pragma once
 #include <exception>
-#include <iostream>
+#include <string>
 
 #ifdef _WIN32
 #define DLL_EXPORT __declspec(dllexport)
@@ -31,6 +31,16 @@ class StatusCodeException : public DiscordException {
 class ClientException : public DiscordException {
    public:
     DLL_EXPORT explicit ClientException(std::string what);
+};
+
+class DisconnectException : public DiscordException {
+   public:
+    DLL_EXPORT explicit DisconnectException(std::string what);
+};
+
+class CanceledException : public DiscordException {
+   public:
+    DLL_EXPORT explicit CanceledException(std::string what);
 };
 
 class SizeError : public DiscordException {

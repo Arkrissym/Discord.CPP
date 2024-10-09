@@ -282,9 +282,9 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
         }
 
         while (_ready && !_cancel_playing) {
-            if (source->read((char*)pcm_data, FRAME_SIZE * CHANNELS * 2) !=
-                true)
+            if (source->read((char*)pcm_data, FRAME_SIZE * CHANNELS * 2) != true) {
                 break;
+            }
 
             in_data = reinterpret_cast<opus_int16*>(pcm_data);
 
@@ -357,5 +357,12 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
         delete[] pcm_data;
 
         _log.debug("finished playing audio");
+
+        if (!_ready) {
+            throw DisconnectException("disconnected from voice");
+        }
+        if (_cancel_playing) {
+            throw CanceledException("audio stream canceled");
+        }
     });
 }

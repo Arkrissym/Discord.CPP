@@ -168,7 +168,7 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
     threadpool = std::make_shared<Threadpool>(4);
 
     _log = Logger("Discord.VoiceClient");
-    _log.info("connecting to endpoint " + _endpoint);
+    _log.debug("connecting to endpoint " + _endpoint);
 
     _voice_ws = std::make_unique<VoiceGateway>(_voice_token, _session_id, _guild_id, _user_id, threadpool);
 
@@ -184,8 +184,7 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
             case 4:
                 load_session_description(data["d"]);
 
-                _log.info("mode: " + _mode);
-                _log.info("handshake complete. voice connection ready.");
+                _log.info("handshake complete. voice connection ready. mode: " + _mode);
                 _ready = true;
                 speak();
                 break;

@@ -78,7 +78,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
         try {
             io_context.restart();
             connect(_resume_url);
-            _log.info("reconnected");
+            _log.debug("reconnected");
             _reconnect_timeout = 0;
             _last_heartbeat_ack = time(nullptr);
             _reconnecting = false;
@@ -142,8 +142,7 @@ DiscordCPP::Gateway::~Gateway() {
     _heartbeat_task.join();
 }
 
-void DiscordCPP::Gateway::set_message_handler(
-    const std::function<void(json)>& handler) {
+void DiscordCPP::Gateway::set_message_handler(const std::function<void(json)>& handler) {
     _message_handler = handler;
 }
 
@@ -203,7 +202,7 @@ void DiscordCPP::Gateway::connect(const std::string& url) {
         start_heartbeating();
     }
 
-    _log.info("Successfully connected to endpoint: " + endpoint.address().to_string() + ":" + std::to_string(endpoint.port()));
+    _log.debug("Successfully connected to endpoint: " + endpoint.address().to_string() + ":" + std::to_string(endpoint.port()));
     _connected = true;
 
     _client->async_read(buffer, [this](boost::system::error_code error_code, std::size_t bytes) {

@@ -74,8 +74,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(const std::string& m
 
                     std::string str = set_trace(payload);
 
-                    _log.info("successfully resumed session " + _session_id +
-                              " with trace " + str + " ]");
+                    _log.info("successfully resumed session " + _session_id + " with trace " + str + " ]");
                 }
                 break;
             case 1:
@@ -95,8 +94,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(const std::string& m
                 break;
             case 10:
                 _heartbeat_interval = payload["d"]["heartbeat_interval"].get<int>();
-                _log.debug("set heartbeat_interval: " +
-                           std::to_string(_heartbeat_interval));
+                _log.debug("set heartbeat_interval: " + std::to_string(_heartbeat_interval));
                 identify();
                 break;
             case 11:
@@ -122,14 +120,14 @@ void DiscordCPP::MainGateway::identify() {
     if (_sequence_number > 0) {
         unsigned int seq = _sequence_number;
 
-        _log.info("trying to resume session");
+        _log.debug("trying to resume session");
 
         json resume_json = {
             {"op", 6},
             {"d", {{"token", _token}, {"session_id", _session_id}, {"seq", seq}}}};
 
         this->send(resume_json).get();
-        _log.info("Resume payload has been sent");
+        _log.debug("Resume payload has been sent");
 
         while (_invalid_session == false) {
             if (_sequence_number > seq) {
@@ -139,9 +137,9 @@ void DiscordCPP::MainGateway::identify() {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 
-        _log.info("cannot resume session");
+        _log.debug("cannot resume session");
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100 + +rand() % 4001));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100 + rand() % 4001));
     }
 
     json identify_json = {
@@ -172,7 +170,7 @@ void DiscordCPP::MainGateway::identify() {
     identify_json["d"]["properties"]["device"] = "Discord.C++";
 
     this->send(identify_json).get();
-    _log.info("Identify payload has been sent");
+    _log.debug("Identify payload has been sent");
 }
 
 std::string DiscordCPP::MainGateway::set_trace(const json& payload) {

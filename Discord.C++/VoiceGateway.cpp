@@ -31,13 +31,13 @@ void DiscordCPP::VoiceGateway::identify() {
         _resume = false;
 
         this->send(out_payload).get();
-        _log.info("Resume payload has been sent");
+        _log.debug("Resume payload has been sent");
     } else {
         out_payload["op"] = 0;
         out_payload["d"]["user_id"] = _user_id;
 
         this->send(out_payload).get();
-        _log.info("Identify payload has been sent");
+        _log.debug("Identify payload has been sent");
     }
 }
 
@@ -71,8 +71,7 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(const std::string& 
                 _reconnect_timeout = 0;
                 _last_heartbeat_ack = time(nullptr);
                 _resume = true;
-                _log.info("successfully resumed session for guild with id: " +
-                          _guild_id);
+                _log.info("successfully resumed session for guild with id: " + _guild_id);
                 break;
         }
 

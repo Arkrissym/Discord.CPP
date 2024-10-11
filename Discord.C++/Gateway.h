@@ -4,6 +4,8 @@
 #include <boost/asio/ssl.hpp>
 #include <boost/beast/ssl.hpp>
 #include <boost/beast/websocket.hpp>
+#include <condition_variable>
+#include <mutex>
 #include <nlohmann/json.hpp>
 
 #include "Logger.h"
@@ -42,6 +44,10 @@ class Gateway {
     std::thread _heartbeat_task;
     /// indicator if Gateway is connected
     bool _connected;
+    /// condition to wait for ongoing reconnects
+    std::condition_variable _reconnect_finished;
+    std::mutex _reconnect_mutex;
+    bool _reconnecting;
     /// current sequence number
     unsigned int _sequence_number;
     /// logging instance

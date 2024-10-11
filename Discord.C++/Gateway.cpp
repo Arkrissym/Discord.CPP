@@ -44,8 +44,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
                         this->send(payload).get();
                         _log.debug("Heartbeat message has been sent");
                     } catch (const std::exception& e) {
-                        _log.error("Cannot send heartbeat message: " +
-                                   std::string(e.what()));
+                        _log.error("Cannot send heartbeat message: " + std::string(e.what()));
                     }
                 }
             }
@@ -58,8 +57,11 @@ void DiscordCPP::Gateway::start_heartbeating() {
 void DiscordCPP::Gateway::on_websocket_disconnnect() {
     _connected = false;
     if (_keepalive == false) {
+        _reconnecting = false;
+        _reconnect_finished.notify_all();
         return;
     }
+    _reconnecting = true;
     _log.info("Websocket connection closed");
 
     threadpool->execute([this] {
@@ -79,7 +81,11 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
             _log.info("reconnected");
             _reconnect_timeout = 0;
             _last_heartbeat_ack = time(nullptr);
+            _reconnecting = false;
+            _reconnect_finished.notify_all();
         } catch (const beast::system_error& e) {
+            _reconnecting = false;
+            _reconnect_finished.notify_all();
             _log.error("Failed to reconnect: " + std::string(e.what()));
             on_websocket_disconnnect();
         }
@@ -123,6 +129,7 @@ DiscordCPP::Gateway::Gateway(std::string token, const std::shared_ptr<Threadpool
       _keepalive(true),
       _reconnect_timeout(0),
       _connected(false),
+      _reconnecting(false),
       _sequence_number(0) {
     _log = Logger("Discord.Gateway");
 
@@ -240,4 +247,9 @@ void DiscordCPP::Gateway::close() {
     } catch (const std::exception& e) {
         _log.error("Error while closing websocket: " + std::string(e.what()));
     }
+
+    std::unique_lock<std::mutex> lock(_reconnect_mutex);
+    _reconnect_finished.wait(lock, [this]() {
+        return !_reconnecting;
+    });
 }

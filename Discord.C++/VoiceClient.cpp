@@ -209,7 +209,6 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
 DiscordCPP::VoiceClient::~VoiceClient() {
     _log.debug("~VoiceClient");
     _ready = false;
-    disconnect();
     _voice_ws->close();
 }
 
@@ -232,9 +231,11 @@ void DiscordCPP::VoiceClient::disconnect() {
     };
 
     _voice_ws->close();
-    _main_ws->send(payload).then([this]() {
-        _log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
-    });
+    _main_ws->send(payload)
+        .then([this]() {
+            _log.debug("Payload with Opcode 4 (Gateway Voice State Update) has been sent");
+        })
+        .get();
 }
 
 void DiscordCPP::VoiceClient::stop_playing() {

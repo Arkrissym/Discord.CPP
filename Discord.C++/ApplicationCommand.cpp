@@ -13,8 +13,24 @@ DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::
 
     name = data.at("name").get<std::string>();
     description = data.at("description").get<std::string>();
-    dm_permission = get_or_else<bool>(data, "dm_permission", true);
+    nsfw = get_or_else<bool>(data, "nsfw", false);
     version = data.at("version").get<std::string>();
+
+    if (has_value(data, "integration_types")) {
+        for (const json& integration_type : data.at("integration_types")) {
+            integration_types.push_back(static_cast<DiscordCPP::ApplicationCommand::IntegrationType>(integration_type.get<int>()));
+        }
+    }
+
+    if (has_value(data, "contexts")) {
+        for (const json& context : data.at("contexts")) {
+            contexts.push_back(static_cast<DiscordCPP::ApplicationCommand::ContextType>(context.get<int>()));
+        }
+    }
+
+    if (has_value(data, "handler")) {
+        handler = static_cast<DiscordCPP::ApplicationCommand::HandlerType>(data.at("handler").get<int>());
+    }
 
     if (has_value(data, "options")) {
         for (const json& option : data.at("options")) {
@@ -28,7 +44,19 @@ json DiscordCPP::ApplicationCommand::to_json() {
     data["type"] = type;
     data["name"] = name;
     data["description"] = description;
-    data["dm_permission"] = dm_permission;
+    data["nsfw"] = nsfw;
+
+    for (auto& integration_type : integration_types) {
+        data["integration_types"].push_back(integration_type);
+    }
+
+    for (auto& context : contexts) {
+        data["contexts"].push_back(context);
+    }
+
+    if (handler.has_value()) {
+        data["handler"] = handler.value();
+    }
 
     for (auto& option : options) {
         data["options"].push_back(std::visit([](auto v) { return v.to_json(); }, option));

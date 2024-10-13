@@ -2,6 +2,8 @@
 #include <thread>
 #include <vector>
 
+#include "ApplicationCommand.h"
+
 #ifndef _WIN32
 #include <cstdlib>
 #endif
@@ -53,12 +55,18 @@ class Client : public Discord {
         ping.set_name("ping");
         ping.set_description("Ping the bot");
         ping.set_type(ApplicationCommand::Type::CHAT_INPUT);
+        ping.add_integration_types(ApplicationCommand::IntegrationType::GUILD_INSTALL);
+        ping.add_integration_types(ApplicationCommand::IntegrationType::USER_INSTALL);
+        ping.add_contexts(ApplicationCommand::ContextType::BOT_DM);
+        ping.add_contexts(ApplicationCommand::ContextType::PRIVATE_CHANNEL);
         create_application_command(ping);
 
         ApplicationCommand update = ApplicationCommand();
         update.set_name("update");
         update.set_description("Responds with a message and updates it after 5 seconds");
         update.set_type(ApplicationCommand::Type::CHAT_INPUT);
+        update.add_integration_types(ApplicationCommand::IntegrationType::GUILD_INSTALL);
+        update.add_contexts(ApplicationCommand::ContextType::GUILD);
         create_application_command(update);
 
         ApplicationCommand msg = ApplicationCommand();
@@ -103,13 +111,11 @@ class Client : public Discord {
     }
 
     void on_user_ban(User user, Guild guild) override {
-        log.info("User " + string(user) + " has been banned from Guild " +
-                 string(guild));
+        log.info("User " + string(user) + " has been banned from Guild " + string(guild));
     }
 
     void on_user_unban(User user, Guild guild) override {
-        log.info("User " + string(user) + " has been unbanned from Guild " +
-                 string(guild));
+        log.info("User " + string(user) + " has been unbanned from Guild " + string(guild));
     }
 
     void on_user_join(Member member, Guild guild) override {

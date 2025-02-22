@@ -107,6 +107,14 @@ class Client : public Discord {
         react.set_type(ApplicationCommand::Type::MESSAGE);
         create_application_command(react);
 
+        ApplicationCommand admin = ApplicationCommand();
+        admin.set_name("admin");
+        admin.set_description("check if you are an admin");
+        admin.set_type(DiscordCPP::ApplicationCommand::CHAT_INPUT);
+        admin.add_contexts(DiscordCPP::ApplicationCommand::GUILD);
+        admin.add_integration_types(DiscordCPP::ApplicationCommand::GUILD_INSTALL);
+        create_application_command(admin);
+
         update_presence(DiscordStatus::Online, Activity("test", Activity::Type::Game));
     }
 
@@ -458,6 +466,12 @@ class Client : public Discord {
                 message.add_reaction(e100);
                 this_thread::sleep_for(chrono::seconds(1));
                 message.remove_all_reactions();
+            }
+        } else if (name == "admin") {
+            if (interaction.get_member().has_value() && interaction.get_guild().has_value()) {
+                Permissions permissions = interaction.get_guild().value().get_member_permissions(interaction.get_member().value());
+                bool is_admin = permissions.has_permission(DiscordCPP::Permissions::ADMINISTRATOR);
+                interaction.reply("You are " + std::string(is_admin ? "an" : "no") + " admin");
             }
         }
     }

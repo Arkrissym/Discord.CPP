@@ -9,6 +9,8 @@
 
 namespace DiscordCPP {
 
+class Guild;
+
 class Interaction : public DiscordObject {
    public:
     enum Type {
@@ -31,6 +33,7 @@ class Interaction : public DiscordObject {
     std::optional<InteractionData> data;
     /// The guild the interaction was sent from.
     std::optional<std::string> guild_id;
+    Guild* guild = nullptr;
     /// The channel the interaction was sent from.
     std::optional<std::string> channel_id;
     /// The member that sent the interaction.
@@ -46,6 +49,8 @@ class Interaction : public DiscordObject {
 
    public:
     DLL_EXPORT Interaction(const json& data, const std::string& token);
+    DLL_EXPORT Interaction(const Interaction& old);
+    DLL_EXPORT ~Interaction();
 
     /// Send a Message as a reply to this interaction.
     DLL_EXPORT void reply(const std::string& content, const bool tts = false);
@@ -58,25 +63,27 @@ class Interaction : public DiscordObject {
     DLL_EXPORT void update_reply(Embed embed);
 
     /// @return ID of the application this interaction is for.
-    DLL_EXPORT std::string get_application_id() { return application_id; }
+    DLL_EXPORT std::string get_application_id() const { return application_id; }
     /// @return The type of the invoked command.
-    DLL_EXPORT Type get_type() { return type; }
+    DLL_EXPORT Type get_type() const { return type; }
     /// @return The command data payload.
-    DLL_EXPORT std::optional<InteractionData> get_data() { return data; }
+    DLL_EXPORT std::optional<InteractionData> get_data() const { return data; }
     /// @return The guild the interaction was sent from.
-    DLL_EXPORT std::optional<std::string> get_guild_id() { return guild_id; }
+    DLL_EXPORT std::optional<std::string> get_guild_id() const { return guild_id; }
+    /// @return The guild the interaction was sent from.
+    DLL_EXPORT std::optional<DiscordCPP::Guild> get_guild();
     /// @return The channel the interaction was sent from.
-    DLL_EXPORT std::optional<std::string> get_channel_id() { return channel_id; }
+    DLL_EXPORT std::optional<std::string> get_channel_id() const { return channel_id; }
     /// @return The member that sent the interaction.
-    DLL_EXPORT std::optional<Member> get_member() { return member; }
+    DLL_EXPORT std::optional<Member> get_member() const { return member; }
     /// @return The user that sent the interaction.
-    DLL_EXPORT std::optional<User> get_user() { return user; }
+    DLL_EXPORT std::optional<User> get_user() const { return user; }
     /// @return For components, the message they were attached to.
-    DLL_EXPORT std::optional<Message> get_message() { return message; }
+    DLL_EXPORT std::optional<Message> get_message() const { return message; }
     /// @return The selected locale of the user who sent this interaction.
-    DLL_EXPORT std::optional<std::string> get_locale() { return locale; }
+    DLL_EXPORT std::optional<std::string> get_locale() const { return locale; }
     /// @return The guild's preferred locale.
-    DLL_EXPORT std::optional<std::string> get_guild_locale() { return guild_locale; }
+    DLL_EXPORT std::optional<std::string> get_guild_locale() const { return guild_locale; }
 };
 
 }  // namespace DiscordCPP

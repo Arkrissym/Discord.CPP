@@ -9,7 +9,7 @@ DiscordCPP::Role::Role(const json& data, const std::string& guild_id, const std:
     icon = get_optional<std::string>(data, "icon");
     unicode_emoji = get_optional<std::string>(data, "unicode_emoji");
     position = data.at("position").get<unsigned int>();
-    permissions = data.at("permissions").get<std::string>();
+    permissions = Permissions(data.at("permissions").get<std::string>());
     managed = data.at("managed").get<bool>();
     mentionable = data.at("mentionable").get<bool>();
     flags = data.at("flags").get<int>();

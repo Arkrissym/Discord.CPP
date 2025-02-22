@@ -78,7 +78,7 @@ find_package(OpenSSL REQUIRED)
 if(VCPKG_TOOLCHAIN)
       find_package(unofficial-sodium CONFIG REQUIRED)
       find_package(Opus CONFIG REQUIRED)
-      
+
       target_link_libraries(${PROJECT_NAME}
                         unofficial-sodium::sodium
                         Opus::opus

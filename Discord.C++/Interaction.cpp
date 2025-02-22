@@ -1,6 +1,7 @@
 #include "Interaction.h"
 
 #include "Embed.h"
+#include "Guild.h"
 
 DiscordCPP::Interaction::Interaction(const json& data, const std::string& token)
     : DiscordCPP::DiscordObject(token, data.at("id").get<std::string>()),
@@ -26,6 +27,19 @@ DiscordCPP::Interaction::Interaction(const json& data, const std::string& token)
     guild_locale = get_optional<std::string>(data, "guild_locale");
 }
 
+DiscordCPP::Interaction::Interaction(const Interaction& old)
+    : DiscordCPP::DiscordObject(old) {
+    if (old.guild != nullptr) {
+        guild = new Guild(*old.guild);
+    }
+}
+
+DiscordCPP::Interaction::~Interaction() {
+    if (guild != nullptr) {
+        delete guild;
+    }
+}
+
 void DiscordCPP::Interaction::reply(const std::string& content, const bool tts) {
     std::string url = "/interactions/" + get_id() + "/" + token + "/callback";
 
@@ -37,8 +51,8 @@ void DiscordCPP::Interaction::reply(const std::string& content, const bool tts) 
                 //
                 {"content", content},
                 {"tts", tts}  //
-            }                 //
-        }                     //
+            }  //
+        }  //
     };
 
     api_call(url, "POST", data, "application/json");
@@ -73,4 +87,11 @@ void DiscordCPP::Interaction::update_reply(Embed embed) {
     data["embeds"].push_back(embed.to_json());
 
     api_call(url, "PATCH", data, "application/json");
+}
+
+std::optional<DiscordCPP::Guild> DiscordCPP::Interaction::get_guild() {
+    if (guild_id.has_value() && guild == nullptr) {
+        guild = new Guild(nullptr, guild_id.value(), get_token());
+    }
+    return (guild != nullptr) ? std::optional<Guild>{*guild} : std::nullopt;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DiscordObject.h"
+#include "Permissions.h"
 
 namespace DiscordCPP {
 class Role : public DiscordObject {
@@ -25,7 +26,7 @@ class Role : public DiscordObject {
     /// position of this role (roles with the same position are sorted by id)
     unsigned int position;
     /// permission bit set;
-    std::string permissions;
+    Permissions permissions;
     /// whether this role is managed by an integration
     bool managed;
     /// whether this role is mentionable
@@ -44,28 +45,28 @@ class Role : public DiscordObject {
     DLL_EXPORT void delete_role();
 
     /// @return role name
-    DLL_EXPORT std::string get_name() { return name; }
+    DLL_EXPORT std::string get_name() const { return name; }
     /// @return integer representation of hexadecimal color code
-    DLL_EXPORT unsigned int get_color() { return color; }
+    DLL_EXPORT unsigned int get_color() const { return color; }
     /// @return if this role is pinned in the user listing
-    DLL_EXPORT bool is_hoist() { return hoist; }
+    DLL_EXPORT bool is_hoist() const { return hoist; }
     /// @return role icon hash
-    DLL_EXPORT std::optional<std::string> get_icon() { return icon; }
+    DLL_EXPORT std::optional<std::string> get_icon() const { return icon; }
     /// @return role unicode emoji
-    DLL_EXPORT std::optional<std::string> get_unicode_emoji() { return unicode_emoji; }
+    DLL_EXPORT std::optional<std::string> get_unicode_emoji() const { return unicode_emoji; }
     /// @return position of this role (roles with the same position are sorted by id)
-    DLL_EXPORT unsigned int get_position() { return position; }
+    DLL_EXPORT unsigned int get_position() const { return position; }
     /// @return permission bit set;
-    DLL_EXPORT std::string get_permissions() { return permissions; }
+    DLL_EXPORT Permissions get_permissions() const { return permissions; }
     /// @return whether this role is managed by an integration
-    DLL_EXPORT bool is_managed() { return managed; }
+    DLL_EXPORT bool is_managed() const { return managed; }
     /// @return whether this role is mentionable
-    DLL_EXPORT bool is_mentionable() { return mentionable; }
+    DLL_EXPORT bool is_mentionable() const { return mentionable; }
     /// @return role flags combined as a bitfield
-    DLL_EXPORT int get_flags() { return flags; }
+    DLL_EXPORT int get_flags() const { return flags; }
     /** @param[in] flag the Flag to check
      *	@return true if the role has the given flag
      */
-    DLL_EXPORT bool has_flag(Flag flag) { return flags & flag; }
+    DLL_EXPORT bool has_flag(Flag flag) const { return flags & flag; }
 };
 }  // namespace DiscordCPP

@@ -5,6 +5,7 @@
 
 #include "ChannelHelper.h"
 #include "Emoji.h"
+#include "Exceptions.h"
 #include "Role.h"
 #include "VoiceChannel.h"
 #include "static.h"
@@ -197,6 +198,32 @@ void DiscordCPP::Guild::ban(const User& user, const std::string& reason, const i
 void DiscordCPP::Guild::unban(const User& user) {
     std::string url = "/guilds/" + get_id() + "/bans/" + user.get_id();
     api_call(url, "DEL");
+}
+
+DiscordCPP::Permissions DiscordCPP::Guild::get_member_permissions(const Member& member) {
+    if (owner_id.has_value() && owner_id.value() == member.get_id()) {
+        return Permissions::All();
+    }
+
+    std::map<std::string, Permissions> permission_map;
+    for (const Role& role : roles) {
+        permission_map.insert({role.get_id(), role.get_permissions()});
+    }
+
+    Permissions permissions;
+    for (std::string role : member.get_roles()) {
+        if (permission_map.find(role) == permission_map.end()) {
+            throw DiscordException("unknown role " + role + " for member " + member.get_id() + " in guild " + get_id());
+        }
+
+        if (permission_map.at(role).has_permission(Permissions::ADMINISTRATOR)) {
+            return Permissions::All();
+        }
+
+        permissions.add(permission_map.at(role));
+    }
+
+    return permissions;
 }
 
 std::optional<DiscordCPP::User> DiscordCPP::Guild::get_owner() {

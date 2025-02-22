@@ -150,6 +150,10 @@ class Guild : public DiscordObject {
     /// unbans the given User from this Guild
     DLL_EXPORT void unban(const User& user);
 
+    /** @return the members permissions in the guild
+        @throws DiscordException if an unknown role is encountered */
+    DLL_EXPORT Permissions get_member_permissions(const Member& member);
+
     /// @return the guild's name
     DLL_EXPORT std::string get_name() { return name; }
     /// @return the guild's icon hash

@@ -20,11 +20,19 @@ void DiscordCPP::Permissions::add(const Permissions& permissions) {
     this->permissions |= permissions.permissions;
 }
 
-bool DiscordCPP::Permissions::has_permission(Permission permission) {
+void DiscordCPP::Permissions::remove(const Permission& permission) {
+    permissions &= ~(1 << permission);
+}
+
+void DiscordCPP::Permissions::remove(const Permissions& permissions) {
+    this->permissions &= ~permissions.permissions;
+}
+
+bool DiscordCPP::Permissions::has_permission(Permission permission) const {
     return permissions & (1 << permission);
 }
 
-bool DiscordCPP::Permissions::has_all_permissions(std::vector<Permission> permissions) {
+bool DiscordCPP::Permissions::has_all_permissions(std::vector<Permission> permissions) const {
     for (auto permission : permissions) {
         if (!has_permission(permission)) {
             return false;
@@ -33,11 +41,22 @@ bool DiscordCPP::Permissions::has_all_permissions(std::vector<Permission> permis
     return true;
 }
 
-bool DiscordCPP::Permissions::has_any_permission(std::vector<Permission> permissions) {
+bool DiscordCPP::Permissions::has_any_permission(std::vector<Permission> permissions) const {
     for (auto permission : permissions) {
         if (has_permission(permission)) {
             return true;
         }
     }
     return false;
+}
+
+DiscordCPP::PermissionOverwrites::PermissionOverwrites(const json& data) {
+    id = data.at("id").get<std::string>();
+    type = static_cast<Type>(data["type"].get<int>());
+    if (get_or_else<std::string>(data, "allow", "").length() > 0) {
+        allow = Permissions(data.at("allow").get<std::string>());
+    }
+    if (get_or_else<std::string>(data, "deny", "").length() > 0) {
+        deny = Permissions(data.at("deny").get<std::string>());
+    }
 }

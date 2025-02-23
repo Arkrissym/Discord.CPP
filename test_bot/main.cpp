@@ -2,8 +2,6 @@
 #include <thread>
 #include <vector>
 
-#include "ApplicationCommand.h"
-
 #ifndef _WIN32
 #include <cstdlib>
 #endif
@@ -107,13 +105,13 @@ class Client : public Discord {
         react.set_type(ApplicationCommand::Type::MESSAGE);
         create_application_command(react);
 
-        ApplicationCommand admin = ApplicationCommand();
-        admin.set_name("admin");
-        admin.set_description("check if you are an admin");
-        admin.set_type(DiscordCPP::ApplicationCommand::CHAT_INPUT);
-        admin.add_contexts(DiscordCPP::ApplicationCommand::GUILD);
-        admin.add_integration_types(DiscordCPP::ApplicationCommand::GUILD_INSTALL);
-        create_application_command(admin);
+        ApplicationCommand permissions = ApplicationCommand();
+        permissions.set_name("permissions");
+        permissions.set_description("check some permissions");
+        permissions.set_type(DiscordCPP::ApplicationCommand::CHAT_INPUT);
+        permissions.add_contexts(DiscordCPP::ApplicationCommand::GUILD);
+        permissions.add_integration_types(DiscordCPP::ApplicationCommand::GUILD_INSTALL);
+        create_application_command(permissions);
 
         update_presence(DiscordStatus::Online, Activity("test", Activity::Type::Game));
     }
@@ -467,11 +465,25 @@ class Client : public Discord {
                 this_thread::sleep_for(chrono::seconds(1));
                 message.remove_all_reactions();
             }
-        } else if (name == "admin") {
-            if (interaction.get_member().has_value() && interaction.get_guild().has_value()) {
-                Permissions permissions = interaction.get_guild().value().get_member_permissions(interaction.get_member().value());
+        } else if (name == "permissions") {
+            if (interaction.get_member().has_value() && interaction.get_guild().has_value() && interaction.get_channel().has_value()) {
+                Member member = interaction.get_member().value();
+                Channel channel = interaction.get_channel().value();
+                Guild guild = interaction.get_guild().value();
+
+                Permissions permissions = guild.get_member_permissions(member);
+                permissions = channel.merge_permission_overwrites(permissions, member.get_id());
+                for (auto role : member.get_roles()) {
+                    permissions = channel.merge_permission_overwrites(permissions, role);
+                }
+
                 bool is_admin = permissions.has_permission(DiscordCPP::Permissions::ADMINISTRATOR);
-                interaction.reply("You are " + std::string(is_admin ? "an" : "no") + " admin");
+                bool can_delete_messages = permissions.has_permission(DiscordCPP::Permissions::MANAGE_MESSAGES);
+                bool can_kick_members = permissions.has_permission(DiscordCPP::Permissions::KICK_MEMBERS);
+
+                interaction.reply("You are " + std::string(is_admin ? "an" : "no") + " admin"                                     //
+                                  + "\nYou are " + std::string(can_delete_messages ? "" : "not ") + "allowed to delete messages"  //
+                                  + "\nYou can " + std::string(can_kick_members ? "" : "not ") + "kick members");
             }
         }
     }

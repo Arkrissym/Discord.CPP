@@ -95,3 +95,10 @@ std::optional<DiscordCPP::Guild> DiscordCPP::Interaction::get_guild() {
     }
     return (guild != nullptr) ? std::optional<Guild>{*guild} : std::nullopt;
 }
+
+std::optional<DiscordCPP::Channel> DiscordCPP::Interaction::get_channel() {
+    if (channel_id.has_value() && channel == nullptr) {
+        channel = new Channel(channel_id.value(), get_token());
+    }
+    return (channel != nullptr) ? std::optional<Channel>{*channel} : std::nullopt;
+}

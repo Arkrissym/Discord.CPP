@@ -118,11 +118,50 @@ class Permissions {
     DLL_EXPORT Permissions() : permissions(0) {};
     DLL_EXPORT Permissions(const std::string& permissions);
 
+    /// add the given permission
     DLL_EXPORT void add(const Permission& permission);
+    /// merge the given permission set
     DLL_EXPORT void add(const Permissions& permissions);
+    /// remove the given permission
+    DLL_EXPORT void remove(const Permission& permission);
+    /// remove the given permission set
+    DLL_EXPORT void remove(const Permissions& permissions);
 
-    DLL_EXPORT bool has_permission(Permission permission);
-    DLL_EXPORT bool has_all_permissions(std::vector<Permission> permissions);
-    DLL_EXPORT bool has_any_permission(std::vector<Permission> permissions);
+    /// check if the given permission is set
+    DLL_EXPORT bool has_permission(Permission permission) const;
+    /// check if all given permissions is set
+    DLL_EXPORT bool has_all_permissions(std::vector<Permission> permissions) const;
+    /// check if at least one of the given permissions is set
+    DLL_EXPORT bool has_any_permission(std::vector<Permission> permissions) const;
+};
+
+class PermissionOverwrites {
+   public:
+    enum Type {
+        ROLE = 0,
+        MEMBER = 1
+    };
+
+   private:
+    /// role or user id
+    std::string id;
+    /// overwite type
+    Type type;
+    /// allowed permissions
+    Permissions allow;
+    /// denied permissions
+    Permissions deny;
+
+   public:
+    DLL_EXPORT PermissionOverwrites(const json& data);
+
+    /// @return role or user id
+    DLL_EXPORT std::string get_id() const { return id; }
+    /// @return overwite type
+    DLL_EXPORT Type get_type() const { return type; }
+    /// @return allowed permissions
+    DLL_EXPORT Permissions get_allowed_permissions() const { return allow; }
+    /// @return denied permissions
+    DLL_EXPORT Permissions get_denied_permissions() const { return deny; }
 };
 }  // namespace DiscordCPP

@@ -2,6 +2,7 @@
 
 #include <optional>
 
+#include "Channel.h"
 #include "InteractionData.h"
 #include "Member.h"
 #include "Message.h"
@@ -36,6 +37,8 @@ class Interaction : public DiscordObject {
     Guild* guild = nullptr;
     /// The channel the interaction was sent from.
     std::optional<std::string> channel_id;
+    Channel* channel = nullptr;
+
     /// The member that sent the interaction.
     std::optional<Member> member;
     /// The user that sent the interaction.
@@ -74,6 +77,8 @@ class Interaction : public DiscordObject {
     DLL_EXPORT std::optional<DiscordCPP::Guild> get_guild();
     /// @return The channel the interaction was sent from.
     DLL_EXPORT std::optional<std::string> get_channel_id() const { return channel_id; }
+    /// @return The channel the interaction was sent from.
+    DLL_EXPORT std::optional<Channel> get_channel();
     /// @return The member that sent the interaction.
     DLL_EXPORT std::optional<Member> get_member() const { return member; }
     /// @return The user that sent the interaction.

@@ -32,11 +32,17 @@ DiscordCPP::Interaction::Interaction(const Interaction& old)
     if (old.guild != nullptr) {
         guild = new Guild(*old.guild);
     }
+    if (old.channel != nullptr) {
+        channel = new Channel(*old.channel);
+    }
 }
 
 DiscordCPP::Interaction::~Interaction() {
     if (guild != nullptr) {
         delete guild;
+    }
+    if (channel != nullptr) {
+        delete channel;
     }
 }
 

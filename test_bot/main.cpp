@@ -471,11 +471,7 @@ class Client : public Discord {
                 Channel channel = interaction.get_channel().value();
                 Guild guild = interaction.get_guild().value();
 
-                Permissions permissions = guild.get_member_permissions(member);
-                permissions = channel.merge_permission_overwrites(permissions, member.get_id());
-                for (auto role : member.get_roles()) {
-                    permissions = channel.merge_permission_overwrites(permissions, role);
-                }
+                Permissions permissions = guild.get_member_permissions(member, channel);
 
                 bool is_admin = permissions.has_permission(DiscordCPP::Permissions::ADMINISTRATOR);
                 bool can_delete_messages = permissions.has_permission(DiscordCPP::Permissions::MANAGE_MESSAGES);

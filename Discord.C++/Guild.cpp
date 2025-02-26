@@ -200,28 +200,53 @@ void DiscordCPP::Guild::unban(const User& user) {
     api_call(url, "DEL");
 }
 
-DiscordCPP::Permissions DiscordCPP::Guild::get_member_permissions(const Member& member) {
+DiscordCPP::Permissions DiscordCPP::Guild::get_member_permissions(const Member& member, const ChannelVariant& channel) {
     if (owner_id.has_value() && owner_id.value() == member.get_id()) {
         return Permissions::All();
     }
 
+    std::vector<std::string> ids;
+    ids.push_back(this->get_id());  // everyone
+    for (const auto& id : member.get_roles()) {
+        ids.push_back(id);
+    }
+
     std::map<std::string, Permissions> permission_map;
-    for (const Role& role : roles) {
+    for (const auto& role : roles) {
         permission_map.insert({role.get_id(), role.get_permissions()});
     }
 
     Permissions permissions;
-    for (std::string role : member.get_roles()) {
-        if (permission_map.find(role) == permission_map.end()) {
-            throw DiscordException("unknown role " + role + " for member " + member.get_id() + " in guild " + get_id());
+    for (const auto& id : ids) {
+        if (permission_map.find(id) == permission_map.end()) {
+            throw DiscordException("unknown role " + id + " for member " + member.get_id() + " in guild " + get_id());
         }
 
-        if (permission_map.at(role).has_permission(Permissions::ADMINISTRATOR)) {
-            return Permissions::All();
-        }
-
-        permissions.add(permission_map.at(role));
+        permissions.add(permission_map.at(id));
     }
+
+    if (permissions.has_permission(Permissions::ADMINISTRATOR)) {
+        return Permissions::All();
+    }
+
+    ids.push_back(member.get_id());
+
+    std::map<std::string, PermissionOverwrites> overwrite_map;
+    for (const auto& overwrite : ChannelHelper::get_permission_overwrites(channel)) {
+        overwrite_map.emplace(overwrite.get_id(), overwrite);
+    }
+
+    Permissions denied;
+    Permissions allowed;
+    for (const auto& id : ids) {
+        if (overwrite_map.find(id) != overwrite_map.end()) {
+            denied.add(overwrite_map.at(id).get_denied_permissions());
+            allowed.add(overwrite_map.at(id).get_allowed_permissions());
+        }
+    }
+
+    permissions.remove(denied);
+    permissions.add(allowed);
 
     return permissions;
 }

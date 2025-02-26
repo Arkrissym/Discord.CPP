@@ -30,5 +30,9 @@ class ChannelHelper {
     DLL_EXPORT static std::string get_channel_id(const ChannelVariant& channel) {
         return std::visit([](auto& c) { return c.get_id(); }, channel);
     }
+
+    DLL_EXPORT static std::vector<PermissionOverwrites> get_permission_overwrites(const ChannelVariant& channel) {
+        return std::visit([](auto& c) { return c.get_permission_overwrites(); }, channel);
+    }
 };
 }  // namespace DiscordCPP

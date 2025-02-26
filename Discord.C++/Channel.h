@@ -52,11 +52,6 @@ class Channel : public DiscordObject {
     /// @return Channelname as std::string
     DLL_EXPORT explicit operator std::string() { return name; };
 
-    /** Merge permission overwrites into given permission set
-        @param permissions permission set
-        @param id member or role id */
-    DLL_EXPORT Permissions merge_permission_overwrites(const Permissions& permissions, const std::string& id);
-
     /// @return the ChannelType of the channel
     DLL_EXPORT Type get_type() { return type; }
     /// @return the sorting position

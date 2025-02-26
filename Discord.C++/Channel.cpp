@@ -41,21 +41,3 @@ void DiscordCPP::Channel::delete_channel() {
 
     api_call(url, "DELETE");
 }
-
-DiscordCPP::Permissions DiscordCPP::Channel::merge_permission_overwrites(const Permissions& permissions, const std::string& id) {
-    if (permissions.has_permission(Permissions::ADMINISTRATOR)) {
-        return Permissions::All();
-    }
-
-    Permissions result;
-    result.add(permissions);
-
-    for (auto overwrite : permission_overwrites) {
-        if (overwrite.get_id() == id) {
-            result.add(overwrite.get_allowed_permissions());
-            result.remove(overwrite.get_denied_permissions());
-        }
-    }
-
-    return result;
-}

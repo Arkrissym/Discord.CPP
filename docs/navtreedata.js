@@ -66,11 +66,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_activity_8cpp.html",
-"class_discord_c_p_p_1_1_application_command_number_option.html#abc28cce7b7d7ea7e4d40ac8500704545",
-"class_discord_c_p_p_1_1_embed.html#a9b749d634cc802008485744d6c06eddd",
-"class_discord_c_p_p_1_1_interaction_data.html#a7324e23d351a60269ec445b2de106878",
-"class_discord_c_p_p_1_1_user.html"
+"class_discord_c_p_p_1_1_application_command_integer_option.html#a16b34bd2f65774cd05b86a7196d5c618",
+"class_discord_c_p_p_1_1_discord.html#a9185bc37ac09afe6b8ccf2ae0a175cd1",
+"class_discord_c_p_p_1_1_guild.html#a7cc3b77f110ddd5ceee31964240f11a5",
+"class_discord_c_p_p_1_1_message.html#a6118933664811a68a67227bd5e2c9137",
+"class_discord_c_p_p_1_1_role.html#a21b1a62d757064c4539fa6971d41226c",
+"class_mutex_holder.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';

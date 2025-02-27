@@ -12,10 +12,14 @@ var searchData=
   ['_5flog_9',['_log',['../class_discord_c_p_p_1_1_gateway.html#a93a86555e416d42474ce1dcb39d31190',1,'DiscordCPP::Gateway']]],
   ['_5fmessage_5fhandler_10',['_message_handler',['../class_discord_c_p_p_1_1_gateway.html#a671ea9f35ea90d96bbfad7ffd40f7da7',1,'DiscordCPP::Gateway']]],
   ['_5fnum_5fshards_11',['_num_shards',['../class_discord_c_p_p_1_1_discord.html#ab05d946598a186194fbf264b904690de',1,'DiscordCPP::Discord']]],
-  ['_5freconnect_5ftimeout_12',['_reconnect_timeout',['../class_discord_c_p_p_1_1_gateway.html#a6d0f89646622d33fe67827f5d66b3d09',1,'DiscordCPP::Gateway']]],
-  ['_5fresume_5furl_13',['_resume_url',['../class_discord_c_p_p_1_1_gateway.html#ab0413dc89dd3958a56a975fd421476fd',1,'DiscordCPP::Gateway']]],
-  ['_5ftoken_14',['_token',['../class_discord_c_p_p_1_1_gateway.html#a2478900fa267576f8060585b9a92d9a0',1,'DiscordCPP::Gateway']]],
-  ['_5furl_15',['_url',['../class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed',1,'DiscordCPP::Gateway']]],
-  ['_5fuser_16',['_user',['../class_discord_c_p_p_1_1_discord.html#aaa6c48ecf3243535a5c815335a88c9df',1,'DiscordCPP::Discord']]],
-  ['_5fvoice_5fstates_17',['_voice_states',['../class_discord_c_p_p_1_1_discord.html#a8fca5f5484df9331139b2b2d92948c2b',1,'DiscordCPP::Discord']]]
+  ['_5freconnect_5ffinished_12',['_reconnect_finished',['../class_discord_c_p_p_1_1_gateway.html#a1fb051da406889c951b8fd8e34472710',1,'DiscordCPP::Gateway']]],
+  ['_5freconnect_5fmutex_13',['_reconnect_mutex',['../class_discord_c_p_p_1_1_gateway.html#a8672addbd24661edf4005952badd234e',1,'DiscordCPP::Gateway']]],
+  ['_5freconnect_5ftimeout_14',['_reconnect_timeout',['../class_discord_c_p_p_1_1_gateway.html#a6d0f89646622d33fe67827f5d66b3d09',1,'DiscordCPP::Gateway']]],
+  ['_5freconnecting_15',['_reconnecting',['../class_discord_c_p_p_1_1_gateway.html#a46560e03782978b02e7923a2a448f73b',1,'DiscordCPP::Gateway']]],
+  ['_5fresume_5furl_16',['_resume_url',['../class_discord_c_p_p_1_1_gateway.html#ab0413dc89dd3958a56a975fd421476fd',1,'DiscordCPP::Gateway']]],
+  ['_5fsequence_5fnumber_17',['_sequence_number',['../class_discord_c_p_p_1_1_gateway.html#aa4fd14f8525aa317020361ce09d9594b',1,'DiscordCPP::Gateway']]],
+  ['_5ftoken_18',['_token',['../class_discord_c_p_p_1_1_gateway.html#a2478900fa267576f8060585b9a92d9a0',1,'DiscordCPP::Gateway']]],
+  ['_5furl_19',['_url',['../class_discord_c_p_p_1_1_gateway.html#a148fe7d8d61e7a9562a85d34160849ed',1,'DiscordCPP::Gateway']]],
+  ['_5fuser_20',['_user',['../class_discord_c_p_p_1_1_discord.html#aaa6c48ecf3243535a5c815335a88c9df',1,'DiscordCPP::Discord']]],
+  ['_5fvoice_5fstates_21',['_voice_states',['../class_discord_c_p_p_1_1_discord.html#a8fca5f5484df9331139b2b2d92948c2b',1,'DiscordCPP::Discord']]]
 ];

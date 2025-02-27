@@ -21,6 +21,7 @@ var class_discord_c_p_p_1_1_channel =
     [ "delete_channel", "class_discord_c_p_p_1_1_channel.html#abcdb6d1d0fc5294aaefca48f906d278c", null ],
     [ "get_icon", "class_discord_c_p_p_1_1_channel.html#aed4b9cb1ae91e5370ffd8dde00c99435", null ],
     [ "get_name", "class_discord_c_p_p_1_1_channel.html#ae281355d734e1200aa38eb8f7c61c6c0", null ],
+    [ "get_permission_overwrites", "class_discord_c_p_p_1_1_channel.html#a444b9faf7ec1a6fc261f435cef486a3f", null ],
     [ "get_position", "class_discord_c_p_p_1_1_channel.html#af8d5d5ac3f92e32e1712fe8473259b59", null ],
     [ "get_type", "class_discord_c_p_p_1_1_channel.html#ab898935a480de5bf70856280c053c50d", null ],
     [ "operator std::string", "class_discord_c_p_p_1_1_channel.html#aeb750faf9173cd455e7a4f2218c01305", null ]

@@ -14,29 +14,37 @@ var hierarchy =
       [ "DiscordCPP::FFmpegAudioSource", "class_discord_c_p_p_1_1_f_fmpeg_audio_source.html", null ],
       [ "DiscordCPP::FileAudioSource", "class_discord_c_p_p_1_1_file_audio_source.html", null ]
     ] ],
-    [ "DiscordCPP::ChannelHelper", "class_discord_c_p_p_1_1_channel_helper.html", null ],
-    [ "DiscordCPP::DiscordObject", "class_discord_c_p_p_1_1_discord_object.html", [
-      [ "DiscordCPP::ApplicationCommand", "class_discord_c_p_p_1_1_application_command.html", null ],
-      [ "DiscordCPP::Channel", "class_discord_c_p_p_1_1_channel.html", [
-        [ "DiscordCPP::TextChannel", "class_discord_c_p_p_1_1_text_channel.html", [
-          [ "DiscordCPP::DMChannel", "class_discord_c_p_p_1_1_d_m_channel.html", null ],
-          [ "DiscordCPP::GuildChannel", "class_discord_c_p_p_1_1_guild_channel.html", null ]
+    [ "DiscordCPP::BaseDiscordObject", "class_discord_c_p_p_1_1_base_discord_object.html", [
+      [ "DiscordCPP::DiscordObject", "class_discord_c_p_p_1_1_discord_object.html", [
+        [ "DiscordCPP::ApplicationCommand", "class_discord_c_p_p_1_1_application_command.html", null ],
+        [ "DiscordCPP::Channel", "class_discord_c_p_p_1_1_channel.html", [
+          [ "DiscordCPP::TextChannel", "class_discord_c_p_p_1_1_text_channel.html", [
+            [ "DiscordCPP::DMChannel", "class_discord_c_p_p_1_1_d_m_channel.html", null ],
+            [ "DiscordCPP::GuildChannel", "class_discord_c_p_p_1_1_guild_channel.html", null ]
+          ] ],
+          [ "DiscordCPP::VoiceChannel", "class_discord_c_p_p_1_1_voice_channel.html", null ]
         ] ],
-        [ "DiscordCPP::VoiceChannel", "class_discord_c_p_p_1_1_voice_channel.html", null ]
+        [ "DiscordCPP::Discord", "class_discord_c_p_p_1_1_discord.html", null ],
+        [ "DiscordCPP::Emoji", "class_discord_c_p_p_1_1_emoji.html", null ],
+        [ "DiscordCPP::Guild", "class_discord_c_p_p_1_1_guild.html", null ],
+        [ "DiscordCPP::Interaction", "class_discord_c_p_p_1_1_interaction.html", null ],
+        [ "DiscordCPP::InteractionData", "class_discord_c_p_p_1_1_interaction_data.html", null ],
+        [ "DiscordCPP::Message", "class_discord_c_p_p_1_1_message.html", null ],
+        [ "DiscordCPP::Role", "class_discord_c_p_p_1_1_role.html", null ],
+        [ "DiscordCPP::User", "class_discord_c_p_p_1_1_user.html", [
+          [ "DiscordCPP::Member", "class_discord_c_p_p_1_1_member.html", null ]
+        ] ]
       ] ],
-      [ "DiscordCPP::Discord", "class_discord_c_p_p_1_1_discord.html", null ],
-      [ "DiscordCPP::Guild", "class_discord_c_p_p_1_1_guild.html", null ],
-      [ "DiscordCPP::Interaction", "class_discord_c_p_p_1_1_interaction.html", null ],
-      [ "DiscordCPP::InteractionData", "class_discord_c_p_p_1_1_interaction_data.html", null ],
-      [ "DiscordCPP::Message", "class_discord_c_p_p_1_1_message.html", null ],
-      [ "DiscordCPP::User", "class_discord_c_p_p_1_1_user.html", [
-        [ "DiscordCPP::Member", "class_discord_c_p_p_1_1_member.html", null ]
-      ] ]
+      [ "DiscordCPP::Reaction", "class_discord_c_p_p_1_1_reaction.html", null ]
     ] ],
+    [ "DiscordCPP::ChannelHelper", "class_discord_c_p_p_1_1_channel_helper.html", null ],
+    [ "DiscordCPP::MessageReaction::CountDetails", "class_discord_c_p_p_1_1_message_reaction_1_1_count_details.html", null ],
     [ "DiscordCPP::Embed", "class_discord_c_p_p_1_1_embed.html", null ],
     [ "std::exception", null, [
       [ "DiscordCPP::DiscordException", "class_discord_c_p_p_1_1_discord_exception.html", [
+        [ "DiscordCPP::CanceledException", "class_discord_c_p_p_1_1_canceled_exception.html", null ],
         [ "DiscordCPP::ClientException", "class_discord_c_p_p_1_1_client_exception.html", null ],
+        [ "DiscordCPP::DisconnectException", "class_discord_c_p_p_1_1_disconnect_exception.html", null ],
         [ "DiscordCPP::SizeError", "class_discord_c_p_p_1_1_size_error.html", null ],
         [ "DiscordCPP::StatusCodeException", "class_discord_c_p_p_1_1_status_code_exception.html", [
           [ "DiscordCPP::HTTPError", "class_discord_c_p_p_1_1_h_t_t_p_error.html", null ],
@@ -61,6 +69,10 @@ var hierarchy =
     [ "DiscordCPP::InteractionDataOptionHelper", "class_discord_c_p_p_1_1_interaction_data_option_helper.html", null ],
     [ "DiscordCPP::InteractionResolvedData", "class_discord_c_p_p_1_1_interaction_resolved_data.html", null ],
     [ "Logger", "class_logger.html", null ],
+    [ "DiscordCPP::MessageReaction", "class_discord_c_p_p_1_1_message_reaction.html", null ],
+    [ "MutexHolder", "class_mutex_holder.html", null ],
+    [ "DiscordCPP::PermissionOverwrites", "class_discord_c_p_p_1_1_permission_overwrites.html", null ],
+    [ "DiscordCPP::Permissions", "class_discord_c_p_p_1_1_permissions.html", null ],
     [ "DiscordCPP::SharedFuture< Value >", "class_discord_c_p_p_1_1_shared_future.html", null ],
     [ "DiscordCPP::SharedFuture< void >", "class_discord_c_p_p_1_1_shared_future_3_01void_01_4.html", null ],
     [ "DiscordCPP::Threadpool", "class_discord_c_p_p_1_1_threadpool.html", null ],

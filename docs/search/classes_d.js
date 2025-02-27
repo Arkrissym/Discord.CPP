@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['udp_5fclient_0',['udp_client',['../class_discord_c_p_p_1_1udp__client.html',1,'DiscordCPP']]],
-  ['user_1',['User',['../class_discord_c_p_p_1_1_user.html',1,'DiscordCPP']]]
+  ['reaction_0',['Reaction',['../class_discord_c_p_p_1_1_reaction.html',1,'DiscordCPP']]],
+  ['role_1',['Role',['../class_discord_c_p_p_1_1_role.html',1,'DiscordCPP']]]
 ];

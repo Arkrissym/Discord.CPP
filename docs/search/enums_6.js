@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['verificationlevel_0',['VerificationLevel',['../namespace_discord_c_p_p_1_1_verification_level.html#ae5d2ec1a5cfdd3ba66d6034b7e205be4',1,'DiscordCPP::VerificationLevel']]]
+  ['mfalevel_0',['MFALevel',['../namespace_discord_c_p_p_1_1_m_f_a_level.html#af2e68d7f818558e80e74879712909d42',1,'DiscordCPP::MFALevel']]]
 ];

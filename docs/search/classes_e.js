@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['voicechannel_0',['VoiceChannel',['../class_discord_c_p_p_1_1_voice_channel.html',1,'DiscordCPP']]],
-  ['voiceclient_1',['VoiceClient',['../class_discord_c_p_p_1_1_voice_client.html',1,'DiscordCPP']]],
-  ['voicegateway_2',['VoiceGateway',['../class_discord_c_p_p_1_1_voice_gateway.html',1,'DiscordCPP']]],
-  ['voicestate_3',['VoiceState',['../class_discord_c_p_p_1_1_voice_state.html',1,'DiscordCPP']]]
+  ['sharedfuture_0',['SharedFuture',['../class_discord_c_p_p_1_1_shared_future.html',1,'DiscordCPP']]],
+  ['sharedfuture_3c_20void_20_3e_1',['SharedFuture&lt; void &gt;',['../class_discord_c_p_p_1_1_shared_future_3_01void_01_4.html',1,'DiscordCPP']]],
+  ['sizeerror_2',['SizeError',['../class_discord_c_p_p_1_1_size_error.html',1,'DiscordCPP']]],
+  ['statuscodeexception_3',['StatusCodeException',['../class_discord_c_p_p_1_1_status_code_exception.html',1,'DiscordCPP']]]
 ];

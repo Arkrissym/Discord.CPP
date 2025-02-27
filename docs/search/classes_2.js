@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['discord_0',['Discord',['../class_discord_c_p_p_1_1_discord.html',1,'DiscordCPP']]],
-  ['discordexception_1',['DiscordException',['../class_discord_c_p_p_1_1_discord_exception.html',1,'DiscordCPP']]],
-  ['discordobject_2',['DiscordObject',['../class_discord_c_p_p_1_1_discord_object.html',1,'DiscordCPP']]],
-  ['dmchannel_3',['DMChannel',['../class_discord_c_p_p_1_1_d_m_channel.html',1,'DiscordCPP']]]
+  ['canceledexception_0',['CanceledException',['../class_discord_c_p_p_1_1_canceled_exception.html',1,'DiscordCPP']]],
+  ['channel_1',['Channel',['../class_discord_c_p_p_1_1_channel.html',1,'DiscordCPP']]],
+  ['channelhelper_2',['ChannelHelper',['../class_discord_c_p_p_1_1_channel_helper.html',1,'DiscordCPP']]],
+  ['clientexception_3',['ClientException',['../class_discord_c_p_p_1_1_client_exception.html',1,'DiscordCPP']]],
+  ['countdetails_4',['CountDetails',['../class_discord_c_p_p_1_1_message_reaction_1_1_count_details.html',1,'DiscordCPP::MessageReaction']]]
 ];

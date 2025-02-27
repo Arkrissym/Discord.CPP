@@ -28,7 +28,7 @@ However below is an overview of features based on Discord's [library comparision
 |DM        |Yes      |
 |History   |Yes      |
 |Info      |Read-only|
-|Permission|No       |
+|Permission|Read-only|
 
 #### Invites
 |Feature   |working? |
@@ -52,7 +52,7 @@ However below is an overview of features based on Discord's [library comparision
 |Create|No|
 |Delete|No|
 |Edit|No|
-|Info|No|
+|Info|Yes|
 
 #### Server management
 |Feature   |working? |

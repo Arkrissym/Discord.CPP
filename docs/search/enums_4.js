@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['premiumtype_0',['PremiumType',['../class_discord_c_p_p_1_1_user.html#a1c36292da4ed4cfeb8c2c41b53e6594f',1,'DiscordCPP::User']]]
+  ['integrationtype_0',['IntegrationType',['../class_discord_c_p_p_1_1_application_command.html#a93fb8fe0a3b796ee91b88de70c804713',1,'DiscordCPP::ApplicationCommand']]]
 ];

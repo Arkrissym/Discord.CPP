@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ping_0',['PING',['../class_discord_c_p_p_1_1_interaction.html#a82b042a34ce2b0c06df37d811c2a4f83a3f254a29db364a105877fdedb97c8b20',1,'DiscordCPP::Interaction']]]
+  ['only_5fmentions_0',['ONLY_MENTIONS',['../namespace_discord_c_p_p_1_1_default_message_notification_level.html#a37b8b25ee33335283a508e781be2a840a6d3f96c6f9e23d130fe228e513ff8cf9',1,'DiscordCPP::DefaultMessageNotificationLevel']]]
 ];

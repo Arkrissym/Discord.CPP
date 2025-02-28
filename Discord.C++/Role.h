@@ -44,6 +44,8 @@ class Role : public DiscordObject {
      */
     DLL_EXPORT void delete_role();
 
+    /// @return the role's guild id
+    DLL_EXPORT std::string get_guild_id() const { return guild_id; }
     /// @return role name
     DLL_EXPORT std::string get_name() const { return name; }
     /// @return integer representation of hexadecimal color code
@@ -65,8 +67,7 @@ class Role : public DiscordObject {
     /// @return role flags combined as a bitfield
     DLL_EXPORT int get_flags() const { return flags; }
     /** @param[in] flag the Flag to check
-     *	@return true if the role has the given flag
-     */
+     *	@return true if the role has the given flag */
     DLL_EXPORT bool has_flag(Flag flag) const { return flags & flag; }
 };
 }  // namespace DiscordCPP

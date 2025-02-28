@@ -8,10 +8,10 @@ DiscordCPP::Interaction::Interaction(const json& data, const std::string& token)
       type(static_cast<Type>(data.at("type").get<int>())) {
     data.at("application_id").get_to<std::string>(application_id);
 
-    if (has_value(data, "data")) {
-        this->data.emplace(data.at("data"), token);
-    }
     guild_id = get_optional<std::string>(data, "guild_id");
+    if (has_value(data, "data")) {
+        this->data.emplace(data.at("data"), token, guild_id.value_or(""));
+    }
     channel_id = get_optional<std::string>(data, "channel_id");
     if (has_value(data, "member")) {
         member.emplace(data.at("member"), token);

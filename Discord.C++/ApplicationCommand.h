@@ -110,6 +110,6 @@ class ApplicationCommand : public DiscordObject {
     /// Add interaction context where the command can be used.
     DLL_EXPORT void add_contexts(ContextType context) { contexts.push_back(context); }
     /// Set the handler type for PRIMARY_ENTRY_POINT.
-    DLL_EXPORT void get_handler(HandlerType handler) { this->handler.emplace(handler); }
+    DLL_EXPORT void set_handler(HandlerType handler) { this->handler.emplace(handler); }
 };
 }  // namespace DiscordCPP

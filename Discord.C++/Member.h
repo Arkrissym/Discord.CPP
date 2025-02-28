@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Role.h"
 #include "User.h"
 #include "static.h"
 
@@ -21,6 +22,13 @@ class Member : public User {
    public:
     DLL_EXPORT Member(const json& data, const std::string& token);
     DLL_EXPORT Member() = default;
+
+    /** Assign the given role to this member.
+        @param[in] role the role to assign */
+    DLL_EXPORT void add_role(const Role& role);
+    /** Remove the given role from this member.
+        @param[in] role the role to remove */
+    DLL_EXPORT void remove_role(const Role& role);
 
     ///@return Nickname (Username if not present) as std::string
     DLL_EXPORT explicit operator std::string() override;

@@ -11,7 +11,9 @@ DiscordCPP::InteractionResolvedData::InteractionResolvedData(const json& data, c
 
     if (has_value(data, "members")) {
         for (auto [key, value] : data["members"].items()) {
-            members.insert(std::make_pair(key, Member(value, token)));
+            json member_json = value;
+            member_json["user"] = data["users"][key];
+            members.insert(std::make_pair(key, Member(member_json, token)));
         }
     }
 

@@ -18,3 +18,25 @@ DiscordCPP::Member::operator std::string() {
     else
         return nick;
 }
+
+void DiscordCPP::Member::add_role(const DiscordCPP::Role& role) {
+    std::string url = "/guilds/" + role.get_guild_id() + "/members/" + get_id();
+
+    role_ids.push_back(role.get_id());
+    json data = {{"roles", role_ids}};
+
+    api_call(url, "PATCH", data, "application/json", false);
+}
+
+void DiscordCPP::Member::remove_role(const DiscordCPP::Role& role) {
+    std::string url = "/guilds/" + role.get_guild_id() + "/members/" + get_id();
+
+    role_ids.erase(std::remove_if(role_ids.begin(),
+                                  role_ids.end(),
+                                  [role](std::string i) {
+                                      return role.get_id() == i;
+                                  }));
+    json data = {{"roles", role_ids}};
+
+    api_call(url, "PATCH", data, "application/json", false);
+}

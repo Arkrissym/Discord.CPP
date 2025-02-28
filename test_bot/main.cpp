@@ -113,6 +113,38 @@ class Client : public Discord {
         permissions.add_integration_types(DiscordCPP::ApplicationCommand::GUILD_INSTALL);
         create_application_command(permissions);
 
+        ApplicationCommand role_cmd;
+        role_cmd.set_name("role");
+        role_cmd.set_description("add/remove roles from a member");
+        role_cmd.set_type(DiscordCPP::ApplicationCommand::CHAT_INPUT);
+        role_cmd.add_contexts(DiscordCPP::ApplicationCommand::GUILD);
+        role_cmd.add_integration_types(DiscordCPP::ApplicationCommand::GUILD_INSTALL);
+        ApplicationCommandValueOption member;
+        member.set_type(DiscordCPP::ApplicationCommandOption::USER);
+        member.set_name("member");
+        member.set_description("member");
+        member.set_required(true);
+        ApplicationCommandValueOption role;
+        role.set_type(DiscordCPP::ApplicationCommandOption::ROLE);
+        role.set_name("role");
+        role.set_description("role");
+        role.set_required(true);
+        ApplicationCommandSubcommand add;
+        add.set_type(DiscordCPP::ApplicationCommandOption::SUB_COMMAND);
+        add.set_name("add");
+        add.set_description("assign role to member");
+        add.add_option(member);
+        add.add_option(role);
+        ApplicationCommandSubcommand remove;
+        remove.set_type(DiscordCPP::ApplicationCommandOption::SUB_COMMAND);
+        remove.set_name("remove");
+        remove.set_description("remove role from member");
+        remove.add_option(member);
+        remove.add_option(role);
+        role_cmd.add_option(add);
+        role_cmd.add_option(remove);
+        create_application_command(role_cmd);
+
         update_presence(DiscordStatus::Online, Activity("test", Activity::Type::Game));
     }
 
@@ -480,6 +512,19 @@ class Client : public Discord {
                 interaction.reply("You are " + std::string(is_admin ? "an" : "no") + " admin"                                     //
                                   + "\nYou are " + std::string(can_delete_messages ? "" : "not ") + "allowed to delete messages"  //
                                   + "\nYou can " + std::string(can_kick_members ? "" : "not ") + "kick members");
+            }
+        } else if (name == "role") {
+            auto options = interaction.get_data().value().get_options();
+            auto member = interaction.get_data()->get_resolved_data()->get_members().begin()->second;
+            auto role = interaction.get_data()->get_resolved_data()->get_roles().begin()->second;
+            for (auto& option : options) {
+                if (InteractionDataOptionHelper::get_interaction_data_option_name(option) == "add" && InteractionDataOptionHelper::get_interaction_data_option_type(option) == ApplicationCommandOption::Type::SUB_COMMAND) {
+                    member.add_role(role);
+                    interaction.reply("role " + role.get_name() + " assigned to " + std::string(member));
+                } else if (InteractionDataOptionHelper::get_interaction_data_option_name(option) == "remove" && InteractionDataOptionHelper::get_interaction_data_option_type(option) == ApplicationCommandOption::Type::SUB_COMMAND) {
+                    member.remove_role(role);
+                    interaction.reply("role " + role.get_name() + " removed from " + std::string(member));
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"class_discord_c_p_p_1_1_message.html#a55c38b71d60dc9a26c44b9ec5793d818":[0,0,0,47,22],
+"class_discord_c_p_p_1_1_message.html#a55c38b71d60dc9a26c44b9ec5793d818":[1,0,0,42,22],
 "class_discord_c_p_p_1_1_message.html#a6118933664811a68a67227bd5e2c9137":[0,0,0,47,19],
 "class_discord_c_p_p_1_1_message.html#a6118933664811a68a67227bd5e2c9137":[1,0,0,42,19],
 "class_discord_c_p_p_1_1_message.html#a64080363a10634cde7b1b77169011a91":[0,0,0,47,14],
@@ -246,8 +248,6 @@ var NAVTREEINDEX4 =
 "class_discord_c_p_p_1_1_reaction.html#afc6e93720e79d20fa07692b3931374c7":[1,0,0,47,11],
 "class_discord_c_p_p_1_1_role.html":[0,0,0,53],
 "class_discord_c_p_p_1_1_role.html":[1,0,0,48],
-"class_discord_c_p_p_1_1_role.html#a13d5cf28893f76766ab88e6034a1b8f7":[0,0,0,53,6],
-"class_discord_c_p_p_1_1_role.html#a13d5cf28893f76766ab88e6034a1b8f7":[1,0,0,48,6],
-"class_discord_c_p_p_1_1_role.html#a156be050f615c55c79c53893a3dbfaa4":[0,0,0,53,0],
-"class_discord_c_p_p_1_1_role.html#a156be050f615c55c79c53893a3dbfaa4":[1,0,0,48,0]
+"class_discord_c_p_p_1_1_role.html#a13d5cf28893f76766ab88e6034a1b8f7":[0,0,0,53,7],
+"class_discord_c_p_p_1_1_role.html#a13d5cf28893f76766ab88e6034a1b8f7":[1,0,0,48,7]
 };

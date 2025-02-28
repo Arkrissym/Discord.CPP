@@ -1,5 +1,9 @@
 var NAVTREEINDEX6 =
 {
+"class_logger.html#ab4c4d86279176eb0ede726bc5b4d5ddb":[1,0,2,4],
+"class_logger.html#ab6042fdfcbb14026098e0df9d6b32f27":[1,0,2,3],
+"class_logger.html#ac45b6ef7069b222c094da3724d1aa8fb":[1,0,2,0],
+"class_logger.html#ae7e2b50eb9e77e42da9555120a14e7d6":[1,0,2,1],
 "class_mutex_holder.html":[1,0,3],
 "class_mutex_holder.html#a261dd0dc04592f2ce770dd75a014ec01":[1,0,3,1],
 "class_mutex_holder.html#a589aec636a20db9b7215d9035559e1b5":[1,0,3,3],

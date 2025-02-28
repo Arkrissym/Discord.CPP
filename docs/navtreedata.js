@@ -69,9 +69,9 @@ var NAVTREEINDEX =
 "class_discord_c_p_p_1_1_application_command_integer_option.html#a16b34bd2f65774cd05b86a7196d5c618",
 "class_discord_c_p_p_1_1_discord.html#a9185bc37ac09afe6b8ccf2ae0a175cd1",
 "class_discord_c_p_p_1_1_guild.html#a7cc3b77f110ddd5ceee31964240f11a5",
-"class_discord_c_p_p_1_1_message.html#a6118933664811a68a67227bd5e2c9137",
-"class_discord_c_p_p_1_1_role.html#a21b1a62d757064c4539fa6971d41226c",
-"class_mutex_holder.html"
+"class_discord_c_p_p_1_1_message.html#a55c38b71d60dc9a26c44b9ec5793d818",
+"class_discord_c_p_p_1_1_role.html#a156be050f615c55c79c53893a3dbfaa4",
+"class_logger.html#ab4c4d86279176eb0ede726bc5b4d5ddb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

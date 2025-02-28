@@ -122,6 +122,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6fdf564ed0418e14edd442fe8a7034ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f370fdcfd46384c0079752faf2b16bb" id="r_a4f370fdcfd46384c0079752faf2b16bb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4f370fdcfd46384c0079752faf2b16bb">Member</a> ()=default</td></tr>
 <tr class="separator:a4f370fdcfd46384c0079752faf2b16bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2eee099aa465182e6193fe4b13c08a0" id="r_aa2eee099aa465182e6193fe4b13c08a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2eee099aa465182e6193fe4b13c08a0">add_role</a> (const <a class="el" href="class_discord_c_p_p_1_1_role.html">Role</a> &amp;role)</td></tr>
+<tr class="separator:aa2eee099aa465182e6193fe4b13c08a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac18cd9a00bf8d5aee2ae9bd411fa2d2b" id="r_ac18cd9a00bf8d5aee2ae9bd411fa2d2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac18cd9a00bf8d5aee2ae9bd411fa2d2b">remove_role</a> (const <a class="el" href="class_discord_c_p_p_1_1_role.html">Role</a> &amp;role)</td></tr>
+<tr class="separator:ac18cd9a00bf8d5aee2ae9bd411fa2d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4538674a773f620ddc9585739db90bc7" id="r_a4538674a773f620ddc9585739db90bc7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4538674a773f620ddc9585739db90bc7">operator std::string</a> () override</td></tr>
 <tr class="separator:a4538674a773f620ddc9585739db90bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13f4981dea5a038f0e84f00a27f017df" id="r_a13f4981dea5a038f0e84f00a27f017df"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13f4981dea5a038f0e84f00a27f017df">get_nick</a> () const</td></tr>
@@ -259,6 +263,29 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa2eee099aa465182e6193fe4b13c08a0" name="aa2eee099aa465182e6193fe4b13c08a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2eee099aa465182e6193fe4b13c08a0">&#9670;&#160;</a></span>add_role()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DiscordCPP::Member::add_role </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_discord_c_p_p_1_1_role.html">Role</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>role</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Assign the given role to this member. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">role</td><td>the role to assign </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="af7053460d70aa7a8619571b1d02cb8e5" name="af7053460d70aa7a8619571b1d02cb8e5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af7053460d70aa7a8619571b1d02cb8e5">&#9670;&#160;</a></span>get_joined_at()</h2>
 
@@ -414,6 +441,29 @@ Additional Inherited Members</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Nickname (Username if not present) as std::string </dd></dl>
 
 <p>Reimplemented from <a class="el" href="class_discord_c_p_p_1_1_user.html#a6d46175ca41f9e24c70b2b119ddca6df">DiscordCPP::User</a>.</p>
+
+</div>
+</div>
+<a id="ac18cd9a00bf8d5aee2ae9bd411fa2d2b" name="ac18cd9a00bf8d5aee2ae9bd411fa2d2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac18cd9a00bf8d5aee2ae9bd411fa2d2b">&#9670;&#160;</a></span>remove_role()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DiscordCPP::Member::remove_role </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_discord_c_p_p_1_1_role.html">Role</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>role</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Remove the given role from this member. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">role</td><td>the role to remove </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

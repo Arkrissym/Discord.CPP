@@ -6,6 +6,7 @@ var class_discord_c_p_p_1_1_role =
     [ "delete_role", "class_discord_c_p_p_1_1_role.html#a21b1a62d757064c4539fa6971d41226c", null ],
     [ "get_color", "class_discord_c_p_p_1_1_role.html#abdf94e3cb7d9a3a98eefbb3fb1792f70", null ],
     [ "get_flags", "class_discord_c_p_p_1_1_role.html#a49df2b42355413e3e21362b16b0e176f", null ],
+    [ "get_guild_id", "class_discord_c_p_p_1_1_role.html#a1a7c317bd456435166a483ecfc9194c0", null ],
     [ "get_icon", "class_discord_c_p_p_1_1_role.html#a13d5cf28893f76766ab88e6034a1b8f7", null ],
     [ "get_name", "class_discord_c_p_p_1_1_role.html#a648d36d8e91caac4d48d492647d6b4b5", null ],
     [ "get_permissions", "class_discord_c_p_p_1_1_role.html#a6e9a37cab9d210a27517190fbdf1f7e3", null ],

@@ -29,12 +29,26 @@ DiscordCPP::Interaction::Interaction(const json& data, const std::string& token)
 
 DiscordCPP::Interaction::Interaction(const Interaction& old)
     : DiscordCPP::DiscordObject(old) {
+    token = old.token;
+    application_id = old.application_id;
+    type = old.type;
+    data = old.data;
+
+    guild_id = old.guild_id;
     if (old.guild != nullptr) {
         guild = new Guild(*old.guild);
     }
+
+    channel_id = old.channel_id;
     if (old.channel != nullptr) {
         channel = new Channel(*old.channel);
     }
+
+    member = old.member;
+    user = old.user;
+    message = old.message;
+    locale = old.locale;
+    guild_locale = old.guild_locale;
 }
 
 DiscordCPP::Interaction::~Interaction() {

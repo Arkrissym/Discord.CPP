@@ -43,7 +43,7 @@ json DiscordCPP::MainGateway::get_heartbeat_payload() {
 void DiscordCPP::MainGateway::on_websocket_incoming_message(const std::string& message) {
     std::string decompressed_message = decompress_message(message);
     threadpool->execute([this, decompressed_message]() {
-        _log.debug("Received message: " + decompressed_message);
+        _log.trace("Received message: " + decompressed_message);
 
         json payload = json::parse(decompressed_message);
         int op = payload["op"].get<int>();
@@ -98,7 +98,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(const std::string& m
                 identify();
                 break;
             case 11:
-                _log.debug("received heartbeat ACK");
+                _log.trace("received heartbeat ACK");
                 _last_heartbeat_ack = time(nullptr);
                 break;
             default:
@@ -112,7 +112,7 @@ void DiscordCPP::MainGateway::on_websocket_incoming_message(const std::string& m
 DiscordCPP::SharedFuture<void> DiscordCPP::MainGateway::send_heartbeat_ack() {
     auto f = this->send({{"op", 11}});
     return f.then([this] {
-        _log.debug("Heartbeat ACK message has been sent");
+        _log.trace("Heartbeat ACK message has been sent");
     });
 }
 

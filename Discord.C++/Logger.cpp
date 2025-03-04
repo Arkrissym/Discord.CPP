@@ -27,6 +27,9 @@ void Logger::print(const Loglevel level, const std::string& message) {
     if (level >= _level) {
         std::string level_name;
         switch (level) {
+            case Trace:
+                level_name = "TRACE";
+                break;
             case Debug:
                 level_name = "DEBUG";
                 break;
@@ -54,6 +57,8 @@ void Logger::print(const Loglevel level, const std::string& message) {
         std::cout << " - " << _name.c_str() << " - " << message.c_str() << std::endl;
     }
 }
+
+void Logger::trace(const std::string& message) { print(Trace, message); }
 
 void Logger::debug(const std::string& message) { print(Debug, message); }
 

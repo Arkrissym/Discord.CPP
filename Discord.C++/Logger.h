@@ -10,6 +10,7 @@
 #endif
 
 enum Loglevel {
+    Trace,
     Debug,
     Info,
     Warning,
@@ -35,6 +36,7 @@ class Logger {
 
     DLL_EXPORT void print(const Loglevel level, const std::string& message);
 
+    DLL_EXPORT void trace(const std::string& message);
     DLL_EXPORT void debug(const std::string& message);
     DLL_EXPORT void info(const std::string& message);
     DLL_EXPORT void warning(const std::string& message);

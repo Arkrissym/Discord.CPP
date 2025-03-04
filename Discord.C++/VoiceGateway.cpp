@@ -43,7 +43,7 @@ void DiscordCPP::VoiceGateway::identify() {
 
 void DiscordCPP::VoiceGateway::on_websocket_incoming_message(const std::string& message) {
     threadpool->execute([this, message]() {
-        _log.debug("Received message: " + message);
+        _log.trace("Received message: " + message);
 
         json payload = json::parse(message);
         int op = payload["op"].get<int>();
@@ -60,7 +60,7 @@ void DiscordCPP::VoiceGateway::on_websocket_incoming_message(const std::string& 
                 _log.info("connected to: " + _url);
                 break;
             case 6:
-                _log.debug("received heartbeat ack");
+                _log.trace("received heartbeat ack");
                 _last_heartbeat_ack = time(nullptr);
                 break;
             case 8:

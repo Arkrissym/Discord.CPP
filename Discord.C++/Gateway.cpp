@@ -42,7 +42,7 @@ void DiscordCPP::Gateway::start_heartbeating() {
 
                     try {
                         this->send(payload).get();
-                        _log.debug("Heartbeat message has been sent");
+                        _log.trace("Heartbeat message has been sent");
                     } catch (const std::exception& e) {
                         _log.error("Cannot send heartbeat message: " + std::string(e.what()));
                     }
@@ -78,7 +78,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
         try {
             io_context.restart();
             connect(_resume_url);
-            _log.debug("reconnected");
+            _log.trace("reconnected");
             _reconnect_timeout = 0;
             _last_heartbeat_ack = time(nullptr);
             _reconnecting = false;
@@ -93,7 +93,7 @@ void DiscordCPP::Gateway::on_websocket_disconnnect() {
 }
 
 void DiscordCPP::Gateway::on_read(boost::system::error_code error_code, std::size_t bytes) {
-    _log.debug("Received " + std::to_string(bytes) + " bytes");
+    _log.trace("Received " + std::to_string(bytes) + " bytes");
 
     if (error_code == boost::beast::websocket::error::closed || error_code == boost::beast::errc::operation_canceled || error_code == boost::asio::ssl::error::stream_truncated || bytes <= 0) {
         on_websocket_disconnnect();
@@ -174,7 +174,7 @@ void DiscordCPP::Gateway::connect(const std::string& url) {
         query = "/" + tmp_url.substr(query_index, std::string::npos);
     }
 
-    _log.debug("host: " + host + "\tquery: " + query);
+    _log.trace("host: " + host + "\tquery: " + query);
     _log.info("connecting to websocket: " + url);
 
     tcp::resolver resolver{io_context};
@@ -210,9 +210,9 @@ void DiscordCPP::Gateway::connect(const std::string& url) {
     });
 
     threadpool->execute([this]() {
-        _log.debug("Start io_context");
+        _log.trace("Start io_context");
         io_context.run();
-        _log.debug("Stop io_context");
+        _log.trace("Stop io_context");
     });
 }
 
@@ -225,7 +225,7 @@ DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::send(const json& message) {
 
         std::string message_string = message.dump();
 
-        _log.debug("sending message: " + message_string);
+        _log.trace("sending message: " + message_string);
 
         beast::error_code error_code;
         _client->write(net::buffer(message_string), error_code);
@@ -234,7 +234,7 @@ DiscordCPP::SharedFuture<void> DiscordCPP::Gateway::send(const json& message) {
             throw beast::system_error{error_code};
         }
 
-        _log.debug("Message sent: " + message_string);
+        _log.trace("Message sent: " + message_string);
     });
 }
 

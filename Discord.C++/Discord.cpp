@@ -492,7 +492,7 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const 
         }
     } else {
         log.debug("ignoring event: " + event_name);
-        log.debug(data.dump());
+        log.trace(data.dump());
     }
 }
 

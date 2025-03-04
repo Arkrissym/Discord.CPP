@@ -39,7 +39,7 @@ DiscordCPP::udp_client::udp_client(const std::string& ip, const int port) {
 }
 
 DiscordCPP::udp_client::~udp_client() {
-    _log.debug("~udp_client");
+    _log.trace("~udp_client");
     _socket->close();
 }
 
@@ -68,7 +68,7 @@ std::string DiscordCPP::udp_client::receive() {
 void DiscordCPP::VoiceClient::connect_voice_udp() {
     _udp = std::make_unique<udp_client>(_server_ip, _server_port);
 
-    _log.debug("performing IP Discovery");
+    _log.trace("performing IP Discovery");
 
     std::string msg;
     msg.resize(74, '\0');
@@ -102,11 +102,11 @@ void DiscordCPP::VoiceClient::connect_voice_udp() {
     _my_ip = my_ip;
     _my_port = my_port;
 
-    _log.debug("found own IP and port: " + my_ip + ":" + std::to_string(my_port));
+    _log.trace("found own IP and port: " + my_ip + ":" + std::to_string(my_port));
 }
 
 void DiscordCPP::VoiceClient::select_protocol() {
-    _log.debug("initialising libsodium");
+    _log.trace("initialising libsodium");
     if (sodium_init() == -1) {
         throw ClientException("libsodium initialisation failed");
     }
@@ -193,7 +193,7 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
             case 9:
                 break;
             default:
-                _log.debug(data.dump());
+                _log.trace(data.dump());
                 break;
         }
     });
@@ -206,7 +206,7 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
 }
 
 DiscordCPP::VoiceClient::~VoiceClient() {
-    _log.debug("~VoiceClient");
+    _log.trace("~VoiceClient");
     _ready = false;
     _voice_ws->close();
 }
@@ -243,7 +243,7 @@ void DiscordCPP::VoiceClient::stop_playing() {
 
 DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source) {
     return threadpool->execute([this, source] {
-        _log.debug("creating opus encoder");
+        _log.trace("creating opus encoder");
         int error = 0;
         OpusEncoder* encoder = opus_encoder_create(
             SAMPLE_RATE, CHANNELS, OPUS_APPLICATION_AUDIO, &error);
@@ -262,7 +262,7 @@ DiscordCPP::SharedFuture<void> DiscordCPP::VoiceClient::play(AudioSource* source
         opus_int16* in_data = nullptr;
         std::vector<unsigned char> opus_data(MAX_PACKET_SIZE);
 
-        _log.debug("starting loop");
+        _log.trace("starting loop");
 
         auto next_time = std::chrono::high_resolution_clock::now();
 

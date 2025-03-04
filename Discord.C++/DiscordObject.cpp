@@ -139,7 +139,7 @@ json DiscordCPP::BaseDiscordObject::api_call(const std::string& url, const std::
 }
 
 DiscordCPP::BaseDiscordObject::http_response DiscordCPP::BaseDiscordObject::request_internal(const std::string& target, const std::string& method, const std::string& data, const std::string& content_type) {
-    Logger("discord.object.request_internal").debug("sending message " + data + " via " + method + " to https://" + DISCORD_HOST + target);
+    Logger("discord.object.request_internal").debug(method + " https://" + DISCORD_HOST + target);
 
     ssl::context ssl_context(ssl::context::tlsv13);
     ssl_context.set_verify_mode(ssl::verify_peer | boost::asio::ssl::verify_fail_if_no_peer_cert);
@@ -167,7 +167,7 @@ DiscordCPP::BaseDiscordObject::http_response DiscordCPP::BaseDiscordObject::requ
     request.set(http::field::authorization, "Bot " + _token);
     request.set(http::field::connection, "Close");
     if (data.length() > 0) {
-        Logger("discord.object.request_internal").debug("setting message body \"" + data + "\" with content type \"" + content_type + "\" and content length \"" + std::to_string(data.length()) + "\"");
+        Logger("discord.object.request_internal").trace("setting message body \"" + data + "\" with content type \"" + content_type + "\" and content length \"" + std::to_string(data.length()) + "\"");
         request.set(http::field::content_type, content_type);
         request.set(http::field::content_length, std::to_string(data.length()));
         request.body() = data;
@@ -179,7 +179,7 @@ DiscordCPP::BaseDiscordObject::http_response DiscordCPP::BaseDiscordObject::requ
     http::response<http::string_body> response;
     http::read(stream, buffer, response);
 
-    Logger("discord.object.request_internal").debug("response: " + std::to_string(response.result_int()) + ": " + response.body());
+    Logger("discord.object.request_internal").trace("response: " + std::to_string(response.result_int()) + ": " + response.body());
 
     beast::error_code error_code;
     stream.shutdown(error_code);

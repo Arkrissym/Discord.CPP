@@ -547,7 +547,7 @@ int main() {
 #endif
 
     Logger::register_thread(std::this_thread::get_id(), "main");
-    Logger::set_log_level(Debug);
+    Logger::set_log_level(Trace);
 
     Intents intents = Intents::All();
     intents.add(Intents::MEMBERS);

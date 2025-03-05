@@ -5,6 +5,7 @@
 
 #include "ApplicationCommandOption.h"
 #include "DiscordObject.h"
+#include "Permissions.h"
 #include "static.h"
 
 namespace DiscordCPP {
@@ -49,7 +50,8 @@ class ApplicationCommand : public DiscordObject {
     // description_localizations
     /// Parameters for the command, max of 25.
     std::vector<ApplicationCommandOptionVariant> options;
-    // default_member_permissions
+    /// Set of permissions
+    Permissions default_member_permissions;
     /// Indicates whether the command is age-restricted, defaults to false.
     bool nsfw = false;
     /// Installation contexts where the command is available, only for globally-scoped commands. Defaults to your app's configured contexts.
@@ -82,6 +84,8 @@ class ApplicationCommand : public DiscordObject {
     DLL_EXPORT Type get_type() { return type; }
     /// @return Parameters for the command, max of 25.
     DLL_EXPORT std::vector<ApplicationCommandOptionVariant> get_options() { return options; }
+    /// @return Set of permissions
+    DLL_EXPORT Permissions get_default_member_permissions() { return default_member_permissions; }
     /// @return Indicates whether the command is age-restricted, defaults to false.
     DLL_EXPORT bool is_nsfw() { return nsfw; }
     /// @return Installation contexts where the command is available.
@@ -103,6 +107,8 @@ class ApplicationCommand : public DiscordObject {
     DLL_EXPORT void set_type(Type type) { this->type = type; }
     /// Add parameters for the command, max of 25.
     DLL_EXPORT void add_option(ApplicationCommandOptionVariant option) { options.push_back(option); }
+    /// Set the default member permissions required
+    DLL_EXPORT void set_default_member_permissions(Permissions permissions) { default_member_permissions = permissions; }
     /// Set whether the command is age-restricted, defaults to false.
     DLL_EXPORT void set_nsfw(bool nsfw) { this->nsfw = nsfw; }
     /// Add installation context where the command is available.

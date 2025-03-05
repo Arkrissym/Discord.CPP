@@ -118,6 +118,9 @@ class Permissions {
     DLL_EXPORT Permissions() : permissions(0) {};
     DLL_EXPORT Permissions(const std::string& permissions);
 
+    DLL_EXPORT operator std::string();
+    DLL_EXPORT json to_json();
+
     /// add the given permission
     DLL_EXPORT void add(const Permission& permission);
     /// merge the given permission set

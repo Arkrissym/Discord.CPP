@@ -12,6 +12,20 @@ DiscordCPP::Permissions::Permissions(const std::string& permissions) {
     iss >> this->permissions;
 }
 
+DiscordCPP::Permissions::operator std::string() {
+    std::ostringstream oss;
+    oss.exceptions(std::ios::failbit | std::ios::badbit);
+    oss << permissions;
+    return oss.str();
+}
+
+json DiscordCPP::Permissions::to_json() {
+    if (permissions == 0) {
+        return nullptr;
+    }
+    return std::string(*this);
+}
+
 void DiscordCPP::Permissions::add(const Permission& permission) {
     permissions |= (1 << permission);
 }

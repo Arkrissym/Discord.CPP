@@ -13,6 +13,7 @@ DiscordCPP::ApplicationCommand::ApplicationCommand(const json& data, const std::
 
     name = data.at("name").get<std::string>();
     description = data.at("description").get<std::string>();
+    default_member_permissions = Permissions(get_or_else<std::string>(data, "default_member_permissions", "0"));
     nsfw = get_or_else<bool>(data, "nsfw", false);
     version = data.at("version").get<std::string>();
 
@@ -45,6 +46,7 @@ json DiscordCPP::ApplicationCommand::to_json() {
     data["name"] = name;
     data["description"] = description;
     data["nsfw"] = nsfw;
+    data["default_member_permissions"] = default_member_permissions.to_json();
 
     for (auto& integration_type : integration_types) {
         data["integration_types"].push_back(integration_type);

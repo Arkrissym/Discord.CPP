@@ -1,7 +1,5 @@
 #include "TextChannel.h"
 
-#include "Channel.h"
-#include "DiscordObject.h"
 #include "Embed.h"
 #include "Exceptions.h"
 #include "Message.h"
@@ -47,6 +45,12 @@ DiscordCPP::Message DiscordCPP::TextChannel::send(DiscordCPP::Embed embed) {
     data["embeds"].push_back(embed.to_json());
 
     return {api_call(url, "POST", data, "application/json"), get_token()};
+}
+
+/// @param[in]  message_id  Message ID
+DiscordCPP::Message DiscordCPP::TextChannel::get_message(const std::string& message_id) {
+    std::string url = "/channels/" + get_id() + "/messages/" + message_id;
+    return Message(api_call(url), get_token());
 }
 
 /**	@param[in]	limit	Max number of messages to retrieve (1-100)

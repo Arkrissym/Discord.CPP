@@ -33,6 +33,8 @@ class TextChannel : public Channel {
     /// Send an Embed to this channel.
     DLL_EXPORT Message send(Embed embed);
 
+    /// Get message by id
+    DLL_EXPORT Message get_message(const std::string& message_id);
     /// Get messages from channel history
     DLL_EXPORT std::vector<std::shared_ptr<Message>> history(const int limit = 100, const std::string& before = "", const std::string& after = "", const std::string& around = "");
 

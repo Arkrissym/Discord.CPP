@@ -32,6 +32,9 @@ class Intents {
      *	This affects the following events:
      *		- on_user_join
      *		- on_user_remove
+     *      - on_role_create
+     *      - on_role_update
+     *      - on_role_delete
      */
     static const unsigned int MEMBERS = 1 << 1;
 

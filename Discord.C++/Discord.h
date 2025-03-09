@@ -24,6 +24,7 @@
 #include "MainGateway.h"
 #include "Message.h"
 #include "Reaction.h"
+#include "Role.h"
 #include "TextChannel.h"
 #include "Threadpool.h"
 #include "User.h"
@@ -136,9 +137,24 @@ class Discord : public DiscordObject {
     */
     virtual void on_typing_start(User, TextChannel, unsigned int) {}
 
+    /** called when a role was created
+        @param[in]  role    the created role
+     */
+    virtual void on_role_create(Role) {}
+
+    /** called when a role was updated
+        @param[in]  role    the updated role
+     */
+    virtual void on_role_update(Role) {}
+
+    /** called when a role was deleted
+        @param[in]  role    the deleted role
+     */
+    virtual void on_role_delete(Role) {}
+
     /** called when an interaction was created
-        @param[in]  interaction the Interaction that was received
-    */
+       @param[in]  interaction the Interaction that was received
+   */
     virtual void on_interaction(Interaction) {}
 
    public:

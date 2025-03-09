@@ -363,13 +363,39 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const 
         guild->_update_emojis(emojis);
     } else if (event_name == "GUILD_ROLE_CREATE") {
         Guild *guild = get_guild(data.at("guild_id").get<std::string>());
+        Role role = Role(data.at("role"), guild->get_id(), get_token());
         guild->_add_role(Role(data.at("role"), guild->get_id(), get_token()));
+
+        try {
+            on_role_create(role);
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_role_create: " + std::string(e.what()));
+        }
     } else if (event_name == "GUILD_ROLE_UPDATE") {
         Guild *guild = get_guild(data.at("guild_id").get<std::string>());
-        guild->_update_role(Role(data.at("role"), guild->get_id(), get_token()));
+        Role role = Role(data.at("role"), guild->get_id(), get_token());
+        guild->_update_role(role);
+
+        try {
+            on_role_update(role);
+        } catch (const std::exception &e) {
+            log.error("ignoring exception in on_role_update: " + std::string(e.what()));
+        }
     } else if (event_name == "GUILD_ROLE_DELETE") {
+        std::string role_id = data.at("role_id").get<std::string>();
         Guild *guild = get_guild(data.at("guild_id").get<std::string>());
-        guild->_remove_role(data.at("role_id").get<std::string>());
+
+        for (Role role : guild->get_roles()) {
+            if (role.get_id() == role_id) {
+                guild->_remove_role(role_id);
+                try {
+                    on_role_delete(role);
+                } catch (const std::exception &e) {
+                    log.error("ignoring exception in on_role_delete: " + std::string(e.what()));
+                }
+                break;
+            }
+        }
     } else if (event_name == "MESSAGE_CREATE") {
         if (has_value(data, ("guild_id"))) {
             std::string guild_id = data.at("guild_id").get<std::string>();

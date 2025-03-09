@@ -409,6 +409,27 @@ class Client : public Discord {
                  " in channel: " + message.get_channel_id());
     }
 
+    void on_role_create(Role role) override {
+        log.info("Role " + role.get_name() +
+                 " (id: " + role.get_id() +
+                 ") was created in guild " + role.get_guild_id() +
+                 " with permissions " + std::string(role.get_permissions()));
+    }
+
+    void on_role_update(Role role) override {
+        log.info("Role " + role.get_name() +
+                 " (id: " + role.get_id() +
+                 ") was upated in guild " + role.get_guild_id() +
+                 " with permissions " + std::string(role.get_permissions()));
+    }
+
+    void on_role_delete(Role role) override {
+        log.info("Role " + role.get_name() +
+                 " (id: " + role.get_id() +
+                 ") was deleted in guild " + role.get_guild_id() +
+                 " with permissions " + std::string(role.get_permissions()));
+    }
+
     void on_interaction(Interaction interaction) override {
         if (interaction.get_type() != Interaction::Type::APPLICATION_COMMAND) {
             return;

@@ -276,13 +276,13 @@ void DiscordCPP::Discord::handle_raw_event(const std::string &event_name, const 
                 Guild *old = _guild;
                 _guild = tmp_guild;
                 delete old;
-                log.debug("Updated guild data");
+                log.trace("Updated guild data");
                 return;
             }
         }
 
         _guilds.push_back(tmp_guild);
-        log.debug("data of new guild added");
+        log.trace("data of new guild added");
     } else if (event_name == "GUILD_DELETE") {
         std::string guild_id = data.at("guild_id").get<std::string>();
 
@@ -548,7 +548,7 @@ void DiscordCPP::Discord::_process_voice_state_update(const json &data) {
         voice_state->endpoint = "";
         voice_state->voice_token = "";
         if (voice_state->voice_client != nullptr) {
-            log.debug("disconnecting voice client");
+            log.debug("disconnecting voice client for guild " + voice_state->guild_id);
             voice_state->voice_client->disconnect();
             voice_state->voice_client = nullptr;
         }
@@ -557,5 +557,5 @@ void DiscordCPP::Discord::_process_voice_state_update(const json &data) {
         voice_state->session_id = data.at("session_id").get<std::string>();
     }
 
-    log.debug("Updated voice state for user " + user_id);
+    log.trace("Updated voice state for user " + user_id);
 }

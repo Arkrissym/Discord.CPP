@@ -125,7 +125,7 @@ void DiscordCPP::VoiceClient::select_protocol() {
     };
 
     _voice_ws->send(payload).get();
-    _log.debug("Opcode 1 Select Protocol Payload has been sent");
+    _log.trace("Opcode 1 Select Protocol Payload has been sent");
 }
 
 void DiscordCPP::VoiceClient::load_session_description(const json& data) {
@@ -148,7 +148,7 @@ void DiscordCPP::VoiceClient::speak(bool speak) {
     };
 
     _voice_ws->send(payload).get();
-    _log.debug("Opcode 5 Speaking Payload has been sent");
+    _log.trace("Opcode 5 Speaking Payload has been sent");
 }
 
 DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,

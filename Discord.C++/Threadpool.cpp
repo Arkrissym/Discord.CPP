@@ -31,7 +31,7 @@ void DiscordCPP::Threadpool::start_thread() {
         [this]() {
             Logger thread_log = Logger("Worker");
 
-            thread_log.debug("Thread started");
+            thread_log.trace("Thread started");
 
             while (true) {
                 std::function<void()> task;
@@ -52,7 +52,7 @@ void DiscordCPP::Threadpool::start_thread() {
                 task();
             }
 
-            thread_log.debug("Thread closed");
+            thread_log.trace("Thread closed");
             Logger::unregister_thread(std::this_thread::get_id());
         });
 

@@ -31,13 +31,13 @@ void DiscordCPP::VoiceGateway::identify() {
         _resume = false;
 
         this->send(out_payload).get();
-        _log.debug("Resume payload has been sent");
+        _log.trace("Resume payload has been sent");
     } else {
         out_payload["op"] = 0;
         out_payload["d"]["user_id"] = _user_id;
 
         this->send(out_payload).get();
-        _log.debug("Identify payload has been sent");
+        _log.trace("Identify payload has been sent");
     }
 }
 

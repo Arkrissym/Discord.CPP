@@ -202,7 +202,7 @@ void DiscordCPP::Gateway::connect(const std::string& url) {
         start_heartbeating();
     }
 
-    _log.debug("Successfully connected to endpoint: " + endpoint.address().to_string() + ":" + std::to_string(endpoint.port()));
+    _log.trace("Successfully connected to endpoint: " + endpoint.address().to_string() + ":" + std::to_string(endpoint.port()));
     _connected = true;
 
     _client->async_read(buffer, [this](boost::system::error_code error_code, std::size_t bytes) {

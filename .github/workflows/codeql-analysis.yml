@@ -28,13 +28,5 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
 
-    - name: Build
-      run: |
-       sudo apt-get install -y -q zlib1g-dev libopus-dev libsodium-dev libboost-dev libboost-filesystem-dev libssl-dev
-       mkdir build
-       cd build
-       cmake ..
-       cmake --build . --target discord_cpp
-
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

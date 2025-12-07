@@ -3,7 +3,6 @@
 #include <opus/opus.h>
 #include <sodium.h>
 
-#include <cerrno>
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
@@ -28,12 +27,11 @@ using namespace boost::asio::ip;
 DiscordCPP::udp_client::udp_client(const std::string& ip, const int port) {
     _log = Logger("discord.VoiceClient.udp_client");
 
-    udp::resolver resolver(_io_service);
-    udp::resolver::query query(udp::v4(), ip, std::to_string(port));
+    udp::resolver resolver(_io_context);
 
-    _remote = *resolver.resolve(query);
+    _remote = resolver.resolve(ip, std::to_string(port)).begin()->endpoint();
 
-    _socket = std::make_unique<udp::socket>(_io_service);
+    _socket = std::make_unique<udp::socket>(_io_context);
 
     _socket->open(udp::v4());
 }
@@ -200,7 +198,12 @@ DiscordCPP::VoiceClient::VoiceClient(std::shared_ptr<MainGateway> main_ws,
 
     _voice_ws->connect(_endpoint);
 
+    unsigned short counter = 0;
     while (_ready == false) {
+        if (counter > 3000) {
+            throw ClientException("Handshake not completed after 30 seconds. Aborting");
+        }
+        counter++;
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }

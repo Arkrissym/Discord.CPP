@@ -163,10 +163,13 @@ void DiscordCPP::Gateway::connect(const std::string& url) {
     auto query_index = tmp_url.find('?');
 
     std::string host;
+    std::string port;
     if (port_index != std::string::npos) {
         host = tmp_url.substr(0, port_index);
+        port = tmp_url.substr(port_index + 1, query_index - port_index - 1);
     } else {
         host = tmp_url.substr(0, query_index);
+        port = "443";
     }
 
     std::string query = "/";
@@ -174,22 +177,21 @@ void DiscordCPP::Gateway::connect(const std::string& url) {
         query = "/" + tmp_url.substr(query_index, std::string::npos);
     }
 
-    _log.trace("host: " + host + "\tquery: " + query);
+    _log.trace("host: " + host + "\tport: " + port + "\tquery: " + query);
     _log.info("connecting to websocket: " + url);
 
     tcp::resolver resolver{io_context};
-    auto results = resolver.resolve(host, "443");
+    auto results = resolver.resolve(host, port);
 
     _client = std::make_unique<websocket::stream<beast::ssl_stream<tcp::socket>>>(io_context, ssl_context);
 
     auto endpoint = net::connect(get_lowest_layer(*_client), results);
 
-    if (!SSL_set_tlsext_host_name(_client->next_layer().native_handle(), host.c_str()))
+    if (!SSL_set_tlsext_host_name(_client->next_layer().native_handle(), host.c_str())) {
         throw beast::system_error(
-            beast::error_code(
-                static_cast<int>(::ERR_get_error()),
-                net::error::get_ssl_category()),
-            "Failed to set SNI Hostname");
+            static_cast<int>(::ERR_get_error()),
+            net::error::get_ssl_category());
+    }
 
     _client->set_option(websocket::stream_base::decorator([](websocket::request_type& req) {
         req.set(http::field::user_agent, "Discord.C++ DiscordBot");

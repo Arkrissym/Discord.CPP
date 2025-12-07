@@ -24,7 +24,7 @@ class udp_client {
    private:
     Logger _log;
 
-    boost::asio::io_service _io_service;
+    boost::asio::io_context _io_context;
     std::unique_ptr<udp::socket> _socket;
     // udp::socket *_recv_socket;
     udp::endpoint _remote;

@@ -1,37 +1,33 @@
 FROM alpine as build
 
 RUN apk add --no-cache \
-	g++ \
-	make \
-	cmake \
-	git \
-	zlib-dev \
-	opus-dev \
-	libsodium-dev \
-	boost1.82-dev \
-	openssl-dev
+    g++ \
+    make \
+    cmake \
+    git \
+    linux-headers \
+    openssl-dev \
+    opus-dev \
+    libsodium-dev
 
 COPY . /app
 
 WORKDIR /app
 
 RUN mkdir build && \
-	cd build && \
-	cmake .. && \
-	cmake --build . --target discord_cpp -j$(nproc --all) && \
-	cmake --build . --target test_bot -j$(nproc --all)
+    cd build && \
+    cmake .. && \
+    cmake --build . --target discord_cpp -j$(nproc --all) && \
+    cmake --build . --target test_bot -j$(nproc --all)
 
 FROM alpine
 
 RUN apk add --no-cache \
-	zlib \
-	opus \
-	libsodium \
-	boost1.82 \
-	boost1.82-filesystem \
-	openssl \
-	ffmpeg \
-	yt-dlp
+    openssl \
+    opus \
+    libsodium \
+    ffmpeg \
+    yt-dlp
 
 
 COPY --from=build /app/build/libdiscord_cpp.so /usr/local/lib

@@ -261,15 +261,18 @@ class Client : public Discord {
             getline(argumentstream, link, ' ');
             getline(argumentstream, channel_name);
 
-            boost::filesystem::path p =
-                boost::process::search_path("yt-dlp");
-            boost::process::ipstream input;
-            boost::process::system(p, "-g", "-x", "--no-playlist", link,
-                                   boost::process::std_out > input,
-                                   boost::process::std_err > stderr);
+            const auto exe = boost::process::environment::find_executable("yt-dlp");
 
-            string url;
-            getline(input, url);
+            boost::asio::io_context io_context;
+            boost::asio::readable_pipe input = boost::asio::readable_pipe(io_context);
+
+            boost::process::v2::process process = boost::process::v2::process(io_context, exe,
+                                                                              {"-g", "-x", "--no-playlist", link},
+                                                                              boost::process::v2::process_stdio{nullptr, input, stderr});
+
+            boost::asio::streambuf read_buffer;
+            boost::asio::read_until(input, read_buffer, "\n");
+            string url = std::string((char*)read_buffer.data().data());
 
             FFmpegAudioSource* source = new FFmpegAudioSource(
                 url,

@@ -1,6 +1,7 @@
 #pragma once
-#include <iostream>
+#include <boost/process.hpp>
 #include <memory>
+#include <string>
 
 #include "AudioSource.h"
 
@@ -10,20 +11,15 @@
 #define DLL_EXPORT
 #endif
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-namespace boost::process {
-class child;
-template <class CharT, class Traits>
-class basic_ipstream;
-using ipstream = basic_ipstream<char, std::char_traits<char>>;
-}  // namespace boost::process
-#endif
-
 namespace DiscordCPP {
 class FFmpegAudioSource : public AudioSource {
    private:
-    std::shared_ptr<boost::process::child> _process;
-    std::shared_ptr<boost::process::ipstream> _pipe;
+    std::shared_ptr<boost::asio::io_context> _io_context;
+    std::shared_ptr<boost::asio::readable_pipe> _pipe;
+    struct Process {
+        boost::process::v2::process process;
+    };
+    std::shared_ptr<Process> _process;
 
    public:
     /**	Creates an AudioSource using FFmpeg. This requires ffmpeg to be in your PATH.

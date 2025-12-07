@@ -20,13 +20,16 @@ DiscordCPP::FFmpegAudioSource::FFmpegAudioSource(const std::string& input,
     while (getline(iss, param, ' ')) {
         params.push_back(param);
     }
-    for (auto param : std::vector<std::string>{"-i", input, "-loglevel", "warning", "-f", "s16le", "-ac", "2", "-ar", "48000", "pipe:1"}) {
-        params.push_back(param);
-    }
+    params.push_back("-i");
+    params.push_back(input);
     iss = std::istringstream(options);
     while (getline(iss, param, ' ')) {
         params.push_back(param);
     }
+    for (auto param : std::vector<std::string>{"-loglevel", "warning", "-f", "s16le", "-ac", "2", "-ar", "48000", "pipe:1"}) {
+        params.push_back(param);
+    }
+
     _process = std::make_shared<Process>(Process{boost::process::v2::process(*_io_context, exe,
                                                                              params,
                                                                              boost::process::v2::process_stdio{nullptr, *_pipe, stderr})});
